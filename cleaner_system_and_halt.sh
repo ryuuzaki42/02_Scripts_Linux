@@ -1,4 +1,29 @@
-#! /bin/bash
+#!/bin/bash
+#
+# Autor= João Batista Ribeiro
+# Bugs, Agradecimentos, Criticas "construtiva"
+# Mande me um e-mail. Ficarei Grato!
+# e-mail  joao42lbatista@gmail.com
+#
+# Este programa é um software livre; você pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Licença, ou (na sua opinião) qualquer versão.
+#
+# Este programa é distribuído na esperança que possa ser  útil, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+#
+# Veja a Licença Pública Geral GNU para maiores detalhes.
+# Você deve ter recebido uma cópia da Licença Pública Geral GNU
+# junto com este programa, se não, escreva para a Fundação do Software
+#
+# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# Script: limpeza no sistema (irá precisar do bleachbit estar instalado) e deligar
+#
+# Última atualização: 22/11/2015
+#
 user_current=`whoami`
 if [ $user_current = root ]
  then
@@ -17,8 +42,8 @@ echo "rm -rfv /tmp/*"
 echo "rm -rfv /tmp/.*"
 echo "rm -rfv /var/tmp/*"
 echo "rm -rfv /var/tmp/.*"
-#echo "rm /home/$user_current/.bash_history"
-#echo "rm /root/.bash_history"
+echo "rm /home/$user_current/.bash_history"
+echo "rm /root/.bash_history"
 echo "halt'"
 echo -e "   Deseja continuar \n   (y)es \n   (n)o!"
 read resposta
@@ -32,12 +57,13 @@ if [ $resposta = y ]
   rm -rfv /var/tmp/*
   rm -rfv /var/tmp/.*
   echo "halt"
+  rm /home/'$user_current'/.bash_history
+  rm /root/.bash_history
   halt'
-  #rm /home/'$user_current'/.bash_history
-  #rm /root/.bash_history  
 fi
 if [ $resposta = n ] 
   then
   echo -e "fim do script \n"
   exit 0
 fi
+#

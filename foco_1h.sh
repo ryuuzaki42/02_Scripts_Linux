@@ -20,36 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: exemplo de script com funções, por exemplo a de ajuda/help
+# Script: foco - te avisa se já terminou as 1 hora de trabalho
+# depois do 15 minutos de descanso
 #
 # Última atualização: 22/11/2015
 #
-start () {
-  clear
-  echo "start"
-}
-
-stop () {
-  clear
-  echo "stop"
-}
-
-ajuda () {
-  echo "########################"
-  echo " isto e o help"
-  }
-  
-case "$1" in
-'start')
-  start
-  ;;
-'stop')
-  stop
-  ;;
-'--help')
-  ajuda
-  ;;
-*)
-  echo "usage $0 start|stop|--help"
-esac
+echo "Begin Foco de 1 hora..."`date` > /dev/pts/0
+sleep 1h
+echo "Break of 15 minutos..."`date` > /dev/pts/0
+sleep 15m
+echo "Break End..."`date` > /dev/pts/0
 #

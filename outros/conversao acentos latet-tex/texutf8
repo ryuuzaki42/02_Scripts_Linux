@@ -26,66 +26,68 @@
 # a versão mais recente de ambos pode ser encontrada em
 # http://www.inf.ufrgs.br/utug/download
 ###########################################################################
-# Alterada 28-29/06/2013, por João Batista Ribeiro
-# utf8tex - script sed que converte acentos utf8 para Tex
-# Modo de utilizacao
-# cat aquivoentrada.tex | ./uft8tex > aquivosaida.tex
 #
-# Nao faca
-#  cat aquivoentrada.tex | ./uft8tex > aquivoentrada.tex
-#  ira perder o arquivo.
+# Alteração em 22/11/2015, por João Batista Ribeiro 
+# texuft8 - script sed que converte acentos Tex para utf-8
+# Modo de utilizacao
+# cat aquivoentrada.tex | ./texuft8 > aquivosaida.tex
+#
+# Não faça
+# cat aquivoentrada.tex | ./texuft8 > aquivoentrada.tex
+# pois irá perder o arquivo.
+#
 
 # Vogais, acento agudo
-s/á/\\'{a}/g
-s/é/\\'{e}/g
-s/í/\\'{\\i}/g
-s/ó/\\'{o}/g
-s/ú/\\'{u}/g
+s/\\'{a}/á/g
+s/\\'{e}/é/g
+s/\\'{\\i}/í/g
+s/\\'{o}/ó/g
+s/\\'{u}/ú/g
 
 
-s/Á/\\'{A}/g
-s/É/\\'{E}/g
-s/Í/\\'{I}/g
-s/Ó/\\'{O}/g
-s/Ú/\\'{U}/g
+s/\\'{A}/Á/g
+s/\\'{E}/É/g
+s/\\'{I}/Í/g
+s/\\'{O}/Ó/g
+s/\\'{U}/Ú/g
 
 # Vogais, acento crase
-s/à/\\`{a}/g
-s/è/\\`{e}/g
-s/ì/\\`{\\i}/g
-s/ó/\\`{o}/g
-s/ù/\\`{u}/g
+s/\\`{a}/à/g
+s/\\`{e}/è/g
+s/\\`{\\i}/ì/g
+s/\\`{o}/ó/g
+s/\\`{u}/ù/g
 
-s/À/\\`{A}/g
-s/È/\\`{E}/g
-s/Ì/\\`{I}/g
-s/Ò/\\`{O}/g
-s/Ù/\\`{U}/g
+s/\\`{A}/À/g
+s/\\`{E}/È/g
+s/\\`{I}/Ì/g
+s/\\`{O}/Ò/g
+s/\\`{U}/Ù/g
 
 # Vogais, til
-s/ã/\\~{a}/g
-s/õ/\\~{o}/g
-s/ñ/\\~{n}/g
+s/\\~{a}/ã/g
+s/\\~{o}/õ/g
+s/\\~{n}/ñ/g
 
-s/Ã/\\~{A}/g
-s/Õ/\\~{O}/g
-s/Ñ/\\~{N}/g
+s/\\~{A}/Ã/g
+s/\\~{O}/Õ/g
+s/\\~{N}/Ñ/g
 
 # Cedilha
-s/ç/\\c{c}/g
-s/ç/\\c{c}/g
-s/Ç/\\c{C}/g
-s/Ç/\\c{C}/g
+s/\\c{c}/ç/g
+s/\\c{c}/ç/g
+s/\\c{C}/Ç/g
+s/\\c{C}/Ç/g
 
 # Vogais, acento cincunflexo
-s/â/\\^{a}/g
-s/ê/\\^{e}/g
-s/î/\\^{i}/g
-s/ô/\\^{o}/g
-s/û/\\^{u}/g
+s/\\^{a}/â/g
+s/\\^{e}/ê/g
+s/\\^{i}/î/g
+s/\\^{o}/ô/g
+s/\\^{u}/û/g
 
-s/Â/\\^{A}/g
-s/Ê/\\^{E}/g
-s/Î/\\^{I}/g
-s/Ô/\\^{O}/g
-s/Û/\\^{U}/g
+s/\\^{A}/Â/g
+s/\\^{E}/Ê/g
+s/\\^{I}/Î/g
+s/\\^{O}/Ô/g
+s/\\^{U}/Û/g

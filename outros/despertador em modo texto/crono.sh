@@ -8,9 +8,10 @@
 # Versão 1.2: Adicionado opção para tempo limite na contagem progressiva
 # Versão 1.3: Adicionado opção para pausa do tempo
 # Versão 1.4: Adicionado efeitos na forma como o tempo é exibido na tela
-# Versão 1.5: Adicionado função sair, modificado a parametro (-v --versão), modificado a função conta_tempo e  calcula_tempo
+# Versão 1.5: Adicionado função sair, modificado a parâmetro (-v --versão), modificado a função conta_tempo e  calcula_tempo
 # Joanes Duarte, Janeiro 2013
-# Rumbler Soppa, julho 	 2013
+# Rumbler Soppa, julho 2013
+# João Batista, Novembro 2015
  
 ###############################[ FUNÇÕES ]#################################
  
@@ -33,7 +34,7 @@ OPÇÕES
   -v, --version      Mostra a versão do programa e sai
  
 EXEMPLOS DE USO:
-   $./crono -p.................contagem progessiva infinita
+   $./crono -p.................contagem progressiva infinita
    $./crono -p 01:00:00........contagem progressiva de 1 hora
    $./crono -r 01:00:00........contagem regressiva de 1 hora
 " && exit 1
@@ -119,7 +120,7 @@ $SEGUNDOSF    \033[m"
 #Jonh
 aumix -v 100 #aumentar volume do canal master
 aumix -p 100 #aumentar volume do canal pcm
-vlc -Z /media/sda1/videos/* # reproduzir aletóriamente o conteudo da pasta /media/files/videos
+vlc -Z /media/sda1/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/files/videos
 
 exit 0
 }

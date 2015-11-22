@@ -20,36 +20,33 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: exemplo de script com funções, por exemplo a de ajuda/help
+# Script: pela interface (clique com o mouse, aletre no kde-menu para em vez
+# de kwrite abir este script) testa o tamanho do arquivo antes de abrir no kwrite
+# arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
 # Última atualização: 22/11/2015
 #
-start () {
-  clear
-  echo "start"
-}
+# Nome do arquivo que irá abrir
+filename="$1"
 
-stop () {
-  clear
-  echo "stop"
-}
+# Caminho da pasta
+pwd=`pwd`
 
-ajuda () {
-  echo "########################"
-  echo " isto e o help"
-  }
-  
-case "$1" in
-'start')
-  start
-  ;;
-'stop')
-  stop
-  ;;
-'--help')
-  ajuda
-  ;;
-*)
-  echo "usage $0 start|stop|--help"
-esac
+# Tamanho deste aquivo em kibibyte
+file_size_kb=`du -m "$filename" | cut -f1`
+
+# Apenas para teste
+echo "Arquivo: $filename"
+echo "Tamanho em KiB: $file_size_kb"
+
+# Teste de tamanho do arquivo é maior que 100 MiB
+if [ "$file_size_kb" -gt 100 ] # = 100 MiB (mebibyte)
+then
+  echo "Aquivo muito grande para abrir no Kwrite." > /tmp/big_file_kwite.txt
+  echo -n "Abra com outro programa." >> /tmp/big_file_kwite.txt
+  kwrite /tmp/big_file_kwite.txt
+  rm /tmp/big_file_kwite.txt
+else
+  kwrite "$filename"
+fi
 #

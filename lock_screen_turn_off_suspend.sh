@@ -20,36 +20,11 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: exemplo de script com funções, por exemplo a de ajuda/help
-#
+# Script: no Kde, bloquear a sessão e suspender
 # Última atualização: 22/11/2015
 #
-start () {
-  clear
-  echo "start"
-}
-
-stop () {
-  clear
-  echo "stop"
-}
-
-ajuda () {
-  echo "########################"
-  echo " isto e o help"
-  }
-  
-case "$1" in
-'start')
-  start
-  ;;
-'stop')
-  stop
-  ;;
-'--help')
-  ajuda
-  ;;
-*)
-  echo "usage $0 start|stop|--help"
-esac
+# Dica: Adicione um atalho para este script
+#
+qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend
 #

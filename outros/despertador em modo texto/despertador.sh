@@ -1,4 +1,28 @@
 #!/bin/bash
+#
+# Autor= João Batista Ribeiro
+# Bugs, Agradecimentos, Criticas "construtiva"
+# Mande me um e-mail. Ficarei Grato!
+# e-mail  joao42lbatista@gmail.com
+#
+# Este programa é um software livre; você pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Licença, ou (na sua opinião) qualquer versão.
+#
+# Este programa é distribuído na esperança que possa ser  útil, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+#
+# Veja a Licença Pública Geral GNU para maiores detalhes.
+# Você deve ter recebido uma cópia da Licença Pública Geral GNU
+# junto com este programa, se não, escreva para a Fundação do Software
+#
+# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# Script: despertador em modo texto
+# Última atualização: 22/11/2015
+#
 unset MPP
 Th=`date +%H`
 Tm=`date +%M`
@@ -30,9 +54,9 @@ read minutolevantar
 
 if [ $horainicial -gt $horalevantar ] #hora inicial maior que hora de levantar
 then
-  horafinal=$((24 - $horainicial + $horalevantar)) 
+  horafinal=$((24 - $horainicial + $horalevantar))
 else
- horafinal=$(($horalevantar - $horainicial))   
+ horafinal=$(($horalevantar - $horainicial))
 fi 
 
 if [ $minutoinicial -gt $minutolevantar ] #minuto inicial maior que o final
@@ -57,7 +81,7 @@ then
    echo -e "Podera dormir $horafinal:$minutofinal, bom descanso :)\n"
    #sleep "$horafinal"h "$minutofinal"m
 else
-   echo -e "Podera dormir só $minutofinal minutos, :\ \n" 
+   echo -e "Podera dormir só $minutofinal minutos, :\ \n"
    #sleep "$minutofinal"m
 fi
 
@@ -86,12 +110,13 @@ then
      ./crono.sh -r `echo $TH`:`echo $TM`:`echo $TS`
   else
      ./crono.sh -r `echo $TH`:`echo 0$TM`:`echo $TS`
-  fi   
+  fi
 else
-  if [ $TM -gt 9 ] 
+  if [ $TM -gt 9 ]
   then
      ./crono.sh -r `echo 0$TH`:`echo $TM`:`echo $TS`
   else
      ./crono.sh -r `echo 0$TH`:`echo 0$TM`:`echo $TS`
-  fi   
+  fi
 fi
+#
