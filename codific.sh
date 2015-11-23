@@ -22,7 +22,7 @@
 #
 # Script: converter texto utf8 to iso-8859 e virse-versa
 #
-# Última atualização: 22/11/2015
+# Última atualização: 23/11/2015
 #
 
 if [ $# -ne 1 ] # verifica se foi passado o nome do arquivo
