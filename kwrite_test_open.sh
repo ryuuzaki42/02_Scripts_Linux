@@ -24,29 +24,37 @@
 # de kwrite abir este script) testa o tamanho do arquivo antes de abrir no kwrite
 # arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
-# Última atualização: 22/11/2015
+# Última atualização: 24/11/2015
 #
-# Nome do arquivo que irá abrir
-filename="$1"
 
-# Caminho da pasta
-pwd=`pwd`
-
-# Tamanho deste aquivo em kibibyte
-file_size_kb=`du -m "$filename" | cut -f1`
-
-# Apenas para teste
-echo "Arquivo: $filename"
-echo "Tamanho em KiB: $file_size_kb"
-
-# Teste de tamanho do arquivo é maior que 100 MiB
-if [ "$file_size_kb" -gt 100 ] # = 100 MiB (mebibyte)
+if [ $# -eq 0 ] # verifica se foi passado o nome do arquivo
 then
-  echo "Aquivo muito grande para abrir no Kwrite." > /tmp/big_file_kwite.txt
-  echo -n "Abra com outro programa." >> /tmp/big_file_kwite.txt
-  kwrite /tmp/big_file_kwite.txt
-  rm /tmp/big_file_kwite.txt
+  echo -e "\nApenas abrindo o kwrite...\n"
+  kwrite
 else
-  kwrite "$filename"
+  # Nome do arquivo que irá abrir
+  FILENAME="$1"
+
+  # Caminho da pasta
+  PWD=`pwd`
+
+  # Tamanho deste aquivo em kibibyte
+  FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1`
+
+  # Apenas para teste
+  echo -e "\nArquivo: $FILENAME"
+  echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
+
+  # Teste de tamanho do arquivo é maior que 100 MiB
+  if [ "$FILE_SIZE_MB" -gt 100 ] # = 100 MiB (mebibyte)
+  then
+    TMPFILE=`mktemp`
+    echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE
+    echo -n "Abra com outro programa." >> $TMPFILE
+    kwrite $TMPFILE
+    rm $TMPFILE
+  else
+    kwrite "$FILENAME"
+  fi
 fi
 #
