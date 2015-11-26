@@ -22,46 +22,45 @@
 #
 # Script: limpeza no sistema (irá precisar do bleachbit estar instalado) e deligar
 #
-# Última atualização: 22/11/2015
+# Última atualização: 25/11/2015
 #
-user_current=`whoami`
-if [ $user_current = root ]
+if [ $LOGNAME = root ]
  then
- echo -e "\t\terro, execute como usuário comum!\n"
+ echo -e "\t\t\nerro, execute como usuário comum!\n"
  exit 0
 fi
-echo "Este script(para slackware) vai Limpar o seu sistema e Desligar!"
+echo -e "\nEste script(para slackware) vai Limpar o seu sistema e Desligar!"
 echo "Necessário ter bleachbit instalado e configurado."
 echo "Irá executar o bleachbit como root e como usuário corrente."
 echo "Além de apagar algumas pastas e arquivos."
-echo "Usuário corrente:$user_current"
+echo "Usuário corrente:$LOGNAME"
 echo "Comandos a serem executados:"
-echo "'su - root -c su - $user_current -c \"bleachbit -c --preset\""
+echo "'su - root -c su - $LOGNAME -c \"bleachbit -c --preset\""
 echo "bleachbit -c --preset"
 echo "rm -rfv /tmp/*"
 echo "rm -rfv /tmp/.*"
 echo "rm -rfv /var/tmp/*"
 echo "rm -rfv /var/tmp/.*"
-echo "rm /home/$user_current/.bash_history"
+echo "rm /home/$LOGNAME/.bash_history"
 echo "rm /root/.bash_history"
 echo "halt'"
 echo -e "   Deseja continuar \n   (y)es \n   (n)o!"
-read resposta
-if [ $resposta = y ]
+read RESPOSTA
+if [ $RESPOSTA = y ]
   then
   echo -e "Digite a senha do usuário root"
-  su - root -c 'su - $user_current -c "bleachbit -c --preset"
+  su - root -c 'su - $LOGNAME -c "bleachbit -c --preset"
   bleachbit -c --preset
   rm -rfv /tmp/*
   rm -rfv /tmp/.*
   rm -rfv /var/tmp/*
   rm -rfv /var/tmp/.*
   echo "halt"
-  rm /home/'$user_current'/.bash_history
+  rm /home/'$LOGNAME'/.bash_history
   rm /root/.bash_history
   halt'
 fi
-if [ $resposta = n ] 
+if [ $RESPOSTA = n ]
   then
   echo -e "fim do script \n"
   exit 0
