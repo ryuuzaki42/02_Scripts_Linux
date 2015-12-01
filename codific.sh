@@ -83,7 +83,7 @@ else
   echo -e "\n## Arquivo convertido com sucesso ##\n\"$nomeArquivo\" de $codInicial para $codFinal"
   echo "$nomeArquivo --> $nomeArquivo2"_"$codFinal.$extensao"
   echo -e "\nSobrescrever o arquivo original?"
-  echo "(S)im, (n)ão"
+  echo "(y)es, (n)o"
   read resposta
   if [ $resposta = s ]
   then
