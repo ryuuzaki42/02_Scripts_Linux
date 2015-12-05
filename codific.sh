@@ -85,7 +85,7 @@ else
   echo -e "\nSobrescrever o arquivo original?"
   echo "(y)es, (n)o"
   read resposta
-  if [ $resposta = s ]
+  if [ $resposta = y ]
   then
     mv "$nomeArquivo2"_"$codFinal.$extensao" "$nomeArquivo"
     echo -e "O arquivo foi sobrescrito\n Fim do script\n"
