@@ -49,7 +49,7 @@ echo -n "Possible difference (most common is a) <will try download with this dif
 read smallDifference
 
 if [ $chapterStart -gt $chapterEnd ]; then
-    echo -e "\n\nThe chapter to start the download is great than chapter end (Start: $chapterStart, End: $chapterEnd)\n\n"
+    echo -e "\n\nThe chapter to start the download is great than chapter end (Start: $chapterStart, End: $chapterEnd).\n\n"
     exit 1
 fi
 
@@ -60,8 +60,6 @@ cd "$name" # move to there
 
 countImages=1000 # count of imagens, not for real, just for try
 
-goTONext=0 # in 5 go to next
-
 echo -e "\n\t#Please wait until the download finished#\n"
 
 while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal to end chapter to download
@@ -70,7 +68,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
     goTONext=0 # to not try more and go for next chapter, when get 3 not found
     notZip=0 # just for not zip one incomplete chapter folder
 
-    echo -e "Downloading the chapter $chapterStart ($link$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>)\n" # Current chapter download
+    echo -e "Downloading the chapter $chapterStart ($link$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>).\n" # Current chapter download
 
     mkdir $chapterStart 2> /dev/null # create the folder to current chapter in download
     cd $chapterStart # move to download folder
@@ -105,6 +103,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
                 if [ $? != 0 ]; then # if fail try with dual page
                     i2=$i
                     ((i2+=1))
+                    dualPage=1
 
                     if [ $i2 -gt 9 ]; then # more then 9 (10, 11 etc) don't need zero in begin
                         zero2=
@@ -123,28 +122,34 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 ############################ # Start "Try download with the smallDifference"
 
                             if [ $? != 0 ]; then # if fail try with another extension
-                                wget -q -t 3 $link$chapterStart/$zero$i$smallDifference.png
+                                dualPage=0
+                                wget -q -t 3 $link$chapterStart/$startImage$zero$i$smallDifference.jpg # try download with extension jpg
 
-                                if [ $? != 0 ]; then
-                                    wget -q -t 3 $link$chapterStart/$startImage$zero$i$smallDifference.jpeg
+                                if [ $? != 0 ]; then # if fail try with another extension
+                                    wget -q -t 3 $link$chapterStart/$startImage$zero$i$smallDifference.png
 
-                                    if [ $? != 0 ]; then # if fail try with dual page
-                                        i2=$i
-                                        ((i2+=1))
+                                    if [ $? != 0 ]; then
+                                        wget -q -t 3 $link$chapterStart/$startImage$zero$i$smallDifference.jpeg
 
-                                        if [ $i2 -gt 9 ]; then # more then 9 (10, 11 etc) don't need zero in begin
-                                            zero2=
-                                        else
-                                            zero2=$zero
-                                        fi
+                                        if [ $? != 0 ]; then # if fail try with dual page
+                                            i2=$i
+                                            ((i2+=1))
+                                            dualPage=1
 
-                                        wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg
+                                            if [ $i2 -gt 9 ]; then # more then 9 (10, 11 etc) don't need zero in begin
+                                                zero2=
+                                            else
+                                                zero2=$zero
+                                            fi
 
-                                        if [ $? != 0 ]; then
-                                            wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png
+                                            wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg
 
                                             if [ $? != 0 ]; then
-                                                wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg
+                                                wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png
+
+                                                if [ $? != 0 ]; then
+                                                    wget -q -t 3 $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg
+                                                fi
                                             fi
                                         fi
                                     fi
@@ -155,21 +160,19 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 
                         fi
                      fi
-
-                    if [ $? -eq 0 ]; then # if not fail, don't need try i+1, beacause i+1 is already download with i page (dual page)
-                        ((i+=1))
-                        dualPage=1
-                    else # if not found page
-                        echo " not found #"
-                        flag=0 # to not print ok below
-                        ((goTONext+=1)) # times for next chapter
-
-                        if [ $goTONext -eq 3 ]; then # if get 3, go to next chapter
-                            i=1000
-                        fi
-                    fi
                 fi
             fi
+        fi
+
+         if [ $? -eq 0 ]; then
+            if [ $dualPage -eq 1 ]; then # if not fail, don't need try i+1, beacause i+1 is already download with i page (dual page)
+                ((i+=1))
+            fi
+
+        else # if not found page
+            echo " not found #"
+            flag=0 # to not print ok below
+            ((goTONext+=1)) # times for next chapter
         fi
 
         if [ $? -eq 0 ] && [ $flag -eq 1 ]; then # print ok if already download the image
@@ -177,7 +180,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 
             if [ $dualPage -eq 1 ]; then # if download dual page
                 ((i2-=1))
-                echo " * Downloaded # P: \"$startImage$zero$i2-$zero2$i\""
+                echo " * Downloaded # P: \"$startImage$zero$i2-$zero2$i\"."
              else
                 echo # create break of line
             fi
@@ -185,7 +188,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
             if [ $goTONext -eq 1 ]; then
                 i2=$i
                 ((i2-=1))
-                echo -e "\n Better look for the image [$startImage$i2]\n" # When not found only one image in the middle
+                echo -e "\n Better look for the image [$startImage$i2].\n" # When not found only one image in the middle
                 goTONext=0
                 notZip=1
             fi
@@ -195,12 +198,16 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
                 i3=$i
                 ((i2-=1))
                 ((i3-=2))
-                echo -e "\n Better look for this imagens [$startImage$2 and $startImage$3]\n" # When not found only two image in the middle
+                echo -e "\n Better look for this imagens [$startImage$2 and $startImage$3].\n" # When not found only two image in the middle
                 goTONext=0
                 notZip=1
             fi
         fi
 
+        if [ $goTONext -eq 3 ]; then # if get 3, go to next chapter
+            i=1000
+            echo -e "\nTried three times and not found any image. Stop download this chapter."
+        fi
         ((i+=1)) # increase the i to next page
     done
 
@@ -211,11 +218,11 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
     if [ -n "$listFiles" ] && [ $notZip -eq 0 ]; then
         zip -q -r $chapterStart.zip $chapterStart # zip the folder already download
         rm -r $chapterStart # delete the <open> folder and files
-        echo -e "\nziped the folder \"$chapterStart\" ($chapterStart.zip) and delete the folder \"$chapterStart\"\n"
+        echo -e "\nziped the folder \"$chapterStart\" ($chapterStart.zip) and delete the folder \"$chapterStart\".\n"
     elif [ $notZip -eq 1 ]; then
-        echo -e "\nThe folder \"$chapterStart\" has some image(ns) not found, so this was not downloaded.\nThis <folder> was left to you be aware of them\n"
+        echo -e "\nThe folder \"$chapterStart\" has some image(ns) not found, so this was not downloaded.\nThis <folder> was left to you be aware of them.\n"
     else
-        echo -e "\nThe folder \"$chapterStart\" is empty, so none image was downloaded.\nThis <folder> was left to you be aware of them\n"
+        echo -e "\nThe folder \"$chapterStart\" is empty, so none image was downloaded.\nThis <folder> was left to you be aware of them.\n"
     fi
 
     ((chapterStart+=1)) # increase to go to next chapter
