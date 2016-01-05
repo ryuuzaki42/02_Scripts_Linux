@@ -21,5 +21,5 @@ if [ $resposta != s ]
 then
 echo 'Que pena! Fim do script.' #aspas simples 
 fi
-fi #Fim do comando IF e do script 
+fi #Fim do comando IF e do script
 #

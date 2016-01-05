@@ -3,16 +3,16 @@
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtiva"
 # Mande me um e-mail. Ficarei Grato!
-# e-mail  joao42lbatista@gmail.com
+# e-mail: joao42lbatista@gmail.com
 #
-# Este programa é um software livre; você pode redistribui-lo e/ou 
-# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Este programa é um software livre; você pode redistribui-lo e/ou
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da
 # Licença, ou (na sua opinião) qualquer versão.
 #
-# Este programa é distribuído na esperança que possa ser  útil, 
-# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
-# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+# Este programa é distribuído na esperança que possa ser útil,
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
 # Veja a Licença Pública Geral GNU para maiores detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
@@ -22,7 +22,7 @@
 #
 # Script: wakeup - reproduz vídeos em determinada hora
 #
-# Última atualização: 22/11/2015
+# Última atualização: 05/01/2016
 #
 horainicial=`date +%H` #Pegando hora atual 0-23
 minutoinicial=`date +%M` #Pegando minutos atual 0-59
@@ -30,7 +30,7 @@ minutoinicial=`date +%M` #Pegando minutos atual 0-59
 #if [ $# -lt 1 ] # verifica se foi passado o nome do arquivo
 #then
 #   echo "$(basename "$0"): Error of the operands"
-#   echo "usage $0 h min' "
+#   echo "usage $0 h min"
 #   echo "Try $0 --help"
 #   exit 0
 #fi
@@ -100,3 +100,4 @@ amixer set Master 100 #aumentar volume do canal master
 amixer set PCM 100 #aumentar volume do canal pcm
 amixer set Speaker 100 #aumentar volume do canal speaker
 vlc -Z /media/sda*/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/sda*/files/videos
+#

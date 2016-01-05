@@ -6,7 +6,7 @@
 # Autor   : Rodney Barreto <rwbarreto@yahoo.com.br>
 #
 #  ----------------------------------------------------------------------
-#   Este é o jogo CAMPO MINADO, totalmente feito em shell-script. O 
+#   Este é o jogo CAMPO MINADO, totalmente feito em shell-script. O
 #   programa recebe as coordenadas digitadas pelo usuário, mostrando a
 #   situação atual e informando se o usuário fez pontos ou perdeu o jogo.
 #
@@ -14,7 +14,7 @@
 #
 #            *** CAMPO MINADO ***
 #
-#         1     2     3     4     5    
+#         1     2     3     4     5
 #      +-----+-----+-----+-----+-----+
 #    1 |  *  |     |     |     |     |
 #      +-----+-----+-----+-----+-----+
@@ -207,7 +207,7 @@ do
          echo -e '\033[12;19H*\033[6B'
          echo '* BOMBA * FIM DE JOGO'
          fim=1
-         ;;   
+         ;;
       54) # Posiciona o cursor na linha 12, coluna 25 e imprime (2)
          echo -e '\033[12;25H2'
          pontos=$(($pontos + 10))
@@ -221,14 +221,14 @@ do
          echo
           ;;
       *)  echo
-         echo -n 'Coordenada não existe, Tente novamente!' 
-         sleep 2 
+         echo -n 'Coordenada não existe, Tente novamente!'
+         sleep 2
          # Apaga até o início da linha e depois sobe 6 linhas
          echo -e '\033[2K\033[6A'
          ;;
    esac
    
-   if [ $pontos -eq 170 ]; then 
+   if [ $pontos -eq 170 ]; then
       echo -e '\033[5B*** VENCEDOR ***'
       break;
    fi

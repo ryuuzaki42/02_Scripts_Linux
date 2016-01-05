@@ -3,16 +3,16 @@
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtiva"
 # Mande me um e-mail. Ficarei Grato!
-# e-mail  joao42lbatista@gmail.com
+# e-mail: joao42lbatista@gmail.com
 #
-# Este programa é um software livre; você pode redistribui-lo e/ou 
-# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Este programa é um software livre; você pode redistribui-lo e/ou
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da
 # Licença, ou (na sua opinião) qualquer versão.
 #
-# Este programa é distribuído na esperança que possa ser  útil, 
-# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
-# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+# Este programa é distribuído na esperança que possa ser útil,
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
 # Veja a Licença Pública Geral GNU para maiores detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
@@ -22,7 +22,7 @@
 #
 # Script: converte de utf-8 to iso-8859-1
 #
-# Última atualização: 22/11/2015
+# Última atualização: 05/01/2016
 #
 if [ $# -ne 1 ] # verifica se foi passado o nome do arquivo
 then
@@ -36,15 +36,15 @@ nomeDoArquivo="$1" #Nome do arquivo $1
 
 ajuda () {
   echo "#                                                        #"
-  echo "# use the file name (with extension) you want to convert #"  
+  echo "# use the file name (with extension) you want to convert #"
   echo "# i.e.: $0 file.srt                  #"
-  echo "#                                                        #" 
+  echo "#                                                        #"
   exit 0
 }
 
 case "$1" in
 '--help')
-  ajuda  
+  ajuda
 esac
 
 tamString=$(echo "$nomeDoArquivo" | wc -m | sed 's/ '"$nomeDoArquivo"'//g') #Calcula o tamanho da string
@@ -70,3 +70,4 @@ else
   echo -e "Convertido com sucesso \"$nomeDoArquivo\" de iso-8859-1 para utf-8"
   echo "$nomeDoArquivo --> "$nome2"2".$extensao""
 fi
+#

@@ -3,16 +3,16 @@
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtiva"
 # Mande me um e-mail. Ficarei Grato!
-# e-mail  joao42lbatista@gmail.com
+# e-mail: joao42lbatista@gmail.com
 #
-# Este programa é um software livre; você pode redistribui-lo e/ou 
-# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Este programa é um software livre; você pode redistribui-lo e/ou
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da
 # Licença, ou (na sua opinião) qualquer versão.
 #
-# Este programa é distribuído na esperança que possa ser  útil, 
-# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
-# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+# Este programa é distribuído na esperança que possa ser útil,
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
 # Veja a Licença Pública Geral GNU para maiores detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
@@ -22,7 +22,7 @@
 #
 # Script: wakeup - reproduz vídeos em determinada hora
 #
-# Última atualização: 22/11/2015
+# Última atualização: 05/01/2016
 #
 horainicial=`date +%H` #Pegando hora atual 0-23
 minutoinicial=`date +%M` #Pegando minutos atual 0-59
@@ -38,10 +38,10 @@ read minutolevantar
 
 if [ $horainicial -gt $horalevantar ] #hora inicial maior que hora de levantar
 then
-  horafinal=$((24 - $horainicial + $horalevantar)) 
+  horafinal=$((24 - $horainicial + $horalevantar))
 else
- horafinal=$(($horalevantar - $horainicial))   
-fi 
+ horafinal=$(($horalevantar - $horainicial))
+fi
 
 if [ $minutoinicial -gt $minutolevantar ] #minuto inicial maior que o final
 then
@@ -62,11 +62,11 @@ echo "#Levantar= $horalevantar:$minutolevantar"
 echo -e "#Final==== $horafinal:$minutofinal\n"
 
 if [ $horafinal != 0 ] 
-then  
+then
    echo -e "Podera dormir $horafinal:$minutofinal, bom descanso :)\n"
    sleep "$horafinal"h "$minutofinal"m
 else
-   echo -e "Podera dormir só $minutofinal minutos, :\ \n" 
+   echo -e "Podera dormir só $minutofinal minutos, :\ \n"
    sleep "$minutofinal"m
 fi
 
@@ -78,3 +78,4 @@ aumix -v 100 #aumentar volume do canal master
 aumix -p 100 #aumentar volume do canal pcm
 # Irá precisar do vlc, altere o caminho dos seu vídeos abaixo
 vlc -Z /media/sda4/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/files/videos
+#

@@ -253,5 +253,4 @@ while [ $INPUT != "q" ];do
   let counter++
 done
 clear
-
 # Fim do script

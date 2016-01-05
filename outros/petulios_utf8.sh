@@ -40,16 +40,16 @@ if [ -e $HOME/petulios ]; then
 localdir="$HOME/petulios"
 
 #Uma mensagem inicial 
-kdialog --title Petulios --msgbox "Este programa é um software livre; 
-você pode redistribui-lo e/ou 
-modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+kdialog --title Petulios --msgbox "Este programa é um software livre;
+você pode redistribui-lo e/ou
+modifica-lo dentro dos termos da Licença Pública Geral GNU como
+publicada pela Fundação do Software Livre (FSF); na versão 2 da
 Licença, ou (na sua opnião) qualquer versão.
 
 
 Este programa é distribuído na esperança que possa ser  útil, 
-mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
-qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
+qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 
 
 Veja a Licença Pública Geral GNU para maiores detalhes.
@@ -57,7 +57,7 @@ Você deve ter recebido uma cópia da Licença Pública Geral GNU
 junto com este programa, se não, escreva para a Fundação do Software
 
 
-Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA" 
+Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA"
 
 
 
@@ -95,7 +95,7 @@ montar() {
 	kdesu mount -o loop $abreiso $localdir
 	fi
 	if [ $? = "0" ]; then
-	kdialog --passivepopup "Operação concluída com sucesso! " 3 & 
+	kdialog --passivepopup "Operação concluída com sucesso! " 3 &
 	echo "Foi aberto a iso $abreiso " &>> $HOME/petulios.log
 	else
 	menuprincipal
@@ -134,7 +134,7 @@ desmontar() {
 	kdesu umount $localdir/
 	if [ $? = "0" ]; then
 	rmdir $localdir
-	kdialog --passivepopup "Operação concluida com sucesso! " 3 & 
+	kdialog --passivepopup "Operação concluida com sucesso! " 3 &
 	menuprincipal
 	else
 	menuprincipal
@@ -197,6 +197,7 @@ fi
 if [ $? = "0" ]; then
 menuprincipal
 else
-kdialog --error "Ocorreu um erro! Por Favor 
+kdialog --error "Ocorreu um erro! Por Favor
 reinicie o script"
 fi
+#

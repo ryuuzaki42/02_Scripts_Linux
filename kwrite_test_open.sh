@@ -3,16 +3,16 @@
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtiva"
 # Mande me um e-mail. Ficarei Grato!
-# e-mail  joao42lbatista@gmail.com
+# e-mail: joao42lbatista@gmail.com
 #
-# Este programa é um software livre; você pode redistribui-lo e/ou 
-# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-# publicada pela Fundação do Software Livre (FSF); na versão 2 da 
+# Este programa é um software livre; você pode redistribui-lo e/ou
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como
+# publicada pela Fundação do Software Livre (FSF); na versão 2 da
 # Licença, ou (na sua opinião) qualquer versão.
 #
-# Este programa é distribuído na esperança que possa ser  útil, 
-# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a 
-# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. 
+# Este programa é distribuído na esperança que possa ser útil,
+# mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
 # Veja a Licença Pública Geral GNU para maiores detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
@@ -24,7 +24,7 @@
 # de kwrite abir este script) testa o tamanho do arquivo antes de abrir no kwrite
 # arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
-# Última atualização: 24/11/2015
+# Última atualização: 05/01/2016
 #
 
 if [ $# -eq 0 ] # verifica se foi passado o nome do arquivo

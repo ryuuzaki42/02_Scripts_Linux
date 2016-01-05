@@ -10,8 +10,8 @@
 # Versão 1.4: Adicionado efeitos na forma como o tempo é exibido na tela
 # Versão 1.5: Adicionado função sair, modificado a parâmetro (-v --versão), modificado a função conta_tempo e  calcula_tempo
 # Joanes Duarte, Janeiro 2013
-# Rumbler Soppa, julho 2013
-# João Batista, Novembro 2015
+# Rumbler Soppa, Julho 2013
+# João Batista, Janeiro 2016
  
 ###############################[ FUNÇÕES ]#################################
  
@@ -205,4 +205,5 @@ início da contagem regressiva" ; exit 1 ; }
  
    esac
  
-done 
+done
+#

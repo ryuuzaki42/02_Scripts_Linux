@@ -148,7 +148,7 @@ _display()
 	then
 		ERROR=0
 
-		echo -e " Jogador $INITUSER, selecione uma peça:" 
+		echo -e " Jogador $INITUSER, selecione uma peça:"
 
 		read SELECT
 	else
@@ -915,7 +915,3 @@ do
 		INITUSER=X
 	fi
 done
-
-
-
-

@@ -27,7 +27,7 @@
 # cat arquivo.tex | tex2latin
 # Joga na saida padrao o arquivo convertido
 #
-# Ou 
+# Ou
 # tex2latin arquivo.tex
 # Converte arquivo.tex e joga o resultado na saida padrao.
 #
@@ -89,4 +89,4 @@ s/\\^E/Ê/g
 s/\\^I/Î/g
 s/\\^O/Ô/g
 s/\\^U/Û/g
-
+#
