@@ -206,7 +206,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 
         if [ $goTONext -eq 3 ]; then # if get 3, go to next chapter
             i=1000
-            echo -e "\nTried three times and not found any image. Stop download this chapter."
+            echo -e "\nTried three times and not found any more image, so stop download this chapter."
         fi
         ((i+=1)) # increase the i to next page
     done
