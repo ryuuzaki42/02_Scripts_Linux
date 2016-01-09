@@ -45,20 +45,21 @@ echo -e " ${green}\t\t\t\t\t* $0 -h for help/example"
 echo -e "\t${reset}# This Script will download imagens from <folder(s)> link(s) sequentially #"
 
 if [ "$1" == "-h" ]; then
-    echo -e "\n\n\t${green}Example:\n"
+    echo -e "\n\t${green}Example:\n"
     echo -e "\tlink = http://website.com/mangax/; chapterStart = 10; chapterEnd = 12; startImage = 1; smallDifference=_Qa_\n"
     echo -e "\tFirst part will try:"
     echo -e "\twget -q link=http://website.com/mangax/10/00.jpg\n"
     echo -e "\tIn the last part will try:"
-    echo -e "\twget -q link=http://website.com/mangax/10/00_Qa_.jpg${reset}\n\n"
-    exit
+    echo -e "\twget -q link=http://website.com/mangax/10/00_Qa_.jpg\n"
+    echo -e "\tTested with mangas from the site: http://unionmangas.com.br/${reset}\n"
+    exit 0
 fi
 
 echo -en "\n\nManga name: "
 read nameManga
 
 echo -e "\nCreate a folder <download destination>:?"
-echo -n "Yes <Hit Enter> | No <type n>: "
+echo -n "Yes <Hit Enter> | ${green}No <type n>${reset}: "
 read newFolder
 
 echo -e "\nLink of Manga (imagens):"
@@ -67,7 +68,7 @@ read link
 echo -en "\nChapter to start the download: "
 read chapterStart
 
-echo -en "\nChapter to end the download: "
+echo -en "\nChapter to end the download <if you will download just one chapter, hit enter>: "
 read chapterEnd
 
 echo -e "\nThe name of the imagens begin is different from 00 (00, 01 etc)?"
@@ -86,8 +87,22 @@ if [ "$tryTimesSequentiallyDl" == '' ]; then
     tryTimesSequentiallyDl=3
 fi
 
+if [ "$link" == '' ]; then
+    echo -e "\n\nThe link <site> is empty (link: \"$link\").\n\n"
+    exit 1
+fi
+
+if [ "$chapterStart" == '' ]; then
+    echo -e "\n\nThe chapter to start is empty (Start: \"$chapterStart\", End: \"$chapterEnd\").\n\n"
+    exit 1
+fi
+
+if [ "$chapterEnd" == '' ]; then
+    $chapterEnd=$chapterStart
+fi
+
 if [ $chapterStart -gt $chapterEnd ]; then
-    echo -e "\n\nThe chapter to start the download is great than chapter end (Start: $chapterStart, End: $chapterEnd).\n\n"
+    echo -e "\n\nThe chapter to start the download is great than chapter end (Start: \"$chapterStart\", End: \"$chapterEnd\").\n\n"
     exit 1
 fi
 
@@ -102,7 +117,7 @@ imagensNotDownload='' # imagens not downloaded
 
 countImages=1000 # count of imagens, not for real, just for try
 
-echo -e "\n\t#Please wait until the download finished#\n"
+echo -e "\n\t${magenta}#Please wait until the download finished#\n"
 
 while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal to end chapter to download
     i=0 # first image
@@ -111,11 +126,27 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
     goTONext=0 # to not try more and go for next chapter, when get equal tryTimesSequentiallyDl not found
     notZip=0 # just for not zip one incomplete chapter folder
 
-    echo -e "Downloading the chapter $chapterStart ($link$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>).\n" # Current chapter download
+    echo -e "${green}Downloading the chapter $chapterStart ($link$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>).\n${reset}" # Current chapter download
 
-    mkdir $chapterStart 2> /dev/null # create the folder to current chapter in download
-    cd $chapterStart # move to download folder
+    if [ "$nameManga" != '' ]; then # Get the name of chapter folder
+        nameFolder="$nameManga $chapterStart"
+    else
+        nameFolder="$chapterStart"
+    fi
 
+    mkdir "$nameFolder" 2> /dev/null # create the folder to current chapter in download
+    mkdirReturn=$?
+
+    if [ $mkdirReturn -eq 1 ]; then
+        randomNameFolder=$nameFolder # random name to move to /tmp/
+        randomNameFolder="$nameFolder $RANDOM"
+        echo -e "${magenta}\tThe Folder \"$nameFolder\" already exist. Renamed to \"$randomNameFolder\" and moved to /tmp/${reset}\n\n"
+        mv "$nameFolder" "$randomNameFolder"
+        mv "$randomNameFolder" /tmp/
+        mkdir "$nameFolder" 2> /dev/null # create the folder to current chapter in download
+    fi
+
+    cd "$nameFolder" # move to download folder
     while [ $i -lt $countImages ]; do # try download all imagens, if has not foud tree times, go to next chapter
         dualPage=0 # just for print the status of download dual page
 
@@ -220,7 +251,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 
             if [ $goTONext -eq 1 ]; then
                 i2=$i
-                ((i2-=1))
+                ((i2-=2))
                 echo -e "\n Better look for the image [$startImage$i2].\n" # When not found only one image in the middle
                 goTONext=0
                 if [ "$imagensNotDownload" == '' ]; then
@@ -260,13 +291,13 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
     cd .. # move to folder up, leaving the chapter folder
 
     if [ $notZip -eq $tryTimesSequentiallyDl ] && [ $emptyFolder -eq 0 ]; then
-        zip -q -r "$nameManga $chapterStart".zip "$chapterStart" # zip the folder already download
-        rm -r $chapterStart # delete the <open> folder and files
-        echo -e "\nziped the folder \"$chapterStart\" ("$nameManga $chapterStart".zip) and delete the folder \"$chapterStart\".\n"
+        zip -q -r "$nameFolder".zip "$nameFolder" # zip the folder already download
+        rm -r "$nameFolder" # delete the <open> folder and files
+        echo -e "\nziped the folder \"$nameFolder\" ("$nameFolder".zip) and delete the folder \"$nameFolder\".\n"
     elif [ $notZip -gt $tryTimesSequentiallyDl ]; then
-        echo -e "\nThe folder \"$chapterStart\" has image(ns) not found, so this was not downloaded.\nThis <folder> was left to you be aware of them.\n"
+        echo -e "\nThe folder \"$nameFolder\" has image(ns) not found, so this was not downloaded.\nThis <folder> was left to you be aware of them.\n"
     else
-        echo -e "\nThe folder \"$chapterStart\" is empty, so none image was downloaded.\nThis <folder> was left to you be aware of them.\n"
+        echo -e "\nThe folder \"$nameFolder\" is empty, so none image was downloaded.\nThis <folder> was left to you be aware of them.\n"
     fi
 
     ((chapterStart+=1)) # increase to go to next chapter
