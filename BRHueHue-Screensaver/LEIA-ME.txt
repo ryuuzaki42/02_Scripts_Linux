@@ -1,0 +1,30 @@
+#Carlos Eduardo S.M
+#14/01/2016
+#Rio de Janeiro RJ - Brasil
+#Contato: carlinhosedubr@gmail.com
+#Script/Programa protetor de tela BRHueHue Screensaver
+
+Modo de uso e instruções gerais:
+
+Este script pode ser utilizado como um daemon, ficar "rodando" em segundo plano no sistema.
+O executável principal vai criar seus logs na mesma pasta onde estiver sendo executado, por isso você precisa entrar na pasta do mesmo para executá-lo.
+Dentro do executável principal há informações que você pode consultar, sobre o funcionamento e edição do tempo de ociosidade.
+Como dito a cima, configure o tempo de ociosidade descomentando a linha desejada e comentando as demais. Leia o executável principal.
+Para uma maior segurança, tire as permissões de leitura e escrita deste script e ou de seus logs para todos os usuários que não o root.
+Este script cria logs com tudo que você digita no teclado, e clica ou move com o mouse, quem tem acesso a esses logs pode ter acesso a "tudo" o que você faz no computador.
+Todos os logs são removidos sempre que o script é executado novamente.
+Não dou garantias de funcionamento deste script para outros fins.
+Seu uso é de total responsabilida de quem o utiliza.
+
+Como funciona?
+De forma genérica, o script fica monitorando as ações do mouse e teclado através do utilitário "xinput" e criando logs.
+Esses logs aumentam seus números de linhas conforme é feito uso do mouse e teclado.
+O que se faz é comparar o número de linhas desses logs atualmente, com o número de linhas dos mesmos antes, se houver o mesmo número de linhas há ociosidade.
+
+Como escolher um vídeo para ser exectado?
+Dentro da pasta deste script existe um arquivo chamado "salvador_de_tela.sh" é dentro dele que você vai por o caminho ou nome (se estiver na mesma pasta) do vídeo desejado.
+Leia o "salvador_de_tela.sh" para mais informações.
+
+OBS:Dê permissões de execução para ambos scripts. 
+
+boa sorte :)
