@@ -7,7 +7,7 @@
 #Script/Programa protetor de tela BRHueHue Screensaver
 
 #############################################################################################################################################
-#Limpa arquivos de execuÁıes anteriores, se n„o existirem apresenta mensagem de erro de n„o existÍncia mas a execuÁ„o geral se d· normalmente.
+#Limpa arquivos de execu√ß√µes anteriores, se n√£o existirem apresenta mensagem de erro de n√£o exist√™ncia mas a execu√ß√£o geral se d√° normalmente.
 
 rm log_anterior.log
 rm mouse.log
@@ -18,27 +18,35 @@ rm nohup.out
 ############################################################################################################################################
 
 ############################################################################################################################################
-#Aqui È executado em segundo plano o utilit·rio xinput (que faz parte do projeto Xorg) para gerar logs de uso do mouse e teclado no Xwindows.
-#Para saber o n˙mero id correspondente ao teclado ou ao mouse use "xinput list". Para mais opÁıes "man xinput" ou "xinput --help".
+#Aqui √© executado em segundo plano o utilit√°rio xinput (que faz parte do projeto Xorg) para gerar logs de uso do mouse e teclado no Xwindows.
+#Para saber o n√∫mero id correspondente ao teclado ou ao mouse use "xinput list". Para mais op√ß√µes "man xinput" ou "xinput --help".
 
-#Fazer o xinput ficar monitorando o mouse em segundo plano e escrevendo um log que ser· lido.
+xinputMouse=xinput | grep "Mouse"
+
+xinputMouse=xinput | grep "Touchpad"
+
+xinputKeyboard=xinput | grep "keyboard"
+
+echo $xinputResult | grep 
+
+#Fazer o xinput ficar monitorando o mouse em segundo plano e escrevendo um log que ser√° lido.
 nohup xinput test 9 >> mouse.log &
 
-#Fazer o xinput ficar monitorando o teclado em segundo plano e escrever um log que ser· lido.
+#Fazer o xinput ficar monitorando o teclado em segundo plano e escrever um log que ser√° lido.
 nohup xinput test 8 >> teclado.log &
 ############################################################################################################################################
 
 ############################################################################################################################################
-#Verificar o n˙mero de linhas(n˙mero de aÁıes do mouse e teclado) e criar um log para posterior comparaÁ„o com futuros n˙meros de log.
-#O que isso faz basicamente È contar o n˙mero de linhas do log do teclado e do mouse e por o resultado em um log ˙nico.
+#Verificar o n√∫mero de linhas(n√∫mero de a√ß√µes do mouse e teclado) e criar um log para posterior compara√ß√£o com futuros n√∫meros de log.
+#O que isso faz basicamente √© contar o n√∫mero de linhas do log do teclado e do mouse e por o resultado em um log √∫nico.
 cat teclado.log mouse.log | wc -l > log_anterior.log
 ############################################################################################################################################
 
 ############################################################################################################################################
-#Aqui nÛs pegamos o conte˙do do log anterior e atual para fazer uma comparaÁ„o
-#Se a quantidade de linhas total atualmente for maior que a quantidade de linhas do momento de escrita do primeiro log, significa que N√O h· ociosidade.
+#Aqui n√≥s pegamos o conte√∫do do log anterior e atual para fazer uma compara√ß√£o
+#Se a quantidade de linhas total atualmente for maior que a quantidade de linhas do momento de escrita do primeiro log, significa que N√ÉO h√° ociosidade.
 
-#FUN«√O: teste_ociosidade
+#FUN√á√ÉO: teste_ociosidade
 teste_ociosidade()
 {
 
@@ -46,11 +54,11 @@ teste_ociosidade()
 log_anterior=$( cat log_anterior.log )
 
 
-#Pega o log do estado atual do mouse e teclado para comparar com um log do estado anterior. Se for igual, significa que H¡ ociosidade.
+#Pega o log do estado atual do mouse e teclado para comparar com um log do estado anterior. Se for igual, significa que H√Å ociosidade.
 log_atual=$( cat mouse.log teclado.log | wc -l )
 
 
-#Teste para verificar se o usu·rio est· ocioso, se o n˙mero de log È igual ao log anterior.
+#Teste para verificar se o usu√°rio est√° ocioso, se o n√∫mero de log √© igual ao log anterior.
 
 if [ "$log_anterior" -eq "$log_atual" ]
 then
@@ -69,10 +77,10 @@ fi
 
 
 ##############################################################################################################################
-######################################### ATEN«√O ATEN«√O ATENC√O ATEN«√O ATEN«√O ############################################
+######################################### ATEN√á√ÉO ATEN√á√ÉO ATENC√ÉO ATEN√á√ÉO ATEN√á√ÉO ############################################
 ##############################################################################################################################
 
-#Aqui existem alguns valores de "ociosidade" prÈ estabelecidos, deixe descomentada apenas a linha que se refere ao valor desejado.
+#Aqui existem alguns valores de "ociosidade" pr√© estabelecidos, deixe descomentada apenas a linha que se refere ao valor desejado.
 
 echo 2 minutos = 555555555555555555555555 > tempo_limite.log
 #echo 3 minutos = 555555555555555555555555555555555555 > tempo_limite.log
@@ -85,21 +93,21 @@ echo 2 minutos = 555555555555555555555555 > tempo_limite.log
 #echo 10 minutos = 555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555 > tempo_limite.log
 
 
-#Caso deseje outro valor de ociosidade crie um n˙mero composto por caractÈres cinco "5" que contenha a quantidade de cincos segundos do tempo desejado.
+#Caso deseje outro valor de ociosidade crie um n√∫mero composto por caract√©res cinco "5" que contenha a quantidade de cincos segundos do tempo desejado.
 
 ##############################################################################################################################
 ##############################################################################################################################
 
-#LÍ e guarda o tempo de ociosidade estabelecido pelo usu·rio para ativar o protetor de tela.
+#L√™ e guarda o tempo de ociosidade estabelecido pelo usu√°rio para ativar o protetor de tela.
 
-#Teste para saber se a ociosidade atingiu o valor m·ximo, escolhido pelo usu·rio.
+#Teste para saber se a ociosidade atingiu o valor m√°ximo, escolhido pelo usu√°rio.
 
 tempo_limite=$( cat tempo_limite.log | awk '{print $4}' )
 
 teste_ociosidade_disparo()
 {
 
-#Aqui o sed possui um par‚metro para juntar todas as linhas do log de tempo ocioso. Isso È necess·rio pois o log È escrito linha por linha.
+#Aqui o sed possui um par√¢metro para juntar todas as linhas do log de tempo ocioso. Isso √© necess√°rio pois o log √© escrito linha por linha.
 tempo_ocioso=$( cat tempo_ocioso.log | sed ':a;$!N;s/\n//;ta;' )
 
 
@@ -114,8 +122,8 @@ fi
 }
 
 
-#Chama as funÁıes do programa e fica atualizando o estado de ociosidade.
-#… aqui que o script ficar· o resto do tempo.
+#Chama as fun√ß√µes do programa e fica atualizando o estado de ociosidade.
+#√â aqui que o script ficar√° o resto do tempo.
 
 while true
 do
@@ -126,16 +134,16 @@ done
 
 ######################################################################################################################################
 ######################################################################################################################################
-############################################INFORMA«’ES INFORMA«’ES INFORMA«’ES INFORMA«’ES INFORMA«’ES###############################
+############################################INFORMA√á√ïES INFORMA√á√ïES INFORMA√á√ïES INFORMA√á√ïES INFORMA√á√ïES###############################
 ######################################################################################################################################
 #
-#Este script n„o faz uso de "novos" softwares, ou implementa novas tecnologias ao GNU/Linux.
-#O que ele faz È apenas fazer uso de ferramentas j· desenvolvidas anteriormente por outros programadores/colaboradores.
-#Se vocÍ encontrar qualquer erro, por favor, verifique se o mesmo n„o est· relacionado aos softwares de terceiros.
-#Este escript foi testado no Slackware GNU/Linux vers„o 14 em um desktop e funcionou normalmente.
-#Se vocÍ quiser contactar-me, fique livre para isso.
-#Seguem as versıes dos softwares utilizados originalmente neste script, n„o h· garantias de que o mesmo funcione com outras versıes.
-#As versıes de software apresentadas aqui n„o se referem aos requisitos para execuÁ„o deste script, servem apenas para conferÍncia.
+#Este script n√£o faz uso de "novos" softwares, ou implementa novas tecnologias ao GNU/Linux.
+#O que ele faz √© apenas fazer uso de ferramentas j√° desenvolvidas anteriormente por outros programadores/colaboradores.
+#Se voc√™ encontrar qualquer erro, por favor, verifique se o mesmo n√£o est√° relacionado aos softwares de terceiros.
+#Este escript foi testado no Slackware GNU/Linux vers√£o 14 em um desktop e funcionou normalmente.
+#Se voc√™ quiser contactar-me, fique livre para isso.
+#Seguem as vers√µes dos softwares utilizados originalmente neste script, n√£o h√° garantias de que o mesmo funcione com outras vers√µes.
+#As vers√µes de software apresentadas aqui n√£o se referem aos requisitos para execu√ß√£o deste script, servem apenas para confer√™ncia.
 
 #rm: rm (GNU coreutils) 8.19
 #Copyright (C) 2012 Free Software Foundation, Inc.
@@ -157,7 +165,7 @@ done
 #License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 #This is free software: you are free to change and redistribute it.
 #There is NO WARRANTY, to the extent permitted by law.
-#Escrito por Torbjˆrn Granlund e Richard M. Stallman.
+#Escrito por Torbj√∂rn Granlund e Richard M. Stallman.
 
 #wc: wc (GNU coreutils) 8.19
 #Copyright (C) 2012 Free Software Foundation, Inc.
