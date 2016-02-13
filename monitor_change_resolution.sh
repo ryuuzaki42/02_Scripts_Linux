@@ -22,7 +22,7 @@
 #
 # Script: altera resolução do seu monitor e projetor
 #
-# Última atualização: 05/01/2016
+# Última atualização: 13/05/2016
 #
 echo -e "\nEste script troca a resolução do monitor (LVDS1), saída VGA (VGA1), saída HDMI (HDMI1)\n"
 
@@ -58,14 +58,10 @@ else
 fi
 echo -e "\t--------------------------\n"
 
-if $LVDS1_status; then
- if $VGA1_status; then
-  echo "1 - LVDS1 1366x768 on, VGA1 off"
-  echo "2 - LVDS1 1366x768 off, VGA1 1440x900 on"
-  echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
-  echo "0 - Outras opções"
- fi
-fi
+echo "1 - LVDS1 1366x768 on, VGA1 off"
+echo "2 - LVDS1 1366x768 off, VGA1 1440x900 on"
+echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
+echo "0 - Outras opções"
 echo "s - Apenas terminar"
 echo -e "\nQual opções deseja?"
 
