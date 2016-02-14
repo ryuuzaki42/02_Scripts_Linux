@@ -20,9 +20,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Download de imagem (manga) apartir do link da primeira imagem
+# Script: Download de imagem (manga) a partir do link da primeira imagem
 #
-# Última atualização: 05/01/2016
+# Última atualização: 13/02/2016
 #
 # Set color by tput:
 green=`tput setaf 2`
@@ -42,7 +42,7 @@ reset=`tput sgr0`
 
 echo -e "${magenta}\n\t# Wellcome to DlManga #"
 echo -e " ${green}\t\t\t\t\t* $0 -h for help/example"
-echo -e "\t${reset}# This Script will download imagens from <folder(s)> link(s) sequentially #"
+echo -e "\t${reset}# This Script will download images from <folder(s)> link(s) sequentially #"
 
 if [ "$1" == "-h" ]; then
     echo -e "\n\t${green}Example:\n"
@@ -62,24 +62,24 @@ echo -e "\nCreate a folder <download destination>:?"
 echo -n "Yes <Hit Enter> | ${green}No <type n>${reset}: "
 read newFolder
 
-echo -e "\nLink of Manga (imagens):"
+echo -e "\nLink of Manga (imagens) [${green}only the link without the chapter number or image number]${reset}:"
 read link
 
 echo -en "\nChapter to start the download: "
 read chapterStart
 
-echo -en "\nChapter to end the download <if you will download just one chapter, hit enter>: "
+echo -en "\nChapter to end the download <${green}if you will download just one chapter, hit enter${reset}>: "
 read chapterEnd
 
 echo -e "\nThe name of the imagens begin is different from 00 (00, 01 etc)?"
-echo -n "No <Hit Enter> | Yes <Type de difference, like Q_c00, type: Q_c>: "
+echo -n "No <Hit Enter> | Yes <${green}Type de difference, like Q_c00, type: Q_c${reset}>: "
 read startImage
 
 echo -e "\nSome imagens can have one difference in the middle (e.g., 00a.jpg e 01a.jpg)"
 echo -n "Possible difference (most common is a) <will try download with this difference in the last part>: "
 read smallDifference
 
-echo -e "\nHow many imagens have try to be the end the chapter? (Default is 3 times)"
+echo -e "\n${green}How many images have try to be the end the chapter${reset}? (Default is 3 times)"
 echo -n "In another words, count not found before go to next chapter: "
 read tryTimesSequentiallyDl
 
@@ -87,22 +87,22 @@ if [ "$tryTimesSequentiallyDl" == '' ]; then
     tryTimesSequentiallyDl=3
 fi
 
-if [ "$link" == '' ]; then
-    echo -e "\n\nThe link <site> is empty (link: \"$link\").\n\n"
+if [ "$link$zeroChapter" == '' ]; then
+    echo -e "\n\nERRROR\n${magenta}The link <site> is empty (link: \"$link$zeroChapter\").${reset}\n\n"
     exit 1
 fi
 
 if [ "$chapterStart" == '' ]; then
-    echo -e "\n\nThe chapter to start is empty (Start: \"$chapterStart\", End: \"$chapterEnd\").\n\n"
+    echo -e "\n\nERRROR\n${magenta}The chapter to start is empty (Start: \"$chapterStart\", End: \"$chapterEnd\").${reset}\n\n"
     exit 1
 fi
 
 if [ "$chapterEnd" == '' ]; then
-    $chapterEnd=$chapterStart
+    chapterEnd=$chapterStart
 fi
 
 if [ $chapterStart -gt $chapterEnd ]; then
-    echo -e "\n\nThe chapter to start the download is great than chapter end (Start: \"$chapterStart\", End: \"$chapterEnd\").\n\n"
+    echo -e "\n\nERRROR\n${magenta}The chapter to start the download is great than chapter end (Start: \"$chapterStart\", End: \"$chapterEnd\").${reset}\n\n"
     exit 1
 fi
 
@@ -113,20 +113,25 @@ fi
 
 ((chapterEnd+=1)) # to download the last chapter in the while condition
 wgetReturn=1 # for status about the download by wget
-imagensNotDownload='' # imagens not downloaded
+imagensNotDownload='' # images not downloaded
 
-countImages=1000 # count of imagens, not for real, just for try
+countImages=1000 # count of images, not for real, just for try
 
 echo -e "\n\t${magenta}#Please wait until the download finished#\n"
 
 while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal to end chapter to download
     i=0 # first image
     emptyFolder=1 # just tell the chapter folder is empty
+    zeroChapter=0 # just for zero to 0 to 9, like (0<1,2,3,4,5,6,7,8,9>)
     zero=0 # just for zero to 0 to 9, like (0<1,2,3,4,5,6,7,8,9>)
     goTONext=0 # to not try more and go for next chapter, when get equal tryTimesSequentiallyDl not found
     notZip=0 # just for not zip one incomplete chapter folder
 
-    echo -e "${green}Downloading the chapter $chapterStart ($link$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>).\n${reset}" # Current chapter download
+    if [ $chapterStart -gt 9 ]; then
+            zeroChapter= # more then 9 (10, 11 etc) don't need zero in begin
+    fi
+
+    echo -e "${green}Downloading the chapter $chapterStart ($link$zeroChapter$chapterStart/$startImage<00|?end?>.<jpg|png|jpeg>).\n${reset}" # Current chapter download
 
     if [ "$nameManga" != '' ]; then # Get the name of chapter folder
         nameFolder="$nameManga $chapterStart"
@@ -134,7 +139,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
         nameFolder="$chapterStart"
     fi
 
-    mkdir "$nameFolder" 2> /dev/null # create the folder to current chapter in download
+    mkdir "$nameFolder" 2> /dev/null # Create the folder to current chapter in download
     mkdirReturn=$?
 
     if [ $mkdirReturn -eq 1 ]; then
@@ -147,7 +152,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
     fi
 
     cd "$nameFolder" # move to download folder
-    while [ $i -lt $countImages ]; do # try download all imagens, if has not foud tree times, go to next chapter
+    while [ $i -lt $countImages ]; do # try download all images, if has not found tree times, go to next chapter
         dualPage=0 # just for print the status of download dual page
 
         if [ $i -gt 9 ]; then
@@ -157,15 +162,15 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
         # C => Chapter, I => Image, S => Status
         echo -n " # C: $chapterStart # P: $zero$i # S: " # print the try download right now
 
-        wget -q $link$chapterStart/$startImage$zero$i.jpg # try download with extension jpg
+        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i.jpg # try download with extension jpg
         wgetReturn=$? # Get result from the command wget
  
         if [ $wgetReturn != 0 ]; then # if fail try with another extension
-            wget -q $link$chapterStart/$zero$i.png
+            wget -q $link$zeroChapter$chapterStart/$zero$i.png
             wgetReturn=$?
 
             if [ $wgetReturn != 0 ]; then
-                wget -q $link$chapterStart/$startImage$zero$i.jpeg
+                wget -q $link$zeroChapter$chapterStart/$startImage$zero$i.jpeg
                 wgetReturn=$?
 
                 if [ $wgetReturn != 0 ]; then # if fail try with dual page
@@ -179,30 +184,30 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
                         zero2=$zero
                     fi
 
-                    wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2.jpg
+                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpg
                     wgetReturn=$?
 
                     if [ $wgetReturn != 0 ]; then
-                        wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2.png
+                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.png
                         wgetReturn=$?
 
                         if [ $wgetReturn != 0 ]; then
-                            wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2.jpeg
+                            wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpeg
                             wgetReturn=$?
 
                             if [ "$smallDifference" != '' ]; then # Start "Try download with the smallDifference"
 
                                 if [ $wgetReturn != 0 ]; then # if fail try with another extension
                                     dualPage=0
-                                    wget -q $link$chapterStart/$startImage$zero$i$smallDifference.jpg # try download with extension jpg
+                                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpg # try download with extension jpg
                                     wgetReturn=$?
 
                                     if [ $wgetReturn != 0 ]; then # if fail try with another extension
-                                        wget -q $link$chapterStart/$startImage$zero$i$smallDifference.png
+                                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.png
                                         wgetReturn=$?
 
                                         if [ $wgetReturn != 0 ]; then
-                                            wget -q $link$chapterStart/$startImage$zero$i$smallDifference.jpeg
+                                            wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpeg
                                             wgetReturn=$?
 
                                             if [ $wgetReturn != 0 ]; then # if fail try with dual page
@@ -216,15 +221,15 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
                                                     zero2=$zero
                                                 fi
 
-                                                wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg
+                                                wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg
                                                 wgetReturn=$?
 
                                                 if [ $wgetReturn != 0 ]; then
-                                                    wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png
+                                                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png
                                                     wgetReturn=$?
 
                                                     if [ $wgetReturn != 0 ]; then
-                                                        wget -q $link$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg
+                                                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg
                                                         wgetReturn=$?
                                                     fi
                                                 fi
@@ -251,7 +256,10 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
 
             if [ $goTONext -eq 1 ]; then
                 i2=$i
-                ((i2-=2))
+                ((i2-=1))
+                if [ $dualPage -eq 1 ]; then
+                    ((i2-=1))
+                fi
                 echo -e "\n Better look for the image [$startImage$i2].\n" # When not found only one image in the middle
                 goTONext=0
                 if [ "$imagensNotDownload" == '' ]; then
@@ -264,8 +272,12 @@ while [ $chapterStart -lt $chapterEnd ]; do # run until chapter download equal t
             if [ $goTONext -eq 2 ]; then
                 i2=$i
                 i3=$i
-                ((i2-=2))
-                ((i3-=1))
+                ((i2-=1))
+                ((i3-=2))
+                if [ $dualPage -eq 1 ]; then
+                    ((i2-=1))
+                    ((i3-=1))
+                fi
                 echo -e "\n Better look for this imagens [$startImage$i2 and $startImage$i3].\n" # When not found only two image in the middle
                 goTONext=0
                 if [ "$imagensNotDownload" == '' ]; then
@@ -312,4 +324,3 @@ if [ "$newFolder" != "n" ]; then
     cd .. # move to folder up, leaving the manga folder
 fi
 echo -e "Download finished. \"Long life and prosperity\"\n\n"
-#
