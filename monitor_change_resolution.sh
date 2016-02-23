@@ -22,7 +22,7 @@
 #
 # Script: altera resolução do seu monitor e projetor
 #
-# Última atualização: 13/05/2016
+# Última atualização: 24/02/2016
 #
 echo -e "\nEste script troca a resolução do monitor (LVDS1), saída VGA (VGA1), saída HDMI (HDMI1)\n"
 
@@ -34,7 +34,8 @@ HDMI1_status=false # Implementação no futuro
 echo -e "\t--------------------------"
 echo -e "\t# Modulos # Estado       #"
 #echo -e "\t--------------------------"
-if xrandr | grep "LVDS1 connected"  > /dev/null; then
+if xrandr | grep "LVDS1 connected"  > /dev/null
+then
   echo -e "\t# LVDS1   # Conectado    #"
   LVDS1_status=true
 else
@@ -42,7 +43,8 @@ else
 fi
 
 #echo -e "\t--------------------------"
-if xrandr | grep "VGA1 connected"  > /dev/null; then
+if xrandr | grep "VGA1 connected"  > /dev/null
+then
   echo -e "\t# VGA1    # Conectado    #"
   VGA1_status=true
 else
@@ -50,7 +52,8 @@ else
 fi
 
 #echo -e "\t--------------------------"
-if xrandr | grep "HDMI1 connected"  > /dev/null; then
+if xrandr | grep "HDMI1 connected"  > /dev/null
+then
   echo -e "\t# HDMI1   # Conectado    #"
   HDMI1_status=true
 else
@@ -68,33 +71,30 @@ echo -e "\nQual opções deseja?"
 read resposta
 
 flag=0
-if [ $resposta = s ]
-  then
+if [ $resposta = s ]; then
   exit 0
-elif [ $resposta = 1 ]
-  then
+elif [ $resposta = 1 ]; then
   xrandr --output VGA1 --off
   xrandr --output LVDS1 --mode 1366x768 --primary
   flag=1
-  elif [ $resposta = 2 ]
-  then
+  elif [ $resposta = 2 ]; then
   xrandr --output LVDS1 --off
   xrandr --output VGA1 --mode 1440x900
   flag=1
-elif [ $resposta = 3 ]
-  then
+elif [ $resposta = 3 ]; then
   xrandr --output LVDS1 --mode 1024x768
   xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
   flag=1
 fi
 
-if [ $flag -eq 1 ]
-  then
+if [ $flag -eq 1 ]; then
   exit 0
 fi
 
-if $LVDS1_status; then
- if $VGA1_status; then
+if $LVDS1_status
+then
+ if $VGA1_status
+ then
   echo "4 - LVDS1 left-of VGA1"
   echo "5 - LVDS1 right-of VGA1"
   echo "6 - LVDS1 1366x768"
@@ -107,23 +107,18 @@ echo -e "\nQual opções deseja?"
 
 read resposta
 
-if [ $resposta = s ]
-  then
+if [ $resposta = s ]; then
   exit 0
-elif [ $resposta = 4 ]
-  then
+elif [ $resposta = 4 ]; then
   xrandr --output LVDS1 --left-of VGA1
 elif [ $resposta = 5 ]
   then
   xrandr --output LVDS1 --right-of VGA1
-elif [ $resposta = 6 ]
-  then
+elif [ $resposta = 6 ]; then
   xrandr --output LVDS1 --mode 1366x768
-elif [ $resposta = 7 ]
-  then
+elif [ $resposta = 7 ]; then
   xrandr --output VGA1 --mode 1440x900
-elif [ $resposta = 8 ]
-  then
+elif [ $resposta = 8 ]; then
   xrandr --output LVDS1 --mode 1024x768
   xrandr --output VGA1 --mode 1024x768
   xrandr --output LVDS1 --mode 1366x768 --primary

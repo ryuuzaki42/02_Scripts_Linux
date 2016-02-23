@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link da primeira imagem
 #
-# Última atualização: 13/02/2016
+# Última atualização: 24/02/2016
 #
 # Set color by tput:
 green=`tput setaf 2`
@@ -324,3 +324,4 @@ if [ "$newFolder" != "n" ]; then
     cd .. # move to folder up, leaving the manga folder
 fi
 echo -e "Download finished. \"Long life and prosperity\"\n\n"
+#

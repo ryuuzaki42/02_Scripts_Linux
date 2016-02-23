@@ -22,11 +22,10 @@
 #
 # Script: converter texto utf8 to iso-8859 e virse-versa
 #
-# Última atualização: 05/01/2016
+# Última atualização: 24/02/2016
 #
 
-if [ $# -ne 1 ] # verifica se foi passado o nome do arquivo
-then
+if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
    echo -e "\n$(basename "$0"): Erro de operandos"
    echo "Use $0 nome.extensão (do arquivo que deseja converter)"
    echo -e "Tente $0 --help para mais detalhes\n"
@@ -45,8 +44,7 @@ case "$1" in #Case virifica chamada da função ajuda
 esac
 
 nomeArquivo="$1" #Nome do arquivo $1
-if [ -e "$nomeArquivo" ]
-then
+if [ -e "$nomeArquivo" ]; then
   echo >/dev/null
 else
   echo -e "\nArquivo passado por parâmetro não existe\nTente \"$0 --help\" ou com outro arquivo\n"
@@ -75,8 +73,7 @@ else #Em último caso, se o arquivo não for de nenhuma das duas codificações,
   exit 1
 fi
 
-if [ $? -eq 1 ]
-then
+if [ $? -eq 1 ]; then
   echo -e "Erro encontrado na execução do iconv\nTente $0 --help"
   exit 1
 else
@@ -85,8 +82,7 @@ else
   echo -e "\nSobrescrever o arquivo original?"
   echo "(y)es, (n)o"
   read resposta
-  if [ $resposta = y ]
-  then
+  if [ $resposta = y ]; then
     mv "$nomeArquivo2"_"$codFinal.$extensao" "$nomeArquivo"
     echo -e "O arquivo foi sobrescrito\n Fim do script\n"
   else

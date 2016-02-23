@@ -24,11 +24,10 @@
 # de kwrite abir este script) testa o tamanho do arquivo antes de abrir no kwrite
 # arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
-# Última atualização: 05/01/2016
+# Última atualização: 24/02/2016
 #
 
-if [ $# -eq 0 ] # verifica se foi passado o nome do arquivo
-then
+if [ $# -eq 0 ]; then # verifica se foi passado o nome do arquivo
   echo -e "\nApenas abrindo o kwrite...\n"
   kwrite
 else
@@ -46,8 +45,7 @@ else
   echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
 
   # Teste de tamanho do arquivo é maior que 100 MiB
-  if [ "$FILE_SIZE_MB" -gt 100 ] # = 100 MiB (mebibyte)
-  then
+  if [ "$FILE_SIZE_MB" -gt 100 ]; then # = 100 MiB (mebibyte)
     TMPFILE=`mktemp`
     echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE
     echo -n "Abra com outro programa." >> $TMPFILE
