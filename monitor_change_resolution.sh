@@ -38,7 +38,7 @@ if xrandr | grep "LVDS1 connected"  > /dev/null
 then
   echo -e "\t# LVDS1   # Conectado    #"
   LVDS1_status=true
-  LVDS1_resolution=`xrandr  | grep \+ | cut -d' ' -f4 | grep -v +0 | sed -n "1p"`
+  LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 else
   echo -e "\t# LVDS1   # Desconectado #"
 fi
@@ -47,7 +47,7 @@ if xrandr | grep "VGA1 connected"  > /dev/null
 then
   echo -e "\t# VGA1    # Conectado    #"
   VGA1_status=true
-  VGA1_resolution=`xrandr  | grep \+ | cut -d' ' -f4 | grep -v +0 | sed -n "2p"`
+  VGA1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
 else
   echo -e "\t# VGA1    # Desconectado #"
 fi
@@ -56,7 +56,7 @@ if xrandr | grep "HDMI1 connected"  > /dev/null
 then
   echo -e "\t# HDMI1   # Conectado    #"
   HDMI1_status=true
-  HDMI1_resolution=`xrandr  | grep \+ | cut -d' ' -f4 | grep -v +0 | sed -n "3p"`
+  HDMI1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "3p"`
 else
   echo -e "\t# HDMI1   # Desconectado #"
 fi
@@ -104,8 +104,8 @@ if [ $VGA1_status == true ]; then
   echo -e "\n4 - LVDS1 left-of VGA1"
   echo "5 - LVDS1 right-of VGA1"
   echo "6 - LVDS1 $LVDS1_resolution"
-  echo "7 - VGA1 1440x900"
-  echo "8 - LVDS1 $LVDS1_resolution left-of VGA1 1440x900"
+  echo "7 - VGA1 $VGA1_resolution"
+  echo "8 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution"
   echo "s - Apenas terminar"
   echo -e "\nQual opções deseja?"
   read resposta
