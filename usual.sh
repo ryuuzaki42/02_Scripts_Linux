@@ -22,9 +22,9 @@
 #
 # Script: funções comum do dia-a-dia
 #
-# Última atualização: 05/01/2016
+# Última atualização: 26/02/2016
 #
-#echo $# Quantidade de parâmetros
+
 echo -e "\nscript para coisas do dia a dia\n"
 
 if [ $# -lt 1 ]
@@ -35,7 +35,6 @@ if [ $# -lt 1 ]
 fi
 
 opcao="$1"
-
 if [ $opcao = opcao ]; then
     echo "data     - atualizar a data"
     echo "vpnc     - conectar na vpn da USP"
@@ -47,9 +46,9 @@ if [ $opcao = opcao ]; then
 elif [ $opcao = data ]; then
     echo -e "\tatualizar a data\n"
     su - root -c 'ntpdate -u -b ntp1.ptb.de'
-elif [ $opcao = vpnc ]; then # irá precisar do vpnc
+elif [ $opcao = vpnc ]; then # Irá precisar do vpnc
     echo -e "\tconectar na vpn da USP\n"
-    su - root -c 'vpnc /etc/vpnc/usp.conf'
+    su - root -c 'vpnc /etc/vpnc/vpnuspnet.conf'
 elif [ $opcao = vpnd ]; then
     echo -e "\tdesconectar da vpn\n"
     su - root -c 'vpnc-disconnect'
@@ -57,7 +56,7 @@ elif [ $opcao = swap ]; then
     echo -e "\tswap off e on\n"
     su - root -c 'swapoff -a
     swapon -a'
-elif [ $opcao = pdf ]; then # irá precisar do Ghostscript
+elif [ $opcao = pdf ]; then # Irá precisar do Ghostscript
     echo -e "\tReduzir pdf\n"
     if [ $# -eq 1 ]; then
         echo -e "Erro, utilize $0 pdf arquivo.pdf\n"
@@ -81,9 +80,9 @@ elif [ $opcao = slack-up ]; then
         slackpkg update
         USEBL=1 slackpkg upgrade-all'
     fi
-elif [ $opcao = tempo ]; then
-    # Para mudar a cidade vá até http://wttr.in/ e digite a cidade na URL
+elif [ $opcao = tempo ]; then # Para mudar a cidade vá até http://wttr.in/ e digite a cidade na URL
     wget -qO - http://wttr.in/S%C3%A3o%20Carlos
 else
     echo -e "erro, opção invalida!\n"
 fi
+#
