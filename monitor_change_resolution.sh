@@ -79,24 +79,19 @@ else
   exit 1
 fi
 
-flag=0
 if [ $resposta = s ]; then
   exit 0
 elif [ $resposta = 1 ]; then
-  xrandr --output VGA1 --off
   xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-  flag=1
+  xrandr --output VGA1 --off
+  exit 0
 elif [ $resposta = 2 ]; then
-  xrandr --output LVDS1 --off
   xrandr --output VGA1 --mode $VGA1_resolution
-  flag=1
+  xrandr --output LVDS1 --off
+  exit 0
 elif [ $resposta = 3 ]; then
   xrandr --output LVDS1 --mode 1024x768
   xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
-  flag=1
-fi
-
-if [ $flag -eq 1 ]; then
   exit 0
 fi
 
