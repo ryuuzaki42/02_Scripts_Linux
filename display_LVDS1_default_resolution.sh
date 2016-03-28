@@ -25,7 +25,6 @@
 #
 # Última atualização: 28/03/2016
 #
-
 echo -e "\nEste script setar o monitor (LVDS1) para resolução padrão, caso a saída VGA1 ou HDMI1 seja removida \n"
 
 LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
@@ -33,10 +32,10 @@ LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 while [[ true ]]; do
 	value=$(xrandr | grep "*+")
 	if [ "$value" == '' ]; then
-  		xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-  		xrandr --output VGA1 --off
-  		xrandr --output HDMI1 --off
-  	fi
+		xrandr --output LVDS1 --mode $LVDS1_resolution --primary
+		xrandr --output VGA1 --off
+		xrandr --output HDMI1 --off
+	fi
 	sleep 1s
 done
 #

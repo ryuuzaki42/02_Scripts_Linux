@@ -20,12 +20,16 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: no Kde, bloquear a sessão e suspender
+# Script: no KDE e XFCE, bloquea a sessão e suspender
 #
-# Última atualização: 05/01/2016
+# Última atualização: 28/03/2016
 #
 # Dica: Adicione um atalho para este script
 #
-qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+if [ $DESKTOP_SESSION == "xfce" ]; then
+	xflock4
+elif [ $DESKTOP_SESSION == "kde" ]; then
+	qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+fi
 dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend
-#
+#end
