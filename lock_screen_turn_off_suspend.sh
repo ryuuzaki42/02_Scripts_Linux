@@ -26,9 +26,17 @@
 #
 # Dica: Adicione um atalho para este script
 #
-if [ $DESKTOP_SESSION == "xfce" ]; then
+if [ "$XDG_CURRENT_DESKTOP" = "" ]; then
+    desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
+else
+    desktopGUI=$XDG_CURRENT_DESKTOP
+fi
+
+desktopGUI=${desktopGUI,,}  # convert to lower case
+
+if [ $desktopGUI == "xfce" ]; then
     xflock4
-elif [ $DESKTOP_SESSION == "kde" ]; then
+elif [ $desktopGUI == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
 fi
 dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend
