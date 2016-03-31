@@ -36,100 +36,100 @@ echo -e "\t# Modulos # Estado       #"
 
 if xrandr | grep "LVDS1 connected"  > /dev/null
 then
-  echo -e "\t# LVDS1   # Conectado    #"
-  LVDS1_status=true
-  LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
+    echo -e "\t# LVDS1   # Conectado    #"
+    LVDS1_status=true
+    LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 else
-  echo -e "\t# LVDS1   # Desconectado #"
+    echo -e "\t# LVDS1   # Desconectado #"
 fi
 
 if xrandr | grep "VGA1 connected"  > /dev/null
 then
-  echo -e "\t# VGA1    # Conectado    #"
-  VGA1_status=true
-  VGA1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
+    echo -e "\t# VGA1    # Conectado    #"
+    VGA1_status=true
+    VGA1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
 else
-  echo -e "\t# VGA1    # Desconectado #"
+    echo -e "\t# VGA1    # Desconectado #"
 fi
 
 if xrandr | grep "HDMI1 connected"  > /dev/null
 then
-  echo -e "\t# HDMI1   # Conectado    #"
-  HDMI1_status=true
-  HDMI1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "3p"`
+    echo -e "\t# HDMI1   # Conectado    #"
+    HDMI1_status=true
+    HDMI1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "3p"`
 else
-  echo -e "\t# HDMI1   # Desconectado #"
+    echo -e "\t# HDMI1   # Desconectado #"
 fi
 echo -e "\t--------------------------\n"
 
 if [ $VGA1_status == true ]; then
-  echo "1 - LVDS1 $LVDS1_resolution on, VGA1 off"
-  echo "2 - LVDS1 off, VGA1 $VGA1_resolution on"
-  echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
-  echo "0 - Outras opções"
-  echo "s - Apenas terminar"
-  echo -e "\nQual opções deseja?"
-  read resposta
-  if [ "$resposta" == '' ]; then
-    echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas.\n"
-    exit 1
-  fi
+    echo "1 - LVDS1 $LVDS1_resolution on, VGA1 off"
+    echo "2 - LVDS1 off, VGA1 $VGA1_resolution on"
+    echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
+    echo "0 - Outras opções"
+    echo "s - Apenas terminar"
+    echo -e "\nQual opções deseja?"
+    read resposta
+    if [ "$resposta" == '' ]; then
+      echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas.\n"
+      exit 1
+    fi
 else
-  echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1.\n"
-  exit 1
+    echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1.\n"
+    exit 1
 fi
 
 if [ $resposta = s ]; then
-  exit 0
+    exit 0
 elif [ $resposta = 1 ]; then
-  xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-  xrandr --output VGA1 --off
-  exit 0
+    xrandr --output LVDS1 --mode $LVDS1_resolution --primary
+    xrandr --output VGA1 --off
+    exit 0
 elif [ $resposta = 2 ]; then
-  xrandr --output VGA1 --mode $VGA1_resolution
-  xrandr --output LVDS1 --off
-  exit 0
+    xrandr --output VGA1 --mode $VGA1_resolution
+    xrandr --output LVDS1 --off
+    exit 0
 elif [ $resposta = 3 ]; then
-  xrandr --output LVDS1 --mode 1024x768
-  xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
-  exit 0
+    xrandr --output LVDS1 --mode 1024x768
+    xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
+    exit 0
 fi
 
 if [ $VGA1_status == true ]; then
-  echo -e "\n4 - LVDS1 left-of VGA1"
-  echo "5 - LVDS1 right-of VGA1"
-  echo "6 - LVDS1 $LVDS1_resolution"
-  echo "7 - VGA1 $VGA1_resolution"
-  echo "8 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution"
-  echo "s - Apenas terminar"
-  echo -e "\nQual opções deseja?"
-  read resposta
-  if [ "$resposta" == '' ]; then
-    echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas.\n"
-    exit 1
-  fi
+    echo -e "\n4 - LVDS1 left-of VGA1"
+    echo "5 - LVDS1 right-of VGA1"
+    echo "6 - LVDS1 $LVDS1_resolution"
+    echo "7 - VGA1 $VGA1_resolution"
+    echo "8 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution"
+    echo "s - Apenas terminar"
+    echo -e "\nQual opções deseja?"
+    read resposta
+    if [ "$resposta" == '' ]; then
+        echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas.\n"
+        exit 1
+    fi
 else
-  echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1.\n"
-  exit 0
+    echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1.\n"
+    exit 0
 fi
 
 if [ $resposta = s ]; then
-  exit 0
+    exit 0
 elif [ $resposta = 4 ]; then
-  xrandr --output LVDS1 --left-of VGA1
+    xrandr --output LVDS1 --left-of VGA1
 elif [ $resposta = 5 ]; then
-  xrandr --output LVDS1 --right-of VGA1
+    xrandr --output LVDS1 --right-of VGA1
 elif [ $resposta = 6 ]; then
-  xrandr --output LVDS1 --mode $LVDS1_resolution
+    xrandr --output LVDS1 --mode $LVDS1_resolution
 elif [ $resposta = 7 ]; then
-  xrandr --output VGA1 --mode $VGA1_resolution
+    xrandr --output VGA1 --mode $VGA1_resolution
 elif [ $resposta = 8 ]; then
-  xrandr --output LVDS1 --mode 1024x768
-  xrandr --output VGA1 --mode 1024x768
-  xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-  xrandr --output LVDS1 --left-of VGA1
-  xrandr --output VGA1 --mode $VGA1_resolution
+    xrandr --output LVDS1 --mode 1024x768
+    xrandr --output VGA1 --mode 1024x768
+    xrandr --output LVDS1 --mode $LVDS1_resolution --primary
+    xrandr --output LVDS1 --left-of VGA1
+    xrandr --output VGA1 --mode $VGA1_resolution
 else
-  exit 0
+    exit 0
 fi
 #

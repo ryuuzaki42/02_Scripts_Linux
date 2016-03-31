@@ -27,9 +27,9 @@
 # Dica: Adicione um atalho para este script
 #
 if [ $DESKTOP_SESSION == "xfce" ]; then
-	xflock4
+    xflock4
 elif [ $DESKTOP_SESSION == "kde" ]; then
-	qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
 fi
 dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend
 #end

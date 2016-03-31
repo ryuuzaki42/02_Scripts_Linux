@@ -28,31 +28,31 @@
 #
 
 if [ $# -eq 0 ]; then # verifica se foi passado o nome do arquivo
-  echo -e "\nApenas abrindo o kwrite...\n"
-  kwrite
+    echo -e "\nApenas abrindo o kwrite...\n"
+    kwrite
 else
-  # Nome do arquivo que irá abrir
-  FILENAME="$1"
+    # Nome do arquivo que irá abrir
+    FILENAME="$1"
 
-  # Caminho da pasta
-  PWD=`pwd`
+    # Caminho da pasta
+    PWD=`pwd`
 
-  # Tamanho deste aquivo em kibibyte
-  FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1`
+    # Tamanho deste aquivo em kibibyte
+    FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1`
 
-  # Apenas para teste
-  echo -e "\nArquivo: $FILENAME"
-  echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
+    # Apenas para teste
+    echo -e "\nArquivo: $FILENAME"
+    echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
 
-  # Teste de tamanho do arquivo é maior que 100 MiB
-  if [ "$FILE_SIZE_MB" -gt 100 ]; then # = 100 MiB (mebibyte)
-    TMPFILE=`mktemp`
-    echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE
-    echo -n "Abra com outro programa." >> $TMPFILE
-    kwrite $TMPFILE
-    rm $TMPFILE
-  else
-    kwrite "$FILENAME"
-  fi
+    # Teste de tamanho do arquivo é maior que 100 MiB
+    if [ "$FILE_SIZE_MB" -gt 100 ]; then # = 100 MiB (mebibyte)
+        TMPFILE=`mktemp`
+        echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE
+        echo -n "Abra com outro programa." >> $TMPFILE
+        kwrite $TMPFILE
+        rm $TMPFILE
+    else
+        kwrite "$FILENAME"
+    fi
 fi
 #

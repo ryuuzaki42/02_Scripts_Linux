@@ -29,21 +29,21 @@
 i=1
 
 while [ $i -lt 5 ]; do
-  if [ $i == 1 ]; then
-    notify-send "Pomodoro $i" "Start to work (25 min)"
-  else
-    notify-send "Pomodoro $i" "Back to work (25 min)"
-  fi
-  sleep 3 1500
+    if [ $i == 1 ]; then
+      notify-send "Pomodoro $i" "Start to work (25 min)"
+    else
+      notify-send "Pomodoro $i" "Back to work (25 min)"
+    fi
+    sleep 3 1500
 
-  if [ $i != 4 ]; then
-    notify-send "Pomodoro $i" "short break (5 min)"
-    sleep 4 300
-  else
-    notify-send "Pomodoro $i" "long break (15 min)"
-    sleep 8 900
-  fi
-  i=$((i+1))
+    if [ $i != 4 ]; then
+      notify-send "Pomodoro $i" "short break (5 min)"
+      sleep 4 300
+    else
+      notify-send "Pomodoro $i" "long break (15 min)"
+      sleep 8 900
+    fi
+    i=$((i+1))
 done
 
 i=$((i-1))

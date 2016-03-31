@@ -25,9 +25,9 @@
 #
 operador=`kdialog --yesno "Você está certo disso?"`
 if [ $? = "0" ]; then
-kdialog --msgbox "Parabéns você foi em sim"
+    kdialog --msgbox "Parabéns você foi em sim"
 else
-kdialog --msgbox "Hoo que pena" 
+    kdialog --msgbox "Hoo que pena" 
 fi
 kdialog --passivepopup "Ok, você venceu!" 3
 exit 0

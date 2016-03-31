@@ -25,8 +25,8 @@
 # Última atualização: 05/01/2016
 #
 if [ $LOGNAME = root ]; then
- echo -e "\n\terro, execute como usuário comum!\n"
- exit 0
+    echo -e "\n\terro, execute como usuário comum!\n"
+    exit 0
 fi
 
 echo -e "\nEste script(para slackware) vai Limpar o seu sistema e Desligar!"
@@ -49,22 +49,22 @@ echo -e "Deseja continuar \n   (y)es \n   (n)o!"
 read RESPOSTA
 
 if [ $RESPOSTA = y ]; then
-  bleachbit -c --preset
-  echo -e "\n\nTerminou de executar o bleachbit como usuário comum logado"
-  echo "Agora digite a senha do usuário root para executar como ele <root>:"
-  su - root -c "bleachbit -c --preset
-  rm -rfv /tmp/*
-  rm -rfv /tmp/.*
-  rm -rfv /var/tmp/*
-  rm -rfv /var/tmp/.*
-  echo \"REBOOT!\"
-  rm /home/'$LOGNAME'/.bash_history
-  rm /root/.bash_history
-  halt"
+    bleachbit -c --preset
+    echo -e "\n\nTerminou de executar o bleachbit como usuário comum logado"
+    echo "Agora digite a senha do usuário root para executar como ele <root>:"
+    su - root -c "bleachbit -c --preset
+    rm -rfv /tmp/*
+    rm -rfv /tmp/.*
+    rm -rfv /var/tmp/*
+    rm -rfv /var/tmp/.*
+    echo \"REBOOT!\"
+    rm /home/'$LOGNAME'/.bash_history
+    rm /root/.bash_history
+    halt"
 fi
 
 if [ $RESPOSTA = n ]; then
-  echo -e "fim do script \n"
-  exit 0
+    echo -e "fim do script \n"
+    exit 0
 fi
 #

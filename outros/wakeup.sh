@@ -55,23 +55,20 @@ read minutolevantar
 #horalevantar=$1
 #minutolevantar=$2
 
-if [ $horainicial -gt $horalevantar ] #hora inicial maior que hora de levantar
-then
-  horafinal=$((24 - $horainicial + $horalevantar))
+if [ $horainicial -gt $horalevantar ]; then #hora inicial maior que hora de levantar
+    horafinal=$((24 - $horainicial + $horalevantar))
 else
- horafinal=$(($horalevantar - $horainicial))
+    horafinal=$(($horalevantar - $horainicial))
 fi
 
-if [ $minutoinicial -gt $minutolevantar ] #minuto inicial maior que o final
-then
-  minutofinal=$((60 - $minutoinicial + $minutolevantar))
-  horafinal=$(($horafinal-1))
+if [ $minutoinicial -gt $minutolevantar ]; then #minuto inicial maior que o final
+    minutofinal=$((60 - $minutoinicial + $minutolevantar))
+    horafinal=$(($horafinal-1))
 else
-   minutofinal=$(($minutolevantar - $minutoinicial))
+    minutofinal=$(($minutolevantar - $minutoinicial))
 fi
 
-if [ $horafinal -eq -1 ]
-then
+if [ $horafinal -eq -1 ]; then
     horafinal=23
 fi
 
@@ -80,8 +77,7 @@ echo "#Inicial== $horainicial:$minutoinicial"
 echo "#Levantar= $horalevantar:$minutolevantar"
 echo -e "#Final==== $horafinal:$minutofinal\n"
 
-if [ $horafinal != 0 ]
-then
+if [ $horafinal != 0 ]; then
    echo -e "Podera dormir $horafinal:$minutofinal, bom descanso :)\n"
    sleep "$horafinal"h "$minutofinal"m
 else

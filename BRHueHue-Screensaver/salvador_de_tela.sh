@@ -6,7 +6,6 @@
 #Contato: carlinhosedubr@gmail.com
 #Script/Programa protetor de tela BRHueHue Screensaver
 
-
 #Aqui você coloca o caminho do arquivo de vídeo que quer que seja reproduzido ao "salvar a tela".
 #O Mplayer recebe o parâmetro -fs para abrir em tela cheia, o -loop 0 para ficar em loop infinito e -x -y para setar a resolução do teu monitor.
 #Configure-o de acordo com a necessidade.

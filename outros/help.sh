@@ -25,31 +25,31 @@
 # Última atualização: 05/01/2016
 #
 start () {
-  clear
-  echo "start"
+    clear
+    echo "start"
 }
 
 stop () {
-  clear
-  echo "stop"
+    clear
+    echo "stop"
 }
 
 ajuda () {
-  echo "########################"
-  echo " isto e o help"
-  }
+    echo "########################"
+    echo "Isto e o help"
+}
 
 case "$1" in
 'start')
-  start
-  ;;
+    start
+    ;;
 'stop')
-  stop
-  ;;
+    stop
+    ;;
 '--help')
-  ajuda
-  ;;
+    ajuda
+    ;;
 *)
-  echo "usage $0 start|stop|--help"
+    echo "usage $0 start|stop|--help"
 esac
 #

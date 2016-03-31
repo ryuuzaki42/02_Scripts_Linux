@@ -47,28 +47,25 @@ cat teclado.log mouse.log | wc -l > log_anterior.log
 #Se a quantidade de linhas total atualmente for maior que a quantidade de linhas do momento de escrita do primeiro log, significa que NÃO há ociosidade.
 
 #FUNÇÃO: teste_ociosidade
-teste_ociosidade()
-{
+teste_ociosidade() {
 
-#Pega o log de um estado anterior para usar em um teste com o log do estado atual.
-log_anterior=$( cat log_anterior.log )
-
-
-#Pega o log do estado atual do mouse e teclado para comparar com um log do estado anterior. Se for igual, significa que HÁ ociosidade.
-log_atual=$( cat mouse.log teclado.log | wc -l )
+    #Pega o log de um estado anterior para usar em um teste com o log do estado atual.
+    log_anterior=$( cat log_anterior.log )
 
 
-#Teste para verificar se o usuário está ocioso, se o número de log é igual ao log anterior.
+    #Pega o log do estado atual do mouse e teclado para comparar com um log do estado anterior. Se for igual, significa que HÁ ociosidade.
+    log_atual=$( cat mouse.log teclado.log | wc -l )
 
-if [ "$log_anterior" -eq "$log_atual" ]
-then
-sleep 5
-echo "5" >> tempo_ocioso.log
-else
-sleep 5
-echo $log_atual > log_anterior.log
-echo > tempo_ocioso.log
-fi
+
+    #Teste para verificar se o usuário está ocioso, se o número de log é igual ao log anterior.
+    if [ "$log_anterior" -eq "$log_atual" ]; then
+        sleep 5
+        echo "5" >> tempo_ocioso.log
+        else
+        sleep 5
+        echo $log_atual > log_anterior.log
+        echo > tempo_ocioso.log
+    fi
 }
 
                               ######################################################################
@@ -104,32 +101,25 @@ echo 2 minutos = 555555555555555555555555 > tempo_limite.log
 
 tempo_limite=$( cat tempo_limite.log | awk '{print $4}' )
 
-teste_ociosidade_disparo()
-{
+teste_ociosidade_disparo() {
 
-#Aqui o sed possui um parâmetro para juntar todas as linhas do log de tempo ocioso. Isso é necessário pois o log é escrito linha por linha.
-tempo_ocioso=$( cat tempo_ocioso.log | sed ':a;$!N;s/\n//;ta;' )
+    #Aqui o sed possui um parâmetro para juntar todas as linhas do log de tempo ocioso. Isso é necessário pois o log é escrito linha por linha.
+    tempo_ocioso=$( cat tempo_ocioso.log | sed ':a;$!N;s/\n//;ta;' )
 
-
-if [ "$tempo_ocioso" = "$tempo_limite" ]
-then
-echo > tempo_ocioso.log
-./salvador_de_tela.sh
-else
-echo ""
-fi
-
+    if [ "$tempo_ocioso" = "$tempo_limite" ]; then
+        echo > tempo_ocioso.log
+        ./salvador_de_tela.sh
+    else
+        echo ""
+    fi
 }
 
 
 #Chama as funções do programa e fica atualizando o estado de ociosidade.
 #É aqui que o script ficará o resto do tempo.
 
-while true
-do
-
-teste_ociosidade && teste_ociosidade_disparo
-
+while true; do
+    teste_ociosidade && teste_ociosidade_disparo
 done
 
 ######################################################################################################################################

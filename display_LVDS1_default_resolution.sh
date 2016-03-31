@@ -30,12 +30,12 @@ echo -e "\nEste script setar o monitor (LVDS1) para resolução padrão, caso a 
 LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 
 while [[ true ]]; do
-	value=$(xrandr | grep "*+")
-	if [ "$value" == '' ]; then
-		xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-		xrandr --output VGA1 --off
-		xrandr --output HDMI1 --off
-	fi
-	sleep 1s
+    value=$(xrandr | grep "*+")
+    if [ "$value" == '' ]; then
+        xrandr --output LVDS1 --mode $LVDS1_resolution --primary
+        xrandr --output VGA1 --off
+        xrandr --output HDMI1 --off
+    fi
+    sleep 1s
 done
 #
