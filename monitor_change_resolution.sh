@@ -34,20 +34,20 @@ HDMI1_status=false # Implementação no futuro
 echo -e "\t--------------------------"
 echo -e "\t# Modulos # Estado       #"
 
-if xrandr | grep "LVDS1 connected"  > /dev/null
+if xrandr | grep "LVDS1 connected" > /dev/null
 then
     echo -e "\t# LVDS1   # Conectado    #"
     LVDS1_status=true
-    LVDS1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
+    LVDS1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 else
     echo -e "\t# LVDS1   # Desconectado #"
 fi
 
-if xrandr | grep "VGA1 connected"  > /dev/null
+if xrandr | grep "VGA1 connected" > /dev/null
 then
     echo -e "\t# VGA1    # Conectado    #"
     VGA1_status=true
-    VGA1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
+    VGA1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
 else
     echo -e "\t# VGA1    # Desconectado #"
 fi

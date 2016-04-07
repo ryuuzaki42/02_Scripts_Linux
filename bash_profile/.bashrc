@@ -21,7 +21,7 @@
 #
 # Descrição: Arquivo-bashrc para carregar configuração do bash
 #
-# Última atualização: 04/04/2016
+# Última atualização: 07/04/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -39,11 +39,13 @@ else # user normal
     screenfetch -E
 fi
 #
-alias ls='ls --color'
-alias sl='ls --color'
 alias ext='exit'
 alias exot='exit'
 alias exti='exit'
+alias ls='ls --color'
+alias sl='ls --color'
+alias nano='nano -c'
 alias grep='grep --color=auto'
+alias lcd="cd $1 ; ls -l -a -v -h --color"
 export HISTCONTROL=ignoreboth:ignoredups:erasedups
 #
