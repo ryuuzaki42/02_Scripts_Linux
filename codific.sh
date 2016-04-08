@@ -22,7 +22,7 @@
 #
 # Script: converter texto utf8 to iso-8859 e virse-versa
 #
-# Última atualização: 24/02/2016
+# Última atualização: 07/04/2016
 #
 
 if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
@@ -44,9 +44,7 @@ case "$1" in #Case virifica chamada da função ajuda
 esac
 
 nomeArquivo="$1" #Nome do arquivo $1
-if [ -e "$nomeArquivo" ]; then
-    echo >/dev/null
-else
+if [ ! -e "$nomeArquivo" ]; then
     echo -e "\nArquivo passado por parâmetro não existe\nTente \"$0 --help\" ou com outro arquivo\n"
     exit 1
 fi
@@ -58,13 +56,11 @@ tamanhoNome2=$((tamanhoNome - 3)) #Tamanho do nome do arquivo sem a extensão pr
 extensao=$(echo "$nomeArquivo" | cut -c$tamanhoNome2-) # extensao do arquivo
 codificacao=$(cat "$nomeArquivo" | file -) #Verifica codificação do arquivo
 
-if echo $codificacao | grep ISO-8859  > /dev/null #verifica codificacao do arquivo é iso-8859
-then
+if echo $codificacao | grep -q ISO-8859; then #verifica codificacao do arquivo é iso-8859
     codInicial=iso-8859
     codFinal=utf-8
     iconv -f iso-8859-1 -t utf-8 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" #converter arquivo para utf-8 salvando em outro arquivo
-elif echo $codificacao | grep UTF-8 > /dev/null #verifica codificacao do arquivo é iso-8859
-then
+elif echo $codificacao | grep -q UTF-8; then #verifica codificacao do arquivo é iso-8859
     codInicial=utf-8
     codFinal=iso-8859 
     iconv -f utf-8 -t iso-8859-1 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" #converter arquivo para iso-8859 salvando em outro arquivo

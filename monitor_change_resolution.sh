@@ -22,7 +22,7 @@
 #
 # Script: altera resolução do seu monitor e projetor
 #
-# Última atualização: 24/02/2016
+# Última atualização: 07/04/2016
 #
 echo -e "\nEste script troca a resolução do monitor (LVDS1), saída VGA (VGA1), saída HDMI (HDMI1)\n"
 
@@ -34,8 +34,7 @@ HDMI1_status=false # Implementação no futuro
 echo -e "\t--------------------------"
 echo -e "\t# Modulos # Estado       #"
 
-if xrandr | grep "LVDS1 connected" > /dev/null
-then
+if xrandr | grep -q "LVDS1 connected"; then
     echo -e "\t# LVDS1   # Conectado    #"
     LVDS1_status=true
     LVDS1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
@@ -43,8 +42,7 @@ else
     echo -e "\t# LVDS1   # Desconectado #"
 fi
 
-if xrandr | grep "VGA1 connected" > /dev/null
-then
+if xrandr | grep -q "VGA1 connected"; then
     echo -e "\t# VGA1    # Conectado    #"
     VGA1_status=true
     VGA1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
@@ -52,8 +50,7 @@ else
     echo -e "\t# VGA1    # Desconectado #"
 fi
 
-if xrandr | grep "HDMI1 connected"  > /dev/null
-then
+if xrandr | grep -q "HDMI1 connected"; then
     echo -e "\t# HDMI1   # Conectado    #"
     HDMI1_status=true
     HDMI1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "3p"`

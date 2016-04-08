@@ -24,7 +24,6 @@
 #
 # Última atualização: 26/02/2016
 #
-
 echo -e "\nscript para coisas do dia a dia\n"
 
 if [ $# -lt 1 ]

@@ -32,7 +32,7 @@ else
     desktopGUI=$XDG_CURRENT_DESKTOP
 fi
 
-desktopGUI=${desktopGUI,,}  # convert to lower case
+desktopGUI=${desktopGUI,,} # convert to lower case
 
 if [ $desktopGUI == "xfce" ]; then
     xflock4
@@ -40,4 +40,4 @@ elif [ $desktopGUI == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
 fi
 xset dpms force off
-#end
+#

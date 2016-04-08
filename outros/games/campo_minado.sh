@@ -43,7 +43,6 @@
 #
 # COPYRIGHT: Este programa é GPL.
 #
-
 clear
 echo "        *** CAMPO MINADO ***      "
 
@@ -233,3 +232,4 @@ do
       break;
    fi
 done
+#

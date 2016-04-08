@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-#
 # Bash Labirinto versão 1.0
 # Este jogo foi baseado no gerador aleatório de labirintos de
 # Joe Wingbermuehle localizado em  https://raw.github.com/joewing/maze/master/maze.sh
@@ -14,7 +13,6 @@
 # http://lendscripts.blogspot.com.br/2012/10/licao-3-programacao-de-jogos-em.html
 #
 # Escrito por Fernando Bolonhezi Giannasi - junho/2013
-
 
 # Validar versão do Bash
 if [ $(echo $BASH_VERSION | awk -F"." '{ if ( ($1 >= 4) ) {print "0"} else {print "1"}}') -ne "0" ]; then
@@ -30,26 +28,26 @@ while true; do
 clear
 echo -e '\033[01;33m'
 cat << EOF
-	Labirinto Bash versão 1.0
+    Labirinto Bash versão 1.0
 *******************************************
 Ajude a bolota vermelha a encontrar a saída
 *******************************************
 Comandos:
-	a -> move a esquerda
-	s -> move abaixo
-	d -> move a direita
-	w -> move acima
-	q -> sai do jogo (a qualquer momento)
+    a -> move a esquerda
+    s -> move abaixo
+    d -> move a direita
+    w -> move acima
+    q -> sai do jogo (a qualquer momento)
 *******************************************
 EOF
 tput sgr0
 echo -e '\033[01;31m'
 cat << EOF
 Selecione a dificuldade desejada:
-	1-) Fácil
-	2-) Médio
-	3-) Difícil
-	q-) Sair do Jogo
+    1-) Fácil
+    2-) Médio
+    3-) Difícil
+    q-) Sair do Jogo
 EOF
 tput sgr0
 read -n1 -s DIFICULDADE
@@ -162,17 +160,17 @@ GANHA="$(echo $MAZE_HEIGHT - 3 | bc)" # Detecta local da saída
 
 #Funções para imprimir labirinto e a bola
 function cat_maze() {
-  echo -ne '\033[01;32m'
-  cat $TMP/maze.txt
-  tput sgr0
-  echo "Coordenada X = $x"
-  echo "Coordenada Y = $y"
-  echo "Movimentos = $counter"
+    echo -ne '\033[01;32m'
+    cat $TMP/maze.txt
+    tput sgr0
+    echo "Coordenada X = $x"
+    echo "Coordenada Y = $y"
+    echo "Movimentos = $counter"
 }
 
 function cat_ball() {
-  echo -ne '\033[01;31m'O
-  tput sgr0
+    echo -ne '\033[01;31m'O
+    tput sgr0
 }
 
 # Posição inicial
@@ -184,73 +182,75 @@ cat_ball
 
 #Movimentação da bola:
 while [ $INPUT != "q" ];do
-  read  -n1 -s INPUT
+    read  -n1 -s INPUT
 
-  if [ $INPUT = a ];then
-    let "m = x"
-    let "n = y + 1"
-    C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
-    if [ -z $C ];then
-      let "x = x - 1"
-    else
-      let counter--
+    if [ $INPUT = a ];then
+        let "m = x"
+        let "n = y + 1"
+        C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
+        if [ -z $C ];then
+            let "x = x - 1"
+        else
+            let counter--
+        fi
     fi
-  fi
 
-  if [ $INPUT = d ];then
-    let "m = x + 2"
-    let "n = y + 1"
-    C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
-    if [ -z $C ];then
-      let "x = x + 1"
-    else
-      let counter--
+    if [ $INPUT = d ];then
+        let "m = x + 2"
+        let "n = y + 1"
+        C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
+        if [ -z $C ];then
+            let "x = x + 1"
+        else
+            let counter--
+        fi
     fi
-  fi
 
-  if [ $INPUT = w ];then
-    let "m = x + 1"
-    let "n = y"
-    C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
-    if [ -z $C ];then
-      let "y = y - 1"
-    else
-      let counter--
+    if [ $INPUT = w ];then
+        let "m = x + 1"
+        let "n = y"
+        C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
+        if [ -z $C ];then
+            let "y = y - 1"
+        else
+        let counter--
+        fi
     fi
-  fi
 
-  if [ $INPUT = s ];then
-    let "m = x + 1"
-    let "n = y + 2"
-    C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
-    if [ -z $C ];then
-      let "y = y + 1"
-    else
-      let counter--
+    if [ $INPUT = s ];then
+        let "m = x + 1"
+        let "n = y + 2"
+        C=$(cat $TMP/maze.txt | sed -n "$n"p 2> /dev/null | cut -c"$m" 2> /dev/null) # Se C não estiver vazio então atingimos uma parede
+        if [ -z $C ];then
+            let "y = y + 1"
+        else
+            let counter--
+        fi
     fi
-  fi
 
-  if [ "$y" -lt "0" ]; then y=0; let counter--; fi
+    if [ "$y" -lt "0" ]; then
+        y=0; let counter--
+    fi
 
 # Checa se ganhou
-  if [ "$y" -gt "$GANHA" ]; then
-    tput cup $(echo $MAZE_HEIGHT + 3 | bc) 0
-    echo -e '\033[01;31m'
-    echo GANHOU!!!!!
-    echo "Score: $counter movimentos realizados"
-    tput sgr0
-    echo 
-    setterm -cursor on
-    exit 0
-  fi
+    if [ "$y" -gt "$GANHA" ]; then
+        tput cup $(echo $MAZE_HEIGHT + 3 | bc) 0
+        echo -e '\033[01;31m'
+        echo GANHOU!!!!!
+        echo "Score: $counter movimentos realizados"
+        tput sgr0
+        echo
+        setterm -cursor on
+        exit 0
+    fi
 
-  clear
-  cat_maze
+    clear
+    cat_maze
 
-# Imprime a bola na nova localização
-  tput cup $y $x
-  cat_ball
-  let counter++
+    # Imprime a bola na nova localização
+    tput cup $y $x
+    cat_ball
+    let counter++
 done
 clear
-# Fim do script
+#
