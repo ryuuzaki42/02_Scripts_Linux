@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-# lightson+.sh
+# lightsOnPlusJb.sh
 
+# Changed in 08/04/2016 by João Batista (joao42lbatista@gmail.com)
+
+# based on
 # Copyright (c) 2014 devkral at web de
-# url: https://github.com/devkral/lightson+
+# url: https://github.com/devkral/lightsonplus
 
-#based on
+# that was based on
 # Copyright (c) 2011 iye.cba at gmail com
 # url: https://github.com/iye/lightsOn
 # This script is licensed under GNU GPL version 2.0 or above
@@ -15,34 +18,35 @@
 # can also be detected.
 # One of {x, k, gnome-}screensaver must be installed.
 
-# HOW TO USE: 
-# "./lightson+.sh 120 &" will Check every 120 seconds if Mplayer,
-# VLC, Firefox or Chromium are fullscreen and delay screensaver and Power Management if so.
+# HOW TO USE:
+# "./lightsOnPlusJb.sh 120 &" will Check every 120 seconds if Mplayer,
+# VLC, Firefox, Chromium or Chrome are fullscreen and delay screensaver and Power Management if so.
 # You want the number of seconds to be ~10 seconds less than the time it takes
 # your screensaver or Power Management to activate.
 # If you don't pass an argument, the checks are done every 50 seconds.
 
-
 # Select the programs to be checked
-mplayer_detection=0
+mplayer_detection=1
 vlc_detection=1
 totem_detection=1
 firefox_flash_detection=1
 chromium_flash_detection=1
-chrome_app_detection=0
+chrome_app_detection=1
 chrome_app_name="Netflix"
 webkit_flash_detection=1 # untested
 html5_detection=1 # actually check whether your browser is toggled fullscreen, so simply surfing in fullscreen triggers screensaver inhibition as well (work in progress)
 steam_detection=0 # untested
 minitube_detection=0  # untested
+popcorn_detection=1
+chrome_flash_detection=1
 
 defaultdelay=50
 
 # realdisp
 realdisp=`echo "$DISPLAY" | cut -d. -f1`
 
-inhibitfile="/tmp/lightsoninhibit-$UID-$realdisp"
-pidfile="/tmp/lightson-$UID-$realdisp.pid"
+inhibitfile="/tmp/lightsOnPlusJbinhibit-$UID-$realdisp"
+pidfile="/tmp/lightsOnPlusJb-$UID-$realdisp.pid"
 
 # YOU SHOULD NOT NEED TO MODIFY ANYTHING BELOW THIS LINE
 
@@ -86,24 +90,24 @@ while read id; do
     displays="$displays $id"
 done< <(xvinfo | sed -n 's/^screen #\([0-9]\+\)$/\1/p')
 
-# Detect screensaver been used
-# pgrep cuts off last character
-if [ `pgrep -c xscreensave` -ge 1 ]; then
+# Detect screensaver been used # pgrep cuts off last character
+if [ `pgrep -l xscreensave | grep -wc xscreensave` -ge 1 ]; then
     screensaver="xscreensaver"
-elif [ `pgrep -c gnome-screensave` -ge 1 ] || [ `pgrep -c gnome-shel` -ge 1 ] ;then
+elif [ `pgrep -l gnome-screensave | grep -wc gnome-screensave` -ge 1 ] || [ `pgrep -l gnome-shel | grep -wc gnome-shel` -ge 1 ] ;then
     screensaver="gnome-screensaver"
 # make sure that the command exists then execute
-elif [ `which gnome-screensaver-command 2> /dev/null;echo $?` -eq 0 ] &&
-    [ `"$(which gnome-screensaver-command)" -q  | grep -c active` -ge 1 ]; then
+elif [ `which gnome-screensaver-command 2> /dev/null;echo $?` -eq 0 ] && [ `"$(which gnome-screensaver-command)" -q  | grep -c active` -ge 1 ]; then
     screensaver="gnome-screensaver"
-elif [ `pgrep -c mate-screensave` -ge 1 ]; then
+elif [ `pgrep -l mate-screensave | grep -wc mate-screensave` -ge 1 ]; then
     screensaver="mate-screensaver"
-elif [ `pgrep -c kscreensave` -ge 1 ]; then
+elif [ `pgrep -l kscreensave | grep -wc kscreensave` -ge 1 ]; then
     screensaver="kscreensaver"
-elif [ `pgrep -c xautoloc` -ge 1 ]; then
+elif [ `pgrep -l xautoloc | grep -wc xautoloc` -ge 1 ]; then
     screensaver="xautolock"
-elif [ `pgrep -c cinnamon-screen` -ge 1 ]; then
+elif [ `pgrep -l cinnamon-screen | grep -wc cinnamon-screen` -ge 1 ]; then
     screensaver="cinnamon-screensaver"
+elif ls /usr/lib*/kde4/libexec/kscreenlocker* | grep -qc kscreenlocker*; then
+    screensaver=kscreensaver
 else
     screensaver=""
     echo "No screensaver detected"
@@ -117,11 +121,11 @@ checkFullscreen() {
         activ_win_id=`DISPLAY=$realdisp.${display} xprop -root _NET_ACTIVE_WINDOW`
         activ_win_id=${activ_win_id##*# }
         activ_win_id=${activ_win_id:0:9} # eliminate potentially trailing spaces
-        
+
         top_win_id=`DISPLAY=$realdisp.${display} xprop -root _NET_CLIENT_LIST_STACKING`
         top_win_id=${activ_win_id##*, }
         top_win_id=${top_win_id:0:9} # eliminate potentially trailing spaces
-        
+
         # Check if Active Window (the foremost window) is in fullscreen state
         if [ ${#activ_win_id} -eq 9 ]; then
             isActivWinFullscreen=`DISPLAY=$realdisp.${display} xprop -id $activ_win_id | grep _NET_WM_STATE_FULLSCREEN`
@@ -133,7 +137,7 @@ checkFullscreen() {
         else
             isTopWinFullscreen=""
         fi
-        
+
         if [[ "$isActivWinFullscreen" = *NET_WM_STATE_FULLSCREEN* ]] || [[ "$isTopWinFullscreen" = *NET_WM_STATE_FULLSCREEN* ]]; then
             isAppRunning
             var=$?
@@ -149,81 +153,93 @@ checkFullscreen() {
 isAppRunning() {
     # Get title of active window
     activ_win_title=`xprop -id $activ_win_id | grep "WM_CLASS(STRING)"` # I used WM_NAME(STRING) before, WM_CLASS is more accurate.
-    
+
     if [ $firefox_flash_detection == 1 ]; then
         if [[ "$activ_win_title" = *unknown* || "$activ_win_title" = *plugin-container* ]]; then
             # Check if plugin-container process is running, pgrep cuts off last character
-            [ `pgrep -c plugin-containe` -ge 1 ] && return 1
+            [ `ps faux | grep -c plugin-containe` -ge 2 ] && return 1
         fi
     fi
-    
+
     if [ $chromium_flash_detection == 1 ]; then
-        if [ "$activ_win_title" = *chrom* ]; then
+        if [ "$activ_win_title" = *hromium* ]; then
             # Check if Chromium Flash process is running
-            [ `pgrep -c "chromium --type=ppapi"` -ge 1 ] && return 1
+            [ `ps faux | grep -c "(c|C)hromium --type=ppapi"` -ge 2 ] && return 1
         fi
-        # Check if Chrome flash is running (by cadejager)
-        [ `pgrep -c "chrome --type=ppapi"` -ge 1 ] && return 1
     fi
-    
+
+    if [ $chrome_flash_detection == 1 ]; then
+        if [ "$activ_win_title" = *hrome* ]; then
+            # Check if Chrome flash is running (by cadejager)
+            [ `ps faux | grep -c "(c|C)hrome --type=ppapi"` -ge 2 ] && return 1
+        fi
+    fi
+
     if [ $webkit_flash_detection == 1 ]; then
         if [ "$activ_win_title" = *WebKitPluginProcess* ]; then
             # Check if WebKit Flash process is running
-            [ `pgrep -c ".*WebKitPluginProcess.*flashp.*"` -ge 1 ] && (log "isAppRunning(): webkit flash fullscreen detected" && return 1)
+            [ `ps faux | grep -c ".*WebKitPluginProcess.*flashp.*"` -ge 2 ] && (log "isAppRunning(): webkit flash fullscreen detected" && return 1)
         fi
     fi
-    
+
     if [ $html5_detection == 1 ]; then
         # chromium changed spelling  (c/C possible)
-        if [[ "$activ_win_title" = *Chrome* || "$activ_win_title" = *hromium* || "$activ_win_title" = *Firefox* || "$activ_win_title" = *epiphany* || "$activ_win_title" = *opera* ]]; then
-            # check if firefox or chromium is running.
-            [[ `pgrep -c chrome` -ge 1 || `pgrep -c firefox` -ge 1 || `pgrep -c chromium` -ge 1  || `pgrep -c opera` -ge 1 || `pgrep -c epiphany` -ge 1 ]] && return 1
-                fi
+        if [[ "$activ_win_title" = *hrome* || "$activ_win_title" = *hromium* || "$activ_win_title" = *irefox* || "$activ_win_title" = *epiphany* || "$activ_win_title" = *opera* ]]; then
+            # check if they are running.
+            [[ `ps faux | grep -Ec "chrome|firefox|chromium|opera|epiphany"` -ge 2 ]] && return 1
         fi
-        
-        if [ $chrome_app_detection == 1 ]; then
-            if [ ! -z $chrome_app_name && "$activ_win_title" = *$chrome_app_name* ]; then
-                # check if google chrome is runnig in app mode
-                [ `pgrep -fc "chrome --app"` -ge 1 ] && return 1
-            fi
+    fi
+
+    if [ $chrome_app_detection == 1 ]; then
+        if [[ ! -z $chrome_app_name && "$activ_win_title" = *$chrome_app_name* ]]; then
+            # check if google chrome is runnig in app mode
+            [ `ps faux | grep -c "chrome --app"` -ge 2 ] && return 1
         fi
-        
-        if [ $mplayer_detection == 1 ]; then
-            if [[ "$activ_win_title" = *mplayer* || "$activ_win_title" = *MPlayer* ]]; then
-                # check if mplayer is running.
-                [ `prep -c mplayer` -ge 1 ] && return 1
-            fi
+    fi
+
+    if [ $mplayer_detection == 1 ]; then
+        if [[ "$activ_win_title" = *mplayer* || "$activ_win_title" = *MPlayer* ]]; then
+            # check if mplayer is running.
+            [ `ps faux | grep -c mplayer` -ge 2 ] && return 1
         fi
-        
-        if [ $vlc_detection == 1 ]; then
-            if [ "$activ_win_title" = *vlc* || "$activ_win_title" = *VLC* ]; then
-                # check if vlc is running.
-                [ `pgrep -c vlc` -ge 1 ] && return 1
-            fi
+    fi
+
+    if [ $vlc_detection == 1 ]; then
+        if [[ "$activ_win_title" = *vlc* || "$activ_win_title" = *VLC* ]]; then
+            # check if vlc is running.
+            [ `ps faux | grep -c vlc` -ge 2 ] && return 1
         fi
-        
-        if [ $totem_detection == 1 ]; then
-            if [ "$activ_win_title" = *totem* ]; then
-                # check if totem is running.
-                [ `pgrep -c totem` -ge 1 ] && return 1
-            fi
+    fi
+
+    if [ $totem_detection == 1 ]; then
+        if [ "$activ_win_title" = *totem* ]; then
+            # check if totem is running.
+            [ `ps faux | grep -c totem` -ge 2 ] && return 1
         fi
-        
-        if [ $steam_detection == 1 ]; then
-            if [ "$activ_win_title" = *steam* ]; then
-                # check if steam is running.
-                [ `pgrep -c steam` -ge 1 ] && return 1
-            fi
+    fi
+
+    if [ $steam_detection == 1 ]; then
+        if [ "$activ_win_title" = *steam* ]; then
+            # check if steam is running.
+            [ `ps faux | grep -c steam` -ge 2 ] && return 1
         fi
-        
-        if [ $minitube_detection == 1 ]; then
-            if [ "$activ_win_title" = *minitube* ]; then
-                # check if minitube is running.
-                [ `pgrep -c minitube` -ge 1 ] && (log "isAppRunning(): minitube fullscreen detected" && return 1)
-            fi
+    fi
+
+    if [ $minitube_detection == 1 ]; then
+        if [ "$activ_win_title" = *minitube* ]; then
+            # check if minitube is running.
+            [ `ps faux | grep -c minitube` -ge 2 ] && (log "isAppRunning(): minitube fullscreen detected" && return 1)
         fi
-        
-        return 0
+    fi
+
+    if [ $popcorn_detection == 1 ]; then
+        # check if Popcorn is running.
+        if [ `xprop -id $activ_win_id | grep -cE "(p|P)opcorn"` -ge 2 ]; then
+            return 1
+        fi
+    fi
+
+    return 0
 }
 
 delayScreensaver() {
@@ -312,15 +328,14 @@ while [ ! -z $1 ]; do
         * )
             echo "Ivalid argument. See -h, --help for more information." && exit 1;;
     esac
-    
     # arguments must be always passed in tuples
     shift 2
 done
 
-echo "start lightsOn mainloop"
 while true; do
     [ -f "$inhibitfile" ] && delayScreensaver || checkFullscreen
     sleep $delay
 done
 
 exit 0
+#
