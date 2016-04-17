@@ -21,31 +21,41 @@
 #
 # Descrição: Arquivo-bashrc para carregar configuração do bash
 #
-# Última atualização: 07/04/2016
+# Última atualização: 17/04/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
+export HISTCONTROL=ignoreboth:ignoredups:erasedups
 # tput setaf * ==> 0 black,1 red,2 green,3 yellow,4 blue,5 magenta,6 cyan,7 white
 if [ $(id -u) -eq 0 ]; then # root
     PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# "
 else # user normal
     PS1="\\[$(tput setaf 7)\\][\\u@\\h:\\w]$ "
     echo '*** Bem-vindo ao host '`hostname`' ***'
-    /usr/games/fortune
+    # /usr/games/fortune # Uncomment if you want to use the fortune
     echo '  *v* '
     echo ' /(_)\ '
     echo '  ^ ^ '
     date '+Date:%F %A %B Day:%j Week:%W'
-    screenfetch -E
+    # screenfetch -E # Uncomment if you want to use the screenfetch
 fi
+#
+alias nano='nano -c'
 #
 alias ext='exit'
 alias exot='exit'
 alias exti='exit'
-alias ls='ls --color'
-alias sl='ls --color'
-alias nano='nano -c'
+#
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
+#
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+alias sl='ls --color=auto'
 alias lcd="cd $1 ; ls -l -a -v -h --color"
-export HISTCONTROL=ignoreboth:ignoredups:erasedups
+#
+alias rm="rm -iv --preserve-root"
 #
