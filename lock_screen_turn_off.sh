@@ -20,9 +20,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: no KDE e XFCE, bloquea a sessão e deliga a tela
+# Script: no KDE e XFCE, bloqueia a sessão e deliga a tela
 #
-# Última atualização: 28/03/2016
+# Última atualização: 29/04/2016
 #
 # Dica: Adicione um atalho para este script
 #

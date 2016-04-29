@@ -20,14 +20,15 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: apenas para inicar o unclutter para esconder o cursor do mouse
-# a cada 1 segundo sem nenhum evento de movimento no mouse
+# Script: apenas para iniciar o unclutter, que esconder o cursor do mouse
+# a cada 1 segundo se nenhum evento de movimento no mouse for detectado
 #
 # Última atualização: 17/04/2016
 #
-# Dica: Adicione script para adicionar com o sistema
+# Dica: Adicione este script para iniciar com o sistema
 #
 # altere o valor de -idle, que é o tempo (em segundos) de espera
 # por um evento no mouse para o que lhe for melhor
+#
 unclutter -idle 1 -root &
 #

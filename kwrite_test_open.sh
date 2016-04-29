@@ -20,13 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: pela interface (clique com o mouse, aletre no kde-menu para em vez
-# de kwrite abir este script) testa o tamanho do arquivo antes de abrir no kwrite
+# Script: testa o tamanho do arquivo antes de abrir no kwrite
 # arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
-# Última atualização: 24/02/2016
+# Dica: pela interface do KDE-menu altere para o icone do kwrite abrir este script
+# em vez de executar o "kwrite"
 #
-
+# Última atualização: 29/04/2016
+#
 if [ $# -eq 0 ]; then # verifica se foi passado o nome do arquivo
     echo -e "\nApenas abrindo o kwrite...\n"
     kwrite

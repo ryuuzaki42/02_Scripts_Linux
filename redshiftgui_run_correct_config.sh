@@ -20,13 +20,13 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Script para a execução do aplicativo redshiftgui (https://github.com/maoserr/redshiftgui)
+# Script: para a execução do aplicativo redshiftgui (https://github.com/maoserr/redshiftgui)
 # e ao terminar corrigir o erro de escrita no arquivos de configuração (~/.redshiftgrc)
 #
-# Última atualização: 29/03/2016
+# Última atualização: 29/04/2016
 #
-# Dica: Substituir um atalho do aplicativo por este script
+# Dica: Substituir no atalho do aplicativo para executar em vez de redshiftgui
 #
- /usr/bin/redshiftgui
- sed -i "s/|/,/g" ~/.redshiftgrc
- #
+/usr/bin/redshiftgui
+sed -i "s/|/,/g" ~/.redshiftgrc
+#
