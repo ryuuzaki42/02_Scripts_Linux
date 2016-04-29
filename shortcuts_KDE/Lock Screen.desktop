@@ -1,0 +1,13 @@
+[Desktop Entry]
+Comment=
+Exec=/usr/bin/lock_screen_turn_off.sh
+Icon=preferences-desktop-wallpaper
+Name=Lock Screen
+NoDisplay=false
+Path[$e]=
+StartupNotify=false
+Terminal=0
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
