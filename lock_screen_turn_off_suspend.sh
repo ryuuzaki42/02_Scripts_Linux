@@ -32,12 +32,12 @@ else
     desktopGUI=$XDG_CURRENT_DESKTOP
 fi
 
-desktopGUI=${desktopGUI,,}  # convert to lower case
+desktopGUI=${desktopGUI,,} # Convert to lower case
 
 if [ $desktopGUI == "xfce" ]; then
-    xflock4
+    xflock4 # Lock the session in the XFCE
 elif [ $desktopGUI == "kde" ]; then
-    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 fi
-dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend
-#end
+dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
+#

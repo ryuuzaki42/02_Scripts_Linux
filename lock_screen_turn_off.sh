@@ -32,12 +32,13 @@ else
     desktopGUI=$XDG_CURRENT_DESKTOP
 fi
 
-desktopGUI=${desktopGUI,,} # convert to lower case
+desktopGUI=${desktopGUI,,} # Convert to lower case
 
 if [ $desktopGUI == "xfce" ]; then
-    xflock4
+    xflock4 # Lock the session in the XFCE
 elif [ $desktopGUI == "kde" ]; then
-    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock
+    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 fi
-xset dpms force off
+sleep 2s
+xset dpms force off # Turn off the screen
 #
