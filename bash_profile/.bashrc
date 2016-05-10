@@ -21,25 +21,25 @@
 #
 # Descrição: Arquivo-bashrc para carregar configuração do bash
 #
-# Última atualização: 17/04/2016
+# Última atualização: 10/05/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
 export HISTCONTROL=ignoreboth:ignoredups:erasedups # to ignore dups in history
-export PAGER="/usr/bin/most -s" # to display color man pages, using most instead less
+export PAGER='/usr/bin/most -s' # to display color man pages, using most instead less
 #
 # tput setaf * ==> 0 black,1 red,2 green,3 yellow,4 blue,5 magenta,6 cyan,7 white
 if [ $(id -u) -eq 0 ]; then # root
     PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# "
 else # user normal
     PS1="\\[$(tput setaf 7)\\][\\u@\\h:\\w]$ "
-    echo '*** Bem-vindo ao host '`hostname`' ***'
-    # /usr/games/fortune # Uncomment if you want to use the fortune
-    echo '  *v* '
-    echo ' /(_)\ '
-    echo '  ^ ^ '
-    date '+Date:%F %A %B Day:%j Week:%W'
-    # screenfetch -E # Uncomment if you want to use the screenfetch
+    echo -e '\t*** Bem-vindo ao host '`hostname`' ***\n'
+    #screenfetch -E; echo # Uncomment if you want to use the screenfetch
+    echo -e '\t\t  *v*'
+    echo -e '\t\t /(_)\'
+    echo -e '\t\t  ^ ^'
+    date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
+    #echo -e "Fortune:\n"; /usr/games/fortune # Uncomment if you want to use the fortune
 fi
 #
 alias nano='nano -c'
@@ -59,5 +59,6 @@ alias ls='ls --color=auto'
 alias sl='ls --color=auto'
 alias lcd="cd $1 ; ls -l -a -v -h --color"
 #
-alias rm="rm -iv --preserve-root"
+alias rm='rm -iv --preserve-root'
+alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
 #
