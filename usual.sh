@@ -20,68 +20,78 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: funções comum do dia-a-dia
+# Script: funções comum do dia a dia
 #
-# Última atualização: 26/02/2016
+# Última atualização: 14/05/2016
 #
-echo -e "\nscript para coisas do dia a dia\n"
-
-if [ $# -lt 1 ]
-    then
-    echo "$(basename "$0"): erro de operandos"
-    echo "tente $0 opcao para ver todas opções\n"
-    exit 0;
-fi
+echo -e "\n  ##  Script para coisas do dia a dia ##\n"
 
 opcao="$1"
-if [ $opcao = opcao ]; then
-    echo "data     - atualizar a data"
-    echo "vpnc     - conectar na vpn da USP"
-    echo "vpnd     - desconectar da vpn"
-    echo "swap     - limpar o swap"
-    echo "pdf      - reduzir pdf"
-    echo "tempo    - mostrar a previsão do tempo"
-    echo -e "slack-up - slack update\n"
-elif [ $opcao = data ]; then
-    echo -e "\tatualizar a data\n"
-    su - root -c 'ntpdate -u -b ntp1.ptb.de'
-elif [ $opcao = vpnc ]; then # Irá precisar do vpnc
-    echo -e "\tconectar na vpn da USP\n"
-    su - root -c 'vpnc /etc/vpnc/vpnuspnet.conf'
-elif [ $opcao = vpnd ]; then
-    echo -e "\tdesconectar da vpn\n"
-    su - root -c 'vpnc-disconnect'
-elif [ $opcao = swap ]; then
-    echo -e "\tswap off e on\n"
-    su - root -c 'swapoff -a
-    swapon -a'
-elif [ $opcao = pdf ]; then # Irá precisar do Ghostscript
-    echo -e "\tReduzir pdf\n"
-    if [ $# -eq 1 ]; then
-        echo -e "Erro, utilize $0 pdf arquivo.pdf\n"
-    else
-        arquivo="$2"
-        gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
-    fi
-elif [ $opcao = slack-up ]; then
-    echo -e "\tslackware update\n"
-    echo "Use blacklist?"
-    echo -n "Yes <Hit Enter> | No <type n>: "
-    read useBL
-    if [ "$useBL" == "n" ]; then
-        su - root -c '
-        slackpkg update gpg
-        slackpkg update
-        USEBL=0 slackpkg upgrade-all'
-    else
-        su - root -c '
-        slackpkg update gpg
-        slackpkg update
-        USEBL=1 slackpkg upgrade-all'
-    fi
-elif [ $opcao = tempo ]; then # Para mudar a cidade vá até http://wttr.in/ e digite a cidade na URL
-    wget -qO - http://wttr.in/S%C3%A3o%20Carlos
-else
-    echo -e "erro, opção invalida!\n"
+if [ $# -lt 1 ]; then
+    opcao="opcao"
 fi
+
+case $opcao in
+    "opcao" )
+        echo -e "\t$(basename "$0"): erro de operandos"
+        echo -e "\tTente $0 'opcao'\n\n"
+        echo "Opções diponível:"
+        echo "  data     - Atualizar a data"
+        echo "  vpnc     - Conectar na vpn da USP"
+        echo "  vpnd     - Desconectar da vpn USP"
+        echo "  swap     - Limpar o swap"
+        echo "  pdf      - Reduzir um pdf"
+        echo "  tempo    - Mostrar a previsão do tempo"
+        echo -e "  slack-up - Slackware update\n"
+        ;;
+    "data" )
+        echo -e "\tAtualizar a data\n"
+        su - root -c 'ntpdate -u -b ntp1.ptb.de'
+        ;;
+    "vpnc" ) # Irá precisar do vpnc
+        echo -e "\tConectar na vpn da USP\n"
+        su - root -c 'vpnc /etc/vpnc/vpnuspnet.conf'
+        ;;
+    "vpnd" )
+        echo -e "\tDesconectar da vpn da USP\n"
+        su - root -c 'vpnc-disconnect'
+        ;;
+    "swap" )
+        echo -e "\tSwap off e on\n"
+        su - root -c 'swapoff -a
+        swapon -a'
+        ;;
+    "pdf" ) # Irá precisar do Ghostscript
+        echo -e "\tReduzir um pdf\n"
+        if [ $# -eq 1 ]; then
+            echo -e "Erro, utilize $0 pdf arquivo.pdf\n"
+        else
+            arquivo="$2"
+            gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
+        fi
+        ;;
+    "slack-up" )
+        echo -e "\tSlackware update\n"
+        echo "Use blacklist?"
+        echo -n "Yes <Hit Enter> | No <type n>: "
+        read useBL
+        if [ "$useBL" == "n" ]; then
+            su - root -c '
+            slackpkg update gpg
+            slackpkg update
+            USEBL=0 slackpkg upgrade-all'
+        else
+            su - root -c '
+            slackpkg update gpg
+            slackpkg update
+            USEBL=1 slackpkg upgrade-all'
+        fi
+        ;;
+    "tempo" ) # Para mudar a cidade vá até http://wttr.in/ e digite a cidade na URL
+        wget -qO - http://wttr.in/S%C3%A3o%20Carlos
+        ;;
+    * )
+        echo -e "Erro, opção invalida!\n"
+        ;;
+esac
 #
