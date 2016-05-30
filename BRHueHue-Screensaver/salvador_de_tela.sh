@@ -14,4 +14,7 @@
 #mplayer -fs -loop 0 -x 1280 -y 1024 teu_arquivo_de_video_aqui
 
 # fs fullscreen, -nosound mute, -loop 0 loop times, end file name
-mplayer -fs -nosound -framedrop -loop 0 Mathematics\ is\ the\ queen\ of\ Sciences.mp4 
+mplayer -fs -nosound -framedrop -loop 0 Mathematics\ is\ the\ queen\ of\ Sciences.mp4
+
+exit 0
+#

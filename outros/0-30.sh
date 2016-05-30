@@ -18,4 +18,6 @@ else
     fi
 fi #Fim do comando IF e do script
 echo "Fim do scritp." #aspas duplas
+
+exit 0
 #

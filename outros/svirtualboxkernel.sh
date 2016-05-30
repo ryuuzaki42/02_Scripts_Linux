@@ -41,4 +41,6 @@ if [ $resposta = n ]; then
     exit 0
 fi
 echo -e "fim do script \n"
+
+exit 0
 #

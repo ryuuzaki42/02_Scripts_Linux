@@ -8,4 +8,6 @@
 #
 cd /usr/bin/
 /bin/bash lightsOnPlusJB.sh &
+
+exit 0
 #

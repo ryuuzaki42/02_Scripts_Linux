@@ -67,4 +67,6 @@ if [ $RESPOSTA = n ]; then
     echo -e "fim do script \n"
     exit 0
 fi
+
+exit 0
 #

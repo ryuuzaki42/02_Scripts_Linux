@@ -30,4 +30,6 @@ slackpkg update gpg
 slackpkg update
 slackpkg upgrade-all
 '
+
+exit 0
 #

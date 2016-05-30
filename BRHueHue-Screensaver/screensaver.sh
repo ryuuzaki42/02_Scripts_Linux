@@ -195,3 +195,6 @@ done
 
 #xinput: xinput version 1.6.0
 #XI version on server: 2.2
+
+exit 0
+#

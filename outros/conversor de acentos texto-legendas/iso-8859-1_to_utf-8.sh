@@ -70,4 +70,6 @@ else
   echo -e "Convertido com sucesso \"$nomeDoArquivo\" de utf-8 para iso-8859-1"
   echo "$nomeDoArquivo --> "$nome2"2".$extensao""
 fi
+
+exit 0
 #

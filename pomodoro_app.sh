@@ -48,4 +48,6 @@ done
 
 i=$((i-1))
 notify-send "Pomodoro $i" "Pomodoro End"
+
+exit 0
 #

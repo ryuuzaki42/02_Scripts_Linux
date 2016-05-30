@@ -31,4 +31,6 @@
 # por um evento no mouse para o que lhe for melhor
 #
 unclutter -idle 1 -root &
+
+exit 0
 #

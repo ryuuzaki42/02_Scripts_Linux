@@ -119,4 +119,6 @@ else
      ./crono.sh -r `echo 0$TH`:`echo 0$TM`:`echo $TS`
   fi
 fi
+
+exit 0
 #

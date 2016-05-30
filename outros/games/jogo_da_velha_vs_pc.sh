@@ -915,4 +915,6 @@ do
         INITUSER=X
     fi
 done
+
+exit 0
 #

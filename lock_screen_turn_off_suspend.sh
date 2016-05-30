@@ -40,4 +40,6 @@ elif [ $desktopGUI == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 fi
 dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
+
+exit 0
 #

@@ -30,5 +30,6 @@ else
     kdialog --msgbox "Hoo que pena" 
 fi
 kdialog --passivepopup "Ok, você venceu!" 3
+
 exit 0
 #

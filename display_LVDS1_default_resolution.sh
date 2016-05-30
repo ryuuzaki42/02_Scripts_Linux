@@ -38,4 +38,6 @@ while [[ true ]]; do
     fi
     sleep 5s
 done
+
+exit 0
 #

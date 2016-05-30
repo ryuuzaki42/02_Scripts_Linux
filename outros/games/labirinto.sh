@@ -253,4 +253,6 @@ while [ $INPUT != "q" ];do
     let counter++
 done
 clear
+
+exit 0
 #

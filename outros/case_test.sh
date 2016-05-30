@@ -16,5 +16,7 @@ case $NUM in
     9) echo "nine" ;;
     10) echo "ten" ;;
     *) echo "INVALID NUMBER!" ;;
-esac 
+esac
+
+exit 0
 #

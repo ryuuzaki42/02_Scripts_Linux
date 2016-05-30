@@ -74,4 +74,6 @@ aumix -v 100 #aumentar volume do canal master
 aumix -p 100 #aumentar volume do canal pcm
 # Irá precisar do vlc, altere o caminho dos seu vídeos abaixo
 vlc -Z /media/sda4/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/files/videos
+
+exit 0
 #

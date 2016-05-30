@@ -56,4 +56,6 @@ Jogar() {
 }
 
 Iniciar
+
+exit 0
 #

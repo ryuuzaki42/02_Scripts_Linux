@@ -206,4 +206,6 @@ início da contagem regressiva" ; exit 1 ; }
    esac
  
 done
+
+exit 0
 #

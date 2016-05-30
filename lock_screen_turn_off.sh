@@ -41,4 +41,6 @@ elif [ $desktopGUI == "kde" ]; then
 fi
 sleep 2s
 xset dpms force off # Turn off the screen
+
+exit 0
 #

@@ -56,4 +56,6 @@ else
         kwrite "$FILENAME"
     fi
 fi
+
+exit 0
 #

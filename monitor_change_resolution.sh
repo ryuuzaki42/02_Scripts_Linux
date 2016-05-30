@@ -130,4 +130,6 @@ elif [ $resposta = 8 ]; then
 else
     exit 0
 fi
+
+exit 0
 #

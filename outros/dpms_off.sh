@@ -24,4 +24,6 @@
 # Última atualização: 05/01/2016
 #
 while true; do date; xset -dpms; sleep 1m; done
+
+exit 0
 #
