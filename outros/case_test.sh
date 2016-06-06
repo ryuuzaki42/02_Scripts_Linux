@@ -17,6 +17,4 @@ case $NUM in
     10) echo "ten" ;;
     *) echo "INVALID NUMBER!" ;;
 esac
-
-exit 0
 #

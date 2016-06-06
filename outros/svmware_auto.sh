@@ -32,6 +32,4 @@ then
     su root -c "sh /etc/rc.d/init.d/vmware start"
 fi
 #su l -c "/usr/bin/vmware"
-
-exit 0
 #

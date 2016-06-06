@@ -94,6 +94,4 @@ case $opcao in
         echo -e "Erro, opção invalida!\n"
         ;;
 esac
-
-exit 0
 #

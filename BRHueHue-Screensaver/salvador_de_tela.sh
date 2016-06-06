@@ -15,6 +15,4 @@
 
 # fs fullscreen, -nosound mute, -loop 0 loop times, end file name
 mplayer -fs -nosound -framedrop -loop 0 Mathematics\ is\ the\ queen\ of\ Sciences.mp4
-
-exit 0
 #

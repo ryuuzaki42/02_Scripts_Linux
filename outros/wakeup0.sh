@@ -46,7 +46,7 @@ if [ $minutoinicial -gt $minutolevantar ]; then #minuto inicial maior que o fina
     minutofinal=$((60 - $minutoinicial + $minutolevantar))
     horafinal=$(($horafinal-1))
 else
-   minutofinal=$(($minutolevantar - $minutoinicial))
+    minutofinal=$(($minutolevantar - $minutoinicial))
 fi
 
 if [ $horafinal -eq -1 ]; then
@@ -59,11 +59,11 @@ echo "#Levantar= $horalevantar:$minutolevantar"
 echo -e "#Final==== $horafinal:$minutofinal\n"
 
 if [ $horafinal != 0 ]; then
-   echo -e "Podera dormir $horafinal:$minutofinal, bom descanso :)\n"
-   sleep "$horafinal"h "$minutofinal"m
+    echo -e "Podera dormir $horafinal:$minutofinal, bom descanso :)\n"
+    sleep "$horafinal"h "$minutofinal"m
 else
-   echo -e "Podera dormir só $minutofinal minutos, :\ \n"
-   sleep "$minutofinal"m
+    echo -e "Podera dormir só $minutofinal minutos, :\ \n"
+    sleep "$minutofinal"m
 fi
 
 horainicial=`date +%k` #Pegando hora atual 0-23
@@ -74,6 +74,4 @@ aumix -v 100 #aumentar volume do canal master
 aumix -p 100 #aumentar volume do canal pcm
 # Irá precisar do vlc, altere o caminho dos seu vídeos abaixo
 vlc -Z /media/sda4/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/files/videos
-
-exit 0
 #

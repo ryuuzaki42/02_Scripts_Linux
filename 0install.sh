@@ -11,6 +11,4 @@ scriptsFolder=`pwd`
 export scriptsFolder
 su - root -c "cd $scriptsFolder
 cp *.sh /usr/bin/"
-
-exit 0
 #

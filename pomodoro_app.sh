@@ -26,11 +26,11 @@
 #
 # Dica: Adicione um atalho para este script
 #
-
 workTime=25 # Time in minutes
 shortBreak=5
 LongBreak=15
 i=1
+
 while [ $i -lt 5 ]; do
     if [ $i == 1 ]; then
         notify-send "Pomodoro $i" "Start to work ($workTime min)"
@@ -51,6 +51,4 @@ while [ $i -lt 5 ]; do
 done
 
 notify-send "Good work" "Pomodoro End"
-
-exit 0
 #

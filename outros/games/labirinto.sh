@@ -252,7 +252,4 @@ while [ $INPUT != "q" ];do
     cat_ball
     let counter++
 done
-clear
-
-exit 0
 #

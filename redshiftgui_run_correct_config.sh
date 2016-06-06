@@ -29,6 +29,4 @@
 #
 /usr/bin/redshiftgui
 sed -i "s/|/,/g" ~/.redshiftgrc
-
-exit 0
 #

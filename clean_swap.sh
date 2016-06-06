@@ -45,6 +45,4 @@ while true; do
 
     sleep "$timeToClean"s;
 done
-
-exit 0
 #

@@ -16,8 +16,6 @@ rm tempo_ocioso.log
 rm nohup.out
 
 ############################################################################################################################################
-
-############################################################################################################################################
 #Aqui é executado em segundo plano o utilitário xinput (que faz parte do projeto Xorg) para gerar logs de uso do mouse e teclado no Xwindows.
 #Para saber o número id correspondente ao teclado ou ao mouse use "xinput list". Para mais opções "man xinput" ou "xinput --help".
 
@@ -36,11 +34,9 @@ nohup xinput test 9 >> mouse.log &
 nohup xinput test 8 >> teclado.log &
 ############################################################################################################################################
 
-############################################################################################################################################
 #Verificar o número de linhas(número de ações do mouse e teclado) e criar um log para posterior comparação com futuros números de log.
 #O que isso faz basicamente é contar o número de linhas do log do teclado e do mouse e por o resultado em um log único.
 cat teclado.log mouse.log | wc -l > log_anterior.log
-############################################################################################################################################
 
 ############################################################################################################################################
 #Aqui nós pegamos o conteúdo do log anterior e atual para fazer uma comparação
@@ -93,7 +89,6 @@ echo 2 minutos = 555555555555555555555555 > tempo_limite.log
 #Caso deseje outro valor de ociosidade crie um número composto por caractéres cinco "5" que contenha a quantidade de cincos segundos do tempo desejado.
 
 ##############################################################################################################################
-##############################################################################################################################
 
 #Lê e guarda o tempo de ociosidade estabelecido pelo usuário para ativar o protetor de tela.
 
@@ -122,8 +117,6 @@ while true; do
     teste_ociosidade && teste_ociosidade_disparo
 done
 
-######################################################################################################################################
-######################################################################################################################################
 ############################################INFORMAÇÕES INFORMAÇÕES INFORMAÇÕES INFORMAÇÕES INFORMAÇÕES###############################
 ######################################################################################################################################
 #
@@ -195,6 +188,4 @@ done
 
 #xinput: xinput version 1.6.0
 #XI version on server: 2.2
-
-exit 0
 #

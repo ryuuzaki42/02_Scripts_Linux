@@ -39,8 +39,7 @@ if [ $desktopGUI == "xfce" ]; then
 elif [ $desktopGUI == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 fi
+
 sleep 2s
 xset dpms force off # Turn off the screen
-
-exit 0
 #

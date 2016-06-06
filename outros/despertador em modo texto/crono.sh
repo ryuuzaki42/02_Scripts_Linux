@@ -16,7 +16,7 @@
 ###############################[ FUNÇÕES ]#################################
  
 ### Função para mostras as opções de uso do programa
-opcoes_de_uso(){
+opcoes_de_uso() {
 echo "Uso: $(basename "$0") [OPÇÔES]
  
 OPÇÕES
@@ -179,33 +179,28 @@ conta_tempo
 [ "$1" ] || { opcoes_de_uso ; }
  
 # Passado parâmetro '$1', faz o tratamento do mesmo
-while test -n "$1"
-do
- 
-   case "$1" in
- 
-        -p | --progressive)
-   OP=+ ; TEMPO=-1
-   # Se tiver parâmetro 2, chama a funçao para teste do mesmo, caso não
-   # tenha, define as variáveis e chama direto a função conta_tempo
-   [ "$2" ] || { TEMPO_FINAL=999999 ; conta_tempo ; }
-   TEMPO_LIMITE=$2 && teste_par2
-   ;;
- 
-   -r | --regressive)
-   # Testa se foi passado o parâmetro $2, que neste caso é obrigatório
-   [ "$2" ] || { echo "Necessário informar o tempo inicial para \
-início da contagem regressiva" ; exit 1 ; }
-   TEMPO_LIMITE=$2 ; OP=- && teste_par2
-   ;;
- 
-   -h | --help) opcoes_de_uso ;;
-   -v | --version) versao ;;
-        *) opcoes_de_uso ;;
- 
-   esac
- 
-done
+while test -n "$1"; do
+    case "$1" in
+    -p | --progressive)
+        OP=+ ; TEMPO=-1
+        # Se tiver parâmetro 2, chama a funçao para teste do mesmo, caso não
+        # tenha, define as variáveis e chama direto a função conta_tempo
+        [ "$2" ] || { TEMPO_FINAL=999999 ; conta_tempo ; }
+        TEMPO_LIMITE=$2 && teste_par2
+        ;;
+    -r | --regressive)
+        # Testa se foi passado o parâmetro $2, que neste caso é obrigatório
+        [ "$2" ] || { echo "Necessário informar o tempo inicial para \
+        início da contagem regressiva" ; exit 1 ; }
+        TEMPO_LIMITE=$2 ; OP=- && teste_par2
+        ;;
+    -h | --help) opcoes_de_uso
+        ;;
+   -v | --version) versao
+        ;;
+    *) opcoes_de_uso
+    ;;
 
-exit 0
+   esac
+done
 #

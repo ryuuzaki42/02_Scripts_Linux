@@ -77,23 +77,17 @@ else
 fi
 
 case $resposta in
-    "s" )
-        exit 0
-        ;;
     1 )
         xrandr --output LVDS1 --mode $LVDS1_resolution --primary
         xrandr --output VGA1 --off
-        exit 0
         ;;
     2 )
         xrandr --output VGA1 --mode $VGA1_resolution
         xrandr --output LVDS1 --off
-        exit 0
         ;;
     3 )
         xrandr --output LVDS1 --mode 1024x768
         xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
-        exit 0
         ;;
     4 )
         xrandr --output LVDS1 --mode 1024x768
@@ -101,7 +95,6 @@ case $resposta in
         xrandr --output LVDS1 --mode $LVDS1_resolution --primary
         xrandr --output LVDS1 --left-of VGA1
         xrandr --output VGA1 --mode $VGA1_resolution
-        exit 0
         ;;
     0 )
         if [ $VGA1_status == true ]; then
@@ -120,25 +113,20 @@ case $resposta in
             echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1\n"
             exit 1
         fi
+        case $resposta in
+            5 )
+                xrandr --output LVDS1 --left-of VGA1
+                ;;
+            6 )
+                xrandr --output LVDS1 --right-of VGA1
+                ;;
+            7 )
+                xrandr --output LVDS1 --mode $LVDS1_resolution
+                ;;
+            8 )
+                xrandr --output VGA1 --mode $VGA1_resolution
+                ;;
+        esac
         ;;
 esac
-
-case $resposta in
-    "s" )
-        exit 0
-        ;;
-    5 )
-        xrandr --output LVDS1 --left-of VGA1
-        ;;
-    6 )
-        xrandr --output LVDS1 --right-of VGA1
-        ;;
-    7 )
-        xrandr --output LVDS1 --mode $LVDS1_resolution
-        ;;
-    8 )
-        xrandr --output VGA1 --mode $VGA1_resolution
-esac
-
-exit 0
 #

@@ -59,24 +59,20 @@ echo "   +-----+-----+-----+-----+-----+"
 echo " 5 |     |     |     |     |     |"
 echo "   +-----+-----+-----+-----+-----+"
 
-# Variável pontos inicializada com zero, utilizada para contar
-# os pontos.
-#
-pontos=0 
+# Variável pontos inicializada com zero, utilizada para contar os pontos
+pontos=0
 
 # Variável fim, utilizada para terminar o laço, assumindo o valor 1,
-# quando for encontrada uma BOMBA.
-#
+# quando for encontrada uma BOMBA
 fim=0
 
-while [ $fim -eq 0 ] 
-do
-   echo
-   echo 'Digite as coordenadas. Por exemplo, caso queira ver o'
+while [ $fim -eq 0 ]; do
+   echo -e '\nDigite as coordenadas. Por exemplo, caso queira ver o'
    echo 'quadro que esta na linha 5 e coluna 5, digite: 55'
-   echo -n 'Coordenadas: '; read coord
+   echo -n 'Coordenadas: '
+   read coord
 
-   case $coord in 
+   case $coord in
       11) # Posiciona o cursor na linha 4, coluna 7 e imprime (*)
          echo -e '\033[4;7H*\033[14B'
          echo '* BOMBA * FIM DE JOGO'
@@ -232,6 +228,4 @@ do
       break;
    fi
 done
-
-exit 0
 #

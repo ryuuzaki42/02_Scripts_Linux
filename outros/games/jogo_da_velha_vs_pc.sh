@@ -883,8 +883,7 @@ _check_for_winner()
         _winner
     fi
 
-    if [ "$C $E $G" == "$PLAYER $PLAYER $PLAYER" ]
-    then
+    if [ "$C $E $G" == "$PLAYER $PLAYER $PLAYER" ]; then
         clear
         echo
         echo
@@ -902,19 +901,15 @@ while true
 do
     STOP=0
 
-    while [ $STOP != 1 ]
-    do
+    while [ $STOP != 1 ]; do
         _display
         _imput
     done
 
-    if [ $INITUSER == X ]
-    then
+    if [ $INITUSER == X ]; then
         INITUSER=O
     else
         INITUSER=X
     fi
 done
-
-exit 0
 #

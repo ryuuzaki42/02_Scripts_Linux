@@ -96,6 +96,4 @@ amixer set Master 100 #aumentar volume do canal master
 amixer set PCM 100 #aumentar volume do canal pcm
 amixer set Speaker 100 #aumentar volume do canal speaker
 vlc -Z /media/sda*/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/sda*/files/videos
-
-exit 0
 #

@@ -40,18 +40,16 @@ ajuda () {
 }
 
 case "$1" in
-'start')
-    start
-    ;;
-'stop')
-    stop
-    ;;
-'--help')
-    ajuda
-    ;;
-*)
-    echo "usage $0 start|stop|--help"
+    'start')
+        start
+        ;;
+    'stop')
+        stop
+        ;;
+    '--help')
+        ajuda
+        ;;
+    *)
+        echo "usage $0 start|stop|--help"
 esac
-
-exit 0
 #

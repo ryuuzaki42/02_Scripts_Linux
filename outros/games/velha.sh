@@ -46,8 +46,7 @@ Empate=0
 Bold=`tput bold`
 OBold=`tput sgr0`
 Cols=`tput cols`
-if   [ $Cols -lt 80 -o `tput lines` -lt 25 ]
-then
+if   [ $Cols -lt 80 -o `tput lines` -lt 25 ]; then
     clear
     echo "O tamanho minimo da janela deve ser 25 linhas e 80 colunas"
     exit 2
@@ -57,8 +56,7 @@ Col0=`expr \( $Cols - 46 \) / 2`
 Eng=`echo "To play in english use: $Bold\`basename $0\`$OBold -e (default language is portuguese)"`
 
 # Ingles ou Portugues?             English or Portuguese?
-if  [ "$1" = -e ]
-then
+if  [ "$1" = -e ]; then
         StrIni[1]="   1   2   3"
         StrIni[2]="1    |   |              +---------+----------+"
         StrIni[3]="  ---+---+---           |  Ties   |   Wins   |"
@@ -86,25 +84,20 @@ else
     StrFim="Deseja continuar?"
 fi
 
-Escrever ()
-    {
-        ColIni=`expr \( $Cols - length "$2" \) / 2`
+Escrever () {
+    ColIni=`expr \( $Cols - length "$2" \) / 2`
     tput cup $1 $ColIni
     echo "$2"
-    }
-Iniciar ()
-    {
+}
+Iniciar () {
     Jogo=
-    for i in 1 2 3
-    do
-        for j in 1 2 3
-        do
+    for i in 1 2 3; do
+        for j in 1 2 3; do
             P[$i$j]=
         done
     done
     clear
-    for i in 1 2 3 4 5 6
-    do
+    for i in 1 2 3 4 5 6; do
         tput cup `expr 11 + $i` $Col0
         echo "${StrIni[i]}"
     done
@@ -120,9 +113,8 @@ Iniciar ()
     echo $Bold$Empate
     tput cup 16 `expr $Col0 + 40`
     echo $Ganhei$OBold
-    }
-Jogar ()
-    {
+}
+Jogar () {
     P[$1]=$2
     Lin=`echo $1 | cut -c1`
     Col=`echo $1 | cut -c2`
@@ -130,15 +122,13 @@ Jogar ()
     Col=`expr \( $Col - 1 \) \* 4 + 3 + $Col0`
     tput cup $Lin $Col
     echo $2
-    }
-Placar ()
-    {
+}
+Placar () {
     tput bold
-    if  [ $1 = E ]
-    then
+    if  [ $1 = E ]; then
         Empate=$((Empate+1))
         tput cup 22 $Col0
-                echo "$StrEmp"
+        echo "$StrEmp"
         tput cup 16 `expr $Col0 + 29`  # Escrevendo Placar
         echo $Empate
     else
@@ -148,49 +138,41 @@ Placar ()
         tput cup 16 `expr $Col0 + 40`  # Escrevendo Placar
         echo $Ganhei
         case $2 in
-        L)    for j in 1 2 3
-            do
+        L)    for j in 1 2 3; do
                 Jogar $i$j X
             done
             ;;
-        C)    for j in 1 2 3
-            do
+        C)    for j in 1 2 3; do
                 Jogar $j$i X
             done
             ;;
-        D1)    for i in 11 22 33
-            do
+        D1)    for i in 11 22 33; do
                 Jogar $i X
             done
             ;;
-        *)    for i in 13 22 31
-            do
+        *)    for i in 13 22 31; do
                 Jogar $i X
             done
         esac
     fi
     tput sgr0
-    }
+}
 
 # Cuidado com o chefe!             WARNING! The boss is near you!
 trap "clear ; exit" 0 2 3
 
 
 # Jogando                          Playing
-while true
-do
+while true; do
     Iniciar
-    if  [ "$1" != "-e" ]
-    then
+    if  [ "$1" != "-e" ]; then
 #        tput cup 3 23
         Escrever 3 "$Eng"
     fi
     Jogar $Jogo X
     Vez=0
-    while true
-    do
-        if [ $Vez -eq 4 ]
-        then
+    while true; do
+        if [ $Vez -eq 4 ]; then
             Placar E
             break
         fi
@@ -201,68 +183,61 @@ do
         tput cup 21 `expr $Col0 + 1 + length "$StrLe"`
         read Jogo
         case $Jogo in
-        [1-3][1-3])    if  [ ${P[$Jogo]} ] 
-                then
+            [1-3][1-3])
+                if  [ ${P[$Jogo]} ]; then
                     tput cup 22 $Col0
                     echo -n "$Bold$StrEr1${P[$Jogo]} <-$OBold"
                     read Jogo
                     tput cup 22 $ColIni
                     tput el
-                                tput cup 21 `expr $Col0 + 1 + length "$StrLe"`
+                    tput cup 21 `expr $Col0 + 1 + length "$StrLe"`
                     tput el
                     continue
                 fi
                 Jogar $Jogo O
                 Vez=$((Vez+1))
                 ;;
-             *)    tput cup 22 $Col0
-                     echo -n "$Bold$StrEr2$OBold"
-                     read Jogo
+             *)
+                tput cup 22 $Col0
+                echo -n "$Bold$StrEr2$OBold"
+                read Jogo
                 tput cup 22 $Col0
                 tput el
-                        tput cup 21 `expr $Col0 + 1 + length "$StrLe"`
+                tput cup 21 `expr $Col0 + 1 + length "$StrLe"`
                 tput el
-                     continue
+                 continue
         esac
 
-        for i in 1 2 3
-        do
+        for i in 1 2 3; do
             LX[i]=0 ; CX[i]=0 ; LO[i]=0 ; CO[i]=0 ; DX[i]=0 ; DO[i]=0
         done
         
-        for i in 1 2 3
-        do
-            for j in 1 2 3
-            do
+        for i in 1 2 3; do
+            for j in 1 2 3; do
                 [ "${P[$i$j]}" = X ] && LX[i]=$((${LX[$i]}+1))
                 [ "${P[$i$j]}" = O ] && LO[i]=$((${LO[$i]}+1))
                 [ "${P[$j$i]}" = X ] && CX[i]=$((${CX[$i]}+1))
                 [ "${P[$j$i]}" = O ] && CO[i]=$((${CO[$i]}+1))
             done
         done
-        for i in 11 22 33
-        do
+        for i in 11 22 33; do
             [ "${P[$i]}" = X ] && DX[1]=$((${DX[1]}+1))
             [ "${P[$i]}" = O ] && DO[1]=$((${DO[1]}+1))
         done
         
-        for i in 13 22 31
-        do
+        for i in 13 22 31; do
             [ "${P[$i]}" = X ] && DX[2]=$((${DX[2]}+1))
             [ "${P[$i]}" = O ] && DO[2]=$((${DO[2]}+1))
         done
 
 # Pra ganhar                       I wanna win!
 
-        for i in 1 2 3
-        do
+        for i in 1 2 3; do
             LAlinhadas[i]=$((${LX[i]}-${LO[i]}))
             CAlinhadas[i]=$((${CX[i]}-${CO[i]}))
             DAlinhadas[i]=$((${DX[i]}-${DO[i]}))
-            if  [ ${LAlinhadas[i]} -eq 2 ]
-            then
-                for j in 1 2 3
-                do
+            if  [ ${LAlinhadas[i]} -eq 2 ]; then
+                for j in 1 2 3; do
                     [ ${P[$i$j]} ] && continue
                     Jogo=$i$j
                     Jogar $Jogo X
@@ -270,10 +245,8 @@ do
                     break 3
                 done
             fi
-            if  [ ${CAlinhadas[i]} -eq 2 ]
-            then
-                for j in 1 2 3
-                do
+            if  [ ${CAlinhadas[i]} -eq 2 ]; then
+                for j in 1 2 3; do
                     [ ${P[$j$i]} ] && continue
                     Jogo=$j$i
                     Jogar $Jogo X
@@ -282,10 +255,8 @@ do
                 done
             fi
         done
-        if  [ ${DAlinhadas[1]} -eq 2 ]
-        then
-            for i in 11 22 33
-            do
+        if  [ ${DAlinhadas[1]} -eq 2 ]; then
+            for i in 11 22 33; do
                 [ ${P[$i]} ] && continue
                 Jogo=$i
                 Jogar $Jogo X
@@ -293,10 +264,8 @@ do
                 break 2
             done
         fi
-        if  [ ${DAlinhadas[2]} -eq 2 ]
-        then
-            for i in 13 22 31
-            do
+        if  [ ${DAlinhadas[2]} -eq 2 ]; then
+            for i in 13 22 31; do
                 [ ${P[$i]} ] && continue
                 Jogo=$i
                 Jogar $Jogo X
@@ -306,23 +275,17 @@ do
         fi
 
 # Pra nao perder                   I don't wanna lose
-        
-        for i in 1 2 3
-        do
-            if  [ ${LAlinhadas[i]} -eq -2 ]
-            then
-                for j in 1 2 3
-                do
+        for i in 1 2 3; do
+            if  [ ${LAlinhadas[i]} -eq -2 ]: then
+                for j in 1 2 3; do
                     [ ${P[$i$j]} ] && continue
                     Jogo=$i$j
                     Jogar $Jogo X
                     continue 3
                 done
             fi
-            if  [ ${CAlinhadas[i]} -eq -2 ]
-            then
-                for j in 1 2 3
-                do
+            if  [ ${CAlinhadas[i]} -eq -2 ]; then
+                for j in 1 2 3; do
                     [ ${P[$j$i]} ] && continue
                     Jogo=$j$i
                     Jogar $Jogo X
@@ -330,58 +293,48 @@ do
                 done
             fi
         done
-        if  [ ${DAlinhadas[1]} -eq -2 ]
-        then
-            for i in 11 22 33
-            do
+        if  [ ${DAlinhadas[1]} -eq -2 ]; then
+            for i in 11 22 33; do
                 [ ${P[$i]} ] && continue
                 Jogo=$i
                 Jogar $Jogo X
                 continue 2
             done
         fi
-        if  [ ${DAlinhadas[2]} -eq -2 ]
-        then
-            for i in 13 22 31
-            do
+        if  [ ${DAlinhadas[2]} -eq -2 ]; then
+            for i in 13 22 31; do
                 [ ${P[$i]} ] && continue
                 Jogo=$i
                 Jogar $Jogo X
                 continue 2
             done
         fi
-
 # Ao ataque!                       Let's attack!
-
         case $Vez in
             1)  case $Saida in
                     1)  [ ${P[33]} ] && Jogo=13 || Jogo=33 ;;
                     2)  [ ${P[31]} ] && Jogo=33 || Jogo=31 ;;
                     3)  [ ${P[13]} ] && Jogo=11 || Jogo=13 ;;
                     4)  [ ${P[11]} ] && Jogo=31 || Jogo=11 ;;
-                    *)  if  [ ${P[11]} ]
-                        then
+                    *)  if  [ ${P[11]} ]; then
                             Jogo=33
-                        elif [ ${P[33]} ]
-                        then
+                        elif [ ${P[33]} ]; then
                             Jogo=11
-                        elif [ ${P[13]} ]
-                        then
+                        elif [ ${P[13]} ]; then
                             Jogo=31
                         else
                             Jogo=13
                         fi
-                esac ;;
+                esac
+            ;;
             *)  [ $P{[22]} ] &&
                 {
                     Jogo=
-                    for i in 1 3
-                    do
-                        for j in 1 3
-                        do
-                            [ ${P[$i$j]} ] && 
+                    for i in 1 3; do
+                        for j in 1 3; do
+                            [ ${P[$i$j]} ] &&
                             {
-                                [ ${P[$j$i]} ] && continue || 
+                                [ ${P[$j$i]} ] && continue ||
                                 {
                                     Jogo=$j$i
                                     break 2
@@ -393,15 +346,13 @@ do
                             }
                         done
                     done
-                    [ "$Jogo" ] && 
+                    [ "$Jogo" ] &&
                     {
                         Jogar $Jogo X
                         continue
                     }
-                    for i in 1 2 3
-                    do
-                        for j in 1 2 3
-                        do
+                    for i in 1 2 3; do
+                        for j in 1 2 3; do
                             [ "${P[$i$j]}" ] && continue
                             Jogo=$i$j
                             break 2
@@ -417,6 +368,4 @@ do
     read a
     [ `echo $a | tr n N` = N ] && exit
 done
-
-exit 0
 #
