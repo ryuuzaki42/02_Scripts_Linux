@@ -25,46 +25,46 @@
 # Última atualização: 07/04/2016
 #
 
-if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
+if [ $# -ne 1 ]; then # Verifica se foi passado o nome do arquivo
     echo -e "\n$(basename "$0"): Erro de operandos"
     echo "Use $0 nome.extensão (do arquivo que deseja converter)"
     echo -e "Tente $0 --help para mais detalhes\n"
     exit 0
 fi
 
-ajuda () { #função de Ajuda
+ajuda () { # Função de Ajuda
     echo -e "\n# Use o nome do arquivo (com a extensão) que deseja converter #"
     echo -e "# Ex.: $0 file.srt                                  #\n"
     exit 0
 }
 
-case "$1" in #Case virifica chamada da função ajuda
+case "$1" in # Case virifica chamada da função ajuda
 '--help')
     ajuda
 esac
 
-nomeArquivo="$1" #Nome do arquivo $1
+nomeArquivo="$1" # Nome do arquivo $1
 if [ ! -e "$nomeArquivo" ]; then
     echo -e "\nArquivo passado por parâmetro não existe\nTente \"$0 --help\" ou com outro arquivo\n"
     exit 1
 fi
 
-tamanhoNome=$(echo "$nomeArquivo" | wc -m) #Calcula o tamanho do Nome e retirando retorno do wc
-tamanhoNome2=$((tamanhoNome - 5)) #Tamanho do nome do arquivo sem a extensão
-nomeArquivo2=$(echo "$nomeArquivo" | cut -c1-$tamanhoNome2) #Nome do arquivo sem extensão
-tamanhoNome2=$((tamanhoNome - 3)) #Tamanho do nome do arquivo sem a extensão pra pegar a extensão
-extensao=$(echo "$nomeArquivo" | cut -c$tamanhoNome2-) # extensao do arquivo
-codificacao=$(cat "$nomeArquivo" | file -) #Verifica codificação do arquivo
+tamanhoNome=$(echo "$nomeArquivo" | wc -m) # Calcula o tamanho do Nome e retirando retorno do wc
+tamanhoNome2=$((tamanhoNome - 5)) # Tamanho do nome do arquivo sem a extensão
+nomeArquivo2=$(echo "$nomeArquivo" | cut -c1-$tamanhoNome2) # Nome do arquivo sem extensão
+tamanhoNome2=$((tamanhoNome - 3)) # Tamanho do nome do arquivo sem a extensão pra pegar a extensão
+extensao=$(echo "$nomeArquivo" | cut -c$tamanhoNome2-) # Extensão do arquivo
+codificacao=$(cat "$nomeArquivo" | file -) # Verifica codificação do arquivo
 
-if echo $codificacao | grep -q ISO-8859; then #verifica codificacao do arquivo é iso-8859
+if echo $codificacao | grep -q ISO-8859; then # Verifica codificação do arquivo é iso-8859
     codInicial=iso-8859
     codFinal=utf-8
-    iconv -f iso-8859-1 -t utf-8 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" #converter arquivo para utf-8 salvando em outro arquivo
-elif echo $codificacao | grep -q UTF-8; then #verifica codificacao do arquivo é iso-8859
+    iconv -f iso-8859-1 -t utf-8 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" # Converte arquivo para utf-8 salvando em outro arquivo
+elif echo $codificacao | grep -q UTF-8; then # Verifica codificacao do arquivo é iso-8859
     codInicial=utf-8
-    codFinal=iso-8859 
-    iconv -f utf-8 -t iso-8859-1 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" #converter arquivo para iso-8859 salvando em outro arquivo
-else #Em último caso, se o arquivo não for de nenhuma das duas codificações, o sccrit termina
+    codFinal=iso-8859
+    iconv -f utf-8 -t iso-8859-1 "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" # Converte arquivo para iso-8859 salvando em outro arquivo
+else # Em último caso, se o arquivo não for de nenhuma das duas codificações, o sccrit termina
     echo -e "\nCodificação desconhecida\nArquivo não pode ser convertido\n"
     exit 1
 fi

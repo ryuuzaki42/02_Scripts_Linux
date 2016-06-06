@@ -36,7 +36,7 @@ chrome_app_name="Netflix"
 webkit_flash_detection=1 # untested
 html5_detection=1 # actually check whether your browser is toggled fullscreen, so simply surfing in fullscreen triggers screensaver inhibition as well (work in progress)
 steam_detection=0 # untested
-minitube_detection=0  # untested
+minitube_detection=0 # untested
 popcorn_detection=1
 chrome_flash_detection=1
 
@@ -279,9 +279,8 @@ delayScreensaver() {
 }
 
 help() {
-    echo "USAGE:    $ lighsonplus [FLAG1 ARG1] ... [FLAGn ARGn]"
-    echo "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):"
-    echo ""
+    echo -e "\nUSAGE:    $ lighsonplus [FLAG1 ARG1] ... [FLAGn ARGn]"
+    echo -e "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):\n"
     echo "  -d,  --delay            Time interval in seconds, default is 50s"
     echo "  -mp, --mplayer          mplayer detection"
     echo "  -v,  --vlc              VLC detection"
@@ -292,7 +291,7 @@ help() {
     echo "  -wf, --webkit-flash     Webkit flash detection"
     echo "  -h5, --html5            HTML5 detection"
     echo "  -s,  --steam            Steam detection"
-    echo "  -mt, --minitube         MiniTube detection"
+    echo -e "  -mt, --minitube         MiniTube detection\n"
 }
 
 # check if arguments are valid, default to 50s interval if none is given

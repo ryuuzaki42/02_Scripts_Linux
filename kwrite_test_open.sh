@@ -28,24 +28,19 @@
 #
 # Última atualização: 29/04/2016
 #
-if [ $# -eq 0 ]; then # verifica se foi passado o nome do arquivo
+if [ $# -eq 0 ]; then # Verifica se foi passado o nome do arquivo
     echo -e "\nApenas abrindo o kwrite...\n"
     kwrite
 else
-    # Nome do arquivo que irá abrir
-    FILENAME="$1"
-
-    # Caminho da pasta
-    PWD=`pwd`
-
-    # Tamanho deste aquivo em kibibyte
-    FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1`
+    FILENAME="$1" # Nome do arquivo que irá abrir
+    PWD=`pwd` # Caminho da pasta
+    FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1` # Tamanho deste aquivo em kibibyte
 
     # Apenas para teste
     echo -e "\nArquivo: $FILENAME"
     echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
 
-    # Teste de tamanho do arquivo é maior que 100 MiB
+    # Testa de tamanho do arquivo é maior que 100 MiB
     if [ "$FILE_SIZE_MB" -gt 100 ]; then # = 100 MiB (mebibyte)
         TMPFILE=`mktemp`
         echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE

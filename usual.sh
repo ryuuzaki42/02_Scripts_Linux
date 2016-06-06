@@ -22,9 +22,9 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 14/05/2016
+# Última atualização: 06/06/2016
 #
-echo -e "\n  ##  Script para coisas do dia a dia ##\n"
+echo -e "\n ## Script para coisas do dia a dia ##\n"
 
 opcao="$1"
 if [ $# -lt 1 ]; then
@@ -34,15 +34,15 @@ fi
 case $opcao in
     "opcao" )
         echo -e "\t$(basename "$0"): erro de operandos"
-        echo -e "\tTente $0 'opcao'\n\n"
+        echo -e "\tTente $0 'opcao'\n"
         echo "Opções diponível:"
-        echo "  data     - Atualizar a data"
-        echo "  vpnc     - Conectar na vpn da USP"
-        echo "  vpnd     - Desconectar da vpn USP"
-        echo "  swap     - Limpar o swap"
-        echo "  pdf      - Reduzir um pdf"
-        echo "  tempo    - Mostrar a previsão do tempo"
-        echo -e "  slack-up - Slackware update\n"
+        echo "    data     - Atualizar a data"
+        echo "    vpnc     - Conectar na vpn da USP"
+        echo "    vpnd     - Desconectar da vpn USP"
+        echo "    swap     - Limpar o swap"
+        echo "    pdf      - Reduzir um pdf"
+        echo "    tempo    - Mostrar a previsão do tempo"
+        echo -e "    slack-up - Slackware update\n"
         ;;
     "data" )
         echo -e "\tAtualizar a data\n"

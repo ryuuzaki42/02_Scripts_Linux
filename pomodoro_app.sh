@@ -22,32 +22,35 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Última atualização: 26/02/2016
+# Última atualização: 06/06/2016
 #
 # Dica: Adicione um atalho para este script
 #
-i=1
 
+workTime=25 # Time in minutes
+shortBreak=5
+LongBreak=15
+i=1
 while [ $i -lt 5 ]; do
     if [ $i == 1 ]; then
-      notify-send "Pomodoro $i" "Start to work (25 min)"
+        notify-send "Pomodoro $i" "Start to work ($workTime min)"
     else
-      notify-send "Pomodoro $i" "Back to work (25 min)"
+        notify-send "Pomodoro $i" "Back to work (workTime min)"
     fi
-    sleep 3 1500
+    sleep $workTime\m
 
     if [ $i != 4 ]; then
-      notify-send "Pomodoro $i" "short break (5 min)"
-      sleep 4 300
+        notify-send "Pomodoro $i" "short break (shortBreak min)"
+        sleep shortBreak\m
     else
-      notify-send "Pomodoro $i" "long break (15 min)"
-      sleep 8 900
+        notify-send "Pomodoro $i" "long break (LongBreak min)"
+        sleep LongBreak\m
     fi
-    i=$((i+1))
+
+    ((i++))
 done
 
-i=$((i-1))
-notify-send "Pomodoro $i" "Pomodoro End"
+notify-send "Good work" "Pomodoro End"
 
 exit 0
 #
