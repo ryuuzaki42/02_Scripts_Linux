@@ -23,13 +23,12 @@
 # Script: apenas para iniciar o unclutter, que esconder o cursor do mouse
 # a cada 1 segundo se nenhum evento de movimento no mouse for detectado
 #
-# Última atualização: 06/06/2016
+# Última atualização: 08/06/2016
 #
 # Dica: Adicione este script para iniciar com o sistema
 #
 # altere o valor de -idle, que é o tempo (em segundos) de espera
 # por um evento no mouse para o que lhe for melhor
 #
-cd /usr/bin/
-/bin/bash unclutter -idle 1 -root &
+/usr/bin/unclutter -idle 1 -root &
 #

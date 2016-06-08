@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # lightsOnPlusJb.sh
 
-# Changed in 08/04/2016 by João Batista (joao42lbatista@gmail.com)
+# Changed in 08/06/2016 by João Batista (joao42lbatista@gmail.com)
 
 # based on
 # Copyright (c) 2014 devkral at web de
@@ -42,7 +42,6 @@ chrome_flash_detection=1
 
 defaultdelay=50
 
-# realdisp
 realdisp=`echo "$DISPLAY" | cut -d. -f1`
 
 inhibitfile="/tmp/lightsOnPlusJbinhibit-$UID-$realdisp"
@@ -50,8 +49,7 @@ pidfile="/tmp/lightsOnPlusJb-$UID-$realdisp.pid"
 
 # YOU SHOULD NOT NEED TO MODIFY ANYTHING BELOW THIS LINE
 
-# pidlocking
-pidcreate() {
+pidcreate() { # pidlocking
     # just one instance can run simultaneously
     if [ ! -e "$pidfile" ]; then
         echo "$$" > "$pidfile"
@@ -107,7 +105,7 @@ elif [ `pgrep -l xautoloc | grep -wc xautoloc` -ge 1 ]; then
 elif [ `pgrep -l cinnamon-screen | grep -wc cinnamon-screen` -ge 1 ]; then
     screensaver="cinnamon-screensaver"
 elif ls /usr/lib*/kde4/libexec/kscreenlocker* | grep -qc kscreenlocker*; then
-    screensaver=kscreensaver
+    screensaver="kscreensaver"
 else
     screensaver=""
     echo "No screensaver detected"
@@ -115,8 +113,7 @@ else
 fi
 
 checkFullscreen() {
-    # loop through every display looking for a fullscreen window
-    for display in $displays; do
+    for display in $displays; do # loop through every display looking for a fullscreen window
         # get id of active window and clean output
         activ_win_id=`DISPLAY=$realdisp.${display} xprop -root _NET_ACTIVE_WINDOW`
         activ_win_id=${activ_win_id##*# }
@@ -162,79 +159,68 @@ isAppRunning() {
     fi
 
     if [ $chromium_flash_detection == 1 ]; then
-        if [ "$activ_win_title" = *hromium* ]; then
-            # Check if Chromium Flash process is running
+        if [ "$activ_win_title" = *hromium* ]; then # Check if Chromium Flash process is running
             [ `ps faux | grep -c "(c|C)hromium --type=ppapi"` -ge 2 ] && return 1
         fi
     fi
 
     if [ $chrome_flash_detection == 1 ]; then
-        if [ "$activ_win_title" = *hrome* ]; then
-            # Check if Chrome flash is running (by cadejager)
+        if [ "$activ_win_title" = *hrome* ]; then # Check if Chrome flash is running (by cadejager)
             [ `ps faux | grep -c "(c|C)hrome --type=ppapi"` -ge 2 ] && return 1
         fi
     fi
 
     if [ $webkit_flash_detection == 1 ]; then
-        if [ "$activ_win_title" = *WebKitPluginProcess* ]; then
-            # Check if WebKit Flash process is running
+        if [ "$activ_win_title" = *WebKitPluginProcess* ]; then # Check if WebKit Flash process is running
             [ `ps faux | grep -c ".*WebKitPluginProcess.*flashp.*"` -ge 2 ] && (log "isAppRunning(): webkit flash fullscreen detected" && return 1)
         fi
     fi
 
     if [ $html5_detection == 1 ]; then
-        # chromium changed spelling  (c/C possible)
+        # check if they are running.
         if [[ "$activ_win_title" = *hrome* || "$activ_win_title" = *hromium* || "$activ_win_title" = *irefox* || "$activ_win_title" = *epiphany* || "$activ_win_title" = *opera* ]]; then
-            # check if they are running.
             [[ `ps faux | grep -Ec "chrome|firefox|chromium|opera|epiphany"` -ge 2 ]] && return 1
         fi
     fi
 
     if [ $chrome_app_detection == 1 ]; then
-        if [[ ! -z $chrome_app_name && "$activ_win_title" = *$chrome_app_name* ]]; then
-            # check if google chrome is runnig in app mode
+        if [[ ! -z $chrome_app_name && "$activ_win_title" = *$chrome_app_name* ]]; then # check if google chrome is runnig in app mode
             [ `ps faux | grep -c "chrome --app"` -ge 2 ] && return 1
         fi
     fi
 
     if [ $mplayer_detection == 1 ]; then
-        if [[ "$activ_win_title" = *mplayer* || "$activ_win_title" = *MPlayer* ]]; then
-            # check if mplayer is running.
+        if [[ "$activ_win_title" = *mplayer* || "$activ_win_title" = *MPlayer* ]]; then # check if mplayer is running.
             [ `ps faux | grep -c mplayer` -ge 2 ] && return 1
         fi
     fi
 
     if [ $vlc_detection == 1 ]; then
-        if [[ "$activ_win_title" = *vlc* || "$activ_win_title" = *VLC* ]]; then
-            # check if vlc is running.
+        if [[ "$activ_win_title" = *vlc* || "$activ_win_title" = *VLC* ]]; then # check if vlc is running.
             [ `ps faux | grep -c vlc` -ge 2 ] && return 1
         fi
     fi
 
     if [ $totem_detection == 1 ]; then
-        if [ "$activ_win_title" = *totem* ]; then
-            # check if totem is running.
+        if [ "$activ_win_title" = *totem* ]; then # check if totem is running.
             [ `ps faux | grep -c totem` -ge 2 ] && return 1
         fi
     fi
 
     if [ $steam_detection == 1 ]; then
-        if [ "$activ_win_title" = *steam* ]; then
-            # check if steam is running.
+        if [ "$activ_win_title" = *steam* ]; then # check if steam is running.
             [ `ps faux | grep -c steam` -ge 2 ] && return 1
         fi
     fi
 
     if [ $minitube_detection == 1 ]; then
-        if [ "$activ_win_title" = *minitube* ]; then
-            # check if minitube is running.
+        if [ "$activ_win_title" = *minitube* ]; then # check if minitube is running.
             [ `ps faux | grep -c minitube` -ge 2 ] && (log "isAppRunning(): minitube fullscreen detected" && return 1)
         fi
     fi
 
     if [ $popcorn_detection == 1 ]; then
-        # check if Popcorn is running.
-        if [ `xprop -id $activ_win_id | grep -cE "(p|P)opcorn"` -ge 2 ]; then
+        if [ `xprop -id $activ_win_id | grep -cE "(p|P)opcorn"` -ge 2 ]; then # check if Popcorn is running.
             return 1
         fi
     fi
@@ -272,7 +258,7 @@ delayScreensaver() {
         xautolock -disable
         xautolock -enable;;
     esac
-    
+
     # Check if DPMS is on. If it is, deactivate and reactivate again. If it is not, do nothing.
     dpmsStatus=`xset -q | grep -c 'DPMS is Enabled'`
     [ $dpmsStatus == 1 ] && (xset -dpms && xset dpms)
@@ -327,8 +313,7 @@ while [ ! -z $1 ]; do
         * )
             echo "Ivalid argument. See -h, --help for more information." && exit 1;;
     esac
-    # arguments must be always passed in tuples
-    shift 2
+    shift 2 # arguments must be always passed in tuples
 done
 
 while true; do
