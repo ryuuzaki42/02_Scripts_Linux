@@ -44,7 +44,7 @@ fi
 #
 alias nano='nano -c'
 #
-alias ext='exit'
+alias exut='exit'
 alias exot='exit'
 alias exti='exit'
 #

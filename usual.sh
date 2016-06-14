@@ -22,55 +22,45 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 06/06/2016
+# Última atualização: 14/06/2016
 #
-echo -e "\n ## Script para coisas do dia a dia ##\n"
+echo -e "\n ## Script to usual command ##\n"
 
-opcao="$1"
+option="$1"
 if [ $# -lt 1 ]; then
-    opcao="opcao"
+    option="option"
 fi
 
-case $opcao in
-    "opcao" )
-        echo -e "\t$(basename "$0"): erro de operandos"
-        echo -e "\tTente $0 'opcao'\n"
-        echo "Opções diponível:"
-        echo "    data     - Atualizar a data"
-        echo "    vpnc     - Conectar na vpn da USP"
-        echo "    vpnd     - Desconectar da vpn USP"
-        echo "    swap     - Limpar o swap"
-        echo "    pdf      - Reduzir um pdf"
-        echo "    tempo    - Mostrar a previsão do tempo"
-        echo -e "    slack-up - Slackware update\n"
+case $option in
+    "option" )
+        echo -e "\t$(basename "$0"): error of parameters"
+        echo -e "\tTry $0 'option'\n"
+        echo "Options available:"
+        echo "    date     - Update the date"
+        echo "    swap     - Clean up the Swap Memory"
+        echo "    pdf      - Reduce a PDF"
+        echo "    weather  - Show the weather forecast"
+        echo -e "    slack    - Slackware update\n"
         ;;
-    "data" )
-        echo -e "\tAtualizar a data\n"
+    "date" )
+        echo -e "\tUpdate the date\n"
         su - root -c 'ntpdate -u -b ntp1.ptb.de'
         ;;
-    "vpnc" ) # Irá precisar do vpnc
-        echo -e "\tConectar na vpn da USP\n"
-        su - root -c 'vpnc /etc/vpnc/vpnuspnet.conf'
-        ;;
-    "vpnd" )
-        echo -e "\tDesconectar da vpn da USP\n"
-        su - root -c 'vpnc-disconnect'
-        ;;
     "swap" )
-        echo -e "\tSwap off e on\n"
+        echo -e "\tClean up the Swap Memory\n"
         su - root -c 'swapoff -a
         swapon -a'
         ;;
-    "pdf" ) # Irá precisar do Ghostscript
-        echo -e "\tReduzir um pdf\n"
+    "pdf" ) # Need Ghostscript
+        echo -e "\tReduce a PDF\n"
         if [ $# -eq 1 ]; then
-            echo -e "Erro, utilize $0 pdf arquivo.pdf\n"
+            echo -e "Error, use $0 pdf file.pdf\n"
         else
             arquivo="$2"
             gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
         fi
         ;;
-    "slack-up" )
+    "slack" )
         echo -e "\tSlackware update\n"
         echo "Use blacklist?"
         echo -n "Yes <Hit Enter> | No <type n>: "
@@ -87,11 +77,11 @@ case $opcao in
             USEBL=1 slackpkg upgrade-all'
         fi
         ;;
-    "tempo" ) # Para mudar a cidade vá até http://wttr.in/ e digite a cidade na URL
+    "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos
         ;;
     * )
-        echo -e "Erro, opção invalida!\n"
+        echo -e "Error, invalid option!\n"
         ;;
 esac
 #
