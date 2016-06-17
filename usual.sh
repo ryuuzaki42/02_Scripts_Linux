@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 14/06/2016
+# Última atualização: 17/06/2016
 #
 echo -e "\n ## Script to usual command ##\n"
 
@@ -31,16 +31,20 @@ if [ $# -lt 1 ]; then
     option="option"
 fi
 
+help () {
+    echo -e "\t$(basename "$0"): error of parameters"
+    echo -e "\tTry $0 'option'\n"
+    echo "Options available:"
+    echo "    date     - Update the date"
+    echo "    swap     - Clean up the Swap Memory"
+    echo "    pdf      - Reduce a PDF"
+    echo "    weather  - Show the weather forecast"
+    echo -e "    slack    - Slackware update\n"
+}
+
 case $option in
     "option" )
-        echo -e "\t$(basename "$0"): error of parameters"
-        echo -e "\tTry $0 'option'\n"
-        echo "Options available:"
-        echo "    date     - Update the date"
-        echo "    swap     - Clean up the Swap Memory"
-        echo "    pdf      - Reduce a PDF"
-        echo "    weather  - Show the weather forecast"
-        echo -e "    slack    - Slackware update\n"
+        help
         ;;
     "date" )
         echo -e "\tUpdate the date\n"
@@ -82,6 +86,7 @@ case $option in
         ;;
     * )
         echo -e "Error, invalid option!\n"
+        help
         ;;
 esac
 #
