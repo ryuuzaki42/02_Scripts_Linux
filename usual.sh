@@ -39,6 +39,7 @@ help () {
     echo "    swap     - Clean up the Swap Memory"
     echo "    pdf      - Reduce a PDF"
     echo "    weather  - Show the weather forecast"
+    echo "    updatedb  - Update the database for 'locate'"
     echo -e "    slack    - Slackware update\n"
 }
 
@@ -81,6 +82,11 @@ case $option in
             USEBL=1 slackpkg upgrade-all'
         fi
         ;;
+    "updatedb" )
+        echo -e "\tUpdate the database for 'locate'\n"
+        su - root -c '
+        updatedb'
+    ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos
         ;;
