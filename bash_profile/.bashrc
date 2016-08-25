@@ -21,7 +21,7 @@
 #
 # Descrição: Arquivo-bashrc para carregar configuração do bash
 #
-# Última atualização: 10/05/2016
+# Última atualização: 25/08/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -39,7 +39,8 @@ else # user normal
     echo -e '\t\t /(_)\'
     echo -e '\t\t  ^ ^'
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
-    #echo -e "Fortune:\n"; /usr/games/fortune # Uncomment if you want to use the fortune
+    #echo -e "Fortune:\n"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
+    #echo -e "Fortune:\n"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
 fi
 #
 alias nano='nano -c'
@@ -59,6 +60,6 @@ alias ls='ls --color=auto'
 alias sl='ls --color=auto'
 alias lcd="cd $1 ; ls -l -a -v -h --color"
 #
-alias rm='rm -iv --preserve-root'
+#alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
 alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
 #
