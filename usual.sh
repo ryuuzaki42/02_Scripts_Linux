@@ -22,42 +22,45 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 17/06/2016
+# Última atualização: 26/08/2016
 #
 echo -e "\n ## Script to usual command ##\n"
 
 option="$1"
-if [ $# -lt 1 ]; then
-    option="option"
-fi
 
 help () {
-    echo -e "\t$(basename "$0"): error of parameters"
-    echo -e "\tTry $0 'option'\n"
     echo "Options available:"
-    echo "    date     - Update the date"
-    echo "    swap     - Clean up the Swap Memory"
-    echo "    pdf      - Reduce a PDF"
-    echo "    weather  - Show the weather forecast"
-    echo "    updatedb  - Update the database for 'locate'"
-    echo "    listpack  - List last packages installed"
-    echo -e "    slack    - Slackware update\n"
+    echo
+    echo "              -d              - Update the date"
+    echo "              -lpkg           - List last packages installed"
+    echo "              -pdf            - Reduce a PDF"
+    echo "              -swap           - Clean up the Swap Memory"
+    echo "              -slackup        - Slackware update"
+    echo "              -updb           - Update the database for 'locate'"
+    echo "              -w              - Show the weather forecast"
+    echo
 }
 
 case $option in
-    "option" )
+    "--help" )
         help
         ;;
-    "date" )
+    "-d" )
         echo -e "\tUpdate the date\n"
         su - root -c 'ntpdate -u -b ntp1.ptb.de'
         ;;
-    "swap" )
-        echo -e "\tClean up the Swap Memory\n"
-        su - root -c 'swapoff -a
-        swapon -a'
+    "-lpkg" )
+        echo -e "\tList last packages installed\n"
+        if [ $# -eq 1 ]; then
+            line=10
+        else
+            line="$2"
+        fi
+        echo -e "Listing the last $line packages installed\n"
+        ls -l --sort=time /var/log/packages/ | head -n $line
+        echo
         ;;
-    "pdf" ) # Need Ghostscript
+    "-pdf" ) # Need Ghostscript
         echo -e "\tReduce a PDF\n"
         if [ $# -eq 1 ]; then
             echo -e "Error, use $0 pdf file.pdf\n"
@@ -66,7 +69,12 @@ case $option in
             gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
         fi
         ;;
-    "slack" )
+    "-swap" )
+        echo -e "\tClean up the Swap Memory\n"
+        su - root -c 'swapoff -a
+        swapon -a'
+        ;;
+    "-slackup" )
         echo -e "\tSlackware update\n"
         echo "Use blacklist?"
         echo -n "Yes <Hit Enter> | No <type n>: "
@@ -83,21 +91,17 @@ case $option in
             USEBL=1 slackpkg upgrade-all'
         fi
         ;;
-    "updatedb" )
+    "-updb" )
         echo -e "\tUpdate the database for 'locate'\n"
-        su - root -c '
-        updatedb'
-    ;;
-    "listpack" )
-        ls -l --sort=time /var/log/packages/ | head -n $1
-    ;;
-    
-    "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+        su - root -c 'updatedb'
+        ;;
+    "-w" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos
         ;;
     * )
-        echo -e "Error, invalid option!\n"
-        help
+        echo -e "\t$(basename "$0"): error of parameters"
+        echo -e "\tTry $0 '--help'\n"
         ;;
 esac
+echo -e "\n\tSo Long, and Thanks for All the Fish!\n"
 #
