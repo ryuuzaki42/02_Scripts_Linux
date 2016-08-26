@@ -1,6 +1,6 @@
 #!/bin/bash
 #Autor= Rumbler nelson soppa
-#Bugs, Agradecimentos, Criticas "construtiva"
+#Bugs, Agradecimentos, Criticas "construtivas"
 #Mande me um e-mail. Ficarei Grato!
 # e-mail  rumbler.soppa@gmail.com
 #Script grafico para auxiliar a montagen de arquivos .iso!

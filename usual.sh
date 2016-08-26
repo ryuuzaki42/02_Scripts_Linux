@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Autor= João Batista Ribeiro
-# Bugs, Agradecimentos, Criticas "construtiva"
+# Bugs, Agradecimentos, Criticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
 # e-mail: joao42lbatista@gmail.com
 #
@@ -40,6 +40,7 @@ help () {
     echo "    pdf      - Reduce a PDF"
     echo "    weather  - Show the weather forecast"
     echo "    updatedb  - Update the database for 'locate'"
+    echo "    listpack  - List last packages installed"
     echo -e "    slack    - Slackware update\n"
 }
 
@@ -87,6 +88,10 @@ case $option in
         su - root -c '
         updatedb'
     ;;
+    "listpack" )
+        ls -l --sort=time /var/log/packages/ | head -n $1
+    ;;
+    
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos
         ;;

@@ -1,7 +1,7 @@
  #!/bin/bash
 #
 # Autor= João Batista Ribeiro
-# Bugs, Agradecimentos, Criticas "construtiva"
+# Bugs, Agradecimentos, Criticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
 # e-mail: joao42lbatista@gmail.com
 #
