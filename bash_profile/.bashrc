@@ -62,4 +62,5 @@ alias lcd="cd $1 ; ls -l -a -v -h --color"
 #
 #alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
 alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
+alias pingGoogle='ping -c 3 google.com'
 #
