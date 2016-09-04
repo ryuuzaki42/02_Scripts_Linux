@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 26/08/2016
+# Última atualização: 04/09/2016
 #
 echo -e "\n ## Script to usual command ##\n"
 
@@ -62,16 +62,22 @@ case $option in
         # Set more 0.1 to appears the correct percentage value in the GUI interface
         brightnessValue=`echo "scale=1; $brightnessValueOriginal+0.1" | bc`
 
-        # Choose the your path file brightness
-        #pathFile="/sys/class/backlight/acpi_video0/brightness"
+        # Choose the your path from "files brightness"
+        if [ -f /sys/class/backlight/acpi_video0/brightness ]; then
+            pathFile="/sys/class/backlight/acpi_video0/"
+        elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
+            pathFile="/sys/class/backlight/intel_backlight/"
+        else
+            echo -e "\n\tError, file to set brightness no found!\n"
+            exit 1
+        fi
 
-        pathFile="/sys/class/backlight/intel_backlight/brightness"
-        brightnessMax=`cat /sys/class/backlight/intel_backlight/max_brightness`
-        brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc`
+        brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
+        brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc` # Get the percentage of 1% from max_brightness
 
-        brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc`
+        brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc` # Get no value percentage vs Input value brightness
 
-        if [ $brightnessValueOriginal -gt "99" ]; then
+        if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
             brightnessValueFinal=$brightnessMax
         fi
 
@@ -81,8 +87,9 @@ case $option in
         echo "Percentage value to 1% of brightness: $brightnessPercentage"
         echo -e "Final set brightness value: $brightnessValueFinalz\n"
 
+        # Set the final percentage
         su - root -c "
-        echo $brightnessValueFinal > $pathFile"
+        echo $brightnessValueFinal > $pathFile/brightness"
         ;;
     "-d" )
         echo -e "\tUpdate the date\n"
@@ -102,8 +109,8 @@ case $option in
     "-pdf" ) # Need Ghostscript
         echo -e "\tReduce a PDF\n"
         if [ $# -eq 1 ]; then
-            echo -e "Error, use $0 pdf file.pdf\n"
-        else
+            echo -e "Error, use $0 pdf file.pdf\n" # Pdf not found
+        else # Convert the file
             arquivo="$2"
             gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
         fi
@@ -118,12 +125,12 @@ case $option in
         echo "Use blacklist?"
         echo -n "Yes <Hit Enter> | No <type n>: "
         read useBL
-        if [ "$useBL" == "n" ]; then
+        if [ "$useBL" == "n" ]; then # slackpkg not using USEBL
             su - root -c "
             slackpkg update gpg
             slackpkg update
             USEBL=0 slackpkg upgrade-all"
-        else
+        else # slackpkg using USEBL
             su - root -c "
             slackpkg update gpg
             slackpkg update
@@ -132,10 +139,10 @@ case $option in
         ;;
     "-updb" )
         echo -e "\tUpdate the database for 'locate'\n"
-        su - root -c "updatedb"
+        su - root -c "updatedb" # Update de database
         ;;
     "-w" ) # To change the city go to http://wttr.in/ e type the city name on the URL
-        wget -qO - http://wttr.in/S%C3%A3o%20Carlos
+        wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
     * )
         echo -e "\t$(basename "$0"): error of parameters"
