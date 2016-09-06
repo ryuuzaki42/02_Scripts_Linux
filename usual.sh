@@ -31,10 +31,10 @@ option="$1"
 help () {
     echo "Options:"
     echo "              -ap-info        - Show informations about the AP connected"
-    echo "              -wifi-list      - List the Wi-Fi AP arround"
-    echo "              -texlive-up     - Update the texlive packages with the comand iw and iwlist"
-    echo "              -nm-list        - List the Wi-Fi AP arround with the nmcli from Network-Manager"
-    echo "              -b              - Set brightness value"
+    echo "              -wifi-list      - List the Wi-Fi AP around"
+    echo "              -texlive-up     - Update the texlive packages with the command iw and iwlist"
+    echo "              -nm-list        - List the Wi-Fi AP around with the nmcli from Network-Manager"
+    echo "              -b              - Set brightness value (accept % value, up and down"
     echo "              -date           - Update the date"
     echo "              -lpkg           - List last packages installed"
     echo "              -pdf            - Reduce a PDF"
@@ -53,7 +53,7 @@ case $option in
         su - root -c "iw dev wlan0 link"
         ;;
     "-wifi-list" )
-        echo -e "\tList the Wi-Fi AP arround\n"
+        echo -e "\tList the Wi-Fi AP around\n"
         echo -e "\n\t\t\tWith iw (show WPS and more infos)\n\n"
         su - root -c 'iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
         echo -e "\n\n\n\t\t\tWith iwlist (show WPA/2 and more infos)\n\n"
@@ -65,7 +65,7 @@ case $option in
         tlmgr update --all"
         ;;
     "-nm-list" )
-        echo -e "\tList the Wi-Fi AP arround with the nmcli from Network-Manager\n"
+        echo -e "\tList the Wi-Fi AP around with the nmcli from Network-Manager\n"
         nmcli device wifi list
         ;;
     "-b" )
@@ -76,18 +76,17 @@ case $option in
             brightnessValueOriginal="$2"
         fi
 
-        if [ $brightnessValueOriginal -gt "100" ]; then
-            brightnessValueOriginal=100
+        if echo $2 | grep [[:digit:]]; then # Test if has only digit
+            if [ $brightnessValueOriginal -gt "100" ]; then # Test max percentage
+                brightnessValueOriginal=100
+            fi
         fi
-
-        # Set more 0.1 to appears the correct percentage value in the GUI interface
-        brightnessValue=`echo "scale=1; $brightnessValueOriginal+0.1" | bc`
 
         # Choose the your path from "files brightness"
         if [ -f /sys/class/backlight/acpi_video0/brightness ]; then
-            pathFile="/sys/class/backlight/acpi_video0/"
+            pathFile="/sys/class/backlight/acpi_video0"
         elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
-            pathFile="/sys/class/backlight/intel_backlight/"
+            pathFile="/sys/class/backlight/intel_backlight"
         else
             echo -e "\n\tError, file to set brightness no found!\n"
             exit 1
@@ -96,21 +95,38 @@ case $option in
         brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
         brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc` # Get the percentage of 1% from max_brightness
 
-        brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc` # Get no value percentage vs Input value brightness
+        actualBrightness=`cat $pathFile/actual_brightness`  # Get actual_brightness
+        actualBrightness=`echo "scale=2; $actualBrightness/$brightnessPercentage" | bc`
 
-        if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
-            brightnessValueFinal=$brightnessMax
+        brightnessValue=$actualBrightness
+        if [ "$2" == "up" ]; then # More 1 % (more 0.1 to appears correct percentage value in the GUI interface)
+            brightnessValue=`scale=2; echo $brightnessValue + 1.1 | bc`
+        elif [ "$2" == "down" ]; then # Less 1 % (more 0.1 to appears correct percentage value in the GUI interface)
+            brightnessValue=`scale=2; echo $brightnessValue - 1.1 | bc`
+        else # Set Input value more 0.1 to appears correct percentage value in the GUI interface
+            brightnessValue=`echo "scale=1; $brightnessValueOriginal+0.1" | bc`
         fi
 
-        echo "Input value brightness: $brightnessValueOriginal"
-        echo "Path: $pathFile"
-        echo "Max brightness value: $brightnessMax"
-        echo "Percentage value to 1% of brightness: $brightnessPercentage"
-        echo -e "Final set brightness value: $brightnessValueFinalz\n"
+        brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc` # Get no value percentage vs Input value brightness
 
-        # Set the final percentage
-        su - root -c "
-        echo $brightnessValueFinal > $pathFile/brightness"
+        if echo $2 | grep [[:digit:]]; then # Test if has only digit
+            if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
+                brightnessValueFinal=$brightnessMax
+            fi
+        fi
+
+        echo "File to set brightness: $pathFile/brightness"
+        echo "Actual brightness: $actualBrightness %"
+        echo "Input value brightness: $brightnessValueOriginal"
+        echo "Final percentage brightness value: $brightnessValue"
+        echo -e "Final set brightness value: $brightnessValueFinal\n"
+
+        # Only for test
+        #echo "Max brightness value: $brightnessMax" 
+        #echo "Percentage value to 1% of brightness: $brightnessPercentage"
+
+        # Set the final percentage brightness
+        su - root -c "echo $brightnessValueFinal > $pathFile/brightness"
         ;;
     "-date" )
         echo -e "\tUpdate the date\n"
@@ -132,8 +148,8 @@ case $option in
         if [ $# -eq 1 ]; then
             echo -e "Error, use $0 pdf file.pdf\n" # Pdf not found
         else # Convert the file
-            arquivo="$2"
-            gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$arquivo"-r.pdf "$arquivo"
+            file="$2"
+            gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
         fi
         ;;
     "-swap" )
