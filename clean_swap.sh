@@ -20,26 +20,35 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: limpa o swap de tempo em tempos ($timeToClean)
+# Script: limpa o swap de tempo em tempos ($timeToClean), padrão é 50 segundos
 #
-# Última atualização: 27/05/2016
+# Última atualização: 07/09/2016
 #
-timeToClean=5 # Em segundos
+timeToClean=50 # Em segundos
+
+testSwap=`free -m | grep Swap | awk '{print $2}'`
+if [ $testSwap -eq 0 ]; then
+    echo -e "\n\n\tError: Swap is not configured in this computer!\n"
+    exit 1
+fi
 
 while true; do
+    echo -e "\n\tCleaning the Swap\n"
+
     memoryFree=`free -m | grep Mem | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
     swapFree=`free -m | grep Swap | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
+    swapUse=$((100 - $swapFree))
 
-    echo -e "\n\nPorcentage of Memory free: $memoryFree"
-    echo "Porcentage of Swap free: $swapFree"
-    echo "Porcentage of Swap use: $(( 100 - swapUse ))"
-    date
+    echo "Memory free: $memoryFree %"
+    echo "Swap use: $swapUse %"
+    echo "Date: `date`"
 
-    if [ "$memoryFree" -gt 20 ]; then
-        if [ $swapFree -lt 100 ]; then
-            echo "Cleaning the Swap"
+    if [ $memoryFree -gt 20 ]; then
+        if [ $swapUse -gt 0 ]; then
+            echo
+            su - root -c 'echo "...please wait..."
             swapoff -a
-            swapon -a
+            swapon -a'
         fi
     fi
 
