@@ -32,17 +32,22 @@ help () {
     echo "Options:"
     echo "              -men-info       - Show memory and swap percentage of use"
     echo "              -ap-info        - Show informations about the AP connected"
-    echo "              -wifi-list      - List the Wi-Fi AP around"
-    echo "              -texlive-up     - Update the texlive packages with the command iw and iwlist"
-    echo "              -nm-list        - List the Wi-Fi AP around with the nmcli from Network-Manager"
-    echo "              -b              - Set brightness value (accept % value, up and down"
+    echo "              -iw-l         * - List the Wi-Fi AP around with iw (show WPS and more)"
+    echo "              -iwlist-l       - List the Wi-Fi AP around with iwlist (show WPA/2 and more)"
+    echo "              -texlive-up   * - Update the texlive packages with the command iw and iwlist"
+    echo "              -nm-list      + - List the Wi-Fi AP around with the nmcli from Network-Manager"
+    echo "              -b1           * - Set brightness value (accept % value, up and down)"
+    echo "              -b2             - Set brightness value with xbacklight (accept % value, up, down, up % and down %)"
     echo "              -date           - Update the date"
+    echo "              -lpkg-i         - List of packages installed in the Slackware"
     echo "              -lpkg           - List last packages installed"
     echo "              -pdf            - Reduce a PDF"
-    echo "              -swap           - Clean up the Swap Memory"
-    echo "              -slack-up       - Slackware update"
-    echo "              -up-db          - Update the database for 'locate'"
+    echo "              -swap         * - Clean up the Swap Memory"
+    echo "              -slack-up     * - Slackware update"
+    echo "              -up-db        * - Update the database for 'locate'"
     echo "              -w              - Show the weather forecast"
+    echo "                     * - root required"
+    echo "                     + - Network-Manager required"
 }
 
 case $option in
@@ -50,48 +55,60 @@ case $option in
         help
         ;;
     "-men-info" )
-        memoryFree=`free -m | grep Mem | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
-        echo "Memory free: $memoryFree %"
+        echo -e "\tShow memory and swap percentage of use\n"
 
-        testSwap=`free -m | grep Swap | awk '{print $2}'`
+        memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
+        memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
+        memUsedPercentage=`echo "scale=2; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total"
+        echo "Memory used: $memUsedPercentage % ($memUsed/$memTotal MiB)"
+
+        testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
+
         if [ $testSwap -eq 0 ]; then
             echo "Swap is not configured in this computer"
-            swapUse=0
         else
-            swapFree=`free -m | grep Swap | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
-            swapUse=$((100 - $swapFree))
-            echo "Swap use: $swapUse %"
+            swapTotal=`free -m | grep Swap | awk '{print $2}'`
+            swapUsed=`free -m | grep Swap | awk '{print $3}'`
+            swapUsedPercentage=`echo "scale=2; ($swapUsed*100)/$swapTotal" | bc`
+            echo "Swap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
         fi
         ;;
     "-ap-info" )
         echo -e "\tShow informations about the AP connected\n"
-        su - root -c "iw dev wlan0 link"
+
+        /usr/sbin/iw dev wlan0 link
         ;;
-    "-wifi-list" )
-        echo -e "\tList the Wi-Fi AP around\n"
-        echo -e "\n\t\t\tWith iw (show WPS and more infos)\n\n"
-        su - root -c 'iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
-        echo -e "\n\n\n\t\t\tWith iwlist (show WPA/2 and more infos)\n\n"
-        su - root -c 'iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"'
+    "-iw-l" )
+        echo -e "\tList the Wi-Fi AP around, with iw (show WPS and more infos)\n"
+
+        su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
+        ;;
+    "-iwlist-l" )
+        echo -e "\tList the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)\n"
+
+        /sbin/iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "-texlive-up" )
         echo -e "\tUpdate the texlive packages\n"
+
         su - root -c "tlmgr update --self
         tlmgr update --all"
         ;;
     "-nm-list" )
         echo -e "\tList the Wi-Fi AP around with the nmcli from Network-Manager\n"
+
         nmcli device wifi list
         ;;
-    "-b" )
+    "-b1" )
         echo -e "\tSet brightness percentage value\n"
+
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
         else
             brightnessValueOriginal="$2"
         fi
 
-        if echo $2 | grep [[:digit:]]; then # Test if has only digit
+        if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
             if [ $brightnessValueOriginal -gt "100" ]; then # Test max percentage
                 brightnessValueOriginal=100
             fi
@@ -104,7 +121,6 @@ case $option in
             pathFile="/sys/class/backlight/intel_backlight"
         else
             echo -e "\n\tError, file to set brightness no found!\n"
-            exit 1
         fi
 
         brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
@@ -124,7 +140,7 @@ case $option in
 
         brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc` # Get no value percentage vs Input value brightness
 
-        if echo $2 | grep [[:digit:]]; then # Test if has only digit
+        if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
             if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
                 brightnessValueFinal=$brightnessMax
             fi
@@ -143,25 +159,73 @@ case $option in
         # Set the final percentage brightness
         su - root -c "echo $brightnessValueFinal > $pathFile/brightness"
         ;;
+    "-b2" )
+        echo -e "\tSet brightness percentage value with xbacklight\n"
+
+        if [ $# -eq 1 ]; then # Option without value set brightness in 1%
+            xbacklight -set 1
+        elif [ $# -eq 2 ]; then # Option to one value of input to set
+            if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
+                brightnessValue=$2
+                if [ $brightnessValue -gt "100" ]; then # Test max percentage
+                    brightnessValue=100
+                fi
+                xbacklight -set $brightnessValue
+            else
+                if [ "$2" == "up" ];then
+                    xbacklight -inc 1
+                elif [ "$2" == "down" ];then
+                    xbacklight -dec 1
+                else
+                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)\n"
+                fi
+            fi
+        else #elif [ $# -eq 3 ]; then # Option to two value of input to set
+            if echo $3 | grep -q [[:digit:]]; then # Test if has only digit
+                if [ "$2" == "up" ];then
+                    xbacklight -inc $3
+                elif [ "$2" == "down" ];then
+                    xbacklight -dec $3
+                else
+                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)\n"
+                fi
+            else
+                echo -e "\n\tError: Value must be only digit (e.g. $0 -b2 up 10 to set brightness up in 10 %)\n"
+            fi
+        fi
+        ;;
     "-date" )
         echo -e "\tUpdate the date\n"
-        su - root -c "ntpdate -u -b ntp1.ptb.de"
+
+        /usr/sbin/ntpdate -u -b ntp1.ptb.de
+        ;;
+    "-lpkg-i" )
+        echo -e "\tList of packages installed in the Slackware\n"
+
+        countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
+        echo "There are $countPackages packages installed"
         ;;
     "-lpkg" )
         echo -e "\tList last packages installed\n"
+
         if [ $# -eq 1 ]; then
-            line=10
+            numberPackages=10
         else
-            line="$2"
+            if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
+                numberPackages="$2"
+            else
+                numberPackages=10
+            fi
         fi
-        echo -e "Listing the last $line packages installed\n"
-        ls -l --sort=time /var/log/packages/ | head -n $line
-        echo
+
+        echo -e "List of the last $numberPackages packages installed\n"
+        ls -l --sort=time /var/log/packages/ | head -n $numberPackages
         ;;
     "-pdf" ) # Need Ghostscript
-        echo -e "\tReduce a PDF\n"
+        echo -e "\tReduce a PDF file\n"
+
         if [ $# -eq 1 ]; then
-            echo -e "Error, use $0 pdf file.pdf\n" # Pdf not found
+            echo -e "Error: Use $0 -pdf file.pdf\n" # Pdf not found
         else # Convert the file
             file="$2"
             gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
@@ -169,14 +233,33 @@ case $option in
         ;;
     "-swap" )
         echo -e "\tClean up the Swap Memory\n"
-        su - root -c 'swapoff -a
-        swapon -a'
+
+        testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
+
+        if [ $testSwap -eq 0 ]; then
+            echo "Swap is not configured in this computer"
+        else
+            swapTotal=`free -m | grep Swap | awk '{print $2}'`
+            swapUsed=`free -m | grep Swap | awk '{print $3}'`
+            swapUsedPercentage=`echo "scale=2; ($swapUsed*100)/$swapTotal" | bc`
+
+            echo -e "Swap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)\n"
+
+            if [ $swapUsedPercentage -eq 0 ]; then
+                echo -e "\tSwap is alreday clean!"
+            else
+                su - root -c 'swapoff -a
+                swapon -a'
+            fi
+        fi
+
         ;;
     "-slack-up" )
         echo -e "\tSlackware update\n"
-        echo "Use blacklist?"
-        echo -n "Yes <Hit Enter> | No <type n>: "
+
+        echo -en "Use blacklist?\nYes <Hit Enter> | No <type n>: "
         read useBL
+
         if [ "$useBL" == "n" ]; then # slackpkg not using USEBL
             su - root -c "slackpkg update gpg
             slackpkg update
@@ -189,6 +272,7 @@ case $option in
         ;;
     "-up-db" )
         echo -e "\tUpdate the database for 'locate'\n"
+
         su - root -c "updatedb" # Update de database
         ;;
     "-w" ) # To change the city go to http://wttr.in/ e type the city name on the URL
@@ -196,8 +280,10 @@ case $option in
         ;;
     * )
         echo -e "\t$(basename "$0"): error of parameters"
+
         echo -e "\tTry $0 '--help'"
         ;;
 esac
+
 echo -e "\n\tSo Long, and Thanks for All the Fish!\n"
 #
