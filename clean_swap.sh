@@ -20,7 +20,8 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: limpa o swap de tempo em tempos ($timeToClean), padrão é 50 segundos
+# Script: limpa o swap de tempos em tempos ($timeToClean), padrão é 50 segundos
+# Se memória livre maior que 20 % e swap em uso maior que 5 % => limpar swap
 #
 # Última atualização: 07/09/2016
 #
@@ -35,23 +36,26 @@ fi
 while true; do
     echo -e "\n\tCleaning the Swap\n"
 
-    memoryFree=`free -m | grep Mem | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
-    swapFree=`free -m | grep Swap | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
-    swapUse=$((100 - $swapFree))
+    memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
+    memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
+    memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total"
+    echo "Memory used: ~ $memUsedPercentage % ($memUsed/$memTotal MiB)"
 
-    echo "Memory free: $memoryFree %"
-    echo "Swap use: $swapUse %"
-    echo "Date: `date`"
+    swapTotal=`free -m | grep Swap | awk '{print $2}'`
+    swapUsed=`free -m | grep Swap | awk '{print $3}'`
+    swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
+    echo "Swap used: ~ $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
 
-    if [ $memoryFree -gt 20 ]; then
-        if [ $swapUse -gt 0 ]; then
-            echo
+    echo -e "Date: `date`"
+    if [ $memUsedPercentage -lt 80 ]; then
+        if [ $swapUsedPercentage -gt 5 ]; then
             su - root -c 'echo "...please wait..."
             swapoff -a
             swapon -a'
         fi
     fi
 
+    echo -e "\nWaiting $timeToClean s to try again\n"
     sleep "$timeToClean"s;
 done
 #
