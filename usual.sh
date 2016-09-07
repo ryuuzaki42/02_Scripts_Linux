@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 06/09/2016
+# Última atualização: 07/09/2016
 #
 echo -e "\n ## Script to usual commands ##\n"
 
@@ -30,6 +30,7 @@ option="$1"
 
 help () {
     echo "Options:"
+    echo "              -men-info       - Show memory and swap percentage of use"
     echo "              -ap-info        - Show informations about the AP connected"
     echo "              -wifi-list      - List the Wi-Fi AP around"
     echo "              -texlive-up     - Update the texlive packages with the command iw and iwlist"
@@ -47,6 +48,20 @@ help () {
 case $option in
     "" | "--help" | "-h" )
         help
+        ;;
+    "-men-info" )
+        memoryFree=`free -m | grep Mem | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
+        echo "Memory free: $memoryFree %"
+
+        testSwap=`free -m | grep Swap | awk '{print $2}'`
+        if [ $testSwap -eq 0 ]; then
+            echo "Swap is not configured in this computer"
+            swapUse=0
+        else
+            swapFree=`free -m | grep Swap | awk '{print ($4/$2) * 100}' | cut -d"." -f1`
+            swapUse=$((100 - $swapFree))
+            echo "Swap use: $swapUse %"
+        fi
         ;;
     "-ap-info" )
         echo -e "\tShow informations about the AP connected\n"
