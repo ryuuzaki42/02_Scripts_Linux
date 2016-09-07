@@ -241,7 +241,7 @@ case $option in
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=2; ($swapUsed*100)/$swapTotal" | bc`
+            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
 
             echo -e "Swap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)\n"
 
