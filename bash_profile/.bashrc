@@ -27,7 +27,7 @@
 #
 export HISTCONTROL=ignoreboth:ignoredups:erasedups # to ignore dups in history
 export PAGER='/usr/bin/most -s' # to display color man pages, using most instead less
-#
+
 # tput setaf * ==> 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 if [ $(id -u) -eq 0 ]; then # root
     PS1="\\[$(tput setaf 3)\\][\\u@\\h:\\w]# "
@@ -42,24 +42,24 @@ else # user normal
     #echo -e "Fortune:\n"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
     #echo -e "Fortune:\n"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
 fi
-#
+
 alias nano='nano -c'
-#
+
 alias exut='exit'
 alias exot='exit'
 alias exti='exit'
-#
+
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
-#
+
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
 alias ls='ls --color=auto'
 alias sl='ls --color=auto'
 alias lcd="cd $1 ; ls -l -a -v -h --color"
-#
+
 #alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
 alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
 alias pingGoogle='ping -c 3 google.com'
