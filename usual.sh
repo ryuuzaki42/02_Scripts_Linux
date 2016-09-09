@@ -31,6 +31,7 @@ option="$1"
 help () {
     echo "Options:"
     echo "              -pingt          - Ping test on domain (default is google.com)"
+    echo "              -search-pwd     - Search in this directory for same pattern"
     echo "              -create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
     echo "              -cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
     echo "              -dc-wifi      * - Disconnect to one Wi-Fi network"
@@ -58,6 +59,14 @@ help () {
 case $option in
     "" | "--help" | "-h" )
         help
+        ;;
+    "-search-pwd" )
+        echo -e "\tSearch in this directory for same pattern\n"
+        echo -n "Pattern to search: "
+        read patternSearch
+
+        echo
+        grep -rn $PWD -e $patternSearch
         ;;
     "-pingt" )
         echo -e "\tPing test on domain (default is google.com)\n"
@@ -346,5 +355,5 @@ case $option in
         ;;
 esac
 
-echo -e "\n\tSo Long, and Thanks for All the Fish!\n"
+echo -e "\n## So Long, and Thanks for All the Fish! ##\n"
 #
