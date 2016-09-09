@@ -14,14 +14,14 @@
 # mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
 # qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
-# Veja a Licença Pública Geral GNU para maiores detalhes.
+# Veja a Licença Pública Geral GNU para mais detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
 # junto com este programa, se não, escreva para a Fundação do Software
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script: testa o tamanho do arquivo antes de abrir no kwrite
-# arquivos maiores que 100 MiB não serão abertos, com um aviso de arquivo muito grande
+# Obs: Arquivos com mais de 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
 # Dica: pela interface do KDE-menu altere para o icone do kwrite abrir este script
 # em vez de executar o "kwrite"

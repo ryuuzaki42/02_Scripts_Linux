@@ -51,7 +51,7 @@ Este programa � distribuido na esperan�a que possa ser  util,
 mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUA��O a
 qualquer MERCADO ou APLICA��O EM PARTICULAR.
 
-Veja a Licen�a P�blica Geral GNU para maiores detalhes.
+Veja a Licen�a P�blica Geral GNU para mais detalhes.
 Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral GNU
 junto com este programa, se n�o, escreva para a Funda��o do Software
 

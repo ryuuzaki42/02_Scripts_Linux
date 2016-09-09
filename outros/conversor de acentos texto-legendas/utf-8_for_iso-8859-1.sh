@@ -14,7 +14,7 @@
 # mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
 # qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
-# Veja a Licença Pública Geral GNU para maiores detalhes.
+# Veja a Licença Pública Geral GNU para mais detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
 # junto com este programa, se não, escreva para a Fundação do Software
 #
