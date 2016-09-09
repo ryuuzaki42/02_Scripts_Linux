@@ -14,7 +14,7 @@
 # mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a
 # qualquer MERCADO ou APLICAÇÃO EM PARTICULAR.
 #
-# Veja a Licença Pública Geral GNU para maiores detalhes.
+# Veja a Licença Pública Geral GNU para mais detalhes.
 # Você deve ter recebido uma cópia da Licença Pública Geral GNU
 # junto com este programa, se não, escreva para a Fundação do Software
 #
@@ -35,7 +35,7 @@ help () {
     echo "              -cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
     echo "              -dc-wifi      * - Disconnect to one Wi-Fi network"
     echo "              -men-info       - Show memory and swap percentage of use"
-    echo "              -ap-info        - Show informations about the AP connected"
+    echo "              -ap-info        - Show information about the AP connected"
     echo "              -l-iw         * - List the Wi-Fi AP around with iw (show WPS and more)"
     echo "              -l-iwlist       - List the Wi-Fi AP around with iwlist (show WPA/2 and more)"
     echo "              -texlive-up   * - Update the texlive packages with the command iw and iwlist"
@@ -81,12 +81,50 @@ case $option in
         ;;
     "-cn-wifi" )
         echo -e "\tConnect to Wi-Fi network (in /etc/wpa_supplicant.conf)\n"
+
         if ps faux | grep "NetworkManager" | grep -v -q "grep"; then # Test if NetworkManager is running
-            echo "Error: NetworkManager is running, please kill him with: killall NetworkManager"
+            echo "\n\tError: NetworkManager is running, please kill him with: killall NetworkManager\n"
         else
-            su - root -c 'wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext
-            dhclient wlan0
-            iw dev wlan0 link'
+            if [ "$LOGNAME" != "root" ]; then
+                echo -e "\n\tError: Execute as root user\n"
+            else
+                killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
+
+                networkConfigAvaiable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
+                if [ "$networkConfigAvaiable" == "" ]; then
+                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi\n"
+                else
+                    echo "Choose one network to connect"
+                    cat /etc/wpa_supplicant.conf | grep "ssid"
+                    echo -n "Network name: "
+                    read networkName
+
+                    # sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' filename # sed in block text
+                    wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
+
+                    if [ "$wpaConf" == "" ]; then
+                        echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi"
+                    else
+                        TMPFILE=`mktemp` # Create a TMP-file
+                        cat /etc/wpa_supplicant.conf | grep -v -E  "{|}|ssid|psk" > $TMPFILE
+
+                        echo -e "$wpaConf" >> $TMPFILE # Save the configuration of the network on this file
+
+                        echo -e "\n###########Network configuration #####################"
+                        cat $TMPFILE
+                        echo -e "######################################################\n"
+
+                        #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
+                        wpa_supplicant -i wlan0 -c $TMPFILE -d -B wext # Connect with the network using the TMP-file
+
+                        rm $TMPFILE # Delete the TMP-file
+
+                        dhclient wlan0 # Get IP
+
+                        iw dev wlan0 link # Show status of the connection
+                    fi
+                fi
+            fi
         fi
         ;;
     "-dc-wifi" )
@@ -113,7 +151,7 @@ case $option in
         fi
         ;;
     "-ap-info" )
-        echo -e "\tShow informations about the AP connected\n"
+        echo -e "\tShow information about the AP connected\n"
         /usr/sbin/iw dev wlan0 link
         ;;
     "-l-iw" )
@@ -254,7 +292,7 @@ case $option in
     "-pdf" ) # Need Ghostscript
         echo -e "\tReduce a PDF file\n"
         if [ $# -eq 1 ]; then
-            echo -e "Error: Use $0 -pdf file.pdf\n" # Pdf not found
+            echo -e "\n\tError: Use $0 -pdf file.pdf\n" # Pdf not found
         else # Convert the file
             file="$2"
             gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
@@ -303,7 +341,7 @@ case $option in
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
     * )
-        echo -e "\t$(basename "$0"): error of parameters"
+        echo -e "\n\t$(basename "$0"): Error of parameters"
         echo -e "\tTry $0 '--help'"
         ;;
 esac
