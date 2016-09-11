@@ -22,14 +22,15 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 09/09/2016
+# Última atualização: 10/09/2016
 #
-echo -e "\n ## Script to usual commands ##\n"
+echo -e "\n #___ Script to usual commands ___#\n"
 
 option="$1"
 
 help () {
     echo "Options:"
+    echo "              -folder-diff     - Show the difference between two folder"
     echo "              -pingt          - Ping test on domain (default is google.com)"
     echo "              -search-pwd     - Search in this directory for same pattern"
     echo "              -create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
@@ -60,16 +61,75 @@ case $option in
     "" | "--help" | "-h" )
         help
         ;;
+    "-folder-diff" )
+        echo "# Show the difference between two folder #"
+        if [ $# -lt 3 ]; then
+            echo -e "\n\tError: Need two parameters, $0 -folder-dif 'pathSource' 'pathDestination'"
+        else
+            pathSource=$2
+            pathDestination=$3
+            echo -e "\nSource: $pathSource"
+            echo "Destination: $pathDestination"
+
+            if [ -x $pathSource ]; then # Test if 'source' exists
+                if [ -x $pathDestination ]; then # Test if 'destination' exists
+                    echo -e "\nPlease wait until all files are compared ...\n"
+                    folderChanges=`rsync -aicn --delete $pathSource $pathDestination` # | grep ">"`
+                    # -a archive mode; # -i output a change-summary for all updates
+                    # -c skip based on checksum, not mod-time & size; # -n perform a trial run with no changes made
+                    # --delete delete extraneous files from destination directories
+
+                    filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
+                    if [ "$filesDelete" != "" ]; then
+                        echo -e "\nFiles to be delete:\n$filesDelete"
+                    fi
+
+                    filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
+                    if [ "$filesDifferent" != "" ]; then
+                        echo -e "\nFiles different:\n$filesDifferent"
+                    fi
+
+                    filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
+                    if [ "$filesNew" != "" ]; then
+                        echo -e "\nNew files:\n$filesNew"
+                    fi
+
+                    if [ "$filesDelete" == "" ] && [ "$filesDifferent" == "" ] && [ "$filesNew" == "" ]; then
+                        echo -e "\nThe source and the destination don't have difference\nSource: $pathSource\nDestination: $pathDestination\n"
+                    else
+                        echo -en "\nShow rsync change-summary?\n(y)es or (N)o: "
+                        read showRsyncS
+                        if [ "$showRsyncS" == "y" ]; then
+                            echo -e "\n$folderChanges"
+                        fi
+
+                        echo -en "\nMake this change in disk?\n(y)es or (N)o: "
+                        read continueWriteDisk
+                        if [ "$continueWriteDisk" == y ]; then
+                            echo -e "Changes are writing in $pathDestination\nPlease wait...\n"
+                            rsync -crvh --delete $pathSource $pathDestination
+                        else
+                            echo -e "\n\tAny change write in disk"
+                        fi
+                    fi
+                else
+                    echo -e "\n\tError: The destination ($pathDestination) don't exists"
+                fi
+            else
+                echo -e "\n\tError: The source ($pathSource) don't exists"
+            fi
+        fi
+        ;;
     "-search-pwd" )
-        echo -e "\tSearch in this directory for same pattern\n"
-        echo -n "Pattern to search: "
+        echo "# Search in this directory for same pattern #"
+        echo -en "\nPattern to search: "
         read patternSearch
 
         echo
         grep -rn $PWD -e $patternSearch
         ;;
     "-pingt" )
-        echo -e "\tPing test on domain (default is google.com)\n"
+        echo -e "# Ping test on domain (default is google.com) #\n"
         if [ $# -eq 1 ]; then
             domainPing="google.com"
         else
@@ -79,7 +139,7 @@ case $option in
         ping -c 3 $domainPing
         ;;
     "-create-wifi" )
-        echo -e "\tCreate configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)\n"
+        echo -e "# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
         su - root -c 'echo -n "Name of the network (SSID): "
         read netSSID
 
@@ -89,19 +149,18 @@ case $option in
         wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf'
         ;;
     "-cn-wifi" )
-        echo -e "\tConnect to Wi-Fi network (in /etc/wpa_supplicant.conf)\n"
-
+        echo -e "# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
         if ps faux | grep "NetworkManager" | grep -v -q "grep"; then # Test if NetworkManager is running
-            echo "\n\tError: NetworkManager is running, please kill him with: killall NetworkManager\n"
+            echo -e "\n\tError: NetworkManager is running, please kill him with: killall NetworkManager"
         else
             if [ "$LOGNAME" != "root" ]; then
-                echo -e "\n\tError: Execute as root user\n"
+                echo -e "\n\tError: Execute as root user"
             else
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
                 networkConfigAvaiable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
                 if [ "$networkConfigAvaiable" == "" ]; then
-                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi\n"
+                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi"
                 else
                     echo "Choose one network to connect"
                     cat /etc/wpa_supplicant.conf | grep "ssid"
@@ -119,9 +178,9 @@ case $option in
 
                         echo -e "$wpaConf" >> $TMPFILE # Save the configuration of the network on this file
 
-                        echo -e "\n###########Network configuration #####################"
+                        echo -e "\n########### Network configuration ####################"
                         cat $TMPFILE
-                        echo -e "######################################################\n"
+                        echo -e "######################################################"
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
                         wpa_supplicant -i wlan0 -c $TMPFILE -d -B wext # Connect with the network using the TMP-file
@@ -137,17 +196,17 @@ case $option in
         fi
         ;;
     "-dc-wifi" )
-        echo -e "\tDesconnect to one Wi-Fi network\n"
+        echo -e "# Desconnect to one Wi-Fi network #\n"
         su - root -c 'dhclient -r wlan0
         ifconfig wlan0 down
         iw dev wlan0 link'
         ;;
     "-men-info" )
-        echo -e "\tShow memory and swap percentage of use\n"
+        echo "# Show memory and swap percentage of use #"
         memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
         memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
         memUsedPercentage=`echo "scale=2; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total"
-        echo "Memory used: $memUsedPercentage % ($memUsed/$memTotal MiB)"
+        echo -e "\nMemory used: $memUsedPercentage % ($memUsed/$memTotal MiB)"
 
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
         if [ $testSwap -eq 0 ]; then
@@ -160,28 +219,28 @@ case $option in
         fi
         ;;
     "-ap-info" )
-        echo -e "\tShow information about the AP connected\n"
+        echo -e "# Show information about the AP connected #\n"
         /usr/sbin/iw dev wlan0 link
         ;;
     "-l-iw" )
-        echo -e "\tList the Wi-Fi AP around, with iw (show WPS and more infos)\n"
+        echo -e "# List the Wi-Fi AP around, with iw (show WPS and more infos) #\n"
         su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
         ;;
     "-l-iwlist" )
-        echo -e "\tList the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)\n"
+        echo -e "# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #\n"
         /sbin/iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "-texlive-up" )
-        echo -e "\tUpdate the texlive packages\n"
+        echo -e "# Update the texlive packages #\n"
         su - root -c "tlmgr update --self
         tlmgr update --all"
         ;;
     "-nm-list" )
-        echo -e "\tList the Wi-Fi AP around with the nmcli from NetworkManager\n"
+        echo -e "# List the Wi-Fi AP around with the nmcli from NetworkManager #\n"
         nmcli device wifi list
         ;;
     "-b1" )
-        echo -e "\tSet brightness percentage value\n"
+        echo "# Set brightness percentage value #"
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
         else
@@ -199,7 +258,7 @@ case $option in
         elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
             pathFile="/sys/class/backlight/intel_backlight"
         else
-            echo -e "\n\tError, file to set brightness no found!\n"
+            echo -e "\n\tError, file to set brightness not found"
         fi
 
         if [ "$pathFile" != "" ]; then
@@ -226,7 +285,7 @@ case $option in
                 fi
             fi
 
-            echo "File to set brightness: $pathFile/brightness"
+            echo -e "\nFile to set brightness: $pathFile/brightness"
             echo "Actual brightness: $actualBrightness %"
             echo "Input value brightness: $brightnessValueOriginal"
             echo "Final percentage brightness value: $brightnessValue"
@@ -241,7 +300,7 @@ case $option in
         fi
         ;;
     "-b2" )
-        echo -e "\tSet brightness percentage value with xbacklight\n"
+        echo "# Set brightness percentage value with xbacklight #"
         if [ $# -eq 1 ]; then # Option without value set brightness in 1%
             xbacklight -set 1
         elif [ $# -eq 2 ]; then # Option to one value of input to set
@@ -257,7 +316,7 @@ case $option in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec 1
                 else
-                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)\n"
+                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)"
                 fi
             fi
         else #elif [ $# -eq 3 ]; then # Option to two value of input to set
@@ -267,24 +326,24 @@ case $option in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec $3
                 else
-                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)\n"
+                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)"
                 fi
             else
-                echo -e "\n\tError: Value must be only digit (e.g. $0 -b2 up 10 to set brightness up in 10 %)\n"
+                echo -e "\n\tError: Value must be only digit (e.g. $0 -b2 up 10 to set brightness up in 10 %)"
             fi
         fi
         ;;
     "-date" )
-        echo -e "\tUpdate the date\n"
+        echo -e "# Update the date #\n"
         su - root -c 'ntpdate -u -b ntp1.ptb.de'
         ;;
     "-lpkg-c" )
-        echo -e "\tCount of packages that are installed in the Slackware\n"
+        echo "# Count of packages that are installed in the Slackware #"
         countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
-        echo "There are $countPackages packages installed"
+        echo -e "\nThere are $countPackages packages installed"
         ;;
     "-lpkg" )
-        echo -e "\tList last packages installed\n"
+        echo "# List last packages installed #"
         if [ $# -eq 1 ]; then
             numberPackages=10
         else
@@ -295,41 +354,46 @@ case $option in
             fi
         fi
 
-        echo -e "List of the last $numberPackages packages installed\n"
-        ls -l --sort=time /var/log/packages/ | head -n $numberPackages
+        echo -e "\nList of the last $numberPackages packages installed\n"
+        ls -l --sort=time /var/log/packages/ | head -n $numberPackages | grep -v "total [[:digit:]]"
         ;;
     "-pdf" ) # Need Ghostscript
-        echo -e "\tReduce a PDF file\n"
+        echo -e "# Reduce a PDF file #\n"
         if [ $# -eq 1 ]; then
-            echo -e "\n\tError: Use $0 -pdf file.pdf\n" # Pdf not found
+            echo -e "\n\tError: Use $0 -pdf file.pdf" # Pdf not found
         else # Convert the file
-            file="$2"
-            gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
+            filePdf="$2"
+            if [ -x $filePdf ]; then
+                gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
+            else
+                echo -e "\n\tError: The file $filePdf not exists"
+            fi
         fi
         ;;
     "-swap" )
-        echo -e "\tClean up the Swap Memory\n"
+        echo "# Clean up the Swap Memory #"
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
         if [ $testSwap -eq 0 ]; then
-            echo "Swap is not configured in this computer"
+            echo "\nSwap is not configured in this computer"
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
             swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
 
-            echo -e "Swap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)\n"
+            echo -e "\nSwap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
 
             if [ $swapUsedPercentage -eq 0 ]; then
-                echo -e "\tSwap is alreday clean!"
+                echo -e "\nSwap is alreday clean!"
             else
+                echo -en "\nCleanning swap\nPlease wait..."
                 su - root -c 'swapoff -a
                 swapon -a'
             fi
         fi
         ;;
     "-slack-up" )
-        echo -e "\tSlackware update\n"
-        echo -en "Use blacklist?\nYes <Hit Enter> | No <type n>: "
+        echo "# Slackware update #"
+        echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
         read useBL
 
         if [ "$useBL" == "n" ]; then # slackpkg not using USEBL
@@ -343,8 +407,9 @@ case $option in
         fi
         ;;
     "-up-db" )
-        echo -e "\tUpdate the database for 'locate'\n"
+        echo -e "# Update the database for 'locate' #\n"
         su - root -c "updatedb" # Update de database
+        echo -e "\nDatabase updated"
         ;;
     "-w" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
@@ -355,5 +420,5 @@ case $option in
         ;;
 esac
 
-echo -e "\n## So Long, and Thanks for All the Fish! ##\n"
+echo -e "\n#___ So Long, and Thanks for All the Fish ___#\n"
 #
