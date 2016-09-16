@@ -39,8 +39,8 @@ else # user normal
     echo -e '\t\t /(_)\'
     echo -e '\t\t  ^ ^'
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
-    #echo -e "Fortune:\n"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
-    #echo -e "Fortune:\n"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
+    #echo -e "Fortune:"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
+    #echo -e "Fortune:"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
 fi
 
 alias nano='nano -c'
@@ -53,14 +53,15 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
-alias l='ls -CF'
-alias la='ls -A'
-alias ll='ls -alF'
-alias ls='ls --color=auto'
-alias sl='ls --color=auto'
-alias lcd="cd $1 ; ls -l -a -v -h --color"
-
-#alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
+alias ls='ls -ah --color=auto'
 alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
-alias pingGoogle='ping -c 3 google.com'
+
+# Uncomment if you want use those alias
+#alias l='ls -CF'
+#alias la='ls -A'
+#alias ll='ls -alF'
+#alias sl='ls --color=auto'
+#alias lcd="cd $1 ; ls -l -a -v -h --color"
+#alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
+#alias pingG='ping -c 3 google.com'
 #
