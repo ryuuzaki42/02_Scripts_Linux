@@ -205,8 +205,8 @@ case $option in
         echo "# Show memory and swap percentage of use #"
         memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
         memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
-        memUsedPercentage=`echo "scale=2; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total"
-        echo -e "\nMemory used: $memUsedPercentage % ($memUsed/$memTotal MiB)"
+        memUsedPercentage=`echo "scale=2; ($memUsed/$memTotal)*100" | bc` # Get the percentage "used/total"
+        echo -e "\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
 
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
         if [ $testSwap -eq 0 ]; then
@@ -214,8 +214,8 @@ case $option in
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=2; ($swapUsed*100)/$swapTotal" | bc`
-            echo "Swap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
+            swapUsedPercentage=`echo "scale=2; ($swapUsed/$swapTotal)*100" | bc`
+            echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
     "-ap-info" )
@@ -378,16 +378,21 @@ case $option in
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
+            swapUsedPercentage=`echo "scale=0; ($swapUsed/$swapTotal)*100" | bc`
 
-            echo -e "\nSwap used: $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
+            echo -e "\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
 
-            if [ $swapUsedPercentage -eq 0 ]; then
-                echo -e "\nSwap is alreday clean!"
+            if [ $swapUsed -eq 0 ]; then
+                echo -e "\nSwap is already clean!"
             else
-                echo -en "\nCleanning swap\nPlease wait..."
-                su - root -c 'swapoff -a
-                swapon -a'
+                echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
+                read cleanSwap
+
+                if [ "$cleanSwap" == "y" ]; then
+                    su - root -c 'echo -e "\nCleanning swap\nPlease wait..."
+                    swapoff -a
+                    swapon -a'
+                fi
             fi
         fi
         ;;
