@@ -23,39 +23,37 @@
 # Script: limpa o swap de tempos em tempos ($timeToClean), padrão é 50 segundos
 # Se memória livre maior que 20 % e swap em uso maior que 5 % => limpar swap
 #
-# Última atualização: 07/09/2016
+# Última atualização: 17/09/2016
 #
 timeToClean=50 # Em segundos
 
 testSwap=`free -m | grep Swap | awk '{print $2}'`
 if [ $testSwap -eq 0 ]; then
     echo -e "\n\n\tError: Swap is not configured in this computer!\n"
-    exit 1
-fi
+else
+    while true; do
+        echo -e "\n\tCleaning the Swap\n"
 
-while true; do
-    echo -e "\n\tCleaning the Swap\n"
+        memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
+        memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
+        memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total", |valueI*100/valueF|
+        echo "Memory used: ~ $memUsedPercentage % ($memUsed/$memTotal MiB)"
 
-    memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
-    memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
-    memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total"
-    echo "Memory used: ~ $memUsedPercentage % ($memUsed/$memTotal MiB)"
+        swapTotal=`free -m | grep Swap | awk '{print $2}'`
+        swapUsed=`free -m | grep Swap | awk '{print $3}'`
+        swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
+        echo "Swap used: ~ $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
 
-    swapTotal=`free -m | grep Swap | awk '{print $2}'`
-    swapUsed=`free -m | grep Swap | awk '{print $3}'`
-    swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc`
-    echo "Swap used: ~ $swapUsedPercentage % ($swapUsed/$swapTotal MiB)"
-
-    echo -e "Date: `date`"
-    if [ $memUsedPercentage -lt 80 ]; then
-        if [ $swapUsedPercentage -gt 5 ]; then
-            su - root -c 'echo "...please wait..."
-            swapoff -a
-            swapon -a'
+        echo -e "Date: `date`"
+        if [ $memUsedPercentage -lt 80 ]; then
+            if [ $swapUsed -gt 0 ]; then
+                su - root -c 'echo -e "\nCleanning swap\nPlease wait..."
+                swapoff -a
+                swapon -a'
+            fi
         fi
-    fi
-
-    echo -e "\nWaiting $timeToClean s to try again\n"
-    sleep "$timeToClean"s;
-done
+        echo -e "\nWaiting $timeToClean s to try again\n"
+        sleep "$timeToClean"s;
+    done
+fi
 #

@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 10/09/2016
+# Última atualização: 17/09/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -205,7 +205,7 @@ case $option in
         echo "# Show memory and swap percentage of use #"
         memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
         memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
-        memUsedPercentage=`echo "scale=2; ($memUsed/$memTotal)*100" | bc` # Get the percentage "used/total"
+        memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total", |valueI*100/valueF|
         echo -e "\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
 
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
@@ -214,7 +214,7 @@ case $option in
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=2; ($swapUsed/$swapTotal)*100" | bc`
+            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc` # |valueI*100/valueF|
             echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
@@ -378,7 +378,7 @@ case $option in
         else
             swapTotal=`free -m | grep Swap | awk '{print $2}'`
             swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=0; ($swapUsed/$swapTotal)*100" | bc`
+            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc` # |valueI*100/valueF|
 
             echo -e "\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
 
