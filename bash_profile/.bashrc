@@ -33,14 +33,17 @@ if [ $(id -u) -eq 0 ]; then # root
     PS1="\\[$(tput setaf 3)\\][\\u@\\h:\\w]# "
 else # user normal
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ "
-    echo -e '\t*** Bem-vindo ao host '`hostname`' ***\n'
-    #screenfetch -E; echo # Uncomment if you want to use the screenfetch
-    echo -e '\t\t  *v*'
-    echo -e '\t\t /(_)\'
-    echo -e '\t\t  ^ ^'
+
+    echo -e '\t*** Bem-vindo ao host '`hostname`' ***'
+    #echo; screenfetch -E; echo # Uncomment if you want to use the screenfetch
+    echo -e '\t\t              mm   '
+    echo -e '\t\t  *v*      /^(  )^\'
+    echo -e '\t\t /(_)\     \,(..),/'
+    echo -e '\t\t  ^ ^        V~~V'
+
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
     #echo -e "Fortune:"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
-    #echo -e "Fortune:"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
+    echo -e "Fortune:"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
 fi
 
 alias nano='nano -c'
