@@ -29,19 +29,10 @@ green=`tput setaf 2`
 magenta=`tput setaf 5`
 reset=`tput sgr0`
 
-#     Num  Colour    #define         R G B
-# 
-#     0    black     COLOR_BLACK     0,0,0
-#     1    red       COLOR_RED       1,0,0
-#     2    green     COLOR_GREEN     0,1,0
-#     3    yellow    COLOR_YELLOW    1,1,0
-#     4    blue      COLOR_BLUE      0,0,1
-#     5    magenta   COLOR_MAGENTA   1,0,1
-#     6    cyan      COLOR_CYAN      0,1,1
-#     7    white     COLOR_WHITE     1,1,1
+# tput setaf * ==> 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 
 echo -e "${magenta}\n\t# Wellcome to DlManga #"
-echo -e " ${green}\t\t\t\t\t* $0 -h for help/example"
+echo -e "${green}\t\t\t\t\t* $0 -h for help/example"
 echo -e "\t${reset}# This Script will download images from <folder(s)> link(s) sequentially #"
 
 if [ "$1" == "-h" ]; then
