@@ -21,45 +21,59 @@
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script: limpeza no sistema (irá precisar do bleachbit estar instalado) e desligar
-#
-# Última atualização: 05/01/2016
-#
+
+# Última atualização: 20/09/2016
+
 if [ $LOGNAME = root ]; then
     echo -e "\n\terro, execute como usuário comum!\n"
-    exit 0
-fi
+else
+    echo -e "\nEste script (para slackware) vai Limpar o seu sistema!"
+    echo -e "\nNecessário ter bleachbit instalado e configurado!"
+    echo "Irá executar o bleachbit como root e como usuário corrente."
+    echo "Além de apagar algumas pastas e arquivos."
 
-echo -e "\nEste script(para slackware) vai Limpar o seu sistema e Desligar!"
-echo "Necessário ter bleachbit instalado e configurado."
-echo "Irá executar o bleachbit como root e como usuário corrente."
-echo "Além de apagar algumas pastas e arquivos."
-echo "Usuário corrente:$LOGNAME"
-echo "Comandos a serem executados:"
-echo "bleachbit -c --preset"
-echo "su - root -c \"bleachbit -c --preset"
-echo "bleachbit -c --preset"
-echo "rm -rfv /tmp/*"
-echo "rm -rfv /tmp/.*"
-echo "rm -rfv /var/tmp/*"
-echo "rm -rfv /var/tmp/.*"
-echo "rm /home/$LOGNAME/.bash_history"
-echo "rm /root/.bash_history"
-echo "halt\""
-echo -e "Deseja continuar \n   (y)es \n   (n)o!"
-read RESPOSTA
+    echo -en "\nApós a limpar o sistema, deseja (d)esligar ou (r)einiciar: "
+    read rebootOrHalt
 
-if [ $RESPOSTA = y ]; then
-    bleachbit -c --preset
-    echo -e "\n\nTerminou de executar o bleachbit como usuário comum logado"
-    echo "Agora digite a senha do usuário root para executar como ele <root>:"
-    su - root -c "bleachbit -c --preset
-    rm -rfv /tmp/*
-    rm -rfv /tmp/.*
-    rm -rfv /var/tmp/*
-    rm -rfv /var/tmp/.*
-    echo \"REBOOT!\"
-    rm /home/'$LOGNAME'/.bash_history
-    rm /root/.bash_history
-    halt"
+    if [ "$rebootOrHalt" == "d" ] || [ "$rebootOrHalt" == "r" ]; then
+        if [ "$rebootOrHalt" = "d" ]; then
+            rebootOrHalt=halt
+        elif [ "$rebootOrHalt" == "r" ]; then
+            rebootOrHalt=reboot
+        fi
+        export rebootOrHalt
+
+        echo -e "\nUsuário corrente:$LOGNAME"
+        echo -e "\nComandos a serem executados:"
+        echo "bleachbit -c --preset"
+        echo "su - root -c \"bleachbit -c --preset"
+        echo "rm -rfv /tmp/*"
+        echo "rm -rfv /tmp/.*"
+        echo "rm -rfv /var/tmp/*"
+        echo "rm -rfv /var/tmp/.*"
+        echo "rm /home/$LOGNAME/.bash_history"
+        echo "rm /root/.bash_history"
+        echo "$rebootOrHalt\""
+
+        echo -en "\nDeseja continuar: \n(y)es - (n)o: "
+        read RESPOSTA
+
+        if [ "$RESPOSTA" = "y" ]; then
+            bleachbit -c --preset
+            echo -e "\nTerminou de executar o bleachbit como usuário comum logado"
+            echo "Agora digite a senha do usuário root para executar como ele"
+            su - root -c "bleachbit -c --preset
+            rm -rfv /tmp/*
+            rm -rfv /tmp/.*
+            rm -rfv /var/tmp/*
+            rm -rfv /var/tmp/.*
+            echo \"REBOOT!\"
+            rm /home/'$LOGNAME'/.bash_history
+            rm /root/.bash_history
+            $rebootOrHalt"
+        fi
+     else
+        echo -e "\n\tNenhuma mudança foi feita"
+    fi
 fi
-echo -e "Fim do script\n"
+echo -e "\nFim do script\n"
