@@ -30,7 +30,7 @@
     # External diff
 # SmartGit command:
     # link this script sh
-    # /usr/bin/smartgit_diff_meld.sh
+    # /usr/bin/smartgit_diff_meld_JBs.sh
 # Arguments
     # ${filePath} ${repositoryRootPath}
 # Handles
