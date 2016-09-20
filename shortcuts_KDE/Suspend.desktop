@@ -1,3 +1,4 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Comment=
 Exec=/usr/bin/lock_screen_turn_off_suspend_JBs.sh
