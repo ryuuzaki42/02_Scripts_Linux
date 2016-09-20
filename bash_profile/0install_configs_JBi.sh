@@ -8,7 +8,6 @@
 echo -e "This script copy (cp .??*) to ~/ and /root/\n"
 echo "List of files that will be copied:"
 ls .??*
-
 echo -e "\t\nBe careful, will overwrite the files if they already exists\n"
 
 echo -en "Want continue and copy this files?\n(y)es - (n)o: "
