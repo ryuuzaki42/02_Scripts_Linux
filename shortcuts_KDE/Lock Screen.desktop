@@ -1,6 +1,6 @@
 [Desktop Entry]
 Comment=
-Exec=/usr/bin/lock_screen_turn_off.sh
+Exec=/usr/bin/lock_screen_turn_off_JBs.sh
 Icon=preferences-desktop-wallpaper
 Name=Lock Screen
 NoDisplay=false

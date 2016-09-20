@@ -2,7 +2,7 @@
 [Desktop Entry]
 Categories=Qt;KDE;Utility;TextEditor;
 Comment=
-Exec=/usr/bin/kwrite_test_open.sh
+Exec=/usr/bin/kwrite_test_open_JBs.sh
 GenericName=Text Editor
 Icon=accessories-text-editor
 InitialPreference=8

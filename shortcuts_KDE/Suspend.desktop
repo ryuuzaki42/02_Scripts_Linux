@@ -1,6 +1,6 @@
 [Desktop Entry]
 Comment=
-Exec=/usr/bin/lock_screen_turn_off_suspend.sh
+Exec=/usr/bin/lock_screen_turn_off_suspend_JBs.sh
 Icon=preferences-desktop-screensaver
 Name=Suspend
 NoDisplay=false
