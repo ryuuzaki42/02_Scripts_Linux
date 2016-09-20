@@ -18,5 +18,7 @@ if [ "$continueCopy" == "y" ]; then
     export scriptsFolder
     su - root -c "cd $scriptsFolder
     cp *_JBs.sh /usr/bin/"
+else
+    echo -e "\n\tThe Files was not copied"
 fi
 echo -e "\nEnd of the script\n"

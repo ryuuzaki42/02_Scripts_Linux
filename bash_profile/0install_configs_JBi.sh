@@ -19,5 +19,7 @@ if [ "$continueCopy" == "y" ]; then
     cp .??* ~/
     su - root -c "cd $configsFolder
     cp .??* /root/"
+else
+    echo -e "\n\tThe Files was not copied"
 fi
 echo -e "\nEnd of the script\n"
