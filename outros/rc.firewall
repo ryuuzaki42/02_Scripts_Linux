@@ -344,4 +344,3 @@ iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "FIREWALL: iptables
 echo "# -------------------------------------------------------------------"
 echo "# IPTABLES - Configuracao personalizada || OK!!!"
 echo "# -------------------------------------------------------------------"
-#

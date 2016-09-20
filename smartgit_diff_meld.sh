@@ -59,4 +59,3 @@ git show HEAD:"$filePathRoot" >> $tmpFile # Generate the a tmpFile from last com
 meld  $tmpFile $fullPath # Open meld with the two files
 
 rm $tmpFile # Delete the tmpFile
-#

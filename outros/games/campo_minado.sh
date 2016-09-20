@@ -222,10 +222,9 @@ while [ $fim -eq 0 ]; do
          echo -e '\033[2K\033[6A'
          ;;
    esac
-   
+
    if [ $pontos -eq 170 ]; then
       echo -e '\033[5B*** VENCEDOR ***'
       break;
    fi
 done
-#

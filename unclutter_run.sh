@@ -31,4 +31,3 @@
 # por um evento no mouse para o que lhe for melhor
 #
 /usr/bin/unclutter -idle 1 -root &
-#

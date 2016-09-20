@@ -22,5 +22,3 @@ if [ "$continueCopy" == "y" ]; then
     cp .??* /root/"
 fi
 echo -e "\nEnd of the script\n"
-
-#

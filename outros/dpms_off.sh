@@ -28,4 +28,3 @@ while true; do
     xset -dpms
     sleep 1m
 done
-#

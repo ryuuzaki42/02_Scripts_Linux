@@ -24,4 +24,3 @@ if [ "$continueCopy" == "y" ]; then
     cp *.sh /usr/bin/"
 fi
 echo -e "\nEnd of the script\n"
-#

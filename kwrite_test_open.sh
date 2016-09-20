@@ -51,4 +51,3 @@ else
         kwrite "$FILENAME"
     fi
 fi
-#

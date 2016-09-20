@@ -12,5 +12,3 @@
 #
 echo "This script copy (cp *.sh) to /home/$USER/.local/share/applications/"
 cp *.desktop /home/$USER/.local/share/applications/
-#
-

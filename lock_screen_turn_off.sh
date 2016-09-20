@@ -42,4 +42,3 @@ fi
 
 sleep 2s
 xset dpms force off # Turn off the screen
-#

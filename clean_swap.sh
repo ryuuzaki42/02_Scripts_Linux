@@ -56,4 +56,3 @@ else
         sleep "$timeToClean"s;
     done
 fi
-#

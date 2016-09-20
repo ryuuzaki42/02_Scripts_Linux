@@ -7,4 +7,3 @@
 # You can use the ./0install.r to do this
 #
 /usr/bin/lightsOnPlusJB.sh &
-#

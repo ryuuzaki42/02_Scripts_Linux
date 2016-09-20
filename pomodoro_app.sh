@@ -51,4 +51,3 @@ while [ $i -lt 5 ]; do
 done
 
 notify-send "Good work" "Pomodoro End"
-#

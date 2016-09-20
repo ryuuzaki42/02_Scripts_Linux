@@ -193,4 +193,3 @@ else
     kdialog --error "Ocorreu um erro! Por Favor
     reinicie o script"
 fi
-#

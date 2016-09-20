@@ -62,6 +62,4 @@ if [ $RESPOSTA = y ]; then
     rm /root/.bash_history
     halt"
 fi
-
 echo -e "Fim do script\n"
-#

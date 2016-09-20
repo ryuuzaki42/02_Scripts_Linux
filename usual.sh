@@ -424,6 +424,4 @@ case $option in
         echo -e "\tTry $0 '--help'"
         ;;
 esac
-
 echo -e "\n#___ So Long, and Thanks for All the Fish ___#\n"
-#

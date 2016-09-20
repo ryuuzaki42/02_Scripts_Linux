@@ -24,27 +24,24 @@
 #
 # Última atualização: 05/01/2016
 #
-if [ $# -ne 1 ] # verifica se foi passado o nome do arquivo
-then
-   echo "$(basename "$0"): Error of the operands"
-   echo "usage $0 name.extension about the file if you "
-   echo "Try $0 --help"
-   exit 0
+if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
+    echo "$(basename "$0"): Error of the operands"
+    echo "usage $0 name.extension about the file if you "
+    echo "Try $0 --help"
 fi
 
 nomeDoArquivo="$1" #Nome do arquivo $1
 
 ajuda () {
-  echo "#                                                        #"
-  echo "# use the file name (with extension) you want to convert #"
-  echo "# i.e.: $0 file.srt                  #"
-  echo "#                                                        #"
-  exit 0
+    echo "#                                                        #"
+    echo "# use the file name (with extension) you want to convert #"
+    echo "# i.e.: $0 file.srt                  #"
+    echo "#                                                        #"
 }
 
 case "$1" in
-'--help')
-  ajuda
+    '--help')
+        ajuda
 esac
 
 tamString=$(echo "$nomeDoArquivo" | wc -m | sed 's/ '"$nomeDoArquivo"'//g') #Calcula o tamanho da string
@@ -63,11 +60,9 @@ extensao=$(echo "$nomeDoArquivo" | cut -c$tamString2-) # extensao do arquivo
 
 #converter de utf-8 para iso-8859-1
 iconv -f iso-8859-1 -t utf-8 "$nomeDoArquivo" > "$nome2"2".$extensao"
-if [ $? == 1 ]
-then
-  echo -e "Erro encontrado na execução do iconv \nTente $0 --help"
+if [ $? == 1 ]; then
+    echo -e "Erro encontrado na execução do iconv \nTente $0 --help"
 else
-  echo -e "Convertido com sucesso \"$nomeDoArquivo\" de utf-8 para iso-8859-1"
-  echo "$nomeDoArquivo --> "$nome2"2".$extensao""
+    echo -e "Convertido com sucesso \"$nomeDoArquivo\" de utf-8 para iso-8859-1"
+    echo "$nomeDoArquivo --> "$nome2"2".$extensao""
 fi
-#

@@ -29,4 +29,3 @@ select var in "Linux" "Gnu Hurd" "Free BSD" "Other"; do
    break
 done
 echo "Você selecionou $var"
-#

@@ -324,4 +324,3 @@ if [ "$newFolder" != "n" ]; then
     cd .. # Move to folder up, leaving the manga folder
 fi
 echo -e "Download finished. \"Long life and prosperity\"\n\n"
-#

@@ -25,13 +25,12 @@
 # Última atualização: 04/04/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
-#
+
 if [ -f ~/.bashrc ]; then
     . ~/.bashrc
 fi
-#
+
 PATH=$PATH:/bin
 BASH_HEV=$HOME/.bashrc
 USERNAME=""
 export USERNAME BASH_HEV PATH
-#

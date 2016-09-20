@@ -252,4 +252,3 @@ while [ $INPUT != "q" ];do
     cat_ball
     let counter++
 done
-#

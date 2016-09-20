@@ -320,4 +320,3 @@ while true; do
     [ -f "$inhibitfile" ] && delayScreensaver || checkFullscreen
     sleep $delay
 done
-#

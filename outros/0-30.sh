@@ -18,4 +18,3 @@ else
     fi
 fi
 echo "Fim do scritp." # Aspas duplas
-#

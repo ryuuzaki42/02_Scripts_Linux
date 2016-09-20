@@ -391,7 +391,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $E $G" == "O   O" ]
@@ -401,20 +401,16 @@ _display()
             MOVED=1
         fi
     fi
-    
-    if [ $MOVED == 0 ]
-    then
 
-        if [ "$C $E $G" == "O O  " ]
-        then
+    if [ $MOVED == 0 ]; then
+        if [ "$C $E $G" == "O O  " ]; then
             G=O
             NUMBER=7
             MOVED=1
         fi
     fi
-    
-    if [ $MOVED == 0 ]
-    then
+
+    if [ $MOVED == 0 ]; then
         if [ "$A $B $C" == "  X X" ]
         then
             A=O
@@ -422,6 +418,7 @@ _display()
             MOVED=1
         fi
     fi
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $B $C" == "X   X" ]
@@ -431,7 +428,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $B $C" == "X X  " ]
@@ -441,7 +438,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -454,6 +450,7 @@ _display()
             MOVED=1
         fi
     fi
+
     if [ $MOVED == 0 ]
     then
         if [ "$D $E $F" == "X   X" ]
@@ -463,7 +460,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$D $E $F" == "X X  " ]
@@ -473,7 +470,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -486,7 +482,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$G $H $I" == "X   X" ]
@@ -496,7 +492,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$G $H $I" == "X X  " ]
@@ -506,7 +502,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -519,7 +514,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $D $G" == "X   X" ]
@@ -529,7 +524,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $D $G" == "X X  " ]
@@ -539,7 +534,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -552,7 +546,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$B $E $H" == "X   X" ]
@@ -562,7 +556,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$B $E $H" == "X X  " ]
@@ -572,7 +566,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -585,7 +578,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $F $I" == "X   X" ]
@@ -595,7 +588,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $F $I" == "X X  " ]
@@ -605,7 +598,6 @@ _display()
             MOVED=1
         fi
     fi
-    
 
 ################################################################################
 
@@ -618,7 +610,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $E $I" == "X   X" ]
@@ -628,7 +620,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $E $I" == "X X  " ]
@@ -638,7 +630,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -651,7 +643,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $E $G" == "X   X" ]
@@ -661,7 +653,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
 
@@ -672,7 +664,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 ################################################################################
 
 
@@ -912,4 +904,3 @@ do
         INITUSER=X
     fi
 done
-#

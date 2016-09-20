@@ -368,4 +368,3 @@ while true; do
     read a
     [ `echo $a | tr n N` = N ] && exit
 done
-#
