@@ -14,3 +14,5 @@ http://alien.slackbook.org/blog/
 http://www.slackware.com/~alien/slackbuilds/
 
 https://www.facebook.com/groups/slackwarebr/
+
+https://telegram.me/slackshowbr
