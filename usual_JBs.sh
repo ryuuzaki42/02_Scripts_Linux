@@ -360,13 +360,15 @@ case $option in
     "-pdf" ) # Need Ghostscript
         echo -e "# Reduce a PDF file #\n"
         if [ $# -eq 1 ]; then
-            echo -e "\n\tError: Use $0 -pdf file.pdf" # Pdf not found
+            echo -e "\n\tError: Use $0 -pdf file.pdf"
         else # Convert the file
-            filePdf="$2"
-            if [ -x $filePdf ]; then
-                gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$file"-r.pdf "$file"
-            else
-                echo -e "\n\tError: The file $filePdf not exists"
+            filePdfInput="$2"
+            if [ -x "$filePdfInput" ]; then
+                filePdfOutput=${filePdfInput::-4}
+                gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput"_r.pdf "$filePdfInput"
+                echo -e "\nThe output pdf file: \""$filePdfOutput"_r.pdf\" was saved"
+            else # Pdf not found
+                echo -e "\n\tError: The file $filePdfInput not exists"
             fi
         fi
         ;;
