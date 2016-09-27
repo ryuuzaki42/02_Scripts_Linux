@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 17/09/2016
+# Última atualização: 26/09/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -30,41 +30,39 @@ option="$1"
 
 help () {
     echo "Options:"
-    echo "              -folder-diff     - Show the difference between two folder"
-    echo "              -pingt          - Ping test on domain (default is google.com)"
-    echo "              -search-pwd     - Search in this directory for same pattern"
-    echo "              -create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-    echo "              -cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-    echo "              -dc-wifi      * - Disconnect to one Wi-Fi network"
-    echo "              -men-info       - Show memory and swap percentage of use"
-    echo "              -ap-info        - Show information about the AP connected"
-    echo "              -l-iw         * - List the Wi-Fi AP around with iw (show WPS and more)"
-    echo "              -l-iwlist       - List the Wi-Fi AP around with iwlist (show WPA/2 and more)"
-    echo "              -texlive-up   * - Update the texlive packages with the command iw and iwlist"
-    echo "              -nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-    echo "              -b1           * - Set brightness value (accept % value, up and down)"
-    echo "              -b2           = - Set brightness value with xbacklight (accept % value, up, down, up % and down %)"
-    echo "              -date         * - Update the date"
-    echo "              -lpkg-c         - Count of packages that are installed in the Slackware"
-    echo "              -lpkg           - List last packages installed"
-    echo "              -pdf            - Reduce a PDF"
-    echo "              -swap         * - Clean up the Swap Memory"
-    echo "              -slack-up     * - Slackware update"
-    echo "              -up-db        * - Update the database for 'locate'"
-    echo "              -w              - Show the weather forecast"
-    echo "                     * - root required"
-    echo "                     + - NetworkManager required"
-    echo "                     = - X server required"
+    echo "              folder-diff    - Show the difference between two folder"
+    echo "              ping-test      - Ping test on domain (default is google.com)"
+    echo "              search-pwd     - Search in this directory for same pattern"
+    echo "              create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+    echo "              cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+    echo "              dc-wifi      * - Disconnect to one Wi-Fi network"
+    echo "              men-info       - Show memory and swap percentage of use"
+    echo "              ap-info        - Show information about the AP connected"
+    echo "              l-iw         * - List the Wi-Fi AP around with iw (show WPS and more)"
+    echo "              l-iwlist       - List the Wi-Fi AP around with iwlist (show WPA/2 and more)"
+    echo "              texlive-up   * - Update the texlive packages with the command iw and iwlist"
+    echo "              nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+    echo "              brigh-1      * - Set brightness value (accept % value, up and down)"
+    echo "              brigh-2      = - Set brightness value with xbacklight (accept % value, up, down, up % and down %)"
+    echo "              date         * - Update the date"
+    echo "              lpkg-c         - Count of packages that are installed in the Slackware"
+    echo "              lpkg           - List last packages installed"
+    echo "              pdf-r          - Reduce a PDF"
+    echo "              swap-clean   * - Clean up the Swap Memory"
+    echo "              slack-up     * - Slackware update"
+    echo "              up-db        * - Update the database for 'locate'"
+    echo "              weather        - Show the weather forecast"
+    echo "Obs: * root required, + NetworkManager required, = X server required"
 }
 
 case $option in
     "" | "--help" | "-h" )
         help
         ;;
-    "-folder-diff" )
+    "folder-diff" )
         echo "# Show the difference between two folder #"
         if [ $# -lt 3 ]; then
-            echo -e "\n\tError: Need two parameters, $0 -folder-dif 'pathSource' 'pathDestination'"
+            echo -e "\n\tError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'"
         else
             pathSource=$2
             pathDestination=$3
@@ -120,7 +118,7 @@ case $option in
             fi
         fi
         ;;
-    "-search-pwd" )
+    "search-pwd" )
         echo "# Search in this directory for same pattern #"
         echo -en "\nPattern to search: "
         read patternSearch
@@ -128,7 +126,7 @@ case $option in
         echo
         grep -rn $PWD -e $patternSearch
         ;;
-    "-pingt" )
+    "ping-test" )
         echo -e "# Ping test on domain (default is google.com) #\n"
         if [ $# -eq 1 ]; then
             domainPing="google.com"
@@ -138,7 +136,7 @@ case $option in
 
         ping -c 3 $domainPing
         ;;
-    "-create-wifi" )
+    "create-wifi" )
         echo -e "# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
         su - root -c 'echo -n "Name of the network (SSID): "
         read netSSID
@@ -148,7 +146,7 @@ case $option in
 
         wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf'
         ;;
-    "-cn-wifi" )
+    "cn-wifi" )
         echo -e "# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
         if ps faux | grep "NetworkManager" | grep -v -q "grep"; then # Test if NetworkManager is running
             echo -e "\n\tError: NetworkManager is running, please kill him with: killall NetworkManager"
@@ -160,7 +158,7 @@ case $option in
 
                 networkConfigAvaiable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
                 if [ "$networkConfigAvaiable" == "" ]; then
-                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi"
+                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                 else
                     echo "Choose one network to connect"
                     cat /etc/wpa_supplicant.conf | grep "ssid"
@@ -171,7 +169,7 @@ case $option in
                     wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
 
                     if [ "$wpaConf" == "" ]; then
-                        echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 -create-wifi"
+                        echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                     else
                         TMPFILE=`mktemp` # Create a TMP-file
                         cat /etc/wpa_supplicant.conf | grep -v -E  "{|}|ssid|psk" > $TMPFILE
@@ -195,13 +193,13 @@ case $option in
             fi
         fi
         ;;
-    "-dc-wifi" )
+    "dc-wifi" )
         echo -e "# Desconnect to one Wi-Fi network #\n"
         su - root -c 'dhclient -r wlan0
         ifconfig wlan0 down
         iw dev wlan0 link'
         ;;
-    "-men-info" )
+    "men-info" )
         echo "# Show memory and swap percentage of use #"
         memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
         memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
@@ -218,28 +216,28 @@ case $option in
             echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
-    "-ap-info" )
+    "ap-info" )
         echo -e "# Show information about the AP connected #\n"
         /usr/sbin/iw dev wlan0 link
         ;;
-    "-l-iw" )
+    "l-iw" )
         echo -e "# List the Wi-Fi AP around, with iw (show WPS and more infos) #\n"
         su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
         ;;
-    "-l-iwlist" )
+    "l-iwlist" )
         echo -e "# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #\n"
         /sbin/iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
-    "-texlive-up" )
+    "texlive-up" )
         echo -e "# Update the texlive packages #\n"
         su - root -c "tlmgr update --self
         tlmgr update --all"
         ;;
-    "-nm-list" )
+    "nm-list" )
         echo -e "# List the Wi-Fi AP around with the nmcli from NetworkManager #\n"
         nmcli device wifi list
         ;;
-    "-b1" )
+    "brigh-1" )
         echo "# Set brightness percentage value #"
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
@@ -299,7 +297,7 @@ case $option in
             su - root -c "echo $brightnessValueFinal > $pathFile/brightness"
         fi
         ;;
-    "-b2" )
+    "brigh-2" )
         echo "# Set brightness percentage value with xbacklight #"
         if [ $# -eq 1 ]; then # Option without value set brightness in 1%
             xbacklight -set 1
@@ -329,20 +327,20 @@ case $option in
                     echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)"
                 fi
             else
-                echo -e "\n\tError: Value must be only digit (e.g. $0 -b2 up 10 to set brightness up in 10 %)"
+                echo -e "\n\tError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)"
             fi
         fi
         ;;
-    "-date" )
+    "date" )
         echo -e "# Update the date #\n"
         su - root -c 'ntpdate -u -b ntp1.ptb.de'
         ;;
-    "-lpkg-c" )
+    "lpkg-c" )
         echo "# Count of packages that are installed in the Slackware #"
         countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
         echo -e "\nThere are $countPackages packages installed"
         ;;
-    "-lpkg" )
+    "lpkg" )
         echo "# List last packages installed #"
         if [ $# -eq 1 ]; then
             numberPackages=10
@@ -357,10 +355,10 @@ case $option in
         echo -e "\nList of the last $numberPackages packages installed\n"
         ls -l --sort=time /var/log/packages/ | head -n $numberPackages | grep -v "total [[:digit:]]"
         ;;
-    "-pdf" ) # Need Ghostscript
+    "pdf-r" ) # Need Ghostscript
         echo -e "# Reduce a PDF file #\n"
         if [ $# -eq 1 ]; then
-            echo -e "\n\tError: Use $0 -pdf file.pdf"
+            echo -e "\n\tError: Use $0 pdf-r file.pdf"
         else # Convert the file
             filePdfInput="$2"
             if [ -x "$filePdfInput" ]; then
@@ -372,7 +370,7 @@ case $option in
             fi
         fi
         ;;
-    "-swap" )
+    "swap-clean" )
         echo "# Clean up the Swap Memory #"
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
         if [ $testSwap -eq 0 ]; then
@@ -398,7 +396,7 @@ case $option in
             fi
         fi
         ;;
-    "-slack-up" )
+    "slack-up" )
         echo "# Slackware update #"
         echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
         read useBL
@@ -413,12 +411,12 @@ case $option in
             USEBL=1 slackpkg upgrade-all"
         fi
         ;;
-    "-up-db" )
+    "up-db" )
         echo -e "# Update the database for 'locate' #\n"
         su - root -c "updatedb" # Update de database
         echo -e "\nDatabase updated"
         ;;
-    "-w" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+    "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
     * )
