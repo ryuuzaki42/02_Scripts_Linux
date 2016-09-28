@@ -37,7 +37,7 @@ echo -e "\t# Modulos # Estado       #"
 if xrandr | grep -q "LVDS1 connected"; then
     echo -e "\t# LVDS1   # Conectado    #"
     LVDS1_status=true
-    LVDS1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
+    LVDS1_resolution=`xrandr | grep \+ | grep -v "+0" | grep -v "connected" | cut -d' ' -f4 | sed -n "1p"`
 else
     echo -e "\t# LVDS1   # Desconectado #"
 fi
@@ -45,7 +45,7 @@ fi
 if xrandr | grep -q "VGA1 connected"; then
     echo -e "\t# VGA1    # Conectado    #"
     VGA1_status=true
-    VGA1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "2p"`
+    VGA1_resolution=`xrandr | grep \+ | grep -v "+0" | grep -v "connected" | cut -d' ' -f4 | sed -n "2p"`
 else
     echo -e "\t# VGA1    # Desconectado #"
 fi
@@ -53,7 +53,7 @@ fi
 if xrandr | grep -q "HDMI1 connected"; then
     echo -e "\t# HDMI1   # Conectado    #"
     HDMI1_status=true
-    HDMI1_resolution=`xrandr  | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "3p"`
+    HDMI1_resolution=`xrandr  | grep \+ | grep -v "+0" | grep -v "connected" | cut -d' ' -f4 | sed -n "3p"`
 else
     echo -e "\t# HDMI1   # Desconectado #"
 fi
@@ -64,7 +64,7 @@ if [ $VGA1_status == true ]; then
     echo "2 - LVDS1 off, VGA1 $VGA1_resolution on"
     echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
     echo "4 - LVDS1 $LVDS1_resolution (primary) left-of VGA1 $VGA1_resolution"
-    echo "5 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution (primary)"
+    echo "5 - LVDS1 $LVDS1_resolution right-of VGA1 $VGA1_resolution (primary)"
     echo "0 - Outras opções"
     echo "s - Apenas terminar/sair"
 
@@ -77,6 +77,24 @@ if [ $VGA1_status == true ]; then
 else
     echo -e "\n\tErro\nNenhum dispositivo conectado na saída VGA1\n"
     exit 1
+fi
+
+# LVDS1 part resolution
+LVDS1_resolution_Part1=`echo $LVDS1_resolution | cut -d 'x' -f1`
+LVDS1_resolution_Part2=`echo $LVDS1_resolution | cut -d 'x' -f2`
+
+# VGA1 part resolution
+VGA1_resolution_Part1=`echo $VGA1_resolution | cut -d 'x' -f1`
+VGA1_resolution_Part2=`echo $VGA1_resolution | cut -d 'x' -f2`
+
+# Diff VGA1_p2 - LVDS1_p2
+diffResolutionPart2=`echo "$VGA1_resolution_Part2 - $LVDS1_resolution_Part2" | bc`
+
+
+if [ "$1" != "" ]; then ## Test propose
+    echo -e "\nLVDS1: $LVDS1_resolution_Part1 x $LVDS1_resolution_Part2"
+    echo "VGA1: $VGA1_resolution_Part1 x $VGA1_resolution_Part2"
+    echo "Diff_part2: ($VGA1_resolution_Part2 - $LVDS1_resolution_Part2) = $diffResolutionPart2"
 fi
 
 case $resposta in
@@ -93,25 +111,17 @@ case $resposta in
         xrandr --output VGA1 --mode 1024x768 --same-as LVDS1
         ;;
     4 )
-        xrandr --output LVDS1 --mode 1024x768
-        xrandr --output VGA1 --mode 1024x768
-        xrandr --output LVDS1 --mode $LVDS1_resolution --primary
-        xrandr --output LVDS1 --left-of VGA1
-        xrandr --output VGA1 --mode $VGA1_resolution
+        xrandr --output LVDS1 --mode $LVDS1_resolution --primary --pos 0x$diffResolutionPart2 --output VGA1 --mode $VGA1_resolution --pos "$LVDS1_resolution_Part1"x0
         ;;
     5 )
-        xrandr --output LVDS1 --mode 1024x768
-        xrandr --output VGA1 --mode 1024x768
-        xrandr --output LVDS1 --mode $LVDS1_resolution
-        xrandr --output LVDS1 --left-of VGA1
-        xrandr --output VGA1 --mode $VGA1_resolution --primary
+        xrandr --output LVDS1 --mode $LVDS1_resolution --pos "$VGA1_resolution_Part1"x"$diffResolutionPart2" --output VGA1 --mode $VGA1_resolution --primary --pos 0x0
         ;;
     0 )
         if [ $VGA1_status == true ]; then
             echo -e "\n6 - LVDS1 left-of VGA1"
             echo "7 - LVDS1 right-of VGA1"
-            echo "8 - LVDS1 above VGA1"
-            echo "9 - LVDS1 below VGA1"
+            echo "8 - LVDS1 above-of VGA1"
+            echo "9 - LVDS1 below-of VGA1"
             echo "10 - LVDS1 $LVDS1_resolution"
             echo "11 - VGA1 $VGA1_resolution"
             echo "s - Apenas terminar/sair"
