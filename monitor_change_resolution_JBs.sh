@@ -22,11 +22,12 @@
 #
 # Script: altera resolução do seu monitor e projetor
 #
-# Última atualização: 06/06/2016
+# Última atualização: 28/09/2016
 #
 echo -e "\nEste script altera a resolução do monitor (LVDS1), saída VGA (VGA1), saída HDMI (HDMI1)\n"
 
-LVDS1_status=false # Inicialização de variáveis
+# Inicialização de variáveis
+LVDS1_status=false
 VGA1_status=false
 HDMI1_status=false # Implementação no futuro
 
@@ -62,10 +63,12 @@ if [ $VGA1_status == true ]; then
     echo "1 - LVDS1 $LVDS1_resolution on, VGA1 off"
     echo "2 - LVDS1 off, VGA1 $VGA1_resolution on"
     echo "3 - LVDS1 e VGA1 1024x768 (espelho)"
-    echo "4 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution"
+    echo "4 - LVDS1 $LVDS1_resolution (primary) left-of VGA1 $VGA1_resolution"
+    echo "5 - LVDS1 $LVDS1_resolution left-of VGA1 $VGA1_resolution (primary)"
     echo "0 - Outras opções"
-    echo "s - Apenas terminar"
-    echo -e "\nQual opções deseja?"
+    echo "s - Apenas terminar/sair"
+
+    echo -e "\nQual opção deseja?"
     read resposta
     if [ "$resposta" == '' ]; then
       echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas\n"
@@ -96,14 +99,24 @@ case $resposta in
         xrandr --output LVDS1 --left-of VGA1
         xrandr --output VGA1 --mode $VGA1_resolution
         ;;
+    5 )
+        xrandr --output LVDS1 --mode 1024x768
+        xrandr --output VGA1 --mode 1024x768
+        xrandr --output LVDS1 --mode $LVDS1_resolution
+        xrandr --output LVDS1 --left-of VGA1
+        xrandr --output VGA1 --mode $VGA1_resolution --primary
+        ;;
     0 )
         if [ $VGA1_status == true ]; then
-            echo -e "\n5 - LVDS1 left-of VGA1"
-            echo "6 - LVDS1 right-of VGA1"
-            echo "7 - LVDS1 $LVDS1_resolution"
-            echo "8 - VGA1 $VGA1_resolution"
-            echo "s - Apenas terminar"
-            echo -e "\nQual opções deseja?"
+            echo -e "\n6 - LVDS1 left-of VGA1"
+            echo "7 - LVDS1 right-of VGA1"
+            echo "8 - LVDS1 above VGA1"
+            echo "9 - LVDS1 below VGA1"
+            echo "10 - LVDS1 $LVDS1_resolution"
+            echo "11 - VGA1 $VGA1_resolution"
+            echo "s - Apenas terminar/sair"
+
+            echo -e "\nQual opção deseja?"
             read resposta
             if [ "$resposta" == '' ]; then
                 echo -e "\n\tErro\nVocê deve digitar uma das opções solicitadas\n"
@@ -114,16 +127,22 @@ case $resposta in
             exit 1
         fi
         case $resposta in
-            5 )
+            6 )
                 xrandr --output LVDS1 --left-of VGA1
                 ;;
-            6 )
+            7 )
                 xrandr --output LVDS1 --right-of VGA1
                 ;;
-            7 )
+            8 )
+                xrandr --output LVDS1 --above VGA1
+                ;;
+            9 )
+                xrandr --output LVDS1 --below VGA1
+                ;;
+            10 )
                 xrandr --output LVDS1 --mode $LVDS1_resolution
                 ;;
-            8 )
+            11 )
                 xrandr --output VGA1 --mode $VGA1_resolution
                 ;;
         esac
