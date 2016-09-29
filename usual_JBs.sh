@@ -361,7 +361,7 @@ case $option in
             echo -e "\n\tError: Use $0 pdf-r file.pdf"
         else # Convert the file
             filePdfInput="$2"
-            if [ -x "$filePdfInput" ]; then
+            if [ -e "$filePdfInput" ]; then
                 filePdfOutput=${filePdfInput::-4}
                 gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput"_r.pdf "$filePdfInput"
                 echo -e "\nThe output pdf file: \""$filePdfOutput"_r.pdf\" was saved"
