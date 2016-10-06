@@ -31,8 +31,10 @@ export PAGER='/usr/bin/most -s' # to display color man pages, using most instead
 # tput setaf * ==> 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 if [ $(id -u) -eq 0 ]; then # root
     PS1="\\[$(tput setaf 3)\\][\\u@\\h:\\w]# "
+    #PS1="\\[\\][\\u@\\h:\\w]# "
 else # user normal
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ "
+    #PS1="\\[\\][\\u@\\h:\\w]$ "
 
     echo -e '\t*** Bem-vindo ao host '`hostname`' ***'
     #echo; screenfetch -E; echo # Uncomment if you want to use the screenfetch
