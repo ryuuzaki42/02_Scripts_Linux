@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 26/09/2016
+# Última atualização: 06/10/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -52,6 +52,7 @@ help () {
     echo "              slack-up     * - Slackware update"
     echo "              up-db        * - Update the database for 'locate'"
     echo "              weather        - Show the weather forecast"
+    echo "              now          * - Run texlive-up date swap-clean slack-up up-db"
     echo "Obs: * root required, + NetworkManager required, = X server required"
 }
 
@@ -218,7 +219,10 @@ case $option in
         ;;
     "ap-info" )
         echo -e "# Show information about the AP connected #\n"
+        echo -e "\n/usr/sbin/iw dev wlan0 link:"
         /usr/sbin/iw dev wlan0 link
+        echo -e "\n/sbin/iwconfig wlan0:"
+        /sbin/iwconfig wlan0
         ;;
     "l-iw" )
         echo -e "# List the Wi-Fi AP around, with iw (show WPS and more infos) #\n"
@@ -418,6 +422,15 @@ case $option in
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
+        ;;
+     "now" )
+        echo -e "# now * - Run texlive-up date swap-clean slack-up up-db #\n"
+
+        $0 texlive-up
+        $0 date
+        $0 swap-clean
+        $0 slack-up
+        $0 up-db
         ;;
     * )
         echo -e "\n\t$(basename "$0"): Error of parameters"
