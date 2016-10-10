@@ -5,7 +5,7 @@
 
 ### Links úteis:
 
-[Slackware official site](http://www.slackware.com/) - Baixe o Slackware 14.2  [aqui] (http://www.slackware.com/getslack/) ou via torrent ([32-bit x86] (http://www.slackware.com/torrents/slackware-14.2-source-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
+[Slackware site](http://www.slackware.com/) - Baixe o Slackware 14.2  [aqui](http://www.slackware.com/getslack/) ou via torrent ([32-bit x86](http://www.slackware.com/torrents/slackware-14.2-source-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
 
 [Slackbuilds](https://slackbuilds.org/) - Script para contruir uma vasta gama de programas para Slackware
 
