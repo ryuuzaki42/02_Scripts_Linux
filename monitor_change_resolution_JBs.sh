@@ -22,7 +22,7 @@
 #
 # Script: altera resolução do seu monitor e projetor
 #
-# Last update: 29/09/2016
+# Last update: 10/10/2016
 #
 echo -e "\nScript to change the resolution of your display (LVDS1), output (VGA1) and output HDMI (HDMI1)\n"
 
@@ -72,11 +72,11 @@ if [ $VGA1_status == true ]; then
     read optionSelected
     if [ "$optionSelected" == '' ]; then
         echo -e "\n\tError: You need select one of the option listed\n"
-        optionSelected="" # Seting a option that is not valid to jump the case in front
+        optionSelected="" # Setting an option that is not valid to jump the case in front
     fi
 else
     echo -e "\n\tError: None device connected in the output VGA1\n"
-    optionSelected="" # Seting a option that is not valid to jump the case in front
+    optionSelected="" # Setting an option that is not valid to jump the case in front
 fi
 
 if [ "$optionSelected" == 4 ] || [ "$optionSelected" == 5 ]; then # Only for the option 4 and 5
@@ -154,12 +154,25 @@ case $optionSelected in
             if echo $VGA1_resolution_actual | grep -q [[:digit:]]; then # Test if VGA1 is ative
                 diffResolutionPart2=`echo "$VGA1_resolution_Part2 - $LVDS1_resolution_Part2" | bc`
             else
-                echo -e "\n\tError: VGA1 is not ative\n"
-                optionSelected="" # Seting a option that is not valid to jump the case in front
+                echo -e "\n\tError: VGA1 is not active\n"
+                LVDS1orVGA1NotAtive=1
             fi
         else
-            echo -e "\n\tError: LVDS1 is not ative\n"
-            optionSelected="" # Seting a option that is not valid to jump the case in front
+            echo -e "\n\tError: LVDS1 is not active\n"
+            LVDS1orVGA1NotAtive=1
+        fi
+
+        if [ "$LVDS1orVGA1NotAtive" == "1" ]; then
+            echo "What you want, set the maximum resolution for both and continue or just terminate?"
+            echo -en "\t(s)et the maximum resolution - (t)erminate: "
+            read continueOrNot
+
+            if [ "$continueOrNot" == "s" ]; then # Set the maximum resolution for both and continue
+                xrandr --output LVDS1 --mode $LVDS1_resolution
+                xrandr --output VGA1 --mode $VGA1_resolution
+            else # Just terminate
+                optionSelected="" # Setting an option that is not valid to jump the case in front
+            fi
         fi
 
         if [ "$1" != "" ]; then ## Test propose
