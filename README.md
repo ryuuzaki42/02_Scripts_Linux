@@ -1,18 +1,18 @@
-# README #
-**
-Scritps para facilitar o uso do O.S. Slackware.**
+# README
+
+## Scritps para facilitar o uso do O.S. Slackware
 
 
-**Links úteis:**
+### Links úteis:
 
-http://www.slackware.com/
+[Slackware official site](http://www.slackware.com/) - Baixe o Slackware 14.2  [aqui] (http://www.slackware.com/getslack/) ou via torrent ([32-bit x86] (http://www.slackware.com/torrents/slackware-14.2-source-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
 
-http://slackbuilds.org/
+[Slackbuilds](https://slackbuilds.org/) - Script para contruir uma vasta gama de programas para Slackware
 
-http://alien.slackbook.org/blog/
+[AlienBOB](http://alien.slackbook.org/blog/) - Blog focado na distro Slackaware
 
-http://www.slackware.com/~alien/slackbuilds/
+[~alien-slackbuids](http://www.slackware.com/~alien/slackbuilds/) - Vários pacotes já compilados pelo AlienBOB
 
-https://www.facebook.com/groups/slackwarebr/
+[Slackware Brasil](https://www.facebook.com/groups/slackwarebr/) - Facebook Group
 
-https://telegram.me/slackshowbr
+[Slack Show BR](https://telegram.me/slackshowbr) - Telegram Group
