@@ -30,7 +30,7 @@ option="$1"
 
 help () {
     echo "Options:"
-    echo "              folder-diff    - Show the difference between two folder"
+    echo "              folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)"
     echo "              ping-test      - Ping test on domain (default is google.com)"
     echo "              search-pwd     - Search in this directory (recursive) for a pattern"
     echo "              create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
@@ -38,20 +38,20 @@ help () {
     echo "              dc-wifi      * - Disconnect to one Wi-Fi network"
     echo "              men-info       - Show memory and swap percentage of use"
     echo "              ap-info        - Show information about the AP connected"
-    echo "              l-iw         * - List the Wi-Fi AP around with iw (show WPS and more)"
-    echo "              l-iwlist       - List the Wi-Fi AP around with iwlist (show WPA/2 and more)"
-    echo "              texlive-up   * - Update the texlive packages with the command iw and iwlist"
+    echo "              l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
+    echo "              l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
+    echo "              texlive-up   * - Update the texlive packages"
     echo "              nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-    echo "              brigh-1      * - Set brightness value (accept % value, up and down)"
-    echo "              brigh-2      = - Set brightness value with xbacklight (accept % value, up, down, up % and down %)"
+    echo "              brigh-1      * - Set brightness percentage value (accept % value, up and down)"
+    echo "              brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
     echo "              date         * - Update the date"
     echo "              lpkg-c         - Count of packages that are installed in the Slackware"
-    echo "              lpkg           - List last packages installed"
-    echo "              pdf-r          - Reduce a PDF"
+    echo "              lpkg           - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+    echo "              pdf-r          - Reduce a PDF file"
     echo "              swap-clean   * - Clean up the Swap Memory"
     echo "              slack-up     * - Slackware update"
     echo "              up-db        * - Update the database for 'locate'"
-    echo "              weather        - Show the weather forecast"
+    echo "              weather        - Show the weather forecast (you can change the city in the script)"
     echo "              now          * - Run texlive-up date swap-clean slack-up up-db"
     echo "Obs: * root required, + NetworkManager required, = X server required"
 }
@@ -61,61 +61,75 @@ case $option in
         help
         ;;
     "folder-diff" )
-        echo "# Show the difference between two folder #"
+        echo "# Show the difference between two folder and (can) make them equal (with rsync) #"
         if [ $# -lt 3 ]; then
             echo -e "\n\tError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'"
         else
+            echo -e "\n\t## An Important Note ##\n"
+            echo "The trailing slash (/) at the end of the first argument (source folder). For example: \"rsync -a dir1/ dir2\""
+            echo "This is necessary to mean \"the contents of dir1\". The alternative, without the trailing slash, would place dir1,"
+            echo -e "including the directory, within dir2. This would create a hierarchy that looks like: dir2/dir1/[files]"
+            echo "## Please double-check your arguments before continue ##"
+
             pathSource=$2
             pathDestination=$3
-            echo -e "\nSource: $pathSource"
-            echo "Destination: $pathDestination"
+            echo -e "\nSource folder: $pathSource"
+            echo "Destination folder: $pathDestination"
 
-            if [ -x $pathSource ]; then # Test if 'source' exists
-                if [ -x $pathDestination ]; then # Test if 'destination' exists
-                    echo -e "\nPlease wait until all files are compared ...\n"
-                    folderChanges=`rsync -aicn --delete $pathSource $pathDestination` # | grep ">"`
-                    # -a archive mode; # -i output a change-summary for all updates
-                    # -c skip based on checksum, not mod-time & size; # -n perform a trial run with no changes made
-                    # --delete delete extraneous files from destination directories
+            echo -en "\nWant continue and use these source and destination folders?\n(y)es - (n)o: "
+            read continueRsync
 
-                    filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
-                    if [ "$filesDelete" != "" ]; then
-                        echo -e "\nFiles to be delete:\n$filesDelete"
-                    fi
+            if [ "$continueRsync" == "y" ]; then
+                if [ -x "$pathSource" ]; then # Test if 'source' exists
+                    if [ -x "$pathDestination" ]; then # Test if 'destination' exists
+                        echo -en "\nPlease wait until all files are compared..."
+                        folderChanges=`rsync -aicn --delete "$pathSource" "$pathDestination"`
+                        # -a archive mode; -i output a change-summary for all updates
+                        # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
+                        # --delete delete extraneous files from destination directories
 
-                    filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
-                    if [ "$filesDifferent" != "" ]; then
-                        echo -e "\nFiles different:\n$filesDifferent"
-                    fi
-
-                    filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
-                    if [ "$filesNew" != "" ]; then
-                        echo -e "\nNew files:\n$filesNew"
-                    fi
-
-                    if [ "$filesDelete" == "" ] && [ "$filesDifferent" == "" ] && [ "$filesNew" == "" ]; then
-                        echo -e "\nThe source and the destination don't have difference\nSource: $pathSource\nDestination: $pathDestination\n"
-                    else
-                        echo -en "\nShow rsync change-summary?\n(y)es or (N)o: "
-                        read showRsyncS
-                        if [ "$showRsyncS" == "y" ]; then
-                            echo -e "\n$folderChanges"
+                        echo # just a new blank line
+                        filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
+                        if [ "$filesDelete" != "" ]; then
+                            echo -e "\nFiles to be delete:\n$filesDelete"
                         fi
 
-                        echo -en "\nMake this change in disk?\n(y)es or (N)o: "
-                        read continueWriteDisk
-                        if [ "$continueWriteDisk" == y ]; then
-                            echo -e "Changes are writing in $pathDestination\nPlease wait...\n"
-                            rsync -crvh --delete $pathSource $pathDestination
+                        filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
+                        if [ "$filesDifferent" != "" ]; then
+                            echo -e "\nFiles different:\n$filesDifferent"
+                        fi
+
+                        filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
+                        if [ "$filesNew" != "" ]; then
+                            echo -e "\nNew files:\n$filesNew"
+                        fi
+
+                        if [ "$filesDelete" == "" ] && [ "$filesDifferent" == "" ] && [ "$filesNew" == "" ]; then
+                            echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't any difference"
                         else
-                            echo -e "\n\tAny change write in disk"
+                            echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
+                            read showRsyncS
+                            if [ "$showRsyncS" == "y" ]; then
+                                echo -e "\n$folderChanges"
+                            fi
+
+                            echo -en "\nMake this change in disk?\n(y)es - (n)o: "
+                            read continueWriteDisk
+                            if [ "$continueWriteDisk" == y ]; then
+                                echo -e "Changes are writing in "$pathDestination"\nPlease wait...\n"
+                                rsync -crvh --delete "$pathSource" "$pathDestination"
+                            else
+                                echo -e "\n\tAny change write in disk"
+                            fi
                         fi
+                    else
+                        echo -e "\n\tError: The destination ($pathDestination) don't exists"
                     fi
                 else
-                    echo -e "\n\tError: The destination ($pathDestination) don't exists"
+                    echo -e "\n\tError: The source ($pathSource) don't exists"
                 fi
             else
-                echo -e "\n\tError: The source ($pathSource) don't exists"
+                echo -e "\n\tAny change write in disk"
             fi
         fi
         ;;
@@ -126,7 +140,7 @@ case $option in
 
         echo -e "\nSearching... please wait...\n"
         grep -rn $patternSearch .
-        # -r, --recursive,  -n, --line-number print line number with output lines, "." is equal to $PWD or `pwd`
+        # -r, --recursive, -n, --line-number print line number with output lines, "." is equal to $PWD or `pwd`
         ;;
     "ping-test" )
         echo -e "# Ping test on domain (default is google.com) #\n"
@@ -158,8 +172,8 @@ case $option in
             else
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
-                networkConfigAvaiable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
-                if [ "$networkConfigAvaiable" == "" ]; then
+                networkConfigAvailable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
+                if [ "$networkConfigAvailable" == "" ]; then
                     echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                 else
                     echo "Choose one network to connect"
@@ -167,14 +181,14 @@ case $option in
                     echo -n "Network name: "
                     read networkName
 
-                    # sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' filename # sed in block text
+                    #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' filename # sed in block text
                     wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
 
                     if [ "$wpaConf" == "" ]; then
                         echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                     else
                         TMPFILE=`mktemp` # Create a TMP-file
-                        cat /etc/wpa_supplicant.conf | grep -v -E  "{|}|ssid|psk" > $TMPFILE
+                        cat /etc/wpa_supplicant.conf | grep -v -E "{|}|ssid|psk" > $TMPFILE
 
                         echo -e "$wpaConf" >> $TMPFILE # Save the configuration of the network on this file
 
@@ -196,7 +210,7 @@ case $option in
         fi
         ;;
     "dc-wifi" )
-        echo -e "# Desconnect to one Wi-Fi network #\n"
+        echo -e "# Disconnect to one Wi-Fi network #\n"
         su - root -c 'dhclient -r wlan0
         ifconfig wlan0 down
         iw dev wlan0 link'
@@ -219,7 +233,7 @@ case $option in
         fi
         ;;
     "ap-info" )
-        echo -e "# Show information about the AP connected #\n"
+        echo -e "# Show information about the AP connected #"
         echo -e "\n/usr/sbin/iw dev wlan0 link:"
         /usr/sbin/iw dev wlan0 link
         echo -e "\n/sbin/iwconfig wlan0:"
@@ -243,7 +257,7 @@ case $option in
         nmcli device wifi list
         ;;
     "brigh-1" )
-        echo "# Set brightness percentage value #"
+        echo "# Set brightness percentage value (accept % value, up and down) #"
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
         else
@@ -268,7 +282,7 @@ case $option in
             brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
             brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc` # Get the percentage of 1% from max_brightness
 
-            actualBrightness=`cat $pathFile/actual_brightness`  # Get actual_brightness
+            actualBrightness=`cat $pathFile/actual_brightness` # Get actual_brightness
             actualBrightness=`echo "scale=2; $actualBrightness/$brightnessPercentage" | bc`
 
             brightnessValue=$actualBrightness
@@ -303,7 +317,7 @@ case $option in
         fi
         ;;
     "brigh-2" )
-        echo "# Set brightness percentage value with xbacklight #"
+        echo "# Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %) #"
         if [ $# -eq 1 ]; then # Option without value set brightness in 1%
             xbacklight -set 1
         elif [ $# -eq 2 ]; then # Option to one value of input to set
@@ -346,7 +360,7 @@ case $option in
         echo -e "\nThere are $countPackages packages installed"
         ;;
     "lpkg" )
-        echo "# List last packages installed #"
+        echo "# List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10) #"
         if [ $# -eq 1 ]; then
             numberPackages=10
         else
@@ -388,13 +402,13 @@ case $option in
             echo -e "\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
 
             if [ $swapUsed -eq 0 ]; then
-                echo -e "\nSwap is already clean!"
+                echo -e "\nSwap is already clean"
             else
                 echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
                 read cleanSwap
 
                 if [ "$cleanSwap" == "y" ]; then
-                    su - root -c 'echo -e "\nCleanning swap\nPlease wait..."
+                    su - root -c 'echo -e "\nCleanning swap. Please wait..."
                     swapoff -a
                     swapon -a'
                 fi
@@ -422,10 +436,11 @@ case $option in
         echo -e "\nDatabase updated"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+        echo -e "# Show the weather forecast (you can change the city in the script) #\n"
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "# now * - Run texlive-up date swap-clean slack-up up-db #\n"
+        echo -e "# now - Run texlive-up date swap-clean slack-up up-db #\n"
 
         $0 texlive-up
         $0 date
