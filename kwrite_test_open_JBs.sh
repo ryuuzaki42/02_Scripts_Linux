@@ -26,14 +26,13 @@
 # Dica: pela interface do KDE-menu altere para o icone do kwrite abrir este script
 # em vez de executar o "kwrite"
 #
-# Última atualização: 29/04/2016
+# Última atualização: 13/10/2016
 #
 if [ $# -eq 0 ]; then # Verifica se foi passado o nome do arquivo
     echo -e "\nApenas abrindo o kwrite...\n"
     kwrite
 else
     FILENAME="$1" # Nome do arquivo que irá abrir
-    PWD=`pwd` # Caminho da pasta
     FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1` # Tamanho deste aquivo em kibibyte
 
     # Apenas para teste
