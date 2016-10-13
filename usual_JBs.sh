@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 06/10/2016
+# Última atualização: 13/10/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -32,7 +32,7 @@ help () {
     echo "Options:"
     echo "              folder-diff    - Show the difference between two folder"
     echo "              ping-test      - Ping test on domain (default is google.com)"
-    echo "              search-pwd     - Search in this directory for same pattern"
+    echo "              search-pwd     - Search in this directory (recursive) for a pattern"
     echo "              create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
     echo "              cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
     echo "              dc-wifi      * - Disconnect to one Wi-Fi network"
@@ -120,12 +120,13 @@ case $option in
         fi
         ;;
     "search-pwd" )
-        echo "# Search in this directory for same pattern #"
+        echo "# Search in this directory (recursive) for a pattern #"
         echo -en "\nPattern to search: "
         read patternSearch
 
-        echo
-        grep -rn $PWD -e $patternSearch
+        echo -e "\nSearching... please wait...\n"
+        grep -rn $patternSearch .
+        # -r, --recursive,  -n, --line-number print line number with output lines, "." is equal to $PWD or `pwd`
         ;;
     "ping-test" )
         echo -e "# Ping test on domain (default is google.com) #\n"
