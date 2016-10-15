@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 14/10/2016
+# Última atualização: 15/10/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -31,10 +31,10 @@ option="$1"
 help () {
     echo "Options:"
     echo "              ip             - Get your IP"
-    echo "              cpu-max        - Process with more CPU in use"
-    echo "              mem-max        - Process with more memory RAM in use"
+    echo "              cpu-max        - Process with more CPU use"
+    echo "              mem-max        - Process with more memory RAM use"
     echo "              day-install    - The day the system are installed"
-    echo "              screen-shot    - Screenshot from display :0"
+    echo "              screenshot     - Screenshot from display :0"
     echo "              print-lines    - Print part of file (lineStart to lineEnd)"
     echo "              folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)"
     echo "              ping-test      - Ping test on domain (default is google.com)"
@@ -75,17 +75,17 @@ case $option in
         echo "External IP: $externalIP"
         ;;
     "cpu-max" )
-        echo -e "# Process with more CPU in use #\n"
+        echo -e "# Process with more CPU use #\n"
         ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head
         ;;
     "mem-max" )
-        echo -e "# Process with more memory RAM in use #\n"
-        ps axo pid,%cpu,%mem,cmd  --sort -rss | head
+        echo -e "# Process with more memory RAM use #\n"
+        ps axo pid,%cpu,%mem,cmd --sort -rss | head
         ;;
     "day-install" )
         echo -e "# The day the system are installed #"
         dayInstall=`ls -alct / | tail -1 | awk '{print $6, $7, $8}'`
-        echo -e "\nThe system way installed: $dayInstall"
+        echo -e "\nThe system was installed at the time: $dayInstall"
         ;;
     "print-lines" )
         echo -e "# Print part of file (lineStart to lineEnd) #"
@@ -118,7 +118,7 @@ case $option in
         echo -e "# Screenshot from display :0 #\n"
         dateNow=`date`
         import -window root -display :0 screenshot_"$dateNow".jpg
-        echo "\nScreenshot \"screenshot_"$dateNow".jpg\" saved"
+        echo "Screenshot \"screenshot_"$dateNow".jpg\" saved"
         ;;
     "folder-diff" )
         echo "# Show the difference between two folder and (can) make them equal (with rsync) #"
