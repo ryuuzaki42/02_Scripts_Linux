@@ -31,8 +31,8 @@ option="$1"
 help () {
     echo "Options:"
     echo "              ip             - Get your IP"
-    echo "              cpu-max        - Process with more CPU use"
-    echo "              mem-max        - Process with more memory RAM use"
+    echo "              cpu-max        - Show the 10 process with more CPU use"
+    echo "              mem-max        - Show the 10 process with more memory RAM use"
     echo "              day-install    - The day the system are installed"
     echo "              screenshot     - Screenshot from display :0"
     echo "              print-lines    - Print part of file (lineStart to lineEnd)"
@@ -52,7 +52,8 @@ help () {
     echo "              brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
     echo "              date         * - Update the date"
     echo "              lpkg-c         - Count of packages that are installed in the Slackware"
-    echo "              lpkg           - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+    echo "              lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+    echo "              lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
     echo "              pdf-r          - Reduce a PDF file"
     echo "              swap-clean   * - Clean up the Swap Memory"
     echo "              slack-up     * - Slackware update"
@@ -75,16 +76,16 @@ case $option in
         echo "External IP: $externalIP"
         ;;
     "cpu-max" )
-        echo -e "# Process with more CPU use #\n"
-        ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head
+        echo -e "# Show the 10 process with more CPU use #\n"
+        ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head -n 11
         ;;
     "mem-max" )
-        echo -e "# Process with more memory RAM use #\n"
-        ps axo pid,%cpu,%mem,cmd --sort -rss | head
+        echo -e "# Show the 10 process with more memory RAM use #\n"
+        ps axo pid,%cpu,%mem,cmd --sort -rss | head -n 11
         ;;
     "day-install" )
         echo -e "# The day the system are installed #"
-        dayInstall=`ls -alct / | tail -1 | awk '{print $6, $7, $8}'`
+        dayInstall=`ls -alct / | tail -n 1 | awk '{print $6, $7, $8}'`
         echo -e "\nThe system was installed at the time: $dayInstall"
         ;;
     "print-lines" )
@@ -107,7 +108,7 @@ case $option in
                     lineStartTmp=$((lineEnd-lineStart))
                     ((lineStartTmp++))
 
-                    cat -n $inputFile | head -$lineEnd | tail -$lineStartTmp
+                    cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
                 fi
              else
                 echo -e "\n\tError: lineStart and lineEnd must be number"
@@ -419,8 +420,16 @@ case $option in
         countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
         echo -e "\nThere are $countPackages packages installed"
         ;;
-    "lpkg" )
-        echo "# List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10) #"
+    "lpkg-i" | "lpkg-r" )
+        if [ "$1" == "lpkg-i" ]; then
+            functionWord="installed"
+            workFolder="/var/log/packages/"
+        elif [ "$1" == "lpkg-r" ]; then
+            functionWord="removed"
+            workFolder="/var/log/removed_packages/"
+        fi
+        echo -e "# List last packages $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #\n"
+
         if [ $# -eq 1 ]; then
             numberPackages=10
         else
@@ -431,8 +440,7 @@ case $option in
             fi
         fi
 
-        echo -e "\nList of the last $numberPackages packages installed\n"
-        ls -l --sort=time /var/log/packages/ | head -n $numberPackages | grep -v "total [[:digit:]]"
+        ls -l --sort=time $workFolder | head -n $numberPackages | grep -v "total [[:digit:]]"
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "# Reduce a PDF file #\n"
