@@ -30,6 +30,12 @@ option="$1"
 
 help () {
     echo "Options:"
+    echo "              ip             - Get your IP"
+    echo "              cpu-max        - Process with more CPU in use"
+    echo "              mem-max        - Process with more memory RAM in use"
+    echo "              day-install    - The day the system are installed"
+    echo "              screen-shot    - Screenshot from display :0"
+    echo "              print-lines    - Print part of file (lineStart to lineEnd)"
     echo "              folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)"
     echo "              ping-test      - Ping test on domain (default is google.com)"
     echo "              search-pwd     - Search in this directory (recursive) for a pattern"
@@ -59,6 +65,60 @@ help () {
 case $option in
     "" | "--help" | "-h" )
         help
+        ;;
+    "ip" )
+        echo -e "# Get your IP #\n"
+        localIP=`/sbin/ifconfig | grep broadcast | awk '{print $2}'`
+        echo "Local IP: $localIP"
+
+        externalIP=`wget -qO - icanhazip.com`
+        echo "External IP: $externalIP"
+        ;;
+    "cpu-max" )
+        echo -e "# Process with more CPU in use #\n"
+        ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head
+        ;;
+    "mem-max" )
+        echo -e "# Process with more memory RAM in use #\n"
+        ps axo pid,%cpu,%mem,cmd  --sort -rss | head
+        ;;
+    "day-install" )
+        echo -e "# The day the system are installed #"
+        dayInstall=`ls -alct / | tail -1 | awk '{print $6, $7, $8}'`
+        echo -e "\nThe system way installed: $dayInstall"
+        ;;
+    "print-lines" )
+        echo -e "# Print part of file (lineStart to lineEnd) #"
+        inputFile=$2 # File to read
+
+        if [ "$inputFile" == "" ]; then
+            echo -e "\n\tError: You need pass the file name, e.g., $0 print-lines file.txt"
+        else
+            echo -n "Line to start: "
+            read lineStart
+            echo -n "Line to end: "
+            read lineEnd
+
+            if echo $lineStart | grep -q [[:digit:]] && echo $lineEnd | grep -q [[:digit:]]; then
+                if [ $lineStart -gt $lineEnd ]; then
+                    echo -e "\n\tError: lineStart must be smaller than lineEnd"
+                else
+                    echo -e "\nPrint of \"$inputFile\" line $lineStart to $lineEnd\n"
+                    lineStartTmp=$((lineEnd-lineStart))
+                    ((lineStartTmp++))
+
+                    cat -n $inputFile | head -$lineEnd | tail -$lineStartTmp
+                fi
+             else
+                echo -e "\n\tError: lineStart and lineEnd must be number"
+             fi
+        fi
+        ;;
+    "screenshot" )
+        echo -e "# Screenshot from display :0 #\n"
+        dateNow=`date`
+        import -window root -display :0 screenshot_"$dateNow".jpg
+        echo "\nScreenshot \"screenshot_"$dateNow".jpg\" saved"
         ;;
     "folder-diff" )
         echo "# Show the difference between two folder and (can) make them equal (with rsync) #"
