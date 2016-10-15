@@ -30,6 +30,7 @@ option="$1"
 
 help () {
     echo "Options:"
+    echo "              work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
     echo "              ip             - Get your IP"
     echo "              cpu-max        - Show the 10 process with more CPU use"
     echo "              mem-max        - Show the 10 process with more memory RAM use"
@@ -67,6 +68,36 @@ case $option in
     "" | "--help" | "-h" )
         help
         ;;
+    "work-fbi" )
+        echo " # Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #"
+        echo -e "\nWarning: depending on how big is your Hard drive, this can take a long time"
+        echo -en "Want continue?\n(y)es - (n)o: "
+        read contineDd
+
+        if [ "$contineDd" == "y" ]; then
+            fileName="work-fbi_" # Create a iso file with a random part name
+            fileName+=`date +%s | md5sum | head -c 10`
+            fileName+=".iso"
+
+            echo "You can use <zero> or <random> valuue"
+            echo "Using <random> value is better to overwrite your deleted file"
+            echo "Otherwise, is slower (almost 10 times) then use <zero> value"
+            echo "Long story short, use <zero> if you has deleted not pretty good sensitive date"
+            echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
+            read continueRandomOrZero
+
+            if [ "$continueRandomOrZero" == "r" ]; then
+                dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M  conv=notrunc status=progress # Write <random> value to wipe the data
+                echo -en "\nWriting <random> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
+            else
+                echo -en "\nWriting <zero> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
+                dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M  conv=notrunc status=progress # Write <zero> value to wipe the data
+            fi
+
+            rm $fileName # Delete the <big> file generated
+            echo -e "\nThe \"$fileName\" tmp file was deleted"
+        fi
+        ;;
     "ip" )
         echo -e "# Get your IP #\n"
         localIP=`/sbin/ifconfig | grep broadcast | awk '{print $2}'`
@@ -93,7 +124,7 @@ case $option in
         inputFile=$2 # File to read
 
         if [ "$inputFile" == "" ]; then
-            echo -e "\n\tError: You need pass the file name, e.g., $0 print-lines file.txt"
+            echo -e "\n\tError: You need to pass the file name, e.g., $0 print-lines file.txt"
         else
             echo -n "Line to start: "
             read lineStart
@@ -152,7 +183,7 @@ case $option in
                         echo # just a new blank line
                         filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
                         if [ "$filesDelete" != "" ]; then
-                            echo -e "\nFiles to be delete:\n$filesDelete"
+                            echo -e "\nFiles to be deleted:\n$filesDelete"
                         fi
 
                         filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
@@ -174,23 +205,23 @@ case $option in
                                 echo -e "\n$folderChanges"
                             fi
 
-                            echo -en "\nMake this change in disk?\n(y)es - (n)o: "
+                            echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
                             read continueWriteDisk
                             if [ "$continueWriteDisk" == y ]; then
                                 echo -e "Changes are writing in "$pathDestination"\nPlease wait..."
                                 rsync -crvh --delete "$pathSource" "$pathDestination"
                             else
-                                echo -e "\n\tAny change write in disk"
+                                echo -e "\n\tAny change writes in disk"
                             fi
                         fi
                     else
-                        echo -e "\n\tError: The destination ($pathDestination) don't exists"
+                        echo -e "\n\tError: The destination ($pathDestination) don't exist"
                     fi
                 else
-                    echo -e "\n\tError: The source ($pathSource) don't exists"
+                    echo -e "\n\tError: The source ($pathSource) don't exist"
                 fi
             else
-                echo -e "\n\tAny change write in disk"
+                echo -e "\n\tAny change writes in disk"
             fi
         fi
         ;;
@@ -242,7 +273,7 @@ case $option in
                     echo -n "Network name: "
                     read networkName
 
-                    #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' filename # sed in block text
+                    #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
                     wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
 
                     if [ "$wpaConf" == "" ]; then
