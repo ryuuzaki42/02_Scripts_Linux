@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 13/10/2016
+# Última atualização: 14/10/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -52,7 +52,7 @@ help () {
     echo "              slack-up     * - Slackware update"
     echo "              up-db        * - Update the database for 'locate'"
     echo "              weather        - Show the weather forecast (you can change the city in the script)"
-    echo "              now          * - Run texlive-up date swap-clean slack-up up-db"
+    echo "              now          * - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
     echo "Obs: * root required, + NetworkManager required, = X server required"
 }
 
@@ -80,8 +80,8 @@ case $option in
             read continueRsync
 
             if [ "$continueRsync" == "y" ]; then
-                if [ -x "$pathSource" ]; then # Test if 'source' exists
-                    if [ -x "$pathDestination" ]; then # Test if 'destination' exists
+                if [ -e "$pathSource" ]; then # Test if 'source' exists
+                    if [ -e "$pathDestination" ]; then # Test if 'destination' exists
                         echo -en "\nPlease wait until all files are compared..."
                         folderChanges=`rsync -aicn --delete "$pathSource" "$pathDestination"`
                         # -a archive mode; -i output a change-summary for all updates
@@ -116,7 +116,7 @@ case $option in
                             echo -en "\nMake this change in disk?\n(y)es - (n)o: "
                             read continueWriteDisk
                             if [ "$continueWriteDisk" == y ]; then
-                                echo -e "Changes are writing in "$pathDestination"\nPlease wait...\n"
+                                echo -e "Changes are writing in "$pathDestination"\nPlease wait..."
                                 rsync -crvh --delete "$pathSource" "$pathDestination"
                             else
                                 echo -e "\n\tAny change write in disk"
@@ -138,7 +138,7 @@ case $option in
         echo -en "\nPattern to search: "
         read patternSearch
 
-        echo -e "\nSearching... please wait...\n"
+        echo -e "\nSearching, please wait..."
         grep -rn $patternSearch .
         # -r, --recursive, -n, --line-number print line number with output lines, "." is equal to $PWD or `pwd`
         ;;
@@ -417,16 +417,21 @@ case $option in
         ;;
     "slack-up" )
         echo "# Slackware update #"
-        echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
-        read useBL
+        if [ "$2" == "" ]; then
+            echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
+            read useBL
+        else
+            useBL=$2
+        fi
+        echo "Use blacklist: $useBL"
 
         if [ "$useBL" == "n" ]; then # slackpkg not using USEBL
             su - root -c "slackpkg update gpg
-            slackpkg update
+            slackpkg update -batch=on
             USEBL=0 slackpkg upgrade-all"
         else # slackpkg using USEBL
             su - root -c "slackpkg update gpg
-            slackpkg update
+            slackpkg update -batch=on
             USEBL=1 slackpkg upgrade-all"
         fi
         ;;
@@ -440,12 +445,12 @@ case $option in
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "# now - Run texlive-up date swap-clean slack-up up-db #\n"
+        echo -e "# now - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
 
         $0 texlive-up
         $0 date
         $0 swap-clean
-        $0 slack-up
+        $0 slack-up n
         $0 up-db
         ;;
     * )
