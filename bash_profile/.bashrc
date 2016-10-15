@@ -21,7 +21,7 @@
 #
 # Descrição: Arquivo-bashrc para carregar configuração do bash
 #
-# Última atualização: 25/08/2016
+# Última atualização: 14/10/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -59,7 +59,23 @@ alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
 alias ls='ls -ah --color=auto'
-alias space='i=0; while [ "$i" -lt 20 ]; do echo; ((i++)); done'
+
+echo_blank-lines() { # Print blank lines on terminal
+    lineNumber=$1
+
+    if [ "$lineNumber" == "" ]; then
+        lineNumber=10
+    fi
+
+    if echo $lineNumber | grep -q [[:digit:]]; then
+        j=0
+        while [ "$j" -lt "$lineNumber" ]; do
+            echo
+            ((j++))
+        done
+    fi
+}
+alias blank-lines='echo_blank-lines'
 
 # Uncomment if you want use those alias
 #alias l='ls -CF'
