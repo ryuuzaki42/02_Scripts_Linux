@@ -1,8 +1,7 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;KDE;Utility;TextEditor;
 Comment=
-Exec=/usr/bin/kwrite_test_open_JBs.sh
+Exec=/usr/bin/editor_test_open_JBs.sh kwrite
 GenericName=Text Editor
 Icon=accessories-text-editor
 InitialPreference=8
