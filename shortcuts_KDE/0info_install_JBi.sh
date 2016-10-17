@@ -18,7 +18,7 @@ echo -e "\t\nBe careful, will overwrite the files if they already exists\n"
 echo -en "Want continue and copy this files?\n(y)es - (n)o: "
 read continueCopy
 
-if [ "$continueCopy" == "y" ]; then
+if [ "$continueCopy" == 'y' ]; then
     cp *.desktop /home/$USER/.local/share/applications/
 else
     echo -e "\n\tThe Files was not copied"

@@ -35,10 +35,10 @@ else
     echo -en "\nApós a limpar o sistema, deseja (d)esligar ou (r)einiciar: "
     read rebootOrHalt
 
-    if [ "$rebootOrHalt" == "d" ] || [ "$rebootOrHalt" == "r" ]; then
-        if [ "$rebootOrHalt" = "d" ]; then
+    if [ "$rebootOrHalt" == 'd' ] || [ "$rebootOrHalt" == 'r' ]; then
+        if [ "$rebootOrHalt" = 'd' ]; then
             rebootOrHalt=halt
-        elif [ "$rebootOrHalt" == "r" ]; then
+        elif [ "$rebootOrHalt" == 'r' ]; then
             rebootOrHalt=reboot
         fi
         export rebootOrHalt
@@ -58,7 +58,7 @@ else
         echo -en "\nDeseja continuar: \n(y)es - (n)o: "
         read RESPOSTA
 
-        if [ "$RESPOSTA" = "y" ]; then
+        if [ "$RESPOSTA" = 'y' ]; then
             bleachbit -c --preset
             echo -e "\nTerminou de executar o bleachbit como usuário comum logado"
             echo "Agora digite a senha do usuário root para executar como ele"

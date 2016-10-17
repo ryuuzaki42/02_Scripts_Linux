@@ -91,7 +91,7 @@ if [ "$optionSelected" == 4 ] || [ "$optionSelected" == 5 ]; then # Only for the
     # Diff VGA1_p2 - LVDS1_p2
     diffResolutionPart2=`echo "$VGA1_resolution_Part2 - $LVDS1_resolution_Part2" | bc`
 
-    if [ "$1" != "" ]; then ## Test propose
+    if [ "$1" != '' ]; then ## Test propose
         echo -e "\nLVDS1: $LVDS1_resolution_Part1 x $LVDS1_resolution_Part2"
         echo "VGA1: $VGA1_resolution_Part1 x $VGA1_resolution_Part2"
         echo "Diff_part2: ($VGA1_resolution_Part2 - $LVDS1_resolution_Part2) = $diffResolutionPart2"
@@ -136,7 +136,7 @@ case $optionSelected in
         LVDS1_resolution_actual=`xrandr | grep "LVDS1" | sed 's/ primary//' | cut -d" " -f3 | cut -d"+" -f1`
         VGA1_resolution_actual=`xrandr | grep "VGA1" | sed 's/ primary//' | cut -d" " -f3 | cut -d"+" -f1`
 
-        if [ "$1" != "" ]; then ## Test propose
+        if [ "$1" != '' ]; then ## Test propose
             echo -e "\nLVDS1: $LVDS1_resolution_actual"
             echo "VGA1: $VGA1_resolution_actual"
         fi
@@ -162,12 +162,12 @@ case $optionSelected in
             LVDS1orVGA1NotAtive=1
         fi
 
-        if [ "$LVDS1orVGA1NotAtive" == "1" ]; then
+        if [ "$LVDS1orVGA1NotAtive" == 1 ]; then
             echo "What you want, set the maximum resolution for both and continue or just terminate?"
             echo -en "\t(s)et the maximum resolution - (t)erminate: "
             read continueOrNot
 
-            if [ "$continueOrNot" == "s" ]; then # Set the maximum resolution for both and continue
+            if [ "$continueOrNot" == 's' ]; then # Set the maximum resolution for both and continue
                 xrandr --output LVDS1 --mode $LVDS1_resolution
                 xrandr --output VGA1 --mode $VGA1_resolution
             else # Just terminate
@@ -175,7 +175,7 @@ case $optionSelected in
             fi
         fi
 
-        if [ "$1" != "" ]; then ## Test propose
+        if [ "$1" != '' ]; then ## Test propose
             echo -e "\nLVDS1: $LVDS1_resolution_Part1 x $LVDS1_resolution_Part2"
             echo "VGA1: $VGA1_resolution_Part1 x $VGA1_resolution_Part2"
             echo "Diff_part2: ($VGA1_resolution_Part2 - $LVDS1_resolution_Part2) = $diffResolutionPart2"

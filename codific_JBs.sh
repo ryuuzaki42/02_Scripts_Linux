@@ -75,10 +75,10 @@ if [ $? -eq 1 ]; then
 else
     echo -e "\n## Arquivo convertido com sucesso ##\n\"$nomeArquivo\" de $codInicial para $codFinal"
     echo "$nomeArquivo --> $nomeArquivo2"_"$codFinal.$extensao"
-    echo -e "\nSobrescrever o arquivo original?"
-    echo "(y)es, (n)o"
+
+    echo -en "\nSobrescrever o arquivo original?\n(y)es, (n)o: "
     read resposta
-    if [ $resposta = y ]; then
+    if [ "$resposta" = 'y' ]; then
         mv "$nomeArquivo2"_"$codFinal.$extensao" "$nomeArquivo"
         echo -e "O arquivo foi sobrescrito\n Fim do script\n"
     else

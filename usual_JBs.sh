@@ -143,7 +143,7 @@ case $option in
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
             read continueRandomOrZero
 
-            if [ "$continueRandomOrZero" == "r" ]; then
+            if [ "$continueRandomOrZero" == 'r' ]; then
                 dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M  conv=notrunc status=progress # Write <random> value to wipe the data
                 echo -en "\nWriting <random> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
             else

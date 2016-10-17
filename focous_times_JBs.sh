@@ -26,7 +26,7 @@
 # Última atualização: 18/10/2016
 #
 timeToFoco=$1
-if [ "$timeToFoco" == "" ]; then
+if [ "$timeToFoco" == '' ]; then
     timeToFoco=1
 fi
 

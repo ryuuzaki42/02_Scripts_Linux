@@ -35,7 +35,7 @@ else
     echo -e "\n\tError, file to set brightness not found"
 fi
 
-if [ "$pathFile" != "" ]; then
+if [ "$pathFile" != '' ]; then
     while true; do
         brightnessValue=`cat $pathFile/brightness`
         #echo "Actual brightness: $brightnessValue"

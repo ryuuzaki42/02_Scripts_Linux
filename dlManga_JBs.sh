@@ -97,7 +97,7 @@ if [ $chapterStart -gt $chapterEnd ]; then
     exit 1
 fi
 
-if [ "$newFolder" != "n" ]; then
+if [ "$newFolder" != 'n' ]; then
     mkdir "$nameManga" 2> /dev/null # Create folder destination
     cd "$nameManga" # Move to there
 fi
@@ -311,7 +311,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
     imagensNotDownload=''
 done # end
 
-if [ "$newFolder" != "n" ]; then
+if [ "$newFolder" != 'n' ]; then
     cd .. # Move to folder up, leaving the manga folder
 fi
 echo -e "Download finished. \"Long life and prosperity\"\n\n"
