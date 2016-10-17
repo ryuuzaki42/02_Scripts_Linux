@@ -20,13 +20,18 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: foco - te avisa se já terminou as 2 horas de trabalho
+# Script: foco - te avisa se já terminou as $1 hora(s) de trabalho
 # depois 15 minutos de descanso
 #
-# Última atualização: 05/01/2016
+# Última atualização: 18/10/2016
 #
-echo "Begin Foco de 2 hora..."`date` > /dev/pts/0
-sleep 2h
+timeToFoco=$1
+if [ "$timeToFoco" == "" ]; then
+    timeToFoco=1
+fi
+
+echo "Begin Foco de $timeToFoco hora..."`date` > /dev/pts/0
+sleep "$timeToFoco"h
 echo "Break of 15 minutos..."`date` > /dev/pts/0
 sleep 15m
 echo "Break End..."`date` > /dev/pts/0
