@@ -29,41 +29,42 @@ echo -e "\n #___ Script to usual commands ___#\n"
 option="$1"
 
 help () {
-    echo "Options:"
-    echo "              search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern"
-    echo "              work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
-    echo "              ip             - Get your IP"
-    echo "              cpu-max        - Show the 10 process with more CPU use"
-    echo "              mem-max        - Show the 10 process with more memory RAM use"
-    echo "              day-install    - The day the system are installed"
-    echo "              screenshot     - Screenshot from display :0"
-    echo "              print-lines    - Print part of file (lineStart to lineEnd)"
-    echo "              folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)"
-    echo "              ping-test      - Ping test on domain (default is google.com)"
-    echo "              search-pwd     - Search in this directory (recursive) for a pattern"
-    echo "              create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-    echo "              cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-    echo "              dc-wifi      * - Disconnect to one Wi-Fi network"
-    echo "              men-info       - Show memory and swap percentage of use"
-    echo "              ap-info        - Show information about the AP connected"
-    echo "              l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
-    echo "              l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
-    echo "              texlive-up   * - Update the texlive packages"
-    echo "              nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-    echo "              brigh-1      * - Set brightness percentage value (accept % value, up and down)"
-    echo "              brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-    echo "              date         * - Update the date"
-    echo "              lpkg-c         - Count of packages that are installed in the Slackware"
-    echo "              lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
-    echo "              lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
-    echo "              pdf-r          - Reduce a PDF file"
-    echo "              swap-clean   * - Clean up the Swap Memory"
-    echo "              slack-up     * - Slackware update"
-    echo "              up-db        * - Update the database for 'locate'"
-    echo "              weather        - Show the weather forecast (you can change the city in the script)"
-    echo "              now          * - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
-    echo
-    echo "Obs: * root required, + NetworkManager required, = X server required"
+    echo "Options:
+
+    search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
+    work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
+    ip             - Get your IP
+    cpu-max        - Show the 10 process with more CPU use
+    mem-max        - Show the 10 process with more memory RAM use
+    day-install    - The day the system are installed
+    screenshot     - Screenshot from display :0
+    print-lines    - Print part of file (lineStart to lineEnd)
+    folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)
+    ping-test      - Ping test on domain (default is google.com)
+    search-pwd     - Search in this directory (recursive) for a pattern
+    create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
+    cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
+    dc-wifi      * - Disconnect to one Wi-Fi network
+    men-info       - Show memory and swap percentage of use
+    ap-info        - Show information about the AP connected
+    l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)
+    l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
+    texlive-up   * - Update the texlive packages
+    nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager
+    brigh-1      * - Set brightness percentage value (accept % value, up and down)
+    brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)
+    date         * - Update the date
+    lpkg-c         - Count of packages that are installed in the Slackware
+    lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
+    lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
+    pdf-r          - Reduce a PDF file
+    swap-clean   * - Clean up the Swap Memory
+    slack-up     * - Slackware update
+    up-db        * - Update the database for 'locate'
+    weather        - Show the weather forecast (you can change the city in the script)
+    now          * - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
+
+    Obs: * root required, + NetworkManager required, = X server required"
 }
 
 case $option in
