@@ -79,7 +79,7 @@ case $option in
         intialFolder=$PWD
         cd /var/log/packages/
 
-        echo -en "\nSeaching, please wait..."
+        echo -en "\nSearching, please wait..."
 
         tmpFileName=`mktemp` # Create a TMP-file
         tmpFileFull=`mktemp` # Create a TMP-file
@@ -136,7 +136,7 @@ case $option in
             fileName+=`date +%s | md5sum | head -c 10`
             fileName+=".iso"
 
-            echo "You can use <zero> or <random> valuue"
+            echo "You can use <zero> or <random> value"
             echo "Using <random> value is better to overwrite your deleted file"
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
             echo "Long story short, use <zero> if you has not deleted pretty good sensitive data"
@@ -568,7 +568,7 @@ case $option in
                 fi
 
                 if [ "$cleanSwap" == 'y' ]; then
-                    su - root -c 'echo -e "\nCleanning swap. Please wait..."
+                    su - root -c 'echo -e "\nCleaning swap. Please wait..."
                     swapoff -a
                     swapon -a'
                 fi
