@@ -20,33 +20,33 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: testa o tamanho do arquivo antes de abrir no kwrite
+# Script: testa o tamanho do arquivo antes de abrir no em algum editor de texto
 # Obs: Arquivos com mais de 100 MiB não serão abertos, com um aviso de arquivo muito grande
 #
-# Dica: pela interface do KDE-menu altere para o icone do kwrite abrir este script
-# em vez de executar o "kwrite"
+# Dica: pela interface do KDE-menu (ou outros) altere para o icone do seu editor padrão
+# por este script em vez de executar o "programName"
 #
-# Última atualização: 13/10/2016
+# Última atualização: 17/10/2016
 #
-if [ $# -eq 0 ]; then # Verifica se foi passado o nome do arquivo
-    echo -e "\nApenas abrindo o kwrite...\n"
-    kwrite
+# To use, set in icon command:
+# /usr/bin/editor_test_open_JBs.sh programName, for example:
+# /usr/bin/editor_test_open_JBs.sh kwrite
+#
+editorText=$1 # Like kwrite and gedit
+if [ $# -lt 2 ]; then # text the count of parramters, 1 "editor" 2 "fileName"
+    $editorText # Just open the text editor
 else
-    FILENAME="$1" # Nome do arquivo que irá abrir
-    FILE_SIZE_MB=`du -m "$FILENAME" | cut -f1` # Tamanho deste aquivo em kibibyte
-
-    # Apenas para teste
-    echo -e "\nArquivo: $FILENAME"
-    echo -e "Tamanho em MiB: $FILE_SIZE_MB\n"
+    fileName="$2" # Nome do arquivo que irá abrir
+    fileSizeMB=`du -m "$fileName" | cut -f1` # Tamanho deste aquivo em kibibyte
 
     # Testa de tamanho do arquivo é maior que 100 MiB
-    if [ "$FILE_SIZE_MB" -gt 100 ]; then # = 100 MiB (mebibyte)
-        TMPFILE=`mktemp`
-        echo "Aquivo muito grande para ser aberto no Kwrite." > $TMPFILE
-        echo -n "Abra com outro programa." >> $TMPFILE
-        kwrite $TMPFILE
-        rm $TMPFILE
+    if [ "$fileSizeMB" -gt 100 ]; then # = 100 MiB (mebibyte)
+        tmpFile=`mktemp`
+        echo "Aquivo muito grande para ser aberto no $editorText." > $tmpFile
+        echo "Abra com outro programa." >> $tmpFile
+        $editorText $tmpFile
+        rm $tmpFile
     else
-        kwrite "$FILENAME"
+        $editorText $fileName
     fi
 fi
