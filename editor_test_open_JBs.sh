@@ -47,6 +47,6 @@ else
         $editorText $tmpFile
         rm $tmpFile
     else
-        $editorText $fileName
+        $editorText "$fileName"
     fi
 fi
