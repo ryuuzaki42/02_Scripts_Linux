@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 15/10/2016
+# Última atualização: 17/10/2016
 #
 echo -e "\n #___ Script to usual commands ___#\n"
 
@@ -30,6 +30,7 @@ option="$1"
 
 help () {
     echo "Options:"
+    echo "              search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern"
     echo "              work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
     echo "              ip             - Get your IP"
     echo "              cpu-max        - Show the 10 process with more CPU use"
@@ -61,6 +62,7 @@ help () {
     echo "              up-db        * - Update the database for 'locate'"
     echo "              weather        - Show the weather forecast (you can change the city in the script)"
     echo "              now          * - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
+    echo
     echo "Obs: * root required, + NetworkManager required, = X server required"
 }
 
@@ -68,8 +70,62 @@ case $option in
     "" | "--help" | "-h" )
         help
         ;;
+     "search-pkg" )
+        echo -e "# Search in the installed package folder (/var/log/packages/) for one pattern #\n"
+        echo -n "Package file or pattern to search: "
+        read filePackage
+
+        intialFolder=$PWD
+        cd /var/log/packages/
+
+        echo -en "\nSeaching, please wait..."
+
+        tmpFileName=`mktemp` # Create a TMP-file
+        tmpFileFull=`mktemp` # Create a TMP-file
+
+        for fileInTheFolder in *; do
+            if cat $fileInTheFolder | grep -q $filePackage; then # Grep the "filePackage" from the file in /var/log/packages
+                cat $fileInTheFolder | grep "PACKAGE NAME" >> $tmpFileName # Grep the package name from the has the "filePackage"
+                cat $fileInTheFolder >> $tmpFileFull # Print all info about the package
+                echo >> $tmpFileFull # Insert one new line
+            fi
+        done
+
+        sizeResultFile=`ls -l $tmpFileName | awk '{print $5}'`
+
+        if [ "$sizeResultFile" != "0" ]; then
+            echo -e "\n\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\n"
+
+            echo -en "Open this files with kwrite or print them in the terminal?\n(k)write - (t)erminal: "
+            read openProgram
+
+            if [ "$openProgram" == "k" ]; then
+                kwrite $tmpFileName
+                kwrite $tmpFileFull
+            else
+                echo -e "\nPackage(s) with '$filePackage':\n"
+                cat $tmpFileName
+
+                echo -en "\nPrint this package(s) in terminal?\n(y)es - (p)artial, only the matches - (n)o: "
+                read continuePrint
+                echo
+                if [ "$continuePrint" == "y" ]; then
+                    cat $tmpFileFull
+                elif [ "$continuePrint" == "p" ]; then
+                    cat $tmpFileFull | grep "$filePackage"
+                fi
+            fi
+        else
+            echo -e "\n\n\tNo result was found"
+        fi
+
+        echo -e "\nDeleting the log files used in this script"
+        rm $tmpFileName $tmpFileFull
+
+        cd $intialFolder # Back to initial folder
+        ;;
     "work-fbi" )
-        echo " # Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #"
+        echo "# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #"
         echo -e "\nWarning: depending on how big is your Hard drive, this can take a long time"
         echo -en "Want continue?\n(y)es - (n)o: "
         read contineDd
