@@ -53,7 +53,7 @@ help () {
     nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager
     brigh-1      * - Set brightness percentage value (accept % value, up and down)
     brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)
-    date         * - Update the date
+    date-up      * - Update the date
     lpkg-c         - Count of packages that are installed in the Slackware
     lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
     lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
@@ -62,13 +62,13 @@ help () {
     slack-up     * - Slackware update
     up-db        * - Update the database for 'locate'
     weather        - Show the weather forecast (you can change the city in the script)
-    now          * - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
+    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
 
     Obs: * root required, + NetworkManager required, = X server required"
 }
 
 case $option in
-    "" | "--help" | "-h" )
+    '' | "--help" | "-h" )
         help
         ;;
      "search-pkg" )
@@ -94,13 +94,13 @@ case $option in
 
         sizeResultFile=`ls -l $tmpFileName | awk '{print $5}'`
 
-        if [ "$sizeResultFile" != "0" ]; then
+        if [ "$sizeResultFile" != '0' ]; then
             echo -e "\n\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\n"
 
             echo -en "Open this files with kwrite or print them in the terminal?\n(k)write - (t)erminal: "
             read openProgram
 
-            if [ "$openProgram" == "k" ]; then
+            if [ "$openProgram" == 'k' ]; then
                 kwrite $tmpFileName
                 kwrite $tmpFileFull
             else
@@ -110,9 +110,9 @@ case $option in
                 echo -en "\nPrint this package(s) in terminal?\n(y)es - (p)artial, only the matches - (n)o: "
                 read continuePrint
                 echo
-                if [ "$continuePrint" == "y" ]; then
+                if [ "$continuePrint" == 'y' ]; then
                     cat $tmpFileFull
-                elif [ "$continuePrint" == "p" ]; then
+                elif [ "$continuePrint" == 'p' ]; then
                     cat $tmpFileFull | grep "$filePackage"
                 fi
             fi
@@ -131,7 +131,7 @@ case $option in
         echo -en "Want continue?\n(y)es - (n)o: "
         read contineDd
 
-        if [ "$contineDd" == "y" ]; then
+        if [ "$contineDd" == 'y' ]; then
             fileName="work-fbi_" # Create a iso file with a random part name
             fileName+=`date +%s | md5sum | head -c 10`
             fileName+=".iso"
@@ -139,7 +139,7 @@ case $option in
             echo "You can use <zero> or <random> valuue"
             echo "Using <random> value is better to overwrite your deleted file"
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
-            echo "Long story short, use <zero> if you has deleted not pretty good sensitive date"
+            echo "Long story short, use <zero> if you has not deleted pretty good sensitive data"
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
             read continueRandomOrZero
 
@@ -180,7 +180,7 @@ case $option in
         echo -e "# Print part of file (lineStart to lineEnd) #"
         inputFile=$2 # File to read
 
-        if [ "$inputFile" == "" ]; then
+        if [ "$inputFile" == '' ]; then
             echo -e "\n\tError: You need to pass the file name, e.g., $0 print-lines file.txt"
         else
             echo -n "Line to start: "
@@ -228,7 +228,7 @@ case $option in
             echo -en "\nWant continue and use these source and destination folders?\n(y)es - (n)o: "
             read continueRsync
 
-            if [ "$continueRsync" == "y" ]; then
+            if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if 'source' exists
                     if [ -e "$pathDestination" ]; then # Test if 'destination' exists
                         echo -en "\nPlease wait until all files are compared..."
@@ -239,32 +239,32 @@ case $option in
 
                         echo # just a new blank line
                         filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesDelete" != "" ]; then
+                        if [ "$filesDelete" != '' ]; then
                             echo -e "\nFiles to be deleted:\n$filesDelete"
                         fi
 
                         filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesDifferent" != "" ]; then
+                        if [ "$filesDifferent" != '' ]; then
                             echo -e "\nFiles different:\n$filesDifferent"
                         fi
 
                         filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesNew" != "" ]; then
+                        if [ "$filesNew" != '' ]; then
                             echo -e "\nNew files:\n$filesNew"
                         fi
 
-                        if [ "$filesDelete" == "" ] && [ "$filesDifferent" == "" ] && [ "$filesNew" == "" ]; then
+                        if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
                             echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't any difference"
                         else
                             echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
                             read showRsyncS
-                            if [ "$showRsyncS" == "y" ]; then
+                            if [ "$showRsyncS" == 'y' ]; then
                                 echo -e "\n$folderChanges"
                             fi
 
                             echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
                             read continueWriteDisk
-                            if [ "$continueWriteDisk" == y ]; then
+                            if [ "$continueWriteDisk" == 'y' ]; then
                                 echo -e "Changes are writing in "$pathDestination"\nPlease wait..."
                                 rsync -crvh --delete "$pathSource" "$pathDestination"
                             else
@@ -289,7 +289,7 @@ case $option in
 
         echo -e "\nSearching, please wait..."
         grep -rn $patternSearch .
-        # -r, --recursive, -n, --line-number print line number with output lines, "." is equal to $PWD or `pwd`
+        # -r, --recursive, -n, --line-number print line number with output lines, '.' is equal to $PWD or `pwd`
         ;;
     "ping-test" )
         echo -e "# Ping test on domain (default is google.com) #\n"
@@ -322,7 +322,7 @@ case $option in
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
                 networkConfigAvailable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
-                if [ "$networkConfigAvailable" == "" ]; then
+                if [ "$networkConfigAvailable" == '' ]; then
                     echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                 else
                     echo "Choose one network to connect"
@@ -333,7 +333,7 @@ case $option in
                     #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
                     wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
 
-                    if [ "$wpaConf" == "" ]; then
+                    if [ "$wpaConf" == '' ]; then
                         echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
                     else
                         TMPFILE=`mktemp` # Create a TMP-file
@@ -427,7 +427,7 @@ case $option in
             echo -e "\n\tError, file to set brightness not found"
         fi
 
-        if [ "$pathFile" != "" ]; then
+        if [ "$pathFile" != '' ]; then
             brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
             brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc` # Get the percentage of 1% from max_brightness
 
@@ -499,7 +499,7 @@ case $option in
             fi
         fi
         ;;
-    "date" )
+    "date-up" )
         echo -e "# Update the date #\n"
         su - root -c 'ntpdate -u -b ntp1.ptb.de'
         ;;
@@ -560,10 +560,14 @@ case $option in
             if [ $swapUsed -eq 0 ]; then
                 echo -e "\nSwap is already clean"
             else
-                echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
-                read cleanSwap
+                if [ "$2" == '' ]; then
+                    echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
+                    read cleanSwap
+                else
+                    cleanSwap='y'
+                fi
 
-                if [ "$cleanSwap" == "y" ]; then
+                if [ "$cleanSwap" == 'y' ]; then
                     su - root -c 'echo -e "\nCleanning swap. Please wait..."
                     swapoff -a
                     swapon -a'
@@ -573,7 +577,7 @@ case $option in
         ;;
     "slack-up" )
         echo "# Slackware update #"
-        if [ "$2" == "" ]; then
+        if [ "$2" == '' ]; then
             echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
             read useBL
         else
@@ -581,7 +585,7 @@ case $option in
         fi
         echo "Use blacklist: $useBL"
 
-        if [ "$useBL" == "n" ]; then # slackpkg not using USEBL
+        if [ "$useBL" == 'n' ]; then # slackpkg not using USEBL
             su - root -c "slackpkg update gpg
             slackpkg update -batch=on
             USEBL=0 slackpkg upgrade-all"
@@ -601,10 +605,10 @@ case $option in
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "# now - Run \"texlive-up\" \"date\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
+        echo -e "# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
 
         $0 texlive-up
-        $0 date
+        $0 date-up
         $0 swap-clean
         $0 slack-up n
         $0 up-db
