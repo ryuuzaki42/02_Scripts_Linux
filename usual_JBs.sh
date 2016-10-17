@@ -609,7 +609,7 @@ case $option in
 
         $0 texlive-up
         $0 date-up
-        $0 swap-clean
+        $0 swap-clean y
         $0 slack-up n
         $0 up-db
         ;;
