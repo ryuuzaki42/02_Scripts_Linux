@@ -19,9 +19,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Descrição: Arquivo-bashrc para carregar configuração do bash
+# Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 14/10/2016
+# Última atualização: 20/10/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -37,15 +37,14 @@ else # user normal
     #PS1="\\[\\][\\u@\\h:\\w]$ "
 
     echo -e '\t*** Bem-vindo ao host '`hostname`' ***'
-    #echo; screenfetch -E; echo # Uncomment if you want to use the screenfetch
+    echo; screenfetch -E; echo # Uncomment if you don't want to use screenfetch
     echo -e '\t\t              mm   '
     echo -e '\t\t  *v*      /^(  )^\'
     echo -e '\t\t /(_)\     \,(..),/'
     echo -e '\t\t  ^ ^        V~~V'
 
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
-    #echo -e "Fortune:"; /usr/games/fortune; echo # Uncomment if you want to use the fortune
-    echo -e "Fortune:"; /usr/games/fortune -so; echo # Uncomment if you want to use the fortune with (-s) Short apothegms only and (-o) offensive
+    /usr/games/fortune -s; echo # Uncomment if you want to use the fortune (-s Short apothegms only)
 fi
 
 alias nano='nano -c'
@@ -75,7 +74,7 @@ echo_blank-lines() { # Print blank lines on terminal
         done
     fi
 }
-alias blank-lines='echo_blank-lines'
+alias bl='echo_blank-lines'
 
 # Uncomment if you want use those alias
 #alias l='ls -CF'
@@ -83,5 +82,4 @@ alias blank-lines='echo_blank-lines'
 #alias ll='ls -alF'
 #alias sl='ls --color=auto'
 #alias lcd="cd $1 ; ls -l -a -v -h --color"
-#alias rm='rm -iv --preserve-root' # Uncomment if you want to use the all rm as rm -iv --preserve-root
-#alias pingG='ping -c 3 google.com'
+#alias rm='rm -iv --preserve-root'

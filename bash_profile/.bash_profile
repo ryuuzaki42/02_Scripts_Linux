@@ -19,10 +19,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Descrição: Arquivo-profile para carregar o .bashrc, com as
-# configuração do perfil
+# Descrição: .bashr_profile para carregar o .bashrc com as configuração do perfil
 #
-# Última atualização: 04/04/2016
+# Última atualização: 20/10/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 
