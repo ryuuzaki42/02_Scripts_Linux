@@ -22,15 +22,67 @@
 #
 # Script: funções comum do dia a dia
 #
-# Última atualização: 22/10/2016
+# Last update: 23/10/2016
 #
-echo -e "\n #___ Script to usual commands ___#\n"
+optionTmp="$1"
+if [ "$optionTmp" != "notPrint" ]; then
+    echo -e "\n #___ Script to usual commands ___#\n"
+else
+    shift
+fi
 
 option="$1"
 
-help () {
+whiptailMenu() {
+    eval `resize`
+    item=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
+
+    Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
+    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
+    "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
+    "ip"           "   - Get your IP" \
+    "cpu-max"      "   - Show the 10 process with more CPU use" \
+    "mem-max"      "   - Show the 10 process with more memory RAM use" \
+    "day-install"  "   - The day the system are installed" \
+    "screenshot"   "   - Screenshot from display :0" \
+    "print-lines"  "   - Print part of file (lineStart to lineEnd)" \
+    "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
+    "ping-test"    "   - Ping test on domain (default is google.com)" \
+    "search-pwd"   "   - Search in this directory (recursive) for a pattern" \
+    "create-wifi"  " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
+    "cn-wifi"      " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
+    "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
+    "men-info"     "   - Show memory and swap percentage of use" \
+    "ap-info"      "   - Show information about the AP connected" \
+    "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
+    "l-iwlist"     "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)" \
+    "texlive-up"   " * - Update the texlive packages" \
+    "nm-list"      " + - List the Wi-Fi AP around with the nmcli from NetworkManager" \
+    "brigh-1"      " * - Set brightness percentage value (accept % value, up and down)" \
+    "brigh-2"      " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)" \
+    "date-up"      " * - Update the date" \
+    "lpkg-c"       "   - Count of packages that are installed in the Slackware" \
+    "lpkg-i"       "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)" \
+    "lpkg-r"       "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)" \
+    "pdf-r"        "   - Reduce a PDF file" \
+    "swap-clean"   " * - Clean up the Swap Memory" \
+    "slack-up"     " * - Slackware update" \
+    "up-db"        " * - Update the database for 'locate'" \
+    "weather"      "   - Show the weather forecast (you can change the city in the script)" \
+    "now"          " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially " 3>&1 1>&2 2>&3)
+
+    if [ "$item" != "" ]; then
+        echo -e "\nRunning: $0 notPrint $item $1 $2\n"
+        $0 notPrint $item $1 $2
+    fi
+}
+
+help() {
     echo "Options:
 
+    Obs: * root required, + NetworkManager required, = X server required
+
+    w or ''        - Menu with whiptail (where you can call another options)
     search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
     work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
     ip             - Get your IP
@@ -62,13 +114,14 @@ help () {
     slack-up     * - Slackware update
     up-db        * - Update the database for 'locate'
     weather        - Show the weather forecast (you can change the city in the script)
-    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
-
-    Obs: * root required, + NetworkManager required, = X server required"
+    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
 }
 
 case $option in
-    '' | "--help" | "-h" )
+    '' | 'w' )
+        whiptailMenu $2 $3
+        ;;
+    "--help" | "-h" )
         help
         ;;
      "search-pkg" )
@@ -458,7 +511,7 @@ case $option in
             echo -e "Final set brightness value: $brightnessValueFinal\n"
 
             # Only for test
-            #echo "Max brightness value: $brightnessMax" 
+            #echo "Max brightness value: $brightnessMax"
             #echo "Percentage value to 1% of brightness: $brightnessPercentage"
 
             # Set the final percentage brightness
@@ -640,15 +693,29 @@ case $option in
      "now" )
         echo -e "# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
 
-        $0 texlive-up
-        $0 date-up
-        $0 swap-clean y
-        $0 slack-up n
-        $0 up-db
+        echo -e "\nRunning: $0 notPrint texlive-up\n"
+        $0 notPrint texlive-up
+
+        echo -e "\nRunning: $0 notPrint date-up\n"
+        $0 notPrint date-up
+
+        echo -e "\nRunning: $0 notPrint swap-clean y\n"
+        $0 notPrint swap-clean y
+
+        echo -e "\nRunning: $0 notPrint slack-up n\n"
+        $0 notPrint slack-up n
+
+        echo -e "\nRunning: $0 notPrint up-db\n"
+        $0 notPrint up-db
         ;;
     * )
         echo -e "\n\t$(basename "$0"): Error of parameters"
         echo -e "\tTry $0 '--help'"
         ;;
 esac
-echo -e "\n#___ So Long, and Thanks for All the Fish ___#\n"
+
+if [ "$optionTmp" != "notPrint" ]; then
+    echo -e "\n#___ So Long, and Thanks for All the Fish ___#\n"
+else
+    shift
+fi
