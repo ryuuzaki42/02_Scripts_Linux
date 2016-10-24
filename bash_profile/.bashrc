@@ -57,7 +57,7 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
-alias ls='ls -ah --color=auto'
+alias ls='ls -h --color=auto'
 
 echo_blank-lines() { # Print blank lines on terminal
     lineNumber=$1
