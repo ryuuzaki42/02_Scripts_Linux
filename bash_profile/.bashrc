@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 20/10/2016
+# Última atualização: 23/10/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -38,10 +38,10 @@ else # user normal
 
     echo -e '\t*** Bem-vindo ao host '`hostname`' ***'
     echo; screenfetch -E; echo # Uncomment if you don't want to use screenfetch
-    echo -e '\t\t              mm   '
-    echo -e '\t\t  *v*      /^(  )^\'
-    echo -e '\t\t /(_)\     \,(..),/'
-    echo -e '\t\t  ^ ^        V~~V'
+    echo -e '\t\t              mm    '
+    echo -e '\t\t  *v*      /^(  )^\ '
+    echo -e '\t\t /(_)\     \,(..),/ '
+    echo -e '\t\t  ^ ^        V~~V   '
 
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
     /usr/games/fortune -s; echo # Uncomment if you want to use the fortune (-s Short apothegms only)
@@ -49,37 +49,34 @@ fi
 
 alias nano='nano -c'
 
-alias exut='exit'
-alias exot='exit'
-alias exti='exit'
-
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
 alias ls='ls -h --color=auto'
 
-echo_blank-lines() { # Print blank lines on terminal
+echoBlankLines() { # Print blank lines on terminal
     lineNumber=$1
-
-    if [ "$lineNumber" == "" ]; then
+    if [ "$lineNumber" == "" ] || ! echo $lineNumber | grep -q [[:digit:]]; then
         lineNumber=10
     fi
 
-    if echo $lineNumber | grep -q [[:digit:]]; then
-        j=0
-        while [ "$j" -lt "$lineNumber" ]; do
-            echo
-            ((j++))
-        done
-    fi
+    count=0
+    while [ "$count" -lt "$lineNumber" ]; do
+        echo
+        ((count++))
+    done
 }
-alias bl='echo_blank-lines'
+alias bl='echoBlankLines'
 
-# Uncomment if you want use those alias
-#alias l='ls -CF'
-#alias la='ls -A'
-#alias ll='ls -alF'
-#alias sl='ls --color=auto'
-#alias lcd="cd $1 ; ls -l -a -v -h --color"
-#alias rm='rm -iv --preserve-root'
+cdMultipleTimes () {
+    count=$1
+    if [ "$count" == "" ];then
+        count=1
+    fi
+
+    for ((i=$count; i > 0; i--)); do
+        cd ..
+    done
+}
+alias cdm='cdMultipleTimes'
