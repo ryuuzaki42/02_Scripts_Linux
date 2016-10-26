@@ -41,7 +41,7 @@ whiptailMenu() {
     "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
     "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
     "ip"           "   - Get your IP" \
-    "mem-use"      "   - Get the use of memory RAM from one process/pattern" \
+    "mem-use"      "   - Get the all (shared and specific) use of memory RAM from one process/pattern" \
     "cpu-max"      "   - Show the 10 process with more CPU use" \
     "mem-max"      "   - Show the 10 process with more memory RAM use" \
     "day-install"  "   - The day the system are installed" \
@@ -87,7 +87,7 @@ help() {
     search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
     work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
     ip             - Get your IP
-    mem-use        - Get the use of memory RAM from one process/pattern
+    mem-use        - Get the all (shared and specific) use of memory RAM from one process/pattern
     cpu-max        - Show the 10 process with more CPU use
     mem-max        - Show the 10 process with more memory RAM use
     day-install    - The day the system are installed
@@ -127,7 +127,7 @@ case $option in
         help
         ;;
      "mem-use" )
-        echo -e "# Get the use of memory RAM from one process/pattern #\n"
+        echo -e "# Get the all (shared and specific) use of memory RAM from one process/pattern #\n"
         if [ "$2" == '' ]; then
             echo -n "Insert the pattern (process name) to search: "
             read process
@@ -139,7 +139,7 @@ case $option in
             processList=`ps aux | grep $process`
             #ps -C chrome -o %cpu,%mem,cmd
 
-            memPercentage=`echo $processList | awk '{print $4}'`
+            memPercentage=`echo "$processList" | awk '{print $4}'`
 
             memPercentageSum=0
             for memPercentageNow in $memPercentage; do
