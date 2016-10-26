@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 23/10/2016
+# Last update: 26/10/2016
 #
 optionTmp="$1"
 if [ "$optionTmp" != "notPrint" ]; then
@@ -41,6 +41,7 @@ whiptailMenu() {
     "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
     "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
     "ip"           "   - Get your IP" \
+    "mem-use"      "   - Get the use of memory RAM from one process/pattern" \
     "cpu-max"      "   - Show the 10 process with more CPU use" \
     "mem-max"      "   - Show the 10 process with more memory RAM use" \
     "day-install"  "   - The day the system are installed" \
@@ -86,6 +87,7 @@ help() {
     search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
     work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
     ip             - Get your IP
+    mem-use        - Get the use of memory RAM from one process/pattern
     cpu-max        - Show the 10 process with more CPU use
     mem-max        - Show the 10 process with more memory RAM use
     day-install    - The day the system are installed
@@ -124,20 +126,58 @@ case $option in
     "--help" | "-h" )
         help
         ;;
+     "mem-use" )
+        echo -e "# Get the use of memory RAM from one process/pattern #\n"
+        if [ "$2" == '' ]; then
+            echo -n "Insert the pattern (process name) to search: "
+            read process
+        else
+            process=$2
+        fi
+
+        if  [ "$process" != '' ]; then
+            processList=`ps aux | grep $process`
+            #ps -C chrome -o %cpu,%mem,cmd
+
+            memPercentage=`echo $processList | awk '{print $4}'`
+
+            memPercentageSum=0
+            for memPercentageNow in $memPercentage; do
+                memPercentageSum=`echo "scale=2; $memPercentageSum+$memPercentageNow" | bc`
+            done
+
+            totalMem=`free -m | head -n 2 | tail -n 1 | awk '{print $2}'`
+            useMem=`echo "($totalMem*$memPercentageSum)/100" | bc`
+
+            echo -e "\nThe process \"$process\" uses: $useMem MiB or $memPercentageSum % of $totalMem MiB\n"
+
+            echo -en "Show the process list?\n(y)es - (n)o: "
+            read showProcessList
+
+            echo
+            if [ "$showProcessList" == 'y' ]; then
+                echo -e "$processList"
+                echo
+            fi
+        else
+            echo -e "\n\tError: You need insert some pattern/process name to search, e.g., $0 mem-use opera"
+        fi
+        ;;
      "search-pkg" )
         echo -e "# Search in the installed package folder (/var/log/packages/) for one pattern #\n"
-        echo -n "Package file or pattern to search: "
-        read filePackage
-
-        intialFolder=$PWD
-        cd /var/log/packages/
+        if [ "$2" == '' ]; then
+            echo -n "Package file or pattern to search: "
+            read filePackage
+        else
+            filePackage=$2
+        fi
 
         echo -en "\nSearching, please wait..."
 
         tmpFileName=`mktemp` # Create a TMP-file
         tmpFileFull=`mktemp` # Create a TMP-file
 
-        for fileInTheFolder in *; do
+        for fileInTheFolder in /var/log/packages/*; do
             if cat $fileInTheFolder | grep -q $filePackage; then # Grep the "filePackage" from the file in /var/log/packages
                 cat $fileInTheFolder | grep "PACKAGE NAME" >> $tmpFileName # Grep the package name from the has the "filePackage"
                 cat $fileInTheFolder >> $tmpFileFull # Print all info about the package
@@ -175,8 +215,6 @@ case $option in
 
         echo -e "\nDeleting the log files used in this script"
         rm $tmpFileName $tmpFileFull
-
-        cd $intialFolder # Back to initial folder
         ;;
     "work-fbi" )
         echo "# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #"
@@ -236,24 +274,29 @@ case $option in
         if [ "$inputFile" == '' ]; then
             echo -e "\n\tError: You need to pass the file name, e.g., $0 print-lines file.txt"
         else
-            echo -n "Line to start: "
-            read lineStart
-            echo -n "Line to end: "
-            read lineEnd
+            lineStart=$3
+            lineEnd=$4
+
+            if [ "$lineStart" == '' ] || [ "$lineEnd" == '' ]; then
+                echo -n "Line to start: "
+                read lineStart
+                echo -n "Line to end: "
+                read lineEnd
+            fi
 
             if echo $lineStart | grep -q [[:digit:]] && echo $lineEnd | grep -q [[:digit:]]; then
                 if [ $lineStart -gt $lineEnd ]; then
                     echo -e "\n\tError: lineStart must be smaller than lineEnd"
                 else
-                    echo -e "\nPrint of \"$inputFile\" line $lineStart to $lineEnd\n"
+                    echo -e "\nPrint \"$inputFile\" line $lineStart to $lineEnd\n"
                     lineStartTmp=$((lineEnd-lineStart))
                     ((lineStartTmp++))
 
                     cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
                 fi
-             else
+            else
                 echo -e "\n\tError: lineStart and lineEnd must be number"
-             fi
+            fi
         fi
         ;;
     "screenshot" )
@@ -337,8 +380,12 @@ case $option in
         ;;
     "search-pwd" )
         echo "# Search in this directory (recursive) for a pattern #"
-        echo -en "\nPattern to search: "
-        read patternSearch
+        if [ "$2" == '' ]; then
+            echo -en "\nPattern to search: "
+            read patternSearch
+        else
+            patternSearch=$2
+        fi
 
         echo -e "\nSearching, please wait..."
         grep -rn $patternSearch .
