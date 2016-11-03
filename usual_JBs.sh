@@ -38,39 +38,39 @@ whiptailMenu() {
     item=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
     Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
-    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
-    "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
-    "ip"           "   - Get your IP" \
-    "mem-use"      "   - Get the all (shared and specific) use of memory RAM from one process/pattern" \
-    "cpu-max"      "   - Show the 10 process with more CPU use" \
-    "mem-max"      "   - Show the 10 process with more memory RAM use" \
-    "day-install"  "   - The day the system are installed" \
-    "screenshot"   "   - Screenshot from display :0" \
-    "print-lines"  "   - Print part of file (lineStart to lineEnd)" \
-    "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
-    "ping-test"    "   - Ping test on domain (default is google.com)" \
-    "search-pwd"   "   - Search in this directory (recursive) for a pattern" \
-    "create-wifi"  " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
-    "cn-wifi"      " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
-    "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
-    "men-info"     "   - Show memory and swap percentage of use" \
     "ap-info"      "   - Show information about the AP connected" \
-    "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
-    "l-iwlist"     "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)" \
-    "texlive-up"   " * - Update the texlive packages" \
-    "nm-list"      " + - List the Wi-Fi AP around with the nmcli from NetworkManager" \
     "brigh-1"      " * - Set brightness percentage value (accept % value, up and down)" \
     "brigh-2"      " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)" \
+    "cn-wifi"      " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
+    "cpu-max"      "   - Show the 10 process with more CPU use" \
+    "create-wifi"  " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
     "date-up"      " * - Update the date" \
+    "day-install"  "   - The day the system are installed" \
+    "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
+    "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
+    "ip"           "   - Get your IP" \
+    "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
+    "l-iwlist"     "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)" \
     "lpkg-c"       "   - Count of packages that are installed in the Slackware" \
     "lpkg-i"       "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)" \
     "lpkg-r"       "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)" \
+    "mem-max"      "   - Show the 10 process with more memory RAM use" \
+    "mem-use"      "   - Get the all (shared and specific) use of memory RAM from one process/pattern" \
+    "men-info"     "   - Show memory and swap percentage of use" \
+    "nm-list"      " + - List the Wi-Fi AP around with the nmcli from NetworkManager" \
+    "now"          " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially " \
     "pdf-r"        "   - Reduce a PDF file" \
-    "swap-clean"   " * - Clean up the Swap Memory" \
+    "ping-test"    "   - Ping test on domain (default is google.com)" \
+    "print-lines"  "   - Print part of file (lineStart to lineEnd)" \
+    "screenshot"   "   - Screenshot from display :0" \
+    "search-pwd"   "   - Search in this directory (recursive) for a pattern" \
     "slack-up"     " * - Slackware update" \
+    "swap-clean"   " * - Clean up the Swap Memory" \
+    "texlive-up"   " * - Update the texlive packages" \
     "up-db"        " * - Update the database for 'locate'" \
     "weather"      "   - Show the weather forecast (you can change the city in the script)" \
-    "now"          " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially " 3>&1 1>&2 2>&3)
+    "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
+    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" 3>&1 1>&2 2>&3)
 
     if [ "$item" != "" ]; then
         echo -e "\nRunning: $0 notPrint $item $1 $2\n"
@@ -83,40 +83,40 @@ help() {
 
     Obs: * root required, + NetworkManager required, = X server required
 
-    w or ''        - Menu with whiptail (where you can call another options)
-    search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
-    work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
-    ip             - Get your IP
-    mem-use        - Get the all (shared and specific) use of memory RAM from one process/pattern
-    cpu-max        - Show the 10 process with more CPU use
-    mem-max        - Show the 10 process with more memory RAM use
-    day-install    - The day the system are installed
-    screenshot     - Screenshot from display :0
-    print-lines    - Print part of file (lineStart to lineEnd)
-    folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)
-    ping-test      - Ping test on domain (default is google.com)
-    search-pwd     - Search in this directory (recursive) for a pattern
-    create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
-    cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
-    dc-wifi      * - Disconnect to one Wi-Fi network
-    men-info       - Show memory and swap percentage of use
     ap-info        - Show information about the AP connected
-    l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)
-    l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
-    texlive-up   * - Update the texlive packages
-    nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager
     brigh-1      * - Set brightness percentage value (accept % value, up and down)
     brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)
+    cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
+    cpu-max        - Show the 10 process with more CPU use
+    create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
     date-up      * - Update the date
+    day-install    - The day the system are installed
+    dc-wifi      * - Disconnect to one Wi-Fi network
+    folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)
+    ip             - Get your IP
+    l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)
+    l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
     lpkg-c         - Count of packages that are installed in the Slackware
     lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
     lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
+    mem-max        - Show the 10 process with more memory RAM use
+    mem-use        - Get the all (shared and specific) use of memory RAM from one process/pattern
+    men-info       - Show memory and swap percentage of use
+    nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager
+    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
     pdf-r          - Reduce a PDF file
-    swap-clean   * - Clean up the Swap Memory
+    ping-test      - Ping test on domain (default is google.com)
+    print-lines    - Print part of file (lineStart to lineEnd)
+    screenshot     - Screenshot from display :0
+    search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
+    search-pwd     - Search in this directory (recursive) for a pattern
     slack-up     * - Slackware update
+    swap-clean   * - Clean up the Swap Memory
+    texlive-up   * - Update the texlive packages
     up-db        * - Update the database for 'locate'
     weather        - Show the weather forecast (you can change the city in the script)
-    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
+    work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
+    w or ''        - Menu with whiptail (where you can call another options)"
 }
 
 case $option in
