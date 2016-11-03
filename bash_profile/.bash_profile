@@ -1,4 +1,3 @@
-#
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
@@ -21,15 +20,10 @@
 #
 # Descrição: .bashr_profile para carregar o .bashrc com as configuração do perfil
 #
-# Última atualização: 20/10/2016
+# Última atualização: 03/11/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
-
+#
 if [ -f ~/.bashrc ]; then
     . ~/.bashrc
 fi
-
-PATH=$PATH:/bin
-BASH_HEV=$HOME/.bashrc
-USERNAME=""
-export USERNAME BASH_HEV PATH
