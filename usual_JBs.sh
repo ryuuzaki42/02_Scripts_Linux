@@ -22,20 +22,39 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 26/10/2016
-#
-optionTmp="$1"
-if [ "$optionTmp" != "notPrint" ]; then
-    echo -e "\n #___ Script to usual commands ___#\n"
+# Last update: 04/11/2016
+
+colorDisableInput="$1"
+if [ "$colorDisableInput" == "noColor" ]; then
+    echo -e "\nColors disabled"
+    shift
+else # Some colors for script output - Make it easier to follow
+    BLACK='\e[1;30m'
+    RED='\e[1;31m'
+    GREEN='\e[1;32m'
+    NC='\033[0m' # reset/no color
+    BLUE='\e[1;34m'
+    PINK='\e[1;35m'
+    CYAN='\e[1;36m'
+    WHITE='\e[1;37m'
+fi
+
+notPrintInput="$1"
+if [ "$notPrintInput" != "notPrint" ]; then
+    echo -e "$BLUE\n\t\t#___ Script to usual commands ___#$NC\n"
 else
     shift
 fi
 
-option="$1"
+testColorInput="$1"
+if [ "$testColorInput" == "testColor" ]; then
+    echo -e "\n\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
+    shift
+fi
 
 whiptailMenu() {
     eval `resize`
-    item=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
+    itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
     Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
     "ap-info"      "   - Show information about the AP connected" \
@@ -48,6 +67,7 @@ whiptailMenu() {
     "day-install"  "   - The day the system are installed" \
     "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
     "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
+    "help"         "   - Show this help message (the same result with --help, -h and h)" \
     "ip"           "   - Get your IP" \
     "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
     "l-iwlist"     "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)" \
@@ -56,7 +76,7 @@ whiptailMenu() {
     "lpkg-r"       "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)" \
     "mem-max"      "   - Show the 10 process with more memory RAM use" \
     "mem-use"      "   - Get the all (shared and specific) use of memory RAM from one process/pattern" \
-    "men-info"     "   - Show memory and swap percentage of use" \
+    "mem-info"     "   - Show memory and swap percentage of use" \
     "nm-list"      " + - List the Wi-Fi AP around with the nmcli from NetworkManager" \
     "now"          " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially " \
     "pdf-r"        "   - Reduce a PDF file" \
@@ -72,62 +92,64 @@ whiptailMenu() {
     "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
     "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" 3>&1 1>&2 2>&3)
 
-    if [ "$item" != "" ]; then
-        echo -e "\nRunning: $0 notPrint $item $1 $2\n"
-        $0 notPrint $item $1 $2
+    if [ "$itemSelected" != "" ]; then
+        echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
+        $0 notPrint $itemSelected $1 $2
     fi
 }
 
 help() {
-    echo "Options:
+    echo -e "$CYAN    Options:
 
-    Obs: * root required, + NetworkManager required, = X server required
+   $RED Obs$CYAN:$RED * root required,$CYAN + NetworkManager required,$BLUE = X server required$CYAN
 
-    ap-info        - Show information about the AP connected
-    brigh-1      * - Set brightness percentage value (accept % value, up and down)
-    brigh-2      = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)
-    cn-wifi      * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
-    cpu-max        - Show the 10 process with more CPU use
-    create-wifi  * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)
-    date-up      * - Update the date
-    day-install    - The day the system are installed
-    dc-wifi      * - Disconnect to one Wi-Fi network
-    folder-diff    - Show the difference between two folder and (can) make them equal (with rsync)
-    ip             - Get your IP
-    l-iw         * - List the Wi-Fi AP around, with iw (show WPS and more infos)
-    l-iwlist       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
-    lpkg-c         - Count of packages that are installed in the Slackware
-    lpkg-i         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
-    lpkg-r         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
-    mem-max        - Show the 10 process with more memory RAM use
-    mem-use        - Get the all (shared and specific) use of memory RAM from one process/pattern
-    men-info       - Show memory and swap percentage of use
-    nm-list      + - List the Wi-Fi AP around with the nmcli from NetworkManager
-    now          * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially
-    pdf-r          - Reduce a PDF file
-    ping-test      - Ping test on domain (default is google.com)
-    print-lines    - Print part of file (lineStart to lineEnd)
-    screenshot     - Screenshot from display :0
-    search-pkg     - Search in the installed package folder (/var/log/packages/) for one pattern
-    search-pwd     - Search in this directory (recursive) for a pattern
-    slack-up     * - Slackware update
-    swap-clean   * - Clean up the Swap Memory
-    texlive-up   * - Update the texlive packages
-    up-db        * - Update the database for 'locate'
-    weather        - Show the weather forecast (you can change the city in the script)
-    work-fbi       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
-    w or ''        - Menu with whiptail (where you can call another options)"
+   $GREEN ap-info$CYAN        - Show information about the AP connected
+   $GREEN brigh-1$CYAN     $RED * - Set brightness percentage value (accept % value, up and down)$CYAN
+   $GREEN brigh-2$CYAN     $BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)$CYAN
+   $GREEN cn-wifi$CYAN     $RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)$CYAN
+   $GREEN cpu-max$CYAN        - Show the 10 process with more CPU use
+   $GREEN create-wifi$CYAN $RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)$CYAN
+   $GREEN date-up$CYAN     $RED * - Update the date$CYAN
+   $GREEN day-install$CYAN    - The day the system are installed
+   $GREEN dc-wifi$CYAN     $RED * - Disconnect to one Wi-Fi network$CYAN
+   $GREEN folder-diff$CYAN    - Show the difference between two folder and (can) make them equal (with rsync)
+   $GREEN help$CYAN           - Show this help message (the same result with --help, -h and h)
+   $GREEN ip$CYAN             - Get your IP
+   $GREEN l-iw$CYAN        $RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)$CYAN
+   $GREEN l-iwlist$CYAN       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
+   $GREEN lpkg-c$CYAN         - Count of packages that are installed in the Slackware
+   $GREEN lpkg-i$CYAN         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
+   $GREEN lpkg-r$CYAN         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
+   $GREEN mem-max$CYAN        - Show the 10 process with more memory RAM use
+   $GREEN mem-use$CYAN        - Get the all (shared and specific) use of memory RAM from one process/pattern
+   $GREEN mem-info$CYAN       - Show memory and swap percentage of use
+   $GREEN nm-list$CYAN      + - List the Wi-Fi AP around with the nmcli from NetworkManager
+   $GREEN now$CYAN         $RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially$CYAN
+   $GREEN pdf-r$CYAN          - Reduce a PDF file
+   $GREEN ping-test$CYAN      - Ping test on domain (default is google.com)
+   $GREEN print-lines$CYAN    - Print part of file (lineStart to lineEnd)
+   $GREEN screenshot$CYAN     - Screenshot from display :0
+   $GREEN search-pkg$CYAN     - Search in the installed package folder (/var/log/packages/) for one pattern
+   $GREEN search-pwd$CYAN     - Search in this directory (recursive) for a pattern
+   $GREEN slack-up$CYAN    $RED * - Slackware update$CYAN
+   $GREEN swap-clean$CYAN  $RED * - Clean up the Swap Memory$CYAN
+   $GREEN texlive-up$CYAN  $RED * - Update the texlive packages$CYAN
+   $GREEN up-db$CYAN       $RED * - Update the database for 'locate'$CYAN
+   $GREEN weather$CYAN        - Show the weather forecast (you can change the city in the script)
+   $GREEN work-fbi$CYAN       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
+   $GREEN w or ''$CYAN        - Menu with whiptail (where you can call another options)$NC"
 }
 
-case $option in
+optionInput="$1"
+case $optionInput in
     '' | 'w' )
         whiptailMenu $2 $3
         ;;
-    "--help" | "-h" )
+    "--help" | "-h" | "help" | 'h' )
         help
         ;;
      "mem-use" )
-        echo -e "# Get the all (shared and specific) use of memory RAM from one process/pattern #\n"
+        echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\n"
         if [ "$2" == '' ]; then
             echo -n "Insert the pattern (process name) to search: "
             read process
@@ -160,11 +182,11 @@ case $option in
                 echo
             fi
         else
-            echo -e "\n\tError: You need insert some pattern/process name to search, e.g., $0 mem-use opera"
+            echo -e "$RED\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
         fi
         ;;
      "search-pkg" )
-        echo -e "# Search in the installed package folder (/var/log/packages/) for one pattern #\n"
+        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\n"
         if [ "$2" == '' ]; then
             echo -n "Package file or pattern to search: "
             read filePackage
@@ -217,7 +239,7 @@ case $option in
         rm $tmpFileName $tmpFileFull
         ;;
     "work-fbi" )
-        echo "# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #"
+        echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
         echo -e "\nWarning: depending on how big is your Hard drive, this can take a long time"
         echo -en "Want continue?\n(y)es - (n)o: "
         read contineDd
@@ -235,11 +257,11 @@ case $option in
             read continueRandomOrZero
 
             if [ "$continueRandomOrZero" == 'r' ]; then
-                dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M  conv=notrunc status=progress # Write <random> value to wipe the data
+                dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
                 echo -en "\nWriting <random> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
             else
                 echo -en "\nWriting <zero> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
-                dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M  conv=notrunc status=progress # Write <zero> value to wipe the data
+                dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <zero> value to wipe the data
             fi
 
             rm $fileName # Delete the <big> file generated
@@ -247,7 +269,7 @@ case $option in
         fi
         ;;
     "ip" )
-        echo -e "# Get your IP #\n"
+        echo -e "$CYAN# Get your IP #$NC\n"
         localIP=`/sbin/ifconfig | grep broadcast | awk '{print $2}'`
         echo "Local IP: $localIP"
 
@@ -255,24 +277,24 @@ case $option in
         echo "External IP: $externalIP"
         ;;
     "cpu-max" )
-        echo -e "# Show the 10 process with more CPU use #\n"
+        echo -e "$CYAN# Show the 10 process with more CPU use #$NC\n"
         ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head -n 11
         ;;
     "mem-max" )
-        echo -e "# Show the 10 process with more memory RAM use #\n"
+        echo -e "$CYAN# Show the 10 process with more memory RAM use #$NC\n"
         ps axo pid,%cpu,%mem,cmd --sort -rss | head -n 11
         ;;
     "day-install" )
-        echo -e "# The day the system are installed #"
+        echo -e "$CYAN# The day the system are installed #$NC"
         dayInstall=`ls -alct / | tail -n 1 | awk '{print $6, $7, $8}'`
         echo -e "\nThe system was installed at the time: $dayInstall"
         ;;
     "print-lines" )
-        echo -e "# Print part of file (lineStart to lineEnd) #"
+        echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
         inputFile=$2 # File to read
 
         if [ "$inputFile" == '' ]; then
-            echo -e "\n\tError: You need to pass the file name, e.g., $0 print-lines file.txt"
+            echo -e "$RED\nError: You need to pass the file name, e.g., $0 print-lines file.txt$NC"
         else
             lineStart=$3
             lineEnd=$4
@@ -286,7 +308,7 @@ case $option in
 
             if echo $lineStart | grep -q [[:digit:]] && echo $lineEnd | grep -q [[:digit:]]; then
                 if [ $lineStart -gt $lineEnd ]; then
-                    echo -e "\n\tError: lineStart must be smaller than lineEnd"
+                    echo -e "$RED\nError: lineStart must be smaller than lineEnd$NC"
                 else
                     echo -e "\nPrint \"$inputFile\" line $lineStart to $lineEnd\n"
                     lineStartTmp=$((lineEnd-lineStart))
@@ -295,26 +317,26 @@ case $option in
                     cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
                 fi
             else
-                echo -e "\n\tError: lineStart and lineEnd must be number"
+                echo -e "$RED\nError: lineStart and lineEnd must be number$NC"
             fi
         fi
         ;;
     "screenshot" )
-        echo -e "# Screenshot from display :0 #\n"
+        echo -e "$CYAN# Screenshot from display :0 #$NC\n"
         dateNow=`date`
         import -window root -display :0 screenshot_"$dateNow".jpg
         echo "Screenshot \"screenshot_"$dateNow".jpg\" saved"
         ;;
     "folder-diff" )
-        echo "# Show the difference between two folder and (can) make them equal (with rsync) #"
+        echo -e "$CYAN# Show the difference between two folder and (can) make them equal (with rsync) #$NC"
         if [ $# -lt 3 ]; then
-            echo -e "\n\tError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'"
+            echo -e "$RED\nError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'$NC"
         else
             echo -e "\n\t## An Important Note ##\n"
             echo "The trailing slash (/) at the end of the first argument (source folder). For example: \"rsync -a dir1/ dir2\""
             echo "This is necessary to mean \"the contents of dir1\". The alternative, without the trailing slash, would place dir1,"
             echo -e "including the directory, within dir2. This would create a hierarchy that looks like: dir2/dir1/[files]"
-            echo "## Please double-check your arguments before continue ##"
+            echo "$CYAN## Please double-check your arguments before continue ##$NC"
 
             pathSource=$2
             pathDestination=$3
@@ -368,10 +390,10 @@ case $option in
                             fi
                         fi
                     else
-                        echo -e "\n\tError: The destination ($pathDestination) don't exist"
+                        echo -e "$RED\nError: The destination ($pathDestination) don't exist$NC"
                     fi
                 else
-                    echo -e "\n\tError: The source ($pathSource) don't exist"
+                    echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
                 echo -e "\n\tAny change writes in disk"
@@ -379,7 +401,7 @@ case $option in
         fi
         ;;
     "search-pwd" )
-        echo "# Search in this directory (recursive) for a pattern #"
+        echo -e "$CYAN# Search in this directory (recursive) for a pattern #$NC"
         if [ "$2" == '' ]; then
             echo -en "\nPattern to search: "
             read patternSearch
@@ -392,7 +414,7 @@ case $option in
         # -r, --recursive, -n, --line-number print line number with output lines, '.' is equal to $PWD or `pwd`
         ;;
     "ping-test" )
-        echo -e "# Ping test on domain (default is google.com) #\n"
+        echo -e "$CYAN# Ping test on domain (default is google.com) #$NC\n"
         if [ $# -eq 1 ]; then
             domainPing="google.com"
         else
@@ -402,7 +424,7 @@ case $option in
         ping -c 3 $domainPing
         ;;
     "create-wifi" )
-        echo -e "# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
+        echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
         su - root -c 'echo -n "Name of the network (SSID): "
         read netSSID
 
@@ -412,21 +434,21 @@ case $option in
         wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf'
         ;;
     "cn-wifi" )
-        echo -e "# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #\n"
+        echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
         if ps faux | grep "NetworkManager" | grep -v -q "grep"; then # Test if NetworkManager is running
-            echo -e "\n\tError: NetworkManager is running, please kill him with: killall NetworkManager"
+            echo -e "$RED\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
         else
             if [ "$LOGNAME" != "root" ]; then
-                echo -e "\n\tError: Execute as root user"
+                echo -e "$RED\nError: Execute as root user$NC"
             else
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
                 networkConfigAvailable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
                 if [ "$networkConfigAvailable" == '' ]; then
-                    echo -e "\n\tError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
+                    echo -e "$RED\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
                 else
                     echo "Choose one network to connect"
-                    cat /etc/wpa_supplicant.conf | grep "ssid"
+                    cat /etc/wpa_supplicant.conf | grep "ssid$NC"
                     echo -n "Network name: "
                     read networkName
 
@@ -434,7 +456,7 @@ case $option in
                     wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
 
                     if [ "$wpaConf" == '' ]; then
-                        echo -e "\n\tError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf). Try: $0 create-wifi"
+                        echo -e "$RED\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
                     else
                         TMPFILE=`mktemp` # Create a TMP-file
                         cat /etc/wpa_supplicant.conf | grep -v -E "{|}|ssid|psk" > $TMPFILE
@@ -443,7 +465,7 @@ case $option in
 
                         echo -e "\n########### Network configuration ####################"
                         cat $TMPFILE
-                        echo -e "######################################################"
+                        echo -e "$CYAN######################################################"
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
                         wpa_supplicant -i wlan0 -c $TMPFILE -d -B wext # Connect with the network using the TMP-file
@@ -459,13 +481,13 @@ case $option in
         fi
         ;;
     "dc-wifi" )
-        echo -e "# Disconnect to one Wi-Fi network #\n"
+        echo -e "$CYAN# Disconnect to one Wi-Fi network #$NC\n"
         su - root -c 'dhclient -r wlan0
         ifconfig wlan0 down
         iw dev wlan0 link'
         ;;
-    "men-info" )
-        echo "# Show memory and swap percentage of use #"
+    "mem-info" )
+        echo -e "$CYAN# Show memory and swap percentage of use #$NC"
         memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
         memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
         memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total", |valueI*100/valueF|
@@ -482,31 +504,31 @@ case $option in
         fi
         ;;
     "ap-info" )
-        echo -e "# Show information about the AP connected #"
+        echo -e "$CYAN# Show information about the AP connected #$NC"
         echo -e "\n/usr/sbin/iw dev wlan0 link:"
         /usr/sbin/iw dev wlan0 link
         echo -e "\n/sbin/iwconfig wlan0:"
         /sbin/iwconfig wlan0
         ;;
     "l-iw" )
-        echo -e "# List the Wi-Fi AP around, with iw (show WPS and more infos) #\n"
+        echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
         su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
         ;;
     "l-iwlist" )
-        echo -e "# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #\n"
+        echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\n"
         /sbin/iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "texlive-up" )
-        echo -e "# Update the texlive packages #\n"
+        echo -e "$CYAN# Update the texlive packages #$NC\n"
         su - root -c "tlmgr update --self
         tlmgr update --all"
         ;;
     "nm-list" )
-        echo -e "# List the Wi-Fi AP around with the nmcli from NetworkManager #\n"
+        echo -e "$CYAN# List the Wi-Fi AP around with the nmcli from NetworkManager #$NC\n"
         nmcli device wifi list
         ;;
     "brigh-1" )
-        echo "# Set brightness percentage value (accept % value, up and down) #"
+        echo -e "$CYAN# Set brightness percentage value (accept % value, up and down) #$NC"
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
         else
@@ -524,7 +546,7 @@ case $option in
         elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
             pathFile="/sys/class/backlight/intel_backlight"
         else
-            echo -e "\n\tError, file to set brightness not found"
+            echo -e "$RED\nError: File to set brightness not found$NC"
         fi
 
         if [ "$pathFile" != '' ]; then
@@ -566,7 +588,7 @@ case $option in
         fi
         ;;
     "brigh-2" )
-        echo "# Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %) #"
+        echo -e "$CYAN# Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %) #$NC"
         if [ $# -eq 1 ]; then # Option without value set brightness in 1%
             xbacklight -set 1
         elif [ $# -eq 2 ]; then # Option to one value of input to set
@@ -582,7 +604,7 @@ case $option in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec 1
                 else
-                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)"
+                    echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             fi
         else #elif [ $# -eq 3 ]; then # Option to two value of input to set
@@ -592,15 +614,15 @@ case $option in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec $3
                 else
-                    echo -e "\n\tError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)"
+                    echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             else
-                echo -e "\n\tError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)"
+                echo -e "$RED\nError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)$NC"
             fi
         fi
         ;;
     "date-up" )
-        echo -e "# Update the date #\n"
+        echo -e "$CYAN# Update the date #$NC\n"
         su - root -c '
         ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
         ntpVectorSize=${#ntpVector[*]} # size of ntpVector
@@ -637,7 +659,7 @@ case $option in
         '
         ;;
     "lpkg-c" )
-        echo "# Count of packages that are installed in the Slackware #"
+        echo -e "$CYAN# Count of packages that are installed in the Slackware #$NC"
         countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
         echo -e "\nThere are $countPackages packages installed"
         ;;
@@ -649,7 +671,7 @@ case $option in
             functionWord="removed"
             workFolder="/var/log/removed_packages/"
         fi
-        echo -e "# List last packages $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #\n"
+        echo -e "$CYAN# List last packages $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\n"
 
         if [ $# -eq 1 ]; then
             numberPackages=10
@@ -664,9 +686,9 @@ case $option in
         ls -l --sort=time $workFolder | head -n $numberPackages | grep -v "total [[:digit:]]"
         ;;
     "pdf-r" ) # Need Ghostscript
-        echo -e "# Reduce a PDF file #\n"
+        echo -e "$CYAN# Reduce a PDF file #$NC\n"
         if [ $# -eq 1 ]; then
-            echo -e "\n\tError: Use $0 pdf-r file.pdf"
+            echo -e "$RED\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
             filePdfInput="$2"
             if [ -e "$filePdfInput" ]; then
@@ -674,12 +696,12 @@ case $option in
                 gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput"_r.pdf "$filePdfInput"
                 echo -e "\nThe output pdf file: \""$filePdfOutput"_r.pdf\" was saved"
             else # Pdf not found
-                echo -e "\n\tError: The file $filePdfInput not exists"
+                echo -e "$RED\nError: The file $filePdfInput not exists$NC"
             fi
         fi
         ;;
     "swap-clean" )
-        echo "# Clean up the Swap Memory #"
+        echo -e "$CYAN# Clean up the Swap Memory #$NC"
         testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
         if [ $testSwap -eq 0 ]; then
             echo "\nSwap is not configured in this computer"
@@ -709,7 +731,7 @@ case $option in
         fi
         ;;
     "slack-up" )
-        echo "# Slackware update #"
+        echo -e "$CYAN# Slackware update #$NC"
         if [ "$2" == '' ]; then
             echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
             read useBL
@@ -729,30 +751,30 @@ case $option in
         fi
         ;;
     "up-db" )
-        echo -e "# Update the database for 'locate' #\n"
+        echo -e "$CYAN# Update the database for 'locate' #$NC\n"
         su - root -c "updatedb" # Update de database
         echo -e "\nDatabase updated"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
-        echo -e "# Show the weather forecast (you can change the city in the script) #\n"
+        echo -e "$CYAN# Show the weather forecast (you can change the city in the script) #$NC\n"
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially"
+        echo -e "$CYAN# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially #$NC"
 
-        echo -e "\nRunning: $0 notPrint texlive-up\n"
+        echo -e "$GREEN\nRunning: $0 notPrint texlive-up$NC\n"
         $0 notPrint texlive-up
 
-        echo -e "\nRunning: $0 notPrint date-up\n"
+        echo -e "$GREEN\nRunning: $0 notPrint date-u$NCp\n"
         $0 notPrint date-up
 
-        echo -e "\nRunning: $0 notPrint swap-clean y\n"
+        echo -e "$GREEN\nRunning: $0 notPrint swap-clean y$NC\n"
         $0 notPrint swap-clean y
 
-        echo -e "\nRunning: $0 notPrint slack-up n\n"
+        echo -e "$GREEN\nRunning: $0 notPrint slack-up n$NC\n"
         $0 notPrint slack-up n
 
-        echo -e "\nRunning: $0 notPrint up-db\n"
+        echo -e "$GREEN\nRunning: $0 notPrint up-db$NC\n"
         $0 notPrint up-db
         ;;
     * )
@@ -761,8 +783,8 @@ case $option in
         ;;
 esac
 
-if [ "$optionTmp" != "notPrint" ]; then
-    echo -e "\n#___ So Long, and Thanks for All the Fish ___#\n"
+if [ "$notPrintInput" != "notPrint" ]; then
+    echo -e "$BLUE\n\t\t#___ So Long, and Thanks for All the Fish ___#$NC\n"
 else
     shift
 fi
