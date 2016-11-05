@@ -332,16 +332,17 @@ case $optionInput in
         if [ $# -lt 3 ]; then
             echo -e "$RED\nError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'$NC"
         else
-            echo -e "\n\t## An Important Note ##\n"
-            echo "The trailing slash (/) at the end of the first argument (source folder). For example: \"rsync -a dir1/ dir2\""
-            echo "This is necessary to mean \"the contents of dir1\". The alternative, without the trailing slash, would place dir1,"
-            echo -e "including the directory, within dir2. This would create a hierarchy that looks like: dir2/dir1/[files]"
-            echo "$CYAN## Please double-check your arguments before continue ##$NC"
+            echo -e "\n$GREEN\t## An Important Note ##$BLUE\n"
+            echo -e "The trailing slash (/) at the end of the first argument (source folder)"
+            echo -e "For example: \"rsync -a dir1/ dir2\" is necessary to mean \"the contents of dir1\""
+            echo -e "The alternative (without the trailing slash) would place dir1 (including the directory) within dir2"
+            echo -e "This would create a hierarchy that looks like: dir2/dir1/[files]"
+            echo -e "\n$CYAN## Please double-check your arguments before continue ##$NC"
 
             pathSource=$2
             pathDestination=$3
-            echo -e "\nSource folder: $pathSource"
-            echo "Destination folder: $pathDestination"
+            echo -e "$CYAN\nSource folder:$GREEN $pathSource$CYAN"
+            echo -e "Destination folder:$GREEN $pathDestination$NC"
 
             echo -en "\nWant continue and use these source and destination folders?\n(y)es - (n)o: "
             read continueRsync
@@ -358,17 +359,20 @@ case $optionInput in
                         echo # just a new blank line
                         filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
                         if [ "$filesDelete" != '' ]; then
-                            echo -e "\nFiles to be deleted:\n$filesDelete"
+                            echo -e "\nFiles to be deleted:"
+                            echo "$filesDelete" | sort
                         fi
 
                         filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
                         if [ "$filesDifferent" != '' ]; then
-                            echo -e "\nFiles different:\n$filesDifferent"
+                            echo -e "\nFiles different:"
+                            echo "$filesDifferent" | sort
                         fi
 
                         filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
                         if [ "$filesNew" != '' ]; then
-                            echo -e "\nNew files:\n$filesNew"
+                            echo -e "\nNew files:"
+                            echo "$filesNew" | sort
                         fi
 
                         if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
@@ -383,10 +387,10 @@ case $optionInput in
                             echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
                             read continueWriteDisk
                             if [ "$continueWriteDisk" == 'y' ]; then
-                                echo -e "Changes are writing in "$pathDestination"\nPlease wait..."
+                                echo -e "\nChanges are writing in "$pathDestination". Please wait..."
                                 rsync -crvh --delete "$pathSource" "$pathDestination"
                             else
-                                echo -e "\n\tAny change writes in disk"
+                                echo -e "\n\tNone change writes in disk"
                             fi
                         fi
                     else
@@ -396,7 +400,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "\n\tAny change writes in disk"
+                echo -e "\n\tNone change writes in disk"
             fi
         fi
         ;;
