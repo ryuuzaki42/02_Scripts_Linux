@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 04/11/2016
+# Last update: 07/11/2016
 
 colorDisableInput="$1"
 if [ "$colorDisableInput" == "noColor" ]; then
@@ -276,8 +276,16 @@ case $optionInput in
         ;;
     "work-fbi" )
         echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
-        echo -e "\nWarning: depending on how big is your Hard drive, this can take a long time"
-        echo -en "Want continue?\n(y)es - (n)o: "
+        echo -e "\nWarning: Depending on how big is the amount of free space, this can take a long time"
+
+        freeSpace=`df . | awk '/[0-9]%/{print $(NF-2)}'` # Free space local/pwd folder
+        freeSpaceMiB=`echo "scale=2; $freeSpace/1024" | bc` # Free space in MiB
+        freeSpaceGiB=`echo "scale=2; $freeSpace/(1024*1024)" | bc` # Free space in GiB
+        timeAvgMin=`echo "($freeSpaceMiB/30)/60" | bc`
+
+        echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
+        echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
+        echo -en "\nWant continue? (y)es - (n)o: "
         read contineDd
 
         if [ "$contineDd" == 'y' ]; then
@@ -292,16 +300,28 @@ case $optionInput in
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
             read continueRandomOrZero
 
+            startAtSeconds=`date +%s`
+
+            if [ "$continueRandomOrZero" == 'r' ]; then
+                typeWriteDd="random"
+            else
+                typeWriteDd="zero"
+            fi
+            echo -en "\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait...\n\n"
+
             if [ "$continueRandomOrZero" == 'r' ]; then
                 dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
-                echo -en "\nWriting <random> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
             else
-                echo -en "\nWriting <zero> value in the \"$fileName\" tmp file\nPlease wait...\n\n"
                 dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <zero> value to wipe the data
             fi
 
+            endsAtSeconds=`date +%s`
+            timeTakeMin=`echo "scale=2; ($endsAtSeconds - $startAtSeconds)/60" | bc`
+
+            echo -e "\nFinished to write the file - this take $timeTakeMin min"
+
             rm $fileName # Delete the <big> file generated
-            echo -e "\nThe \"$fileName\" tmp file was deleted"
+            echo -e "\nThe \"$fileName\" tmp file was deleted and the end of the job"
         fi
         ;;
     "ip" )
