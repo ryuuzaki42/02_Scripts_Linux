@@ -140,6 +140,42 @@ help() {
    $GREEN w or ''$CYAN        - Menu with whiptail (where you can call another options)$NC"
 }
 
+dateUpFunction() { # Need to be run as root
+    ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
+    ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+
+    tmpFileNtpError=`mktemp` # Create a TMP-file
+
+    i=0 # Initialize variables
+    flagContinue=true
+
+    while $flagContinue && [ $i -lt $ntpVectorSize ]; do # Run until flagContinue is false or ntpVector get his end
+        echo "Running: ntpdate -u -b ${ntpVector[$i]}" # Print what will be running
+        ntpdate -u -b ${ntpVector[$i]} 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
+
+        if ! cat $tmpFileNtpError | grep -q "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
+            if ! cat $tmpFileNtpError | grep -q "time out"; then # Test if ntpdate got error "time out"
+                if ! cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+                    echo -e "\nTime updated: `date`\n"
+                    flagContinue=false # Set false in flagContinue, because time is updated
+                fi
+            fi
+        fi
+
+        ((i++)) # Add 1 in the variable $i
+
+        if [ $i -eq $ntpVectorSize ]; then # Test if $i is equal of size ntpVector
+            if [ $flagContinue ]; then # if true, no ntp server worked
+                echo -e "\nSorry, time not updated: `date`\n"
+                if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+                    echo -e "No connection found - Check your network connections\n"
+                fi
+            fi
+        fi
+    done
+    rm $tmpFileNtpError # Delete the tmp file
+}
+
 optionInput="$1"
 case $optionInput in
     '' | 'w' )
@@ -627,40 +663,14 @@ case $optionInput in
         ;;
     "date-up" )
         echo -e "$CYAN# Update the date #$NC\n"
-        su - root -c '
-        ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
-        ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+        export -f dateUpFunction
+        su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
 
-        tmpFileNtpError=`mktemp` # Create a TMP-file
-        i=0 # Initialize variables
-        flagContinue=true
-
-        while $flagContinue && [ $i -lt $ntpVectorSize ]; do # Run until flagContinue is false or ntpVector get his end
-            echo "Running: ntpdate -u -b ${ntpVector[$i]}" # Print what will be running
-            ntpdate -u -b ${ntpVector[$i]} 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
-
-            if ! cat $tmpFileNtpError | grep -q "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
-                if ! cat $tmpFileNtpError | grep -q "time out"; then # Test if ntpdate got error "time out"
-                    if ! cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-                        echo -e "\nTime updated: `date`\n"
-                        flagContinue=false # Set false in flagContinue, because time is updated
-                    fi
-                fi
-            fi
-
-            ((i++)) # Add 1 in the variable $i
-
-            if [ $i -eq $ntpVectorSize ]; then # Test if $i is equal of size ntpVector
-                if [ $flagContinue ]; then # if true, no ntp server worked
-                    echo -e "\nSorry, time not updated: `date`\n"
-                    if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-                        echo -e "No connection found - Check your network connections\n"
-                    fi
-                fi
-            fi
-        done
-        rm $tmpFileNtpError # Delete the tmp file
-        '
+        # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
+        # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
+        # (2) it changes the environmental variables to those of the new user
+        # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
+        # logged on to a new session (rather than just taking over an existing session)
         ;;
     "lpkg-c" )
         echo -e "$CYAN# Count of packages that are installed in the Slackware #$NC"
