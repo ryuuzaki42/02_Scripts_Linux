@@ -727,8 +727,29 @@ case $optionInput in
             filePdfInput="$2"
             if [ -e "$filePdfInput" ]; then
                 filePdfOutput=${filePdfInput::-4}
-                gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput"_r.pdf "$filePdfInput"
-                echo -e "\nThe output pdf file: \""$filePdfOutput"_r.pdf\" was saved"
+
+                echo -en "\nFile change options:\n1 - small size \n2 - better quality\n3 -Minimal changes?\n\nWhat option o want (enter to insert 3): "
+                read fileChangeOption
+
+                echo
+                if [ "$fileChangeOption" == '1' ]; then
+                    sizeQuality="ebook"
+                elif [ "$fileChangeOption" == '2' ]; then
+                    sizeQuality="screen"
+                else
+                    fileChangeOption='3'
+                fi
+
+                fileNamePart="_rOp"$fileChangeOption".pdf"
+                midCode="-dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality"
+
+                if [ "$fileChangeOption" == '3' ]; then
+                    midCode=""
+                fi
+
+                gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput""$fileNamePart" "$filePdfInput"
+
+                echo -e "\nThe output PDF: \""$filePdfOutput""$fileNamePart"\" was saved"
             else # Pdf not found
                 echo -e "$RED\nError: The file $filePdfInput not exists$NC"
             fi
