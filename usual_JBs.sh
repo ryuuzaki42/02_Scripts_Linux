@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 07/11/2016
+# Last update: 14/11/2016
 
 colorDisableInput="$1"
 if [ "$colorDisableInput" == "noColor" ]; then
