@@ -20,14 +20,18 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 03/11/2016
+# Última atualização: 15/11/2016
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
 . /etc/profile # Loading deafault configs (the file /etc/profile and
     # the files inside /etc/profile.d/ with permission to execute)
 
-export HISTCONTROL=ignoreboth:ignoredups:erasedups # To ignore dups in history
+# To ignore dups in history
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
+
 export PAGER='/usr/bin/most -s' # To display color man pages, using most instead less
 
 # Tput setaf * colors => 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
