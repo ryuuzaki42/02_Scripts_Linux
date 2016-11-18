@@ -23,29 +23,24 @@
 # Script: script to create a git show file from last commit and compare
 # wit the local file using the meld program
 #
-# Última atualização: 16/09/2016
-
-# SmartGit >> Edit >> Preferences >> Tools >> Add...
-# Name
-    # External diff
-# SmartGit command:
-    # link this script sh
+# Última atualização: 17/11/2016
+#
+# In the SmartGit go:
+# Edit >> Preferences >> Tools, and # >> Add...
+# Name: Open wiht Meld
+# SmartGit command: link this script sh
     # /usr/bin/smartgit_diff_meld_JBs.sh
-# Arguments
-    # ${filePath} ${repositoryRootPath}
-# Handles
-    # Files
+# Arguments: ${filePath} ${repositoryRootPath}
+# Handles: Files
 
 fullPath=$1 # full path to the file from SmartGit
 rootFolderPath=$2 # path from the project folder from SmartGit
 filePathRoot=`echo ${fullPath#"$rootFolderPath"}` # Get project folder and the file name
 filePathRoot=${filePathRoot:1} # Remove the frist "/" form "/foder/file"
-    #or
-#filePathRoot='echo $filePathRoot | cut -c 2-'
 
 tmpFile=`mktemp` # Create a TMP-file
 
-# Only for test use
+# Only for test
 #echo "fullPath $fullPath" >> $tmpFile
 #echo "rootFolderPath $rootFolderPath" >> $tmpFile
 #echo "filePathRoot $filePathRoot" >> $tmpFile
@@ -56,6 +51,6 @@ git show HEAD:"$filePathRoot" >> $tmpFile # Generate the a tmpFile from last com
 # Commit before (~1, ~2, ...)
     #git show HEAD~1:"$filePathRoot" >> $tmpFile
 
-meld  $tmpFile $fullPath # Open meld with the two files
+meld $tmpFile $fullPath # Open meld with the two files
 
 rm $tmpFile # Delete the tmpFile
