@@ -22,9 +22,9 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 14/11/2016
+# Last update: 19/11/2016
 
-colorDisableInput="$1"
+colorDisableInput=$1
 if [ "$colorDisableInput" == "noColor" ]; then
     echo -e "\nColors disabled"
     shift
@@ -39,14 +39,14 @@ else # Some colors for script output - Make it easier to follow
     WHITE='\e[1;37m'
 fi
 
-notPrintInput="$1"
+notPrintInput=$1
 if [ "$notPrintInput" != "notPrint" ]; then
     echo -e "$BLUE\n\t\t#___ Script to usual commands ___#$NC\n"
 else
     shift
 fi
 
-testColorInput="$1"
+testColorInput=$1
 if [ "$testColorInput" == "testColor" ]; then
     echo -e "\n\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
     shift
@@ -92,7 +92,7 @@ whiptailMenu() {
     "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
     "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" 3>&1 1>&2 2>&3)
 
-    if [ "$itemSelected" != "" ]; then
+    if [ "$itemSelected" != '' ]; then
         echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
         $0 notPrint $itemSelected $1 $2
     fi
@@ -142,41 +142,38 @@ help() {
 
 dateUpFunction() { # Need to be run as root
     ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
-    ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+    #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+    #${ntpVector[$i]}, where $i is the index
 
     tmpFileNtpError=`mktemp` # Create a TMP-file
-
-    i=0 # Initialize variables
     flagContinue=true
 
-    while $flagContinue && [ $i -lt $ntpVectorSize ]; do # Run until flagContinue is false or ntpVector get his end
-        echo "Running: ntpdate -u -b ${ntpVector[$i]}" # Print what will be running
-        ntpdate -u -b ${ntpVector[$i]} 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
+    for ntpValue in $ntpVector; do # Run until flagContinue is false and run the break or ntpVector get his end
+        echo -e "Running: ntpdate -u -b $ntpValue\n"
+        ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
 
         if ! cat $tmpFileNtpError | grep -q "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
             if ! cat $tmpFileNtpError | grep -q "time out"; then # Test if ntpdate got error "time out"
                 if ! cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
                     echo -e "\nTime updated: `date`\n"
                     flagContinue=false # Set false in flagContinue, because time is updated
-                fi
-            fi
-        fi
-
-        ((i++)) # Add 1 in the variable $i
-
-        if [ $i -eq $ntpVectorSize ]; then # Test if $i is equal of size ntpVector
-            if [ $flagContinue ]; then # if true, no ntp server worked
-                echo -e "\nSorry, time not updated: `date`\n"
-                if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-                    echo -e "No connection found - Check your network connections\n"
+                    break
                 fi
             fi
         fi
     done
+
+    if [ $flagContinue ]; then # if true, no ntp server worked
+        echo -e "\nSorry, time not updated: `date`\n"
+        if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+            echo -e "No connection found - Check your network connections\n"
+        fi
+    fi
+
     rm $tmpFileNtpError # Delete the tmp file
 }
 
-optionInput="$1"
+optionInput=$1
 case $optionInput in
     '' | 'w' )
         whiptailMenu $2 $3
@@ -478,9 +475,10 @@ case $optionInput in
         if [ $# -eq 1 ]; then
             domainPing="google.com"
         else
-            domainPing="$2"
+            domainPing=$2
         fi
 
+        echo -e "\nRunning: ping -c 3 $domainPing\n"
         ping -c 3 $domainPing
         ;;
     "create-wifi" )
@@ -534,7 +532,7 @@ case $optionInput in
 
                         dhclient wlan0 # Get IP
 
-                        iw dev wlan0 link # Show status of the connection
+                        iw dev wlan0 link # Show connection status
                     fi
                 fi
             fi
@@ -592,7 +590,7 @@ case $optionInput in
         if [ $# -eq 1 ]; then
             brightnessValueOriginal=1
         else
-            brightnessValueOriginal="$2"
+            brightnessValueOriginal=$2
         fi
 
         if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
@@ -711,7 +709,7 @@ case $optionInput in
             numberPackages=10
         else
             if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
-                numberPackages="$2"
+                numberPackages=$2
             else
                 numberPackages=10
             fi
@@ -720,38 +718,52 @@ case $optionInput in
         ls -l --sort=time $workFolder | head -n $numberPackages | grep -v "total [[:digit:]]"
         ;;
     "pdf-r" ) # Need Ghostscript
-        echo -e "$CYAN# Reduce a PDF file #$NC\n"
+        echo -e "$CYAN# Reduce a PDF file #$NC"
         if [ $# -eq 1 ]; then
             echo -e "$RED\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
-            filePdfInput="$2"
+            filePdfInput=$2
             if [ -e "$filePdfInput" ]; then
                 filePdfOutput=${filePdfInput::-4}
 
-                echo -en "\nFile change options:\n1 - small size \n2 - better quality\n3 -Minimal changes?\n\nWhat option o want (enter to insert 3): "
-                read fileChangeOption
+                fileChangeOption=$3
+                if ! echo "$fileChangeOption" | grep -q [[:digit:]]; then
+                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (enter to insert 3): "
+                    read fileChangeOption
+                fi
 
-                echo
                 if [ "$fileChangeOption" == '1' ]; then
                     sizeQuality="ebook"
                 elif [ "$fileChangeOption" == '2' ]; then
                     sizeQuality="screen"
+                elif [ "$fileChangeOption" == '4' ]; then
+                    # $1 = pdf-r, $2 = fileName.pdf, $3 = fileChangeOption
+                    echo
+                    $0 notPrint $1 "$filePdfInput" 1
+                    echo
+                    $0 notPrint $1 "$filePdfInput" 2
+                    echo
+                    $0 notPrint $1 "$filePdfInput" 3
                 else
                     fileChangeOption='3'
                 fi
 
-                fileNamePart="_rOp"$fileChangeOption".pdf"
-                midCode="-dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality"
+                if [ "$fileChangeOption" != '4' ]; then
+                    fileNamePart="_rOp"$fileChangeOption".pdf"
 
-                if [ "$fileChangeOption" == '3' ]; then
-                    midCode=""
+                    if [ "$fileChangeOption" == '3' ]; then
+                        midCode=''
+                    else
+                        midCode="-dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality"
+                    fi
+
+                    echo -e "\nRunning \"$0 $1 $filePdfInput $fileChangeOption\"\n"
+                    gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput""$fileNamePart" "$filePdfInput"
+
+                    echo -e "\nThe output PDF: \""$filePdfOutput""$fileNamePart"\" was saved"
                 fi
-
-                gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput""$fileNamePart" "$filePdfInput"
-
-                echo -e "\nThe output PDF: \""$filePdfOutput""$fileNamePart"\" was saved"
-            else # Pdf not found
-                echo -e "$RED\nError: The file $filePdfInput not exists$NC"
+            else
+                echo -e "$RED\nError: The file \"$filePdfInput\" not exists$NC"
             fi
         fi
         ;;
