@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: converter texto utf8 to iso-8859 e virse-versa
+# Script: converte texto utf8 to iso-8859 e virse-versa
 #
 # Última atualização: 07/04/2016
 #

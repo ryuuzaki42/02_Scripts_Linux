@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror
 #
-# Last update: 17/11/2016
+# Last update: 19/11/2016
 #
 echo -e "\n# This script download files/packages from a repository #\n"
 
@@ -85,7 +85,8 @@ if [ $archDL == "x86" ] || [ "$archDL" == "armv7hl" ] || [ "$archDL" == "x86_64"
     fi
     echo
 
-    mirrorDl="$mirrorSource/$versioSlackware/$archDL/$progNameDl"
+    #mirrorDl="$mirrorSource/$versioSlackware/$archDL/$progNameDl"
+    mirrorDl="$mirrorSource/$versioSlackware/$archDL"
 
     initialFolder=`pwd`
     folderDest=$progNameDl-dl-alien-`date +%s`
@@ -93,15 +94,17 @@ if [ $archDL == "x86" ] || [ "$archDL" == "armv7hl" ] || [ "$archDL" == "x86_64"
     mkdir $folderDest/
     cd $folderDest/
 
-    wget -c -r -l 1 -np -nH --cut-dirs=100 \
-    -A "$patternDl" \
-    $mirrorDl/
+    wget -c -r -l 1 -np -nH --cut-dirs=100 -A "$patternDl" $mirrorDl/
 
-    # -nH --cut-dirs=100 cut 100 directories to be no created
-    # -c continue
-    # -r:  recursive retrieving
-    # -l 1  sets the maximum recursion depth to be 1
-    # -np  does not ascend to the parent; only downloads from the specified sub directory and downwards hierarchy
+    # --cut-dirs=NUMBER ignore NUMBER remote directory components
+        # --cut-dirs=100 cut 100 directories to be no created
+    # -nH               don't create host directories
+    # -np               don't ascend to the parent directory
+        # Only downloads from the specified sub directory and downwards hierarchy
+    # -r                specify recursive download
+    # -c                resume getting a partially-downloaded file
+    # -l NUMBER         maximum recursion depth (inf or 0 for infinite)
+        # -l 1  sets the maximum recursion depth to be 1
 
     cd $initialFolder
 
