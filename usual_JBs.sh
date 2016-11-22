@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 19/11/2016
+# Last update: 22/11/2016
 
 colorDisableInput=$1
 if [ "$colorDisableInput" == "noColor" ]; then
@@ -67,6 +67,7 @@ whiptailMenu() {
     "day-install"  "   - The day the system are installed" \
     "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
     "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
+    "git-gc"       "   - Run git gc (|--auto|--aggressive) in the sub directories" \
     "help"         "   - Show this help message (the same result with --help, -h and h)" \
     "ip"           "   - Get your IP" \
     "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
@@ -90,7 +91,8 @@ whiptailMenu() {
     "up-db"        " * - Update the database for 'locate'" \
     "weather"      "   - Show the weather forecast (you can change the city in the script)" \
     "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
-    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" 3>&1 1>&2 2>&3)
+    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
+    "w or ''"      "   - Menu with whiptail (where you can call others options)" 3>&1 1>&2 2>&3)
 
     if [ "$itemSelected" != '' ]; then
         echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
@@ -113,6 +115,7 @@ help() {
    $GREEN day-install$CYAN    - The day the system are installed
    $GREEN dc-wifi$CYAN     $RED * - Disconnect to one Wi-Fi network$CYAN
    $GREEN folder-diff$CYAN    - Show the difference between two folder and (can) make them equal (with rsync)
+   $GREEN git-gc$CYAN         - Run git gc (|--auto|--aggressive) in the sub directories
    $GREEN help$CYAN           - Show this help message (the same result with --help, -h and h)
    $GREEN ip$CYAN             - Get your IP
    $GREEN l-iw$CYAN        $RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)$CYAN
@@ -137,7 +140,7 @@ help() {
    $GREEN up-db$CYAN       $RED * - Update the database for 'locate'$CYAN
    $GREEN weather$CYAN        - Show the weather forecast (you can change the city in the script)
    $GREEN work-fbi$CYAN       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
-   $GREEN w or ''$CYAN        - Menu with whiptail (where you can call another options)$NC"
+   $GREEN w or ''$CYAN        - Menu with whiptail (where you can call others options)$NC"
 }
 
 dateUpFunction() { # Need to be run as root
@@ -176,10 +179,37 @@ dateUpFunction() { # Need to be run as root
 optionInput=$1
 case $optionInput in
     '' | 'w' )
+        echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
         whiptailMenu $2 $3
         ;;
     "--help" | "-h" | "help" | 'h' )
+        echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
         help
+        ;;
+    "git-gc" )
+        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\n"
+        ## All folder in one directory run "git gc --aggressive"
+        echo "Commands \"git gc\" avaible:"
+        echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
+        echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
+        echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
+        echo -n "Which option you want? (hit enter to insert 1): "
+        read gitOptionComand
+
+        if [ "$gitOptionComand" == '2' ]; then
+            gitCommandRun="git gc --auto"
+        elif [ "$gitOptionComand" == '3' ]; then
+            gitCommandRun="git gc --aggressive"
+        else
+            gitCommandRun="git gc"
+        fi
+
+        for folderGit in `ls`; do
+            echo -e "\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\n"
+            cd $folderGit
+            $gitCommandRun
+            cd ..
+        done
         ;;
      "mem-use" )
         echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\n"
@@ -728,7 +758,7 @@ case $optionInput in
 
                 fileChangeOption=$3
                 if ! echo "$fileChangeOption" | grep -q [[:digit:]]; then
-                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (enter to insert 3): "
+                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (hit enter to insert 3): "
                     read fileChangeOption
                 fi
 
@@ -800,7 +830,7 @@ case $optionInput in
     "slack-up" )
         echo -e "$CYAN# Slackware update #$NC"
         if [ "$2" == '' ]; then
-            echo -en "\nUse blacklist?\nYes <Hit Enter> | No <type n>: "
+            echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
             read useBL
         else
             useBL=$2
