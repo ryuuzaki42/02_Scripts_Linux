@@ -138,20 +138,23 @@ whiptailMenu() {
 }
 
 help() {
-    echo -e "$CYAN    Options:
-
-   $RED Obs$CYAN:$RED * root required,$CYAN + NetworkManager required,$BLUE = X server required$CYAN\n"
+    echo -e "$CYAN    Options:\n
+   $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
 
     countOption=0
     optionVectorSize=${#optionVector[*]}
     while [ $countOption -lt $optionVectorSize ]; do
         if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
-            useRed=$RED
+            useColor=$RED
+        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
+            useColor=$BLUE
+        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
+            useColor=$PINK
         else
-            useRed=''
+            useColor=''
         fi
 
-        echo -e "\t$GREEN${optionVector[$countOption]}$CYAN $useRed${optionVector[$countOption+1]}$NC"
+        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
 
         countOption=$((countOption + 2))
     done
