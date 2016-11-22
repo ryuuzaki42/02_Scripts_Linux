@@ -94,42 +94,42 @@ whiptailMenu() {
     itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
     Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
-    "ap-info"      "   - Show information about the AP connected" \
-    "brigh-1"      " * - Set brightness percentage value (accept % value, up and down)" \
-    "brigh-2"      " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)" \
-    "cn-wifi"      " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
-    "cpu-max"      "   - Show the 10 process with more CPU use" \
-    "create-wifi"  " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)" \
-    "date-up"      " * - Update the date" \
-    "day-install"  "   - The day the system are installed" \
-    "dc-wifi"      " * - Disconnect to one Wi-Fi network" \
-    "folder-diff"  "   - Show the difference between two folder and (can) make them equal (with rsync)" \
-    "git-gc"       "   - Run git gc (|--auto|--aggressive) in the sub directories" \
-    "help"         "   - Show this help message (the same result with --help, -h and h)" \
-    "ip"           "   - Get your IP" \
-    "l-iw"         " * - List the Wi-Fi AP around, with iw (show WPS and more infos)" \
-    "l-iwlist"     "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)" \
-    "lpkg-c"       "   - Count of packages that are installed in the Slackware" \
-    "lpkg-i"       "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)" \
-    "lpkg-r"       "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)" \
-    "mem-max"      "   - Show the 10 process with more memory RAM use" \
-    "mem-use"      "   - Get the all (shared and specific) use of memory RAM from one process/pattern" \
-    "mem-info"     "   - Show memory and swap percentage of use" \
-    "nm-list"      " + - List the Wi-Fi AP around with the nmcli from NetworkManager" \
-    "now"          " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially " \
-    "pdf-r"        "   - Reduce a PDF file" \
-    "ping-test"    "   - Ping test on domain (default is google.com)" \
-    "print-lines"  "   - Print part of file (lineStart to lineEnd)" \
-    "screenshot"   "   - Screenshot from display :0" \
-    "search-pwd"   "   - Search in this directory (recursive) for a pattern" \
-    "slack-up"     " * - Slackware update" \
-    "swap-clean"   " * - Clean up the Swap Memory" \
-    "texlive-up"   " * - Update the texlive packages" \
-    "up-db"        " * - Update the database for 'locate'" \
-    "weather"      "   - Show the weather forecast (you can change the city in the script)" \
-    "work-fbi"     "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file" \
-    "search-pkg"   "   - Search in the installed package folder (/var/log/packages/) for one pattern" \
-    "w or ''"      "   - Menu with whiptail (where you can call others options)" 3>&1 1>&2 2>&3)
+    "${optionVector[0]}" "${optionVector[1]}" \
+    "${optionVector[2]}" "${optionVector[3]}" \
+    "${optionVector[4]}" "${optionVector[5]}" \
+    "${optionVector[6]}" "${optionVector[7]}" \
+    "${optionVector[8]}" "${optionVector[9]}" \
+    "${optionVector[10]}" "${optionVector[11]}" \
+    "${optionVector[12]}" "${optionVector[13]}" \
+    "${optionVector[14]}" "${optionVector[15]}" \
+    "${optionVector[16]}" "${optionVector[17]}" \
+    "${optionVector[18]}" "${optionVector[19]}" \
+    "${optionVector[20]}" "${optionVector[21]}" \
+    "${optionVector[22]}" "${optionVector[23]}" \
+    "${optionVector[24]}" "${optionVector[25]}" \
+    "${optionVector[26]}" "${optionVector[27]}" \
+    "${optionVector[28]}" "${optionVector[29]}" \
+    "${optionVector[30]}" "${optionVector[31]}" \
+    "${optionVector[32]}" "${optionVector[33]}" \
+    "${optionVector[34]}" "${optionVector[35]}" \
+    "${optionVector[36]}" "${optionVector[37]}" \
+    "${optionVector[38]}" "${optionVector[39]}" \
+    "${optionVector[40]}" "${optionVector[41]}" \
+    "${optionVector[42]}" "${optionVector[43]}" \
+    "${optionVector[44]}" "${optionVector[45]}" \
+    "${optionVector[46]}" "${optionVector[47]}" \
+    "${optionVector[48]}" "${optionVector[49]}" \
+    "${optionVector[50]}" "${optionVector[51]}" \
+    "${optionVector[52]}" "${optionVector[53]}" \
+    "${optionVector[54]}" "${optionVector[55]}" \
+    "${optionVector[56]}" "${optionVector[57]}" \
+    "${optionVector[58]}" "${optionVector[59]}" \
+    "${optionVector[60]}" "${optionVector[61]}" \
+    "${optionVector[62]}" "${optionVector[63]}" \
+    "${optionVector[64]}" "${optionVector[65]}" \
+    "${optionVector[66]}" "${optionVector[67]}" \
+    "${optionVector[68]}" "${optionVector[69]}" \
+    "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
 
     if [ "$itemSelected" != '' ]; then
         echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
