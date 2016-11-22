@@ -52,6 +52,43 @@ if [ "$testColorInput" == "testColor" ]; then
     shift
 fi
 
+optionVector=("ap-info      " "   - Show information about the AP connected"
+"brigh-1      " " * - Set brightness percentage value (accept % value, up and down)"
+"brigh-2      " " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+"cn-wifi      " " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+"cpu-max      " "   - Show the 10 process with more CPU use"
+"create-wifi  " " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+"date-up      " " * - Update the date"
+"day-install  " "   - The day the system are installed"
+"dc-wifi      " " * - Disconnect to one Wi-Fi network"
+"folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
+"git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
+"help         " "   - Show this help message (the same result with --help, -h and h)"
+"ip           " "   - Get your IP"
+"l-iw         " " * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
+"l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
+"lpkg-c       " "   - Count of packages that are installed in the Slackware"
+"lpkg-i       " "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+"lpkg-r       " "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
+"mem-max      " "   - Show the 10 process with more memory RAM use"
+"mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
+"mem-info     " "   - Show memory and swap percentage of use"
+"nm-list      " " + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+"now          " " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
+"pdf-r        " "   - Reduce a PDF file"
+"ping-test    " "   - Ping test on domain (default is google.com)" 
+"print-lines  " "   - Print part of file (lineStart to lineEnd)"
+"screenshot   " "   - Screenshot from display :0"
+"search-pwd   " "   - Search in this directory (recursive) for a pattern"
+"slack-up     " " * - Slackware update"
+"swap-clean   " " * - Clean up the Swap Memory"
+"texlive-up   " " * - Update the texlive packages"
+"up-db        " " * - Update the database for 'locate'"
+"weather      " "   - Show the weather forecast (you can change the city in the script)"
+"work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
+"search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
+"w or ''      " "   - Menu with whiptail (where you can call the options above)")
+
 whiptailMenu() {
     eval `resize`
     itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
@@ -103,44 +140,21 @@ whiptailMenu() {
 help() {
     echo -e "$CYAN    Options:
 
-   $RED Obs$CYAN:$RED * root required,$CYAN + NetworkManager required,$BLUE = X server required$CYAN
+   $RED Obs$CYAN:$RED * root required,$CYAN + NetworkManager required,$BLUE = X server required$CYAN\n"
 
-   $GREEN ap-info$CYAN        - Show information about the AP connected
-   $GREEN brigh-1$CYAN     $RED * - Set brightness percentage value (accept % value, up and down)$CYAN
-   $GREEN brigh-2$CYAN     $BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)$CYAN
-   $GREEN cn-wifi$CYAN     $RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)$CYAN
-   $GREEN cpu-max$CYAN        - Show the 10 process with more CPU use
-   $GREEN create-wifi$CYAN $RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)$CYAN
-   $GREEN date-up$CYAN     $RED * - Update the date$CYAN
-   $GREEN day-install$CYAN    - The day the system are installed
-   $GREEN dc-wifi$CYAN     $RED * - Disconnect to one Wi-Fi network$CYAN
-   $GREEN folder-diff$CYAN    - Show the difference between two folder and (can) make them equal (with rsync)
-   $GREEN git-gc$CYAN         - Run git gc (|--auto|--aggressive) in the sub directories
-   $GREEN help$CYAN           - Show this help message (the same result with --help, -h and h)
-   $GREEN ip$CYAN             - Get your IP
-   $GREEN l-iw$CYAN        $RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)$CYAN
-   $GREEN l-iwlist$CYAN       - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)
-   $GREEN lpkg-c$CYAN         - Count of packages that are installed in the Slackware
-   $GREEN lpkg-i$CYAN         - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)
-   $GREEN lpkg-r$CYAN         - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)
-   $GREEN mem-max$CYAN        - Show the 10 process with more memory RAM use
-   $GREEN mem-use$CYAN        - Get the all (shared and specific) use of memory RAM from one process/pattern
-   $GREEN mem-info$CYAN       - Show memory and swap percentage of use
-   $GREEN nm-list$CYAN      + - List the Wi-Fi AP around with the nmcli from NetworkManager
-   $GREEN now$CYAN         $RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially$CYAN
-   $GREEN pdf-r$CYAN          - Reduce a PDF file
-   $GREEN ping-test$CYAN      - Ping test on domain (default is google.com)
-   $GREEN print-lines$CYAN    - Print part of file (lineStart to lineEnd)
-   $GREEN screenshot$CYAN     - Screenshot from display :0
-   $GREEN search-pkg$CYAN     - Search in the installed package folder (/var/log/packages/) for one pattern
-   $GREEN search-pwd$CYAN     - Search in this directory (recursive) for a pattern
-   $GREEN slack-up$CYAN    $RED * - Slackware update$CYAN
-   $GREEN swap-clean$CYAN  $RED * - Clean up the Swap Memory$CYAN
-   $GREEN texlive-up$CYAN  $RED * - Update the texlive packages$CYAN
-   $GREEN up-db$CYAN       $RED * - Update the database for 'locate'$CYAN
-   $GREEN weather$CYAN        - Show the weather forecast (you can change the city in the script)
-   $GREEN work-fbi$CYAN       - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file
-   $GREEN w or ''$CYAN        - Menu with whiptail (where you can call others options)$NC"
+    countOption=0
+    optionVectorSize=${#optionVector[*]}
+    while [ $countOption -lt $optionVectorSize ]; do
+        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
+            useRed=$RED
+        else
+            useRed=''
+        fi
+
+        echo -e "\t$GREEN${optionVector[$countOption]}$CYAN $useRed${optionVector[$countOption+1]}$NC"
+
+        countOption=$((countOption + 2))
+    done
 }
 
 dateUpFunction() { # Need to be run as root
