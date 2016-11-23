@@ -50,14 +50,14 @@ fi
 
 notPrintHeaderHeader=$1
 if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
-    echo -e "$BLUE\n\t\t#___ Script to usual commands ___#$NC\n"
+    echo -e "$BLUE        #___ Script to usual commands ___#$NC\n"
 else
     shift
 fi
 
 testColorInput=$1
 if [ "$testColorInput" == "testColor" ]; then
-    echo -e "\n\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
+    echo -e "\n    Test colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
     shift
 fi
 
@@ -133,7 +133,7 @@ case $optionInput in
         "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
-        "help         " "   - Show this help message (the same result with --help, -h and h)"
+        "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
         "ip           " "   - Get your IP"
         "l-iw         " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
         "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
@@ -157,7 +157,7 @@ case $optionInput in
         "weather      " "   - Show the weather forecast (you can change the city in the script)"
         "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
         "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
-        "w or ''      " "   - Menu with whiptail (where you can call the options above)")
+        "w            " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
 
         if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
             useColor
@@ -166,9 +166,8 @@ case $optionInput in
         case $optionInput in
             "--help" | "-h" | "help" | 'h' )
                 help() {
-                    echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
-                    echo -e "$CYAN    Options:\n
-                    $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
+                    echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
+                    echo -e "$CYAN\nOptions:\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
 
                     countOption=0
                     optionVectorSize=${#optionVector[*]}
@@ -183,52 +182,67 @@ case $optionInput in
                 ;;
             '' | 'w' )
                 whiptailMenu() {
-                    echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
+                    echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\n"
                     eval `resize`
-                    itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
-                    Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
-                    "${optionVector[0]}" "${optionVector[1]}" \
-                    "${optionVector[2]}" "${optionVector[3]}" \
-                    "${optionVector[4]}" "${optionVector[5]}" \
-                    "${optionVector[6]}" "${optionVector[7]}" \
-                    "${optionVector[8]}" "${optionVector[9]}" \
-                    "${optionVector[10]}" "${optionVector[11]}" \
-                    "${optionVector[12]}" "${optionVector[13]}" \
-                    "${optionVector[14]}" "${optionVector[15]}" \
-                    "${optionVector[16]}" "${optionVector[17]}" \
-                    "${optionVector[18]}" "${optionVector[19]}" \
-                    "${optionVector[20]}" "${optionVector[21]}" \
-                    "${optionVector[22]}" "${optionVector[23]}" \
-                    "${optionVector[24]}" "${optionVector[25]}" \
-                    "${optionVector[26]}" "${optionVector[27]}" \
-                    "${optionVector[28]}" "${optionVector[29]}" \
-                    "${optionVector[30]}" "${optionVector[31]}" \
-                    "${optionVector[32]}" "${optionVector[33]}" \
-                    "${optionVector[34]}" "${optionVector[35]}" \
-                    "${optionVector[36]}" "${optionVector[37]}" \
-                    "${optionVector[38]}" "${optionVector[39]}" \
-                    "${optionVector[40]}" "${optionVector[41]}" \
-                    "${optionVector[42]}" "${optionVector[43]}" \
-                    "${optionVector[44]}" "${optionVector[45]}" \
-                    "${optionVector[46]}" "${optionVector[47]}" \
-                    "${optionVector[48]}" "${optionVector[49]}" \
-                    "${optionVector[50]}" "${optionVector[51]}" \
-                    "${optionVector[52]}" "${optionVector[53]}" \
-                    "${optionVector[54]}" "${optionVector[55]}" \
-                    "${optionVector[56]}" "${optionVector[57]}" \
-                    "${optionVector[58]}" "${optionVector[59]}" \
-                    "${optionVector[60]}" "${optionVector[61]}" \
-                    "${optionVector[62]}" "${optionVector[63]}" \
-                    "${optionVector[64]}" "${optionVector[65]}" \
-                    "${optionVector[66]}" "${optionVector[67]}" \
-                    "${optionVector[68]}" "${optionVector[69]}" \
-                    "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
+                    heightWhiptail=$((LINES -5))
+                    widthWhiptail=$((COLUMNS -5))
 
-                    itemSelected=`echo $itemSelected | sed 's/ //g'`
-                    if [ "$itemSelected" != '' ]; then
-                        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
-                        $0 $colorPrint notPrintHeader $itemSelected $1 $2
+                    if [ $LINES -lt 16 ]; then
+                        echo -e "$RED\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
+                        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\n" | sed 's/  / /g'
+                        $0 $colorPrint notPrintHeader --help
+                    else
+                        heightMenuBoxWhiptail=$((LINES - 15))
+
+                        #whiptail --title "<título da caixa de menu>" --menu "<texto a ser exibido>" <altura> <largura> <altura da caixa de menu> \
+                        #[ <tag> <item> ]  [ <tag> <item> ] [ <tag> <item> ]
+
+                        itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
+
+                        Options:" $heightWhiptail $widthWhiptail $heightMenuBoxWhiptail \
+                        "${optionVector[0]}" "${optionVector[1]}" \
+                        "${optionVector[2]}" "${optionVector[3]}" \
+                        "${optionVector[4]}" "${optionVector[5]}" \
+                        "${optionVector[6]}" "${optionVector[7]}" \
+                        "${optionVector[8]}" "${optionVector[9]}" \
+                        "${optionVector[10]}" "${optionVector[11]}" \
+                        "${optionVector[12]}" "${optionVector[13]}" \
+                        "${optionVector[14]}" "${optionVector[15]}" \
+                        "${optionVector[16]}" "${optionVector[17]}" \
+                        "${optionVector[18]}" "${optionVector[19]}" \
+                        "${optionVector[20]}" "${optionVector[21]}" \
+                        "${optionVector[22]}" "${optionVector[23]}" \
+                        "${optionVector[24]}" "${optionVector[25]}" \
+                        "${optionVector[26]}" "${optionVector[27]}" \
+                        "${optionVector[28]}" "${optionVector[29]}" \
+                        "${optionVector[30]}" "${optionVector[31]}" \
+                        "${optionVector[32]}" "${optionVector[33]}" \
+                        "${optionVector[34]}" "${optionVector[35]}" \
+                        "${optionVector[36]}" "${optionVector[37]}" \
+                        "${optionVector[38]}" "${optionVector[39]}" \
+                        "${optionVector[40]}" "${optionVector[41]}" \
+                        "${optionVector[42]}" "${optionVector[43]}" \
+                        "${optionVector[44]}" "${optionVector[45]}" \
+                        "${optionVector[46]}" "${optionVector[47]}" \
+                        "${optionVector[48]}" "${optionVector[49]}" \
+                        "${optionVector[50]}" "${optionVector[51]}" \
+                        "${optionVector[52]}" "${optionVector[53]}" \
+                        "${optionVector[54]}" "${optionVector[55]}" \
+                        "${optionVector[56]}" "${optionVector[57]}" \
+                        "${optionVector[58]}" "${optionVector[59]}" \
+                        "${optionVector[60]}" "${optionVector[61]}" \
+                        "${optionVector[62]}" "${optionVector[63]}" \
+                        "${optionVector[64]}" "${optionVector[65]}" \
+                        "${optionVector[66]}" "${optionVector[67]}" \
+                        "${optionVector[68]}" "${optionVector[69]}" \
+                        "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
+
+                        if [ "$itemSelected" != '' ]; then
+                            itemSelected=`echo $itemSelected | sed 's/ //g'`
+                            echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
+                            $0 $colorPrint notPrintHeader $itemSelected $1 $2
+                        fi
                     fi
                 }
 
@@ -345,7 +359,7 @@ case $optionInput in
                 fi
             fi
         else
-            echo -e "\n\n\tNo result was found"
+            echo -e "\n\n    No result was found"
         fi
 
         echo -e "\nDeleting the log files used in this script"
@@ -465,7 +479,7 @@ case $optionInput in
         if [ $# -lt 3 ]; then
             echo -e "$RED\nError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'$NC"
         else
-            echo -e "\n$GREEN\t## An Important Note ##$BLUE\n"
+            echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
             echo -e "The trailing slash (/) at the end of the first argument (source folder)"
             echo -e "For example: \"rsync -a dir1/ dir2\" is necessary to mean \"the contents of dir1\""
             echo -e "The alternative (without the trailing slash) would place dir1 (including the directory) within dir2"
@@ -523,7 +537,7 @@ case $optionInput in
                                 echo -e "\nChanges are writing in "$pathDestination". Please wait..."
                                 rsync -crvh --delete "$pathSource" "$pathDestination"
                             else
-                                echo -e "\n\tNone change writes in disk"
+                                echo -e "\n    None change writes in disk"
                             fi
                         fi
                     else
@@ -533,7 +547,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "\n\tNone change writes in disk"
+                echo -e "\n    None change writes in disk"
             fi
         fi
         ;;
@@ -907,13 +921,13 @@ case $optionInput in
         $0 $colorPrint notPrintHeader up-db
         ;;
     * )
-        echo -e "\n\t$(basename "$0"): Error of parameters"
-        echo -e "\tTry $0 '--help'"
+        echo -e "\n    $(basename "$0"): Error of parameters"
+        echo -e "    Try $0 '--help'"
         ;;
 esac
 
 if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
-    echo -e "$BLUE\n\t\t#___ So Long, and Thanks for All the Fish ___#$NC\n"
+    echo -e "$BLUE\n        #___ So Long, and Thanks for All the Fish ___#$NC"
 else
     shift
 fi
