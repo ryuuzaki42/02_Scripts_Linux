@@ -24,11 +24,7 @@
 #
 # Last update: 23/11/2016
 
-colorDisableInput=$1
-if [ "$colorDisableInput" == "noColor" ]; then
-    echo -e "\nColors disabled"
-    shift
-else # Some colors for script output - Make it easier to follow
+useColor () {
     BLACK='\e[1;30m'
     RED='\e[1;31m'
     GREEN='\e[1;32m'
@@ -37,10 +33,23 @@ else # Some colors for script output - Make it easier to follow
     PINK='\e[1;35m'
     CYAN='\e[1;36m'
     WHITE='\e[1;37m'
+}
+
+notUseColor () {
+    unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
+}
+
+colorPrint=$1
+if [ "$colorPrint" == "noColor" ]; then
+    echo -e "\nColors disabled"
+    shift
+else # Some colors for script output - Make it easier to follow
+    useColor
+    colorPrint=''
 fi
 
-notPrintInput=$1
-if [ "$notPrintInput" != "notPrint" ]; then
+notPrintHeaderHeader=$1
+if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
     echo -e "$BLUE\n\t\t#___ Script to usual commands ___#$NC\n"
 else
     shift
@@ -66,9 +75,9 @@ case $optionInput in
 
         dateUpFunction() { # Need to be run as root
             ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
-            #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
-            #${ntpVector[$i]} # where $i is the index
-            # ${ntpVector[@]} # all value of the vector
+            #${#ntpVector[*]} # size of ntpVector
+            #${ntpVector[$i]} # value of the $i index in ntpVector
+            #${ntpVector[@]} # all value of the vector
 
             tmpFileNtpError=`mktemp` # Create a TMP-file
             timeUpdated=false
@@ -108,21 +117,25 @@ case $optionInput in
         # logged on to a new session (rather than just taking over an existing session)
         ;;
     "--help" | "-h" | "help" | 'h' | '' | 'w' )
+        if [ "$optionInput" == '' ] || [ "$optionInput" == 'w' ]; then # whiptailMenu()
+            notUseColor
+        fi
+
         # Options text
         optionVector=("ap-info      " "   - Show information about the AP connected"
-        "brigh-1      " " * - Set brightness percentage value (accept % value, up and down)"
-        "brigh-2      " " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-        "cn-wifi      " " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
+        "brigh-2      " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+        "cn-wifi      " "$RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
         "cpu-max      " "   - Show the 10 process with more CPU use"
-        "create-wifi  " " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-        "date-up      " " * - Update the date"
+        "create-wifi  " "$RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
-        "dc-wifi      " " * - Disconnect to one Wi-Fi network"
+        "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help         " "   - Show this help message (the same result with --help, -h and h)"
         "ip           " "   - Get your IP"
-        "l-iw         " " * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
+        "l-iw         " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
         "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
         "lpkg-c       " "   - Count of packages that are installed in the Slackware"
         "lpkg-i       " "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
@@ -130,21 +143,25 @@ case $optionInput in
         "mem-max      " "   - Show the 10 process with more memory RAM use"
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
-        "nm-list      " " + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-        "now          " " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
+        "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+        "now          " "$RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Ping test on domain (default is google.com)" 
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
-        "slack-up     " " * - Slackware update"
-        "swap-clean   " " * - Clean up the Swap Memory"
-        "texlive-up   " " * - Update the texlive packages"
-        "up-db        " " * - Update the database for 'locate'"
+        "slack-up     " "$RED * - Slackware update"
+        "swap-clean   " "$RED * - Clean up the Swap Memory"
+        "texlive-up   " "$RED * - Update the texlive packages"
+        "up-db        " "$RED * - Update the database for 'locate'"
         "weather      " "   - Show the weather forecast (you can change the city in the script)"
         "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
         "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
         "w or ''      " "   - Menu with whiptail (where you can call the options above)")
+
+        if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
+            useColor
+        fi
 
         case $optionInput in
             "--help" | "-h" | "help" | 'h' )
@@ -156,16 +173,6 @@ case $optionInput in
                     countOption=0
                     optionVectorSize=${#optionVector[*]}
                     while [ $countOption -lt $optionVectorSize ]; do
-                        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
-                            useColor=$RED
-                        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
-                            useColor=$BLUE
-                        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
-                            useColor=$PINK
-                        else
-                            useColor=''
-                        fi
-
                         echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
 
                         countOption=$((countOption + 2))
@@ -220,8 +227,8 @@ case $optionInput in
 
                     itemSelected=`echo $itemSelected | sed 's/ //g'`
                     if [ "$itemSelected" != '' ]; then
-                        echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
-                        $0 notPrint $itemSelected $1 $2
+                        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
+                        $0 $colorPrint notPrintHeader $itemSelected $1 $2
                     fi
                 }
 
@@ -794,11 +801,11 @@ case $optionInput in
                 elif [ "$fileChangeOption" == '4' ]; then
                     # $1 = pdf-r, $2 = fileName.pdf, $3 = fileChangeOption
                     echo
-                    $0 notPrint $1 "$filePdfInput" 1
+                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 1
                     echo
-                    $0 notPrint $1 "$filePdfInput" 2
+                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 2
                     echo
-                    $0 notPrint $1 "$filePdfInput" 3
+                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 3
                 else
                     fileChangeOption='3'
                 fi
@@ -884,20 +891,20 @@ case $optionInput in
      "now" )
         echo -e "$CYAN# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially #$NC"
 
-        echo -e "$GREEN\nRunning: $0 notPrint texlive-up$NC\n"
-        $0 notPrint texlive-up
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader texlive-up$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader texlive-up
 
-        echo -e "$GREEN\nRunning: $0 notPrint date-u$NCp\n"
-        $0 notPrint date-up
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-u$NCp\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader date-up
 
-        echo -e "$GREEN\nRunning: $0 notPrint swap-clean y$NC\n"
-        $0 notPrint swap-clean y
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader swap-clean y
 
-        echo -e "$GREEN\nRunning: $0 notPrint slack-up n$NC\n"
-        $0 notPrint slack-up n
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up n$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader slack-up n
 
-        echo -e "$GREEN\nRunning: $0 notPrint up-db$NC\n"
-        $0 notPrint up-db
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader up-db$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader up-db
         ;;
     * )
         echo -e "\n\t$(basename "$0"): Error of parameters"
@@ -905,7 +912,7 @@ case $optionInput in
         ;;
 esac
 
-if [ "$notPrintInput" != "notPrint" ]; then
+if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
     echo -e "$BLUE\n\t\t#___ So Long, and Thanks for All the Fish ___#$NC\n"
 else
     shift
