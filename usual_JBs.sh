@@ -52,182 +52,183 @@ if [ "$testColorInput" == "testColor" ]; then
     shift
 fi
 
-# Options text
-optionVector=("ap-info      " "   - Show information about the AP connected"
-"brigh-1      " " * - Set brightness percentage value (accept % value, up and down)"
-"brigh-2      " " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-"cn-wifi      " " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-"cpu-max      " "   - Show the 10 process with more CPU use"
-"create-wifi  " " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-"date-up      " " * - Update the date"
-"day-install  " "   - The day the system are installed"
-"dc-wifi      " " * - Disconnect to one Wi-Fi network"
-"folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
-"git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
-"help         " "   - Show this help message (the same result with --help, -h and h)"
-"ip           " "   - Get your IP"
-"l-iw         " " * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
-"l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
-"lpkg-c       " "   - Count of packages that are installed in the Slackware"
-"lpkg-i       " "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
-"lpkg-r       " "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
-"mem-max      " "   - Show the 10 process with more memory RAM use"
-"mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
-"mem-info     " "   - Show memory and swap percentage of use"
-"nm-list      " " + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-"now          " " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
-"pdf-r        " "   - Reduce a PDF file"
-"ping-test    " "   - Ping test on domain (default is google.com)" 
-"print-lines  " "   - Print part of file (lineStart to lineEnd)"
-"screenshot   " "   - Screenshot from display :0"
-"search-pwd   " "   - Search in this directory (recursive) for a pattern"
-"slack-up     " " * - Slackware update"
-"swap-clean   " " * - Clean up the Swap Memory"
-"texlive-up   " " * - Update the texlive packages"
-"up-db        " " * - Update the database for 'locate'"
-"weather      " "   - Show the weather forecast (you can change the city in the script)"
-"work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
-"search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
-"w or ''      " "   - Menu with whiptail (where you can call the options above)")
-
-## Functions
-ap-info () {
-    echo -e "$CYAN# Show information about the AP connected #$NC"
-    echo -e "\n/usr/sbin/iw dev wlan0 link:"
-    /usr/sbin/iw dev wlan0 link
-    echo -e "\n/sbin/iwconfig wlan0:"
-    /sbin/iwconfig wlan0
-}
-
-dateUpFunction() { # Need to be run as root
-    ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
-    #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
-    #${ntpVector[$i]} # where $i is the index
-    # ${ntpVector[@]} # all value of the vector
-
-    tmpFileNtpError=`mktemp` # Create a TMP-file
-    timeUpdated=false
-
-    for ntpValue in ${ntpVector[@]}; do # Run until flagContinue is false and run the break or ntpVector get his end
-        echo -e "Running: ntpdate -u -b $ntpValue\n"
-        ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
-
-        if ! cat $tmpFileNtpError | grep -q -v "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
-            if ! cat $tmpFileNtpError | grep -q -v "time out"; then # Test if ntpdate got error "time out"
-                if ! cat $tmpFileNtpError | grep -q -v "name server cannot be used"; then # Test if can name resolution works
-                    echo -e "\nTime updated: `date`\n"
-                    timeUpdated=true # Set true in the timeUpdated
-                    break
-                fi
-            fi
-        fi
-    done
-
-    if [ "$timeUpdated" == "false" ]; then
-        echo -e "\nSorry, time not updated: `date`\n"
-        if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-            echo -e "No connection found - Check your network connections\n"
-        fi
-    fi
-
-    rm $tmpFileNtpError # Delete the tmp file
-}
-
-date-up () {
-    echo -e "$CYAN# Update the date #$NC\n"
-    export -f dateUpFunction
-    su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
-
-    # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
-    # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
-    # (2) it changes the environmental variables to those of the new user
-    # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
-    # logged on to a new session (rather than just taking over an existing session)
-}
-
-help() {
-    echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
-    echo -e "$CYAN    Options:\n
-   $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
-
-    countOption=0
-    optionVectorSize=${#optionVector[*]}
-    while [ $countOption -lt $optionVectorSize ]; do
-        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
-            useColor=$RED
-        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
-            useColor=$BLUE
-        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
-            useColor=$PINK
-        else
-            useColor=''
-        fi
-
-        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
-
-        countOption=$((countOption + 2))
-    done
-}
-
-whiptailMenu() {
-    echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
-    eval `resize`
-    itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
-
-    Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
-    "${optionVector[0]}" "${optionVector[1]}" \
-    "${optionVector[2]}" "${optionVector[3]}" \
-    "${optionVector[4]}" "${optionVector[5]}" \
-    "${optionVector[6]}" "${optionVector[7]}" \
-    "${optionVector[8]}" "${optionVector[9]}" \
-    "${optionVector[10]}" "${optionVector[11]}" \
-    "${optionVector[12]}" "${optionVector[13]}" \
-    "${optionVector[14]}" "${optionVector[15]}" \
-    "${optionVector[16]}" "${optionVector[17]}" \
-    "${optionVector[18]}" "${optionVector[19]}" \
-    "${optionVector[20]}" "${optionVector[21]}" \
-    "${optionVector[22]}" "${optionVector[23]}" \
-    "${optionVector[24]}" "${optionVector[25]}" \
-    "${optionVector[26]}" "${optionVector[27]}" \
-    "${optionVector[28]}" "${optionVector[29]}" \
-    "${optionVector[30]}" "${optionVector[31]}" \
-    "${optionVector[32]}" "${optionVector[33]}" \
-    "${optionVector[34]}" "${optionVector[35]}" \
-    "${optionVector[36]}" "${optionVector[37]}" \
-    "${optionVector[38]}" "${optionVector[39]}" \
-    "${optionVector[40]}" "${optionVector[41]}" \
-    "${optionVector[42]}" "${optionVector[43]}" \
-    "${optionVector[44]}" "${optionVector[45]}" \
-    "${optionVector[46]}" "${optionVector[47]}" \
-    "${optionVector[48]}" "${optionVector[49]}" \
-    "${optionVector[50]}" "${optionVector[51]}" \
-    "${optionVector[52]}" "${optionVector[53]}" \
-    "${optionVector[54]}" "${optionVector[55]}" \
-    "${optionVector[56]}" "${optionVector[57]}" \
-    "${optionVector[58]}" "${optionVector[59]}" \
-    "${optionVector[60]}" "${optionVector[61]}" \
-    "${optionVector[62]}" "${optionVector[63]}" \
-    "${optionVector[64]}" "${optionVector[65]}" \
-    "${optionVector[66]}" "${optionVector[67]}" \
-    "${optionVector[68]}" "${optionVector[69]}" \
-    "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
-
-    if [ "$itemSelected" != '' ]; then
-        echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
-        $0 notPrint $itemSelected $1 $2
-    fi
-}
-
 optionInput=$1
 case $optionInput in
     "ap-info" )
-        ap-info ;;
+        echo -e "$CYAN# Show information about the AP connected #$NC"
+        echo -e "\n/usr/sbin/iw dev wlan0 link:"
+        /usr/sbin/iw dev wlan0 link
+        echo -e "\n/sbin/iwconfig wlan0:"
+        /sbin/iwconfig wlan0
+        ;;
     "date-up" )
-        date-up ;;
-    "--help" | "-h" | "help" | 'h' )
-        help ;;
-    '' | 'w' )
-        whiptailMenu $2 $3 ;;
+        echo -e "$CYAN# Update the date #$NC\n"
+
+        dateUpFunction() { # Need to be run as root
+            ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
+            #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+            #${ntpVector[$i]} # where $i is the index
+            # ${ntpVector[@]} # all value of the vector
+
+            tmpFileNtpError=`mktemp` # Create a TMP-file
+            timeUpdated=false
+
+            for ntpValue in ${ntpVector[@]}; do # Run until flagContinue is false and run the break or ntpVector get his end
+                echo -e "Running: ntpdate -u -b $ntpValue\n"
+                ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
+
+                if ! cat $tmpFileNtpError | grep -q -v "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
+                    if ! cat $tmpFileNtpError | grep -q -v "time out"; then # Test if ntpdate got error "time out"
+                        if ! cat $tmpFileNtpError | grep -q -v "name server cannot be used"; then # Test if can name resolution works
+                            echo -e "\nTime updated: `date`\n"
+                            timeUpdated=true # Set true in the timeUpdated
+                            break
+                        fi
+                    fi
+                fi
+            done
+
+            if [ "$timeUpdated" == "false" ]; then
+                echo -e "\nSorry, time not updated: `date`\n"
+                if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+                    echo -e "No connection found - Check your network connections\n"
+                fi
+            fi
+
+            rm $tmpFileNtpError # Delete the tmp file
+        }
+
+        export -f dateUpFunction
+        su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
+
+        # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
+        # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
+        # (2) it changes the environmental variables to those of the new user
+        # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
+        # logged on to a new session (rather than just taking over an existing session)
+        ;;
+    "--help" | "-h" | "help" | 'h' | '' | 'w' )
+        # Options text
+        optionVector=("ap-info      " "   - Show information about the AP connected"
+        "brigh-1      " " * - Set brightness percentage value (accept % value, up and down)"
+        "brigh-2      " " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+        "cn-wifi      " " * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "cpu-max      " "   - Show the 10 process with more CPU use"
+        "create-wifi  " " * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "date-up      " " * - Update the date"
+        "day-install  " "   - The day the system are installed"
+        "dc-wifi      " " * - Disconnect to one Wi-Fi network"
+        "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
+        "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
+        "help         " "   - Show this help message (the same result with --help, -h and h)"
+        "ip           " "   - Get your IP"
+        "l-iw         " " * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
+        "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
+        "lpkg-c       " "   - Count of packages that are installed in the Slackware"
+        "lpkg-i       " "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "lpkg-r       " "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "mem-max      " "   - Show the 10 process with more memory RAM use"
+        "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
+        "mem-info     " "   - Show memory and swap percentage of use"
+        "nm-list      " " + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+        "now          " " * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
+        "pdf-r        " "   - Reduce a PDF file"
+        "ping-test    " "   - Ping test on domain (default is google.com)" 
+        "print-lines  " "   - Print part of file (lineStart to lineEnd)"
+        "screenshot   " "   - Screenshot from display :0"
+        "search-pwd   " "   - Search in this directory (recursive) for a pattern"
+        "slack-up     " " * - Slackware update"
+        "swap-clean   " " * - Clean up the Swap Memory"
+        "texlive-up   " " * - Update the texlive packages"
+        "up-db        " " * - Update the database for 'locate'"
+        "weather      " "   - Show the weather forecast (you can change the city in the script)"
+        "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
+        "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
+        "w or ''      " "   - Menu with whiptail (where you can call the options above)")
+
+        case $optionInput in
+            "--help" | "-h" | "help" | 'h' )
+                help() {
+                    echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
+                    echo -e "$CYAN    Options:\n
+                    $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
+
+                    countOption=0
+                    optionVectorSize=${#optionVector[*]}
+                    while [ $countOption -lt $optionVectorSize ]; do
+                        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
+                            useColor=$RED
+                        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
+                            useColor=$BLUE
+                        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
+                            useColor=$PINK
+                        else
+                            useColor=''
+                        fi
+
+                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
+
+                        countOption=$((countOption + 2))
+                    done
+                }
+
+                help
+                ;;
+            '' | 'w' )
+                whiptailMenu() {
+                    echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
+                    eval `resize`
+                    itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
+
+                    Options:" $(( $LINES -5 )) $(( $COLUMNS -5 )) $(( $LINES -15 )) \
+                    "${optionVector[0]}" "${optionVector[1]}" \
+                    "${optionVector[2]}" "${optionVector[3]}" \
+                    "${optionVector[4]}" "${optionVector[5]}" \
+                    "${optionVector[6]}" "${optionVector[7]}" \
+                    "${optionVector[8]}" "${optionVector[9]}" \
+                    "${optionVector[10]}" "${optionVector[11]}" \
+                    "${optionVector[12]}" "${optionVector[13]}" \
+                    "${optionVector[14]}" "${optionVector[15]}" \
+                    "${optionVector[16]}" "${optionVector[17]}" \
+                    "${optionVector[18]}" "${optionVector[19]}" \
+                    "${optionVector[20]}" "${optionVector[21]}" \
+                    "${optionVector[22]}" "${optionVector[23]}" \
+                    "${optionVector[24]}" "${optionVector[25]}" \
+                    "${optionVector[26]}" "${optionVector[27]}" \
+                    "${optionVector[28]}" "${optionVector[29]}" \
+                    "${optionVector[30]}" "${optionVector[31]}" \
+                    "${optionVector[32]}" "${optionVector[33]}" \
+                    "${optionVector[34]}" "${optionVector[35]}" \
+                    "${optionVector[36]}" "${optionVector[37]}" \
+                    "${optionVector[38]}" "${optionVector[39]}" \
+                    "${optionVector[40]}" "${optionVector[41]}" \
+                    "${optionVector[42]}" "${optionVector[43]}" \
+                    "${optionVector[44]}" "${optionVector[45]}" \
+                    "${optionVector[46]}" "${optionVector[47]}" \
+                    "${optionVector[48]}" "${optionVector[49]}" \
+                    "${optionVector[50]}" "${optionVector[51]}" \
+                    "${optionVector[52]}" "${optionVector[53]}" \
+                    "${optionVector[54]}" "${optionVector[55]}" \
+                    "${optionVector[56]}" "${optionVector[57]}" \
+                    "${optionVector[58]}" "${optionVector[59]}" \
+                    "${optionVector[60]}" "${optionVector[61]}" \
+                    "${optionVector[62]}" "${optionVector[63]}" \
+                    "${optionVector[64]}" "${optionVector[65]}" \
+                    "${optionVector[66]}" "${optionVector[67]}" \
+                    "${optionVector[68]}" "${optionVector[69]}" \
+                    "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
+
+                    itemSelected=`echo $itemSelected | sed 's/ //g'`
+                    if [ "$itemSelected" != '' ]; then
+                        echo -e "$GREEN\nRunning: $0 notPrint $itemSelected $1 $2$CYAN\n"
+                        $0 notPrint $itemSelected $1 $2
+                    fi
+                }
+
+                whiptailMenu $2 $3
+                ;;
+        esac
+        ;;
     "git-gc" )
         echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\n"
         ## All folder in one directory run "git gc --aggressive"
