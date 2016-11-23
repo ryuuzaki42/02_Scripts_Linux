@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 22/11/2016
+# Last update: 23/11/2016
 
 colorDisableInput=$1
 if [ "$colorDisableInput" == "noColor" ]; then
@@ -52,6 +52,7 @@ if [ "$testColorInput" == "testColor" ]; then
     shift
 fi
 
+# Options text
 optionVector=("ap-info      " "   - Show information about the AP connected"
 "brigh-1      " " * - Set brightness percentage value (accept % value, up and down)"
 "brigh-2      " " = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
@@ -89,7 +90,87 @@ optionVector=("ap-info      " "   - Show information about the AP connected"
 "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
 "w or ''      " "   - Menu with whiptail (where you can call the options above)")
 
+## Functions
+ap-info () {
+    echo -e "$CYAN# Show information about the AP connected #$NC"
+    echo -e "\n/usr/sbin/iw dev wlan0 link:"
+    /usr/sbin/iw dev wlan0 link
+    echo -e "\n/sbin/iwconfig wlan0:"
+    /sbin/iwconfig wlan0
+}
+
+dateUpFunction() { # Need to be run as root
+    ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
+    #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
+    #${ntpVector[$i]} # where $i is the index
+    # ${ntpVector[@]} # all value of the vector
+
+    tmpFileNtpError=`mktemp` # Create a TMP-file
+    timeUpdated=false
+
+    for ntpValue in ${ntpVector[@]}; do # Run until flagContinue is false and run the break or ntpVector get his end
+        echo -e "Running: ntpdate -u -b $ntpValue\n"
+        ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
+
+        if ! cat $tmpFileNtpError | grep -q -v "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
+            if ! cat $tmpFileNtpError | grep -q -v "time out"; then # Test if ntpdate got error "time out"
+                if ! cat $tmpFileNtpError | grep -q -v "name server cannot be used"; then # Test if can name resolution works
+                    echo -e "\nTime updated: `date`\n"
+                    timeUpdated=true # Set true in the timeUpdated
+                    break
+                fi
+            fi
+        fi
+    done
+
+    if [ "$timeUpdated" == "false" ]; then
+        echo -e "\nSorry, time not updated: `date`\n"
+        if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+            echo -e "No connection found - Check your network connections\n"
+        fi
+    fi
+
+    rm $tmpFileNtpError # Delete the tmp file
+}
+
+date-up () {
+    echo -e "$CYAN# Update the date #$NC\n"
+    export -f dateUpFunction
+    su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
+
+    # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
+    # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
+    # (2) it changes the environmental variables to those of the new user
+    # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
+    # logged on to a new session (rather than just taking over an existing session)
+}
+
+help() {
+    echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
+    echo -e "$CYAN    Options:\n
+   $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
+
+    countOption=0
+    optionVectorSize=${#optionVector[*]}
+    while [ $countOption -lt $optionVectorSize ]; do
+        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
+            useColor=$RED
+        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
+            useColor=$BLUE
+        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
+            useColor=$PINK
+        else
+            useColor=''
+        fi
+
+        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
+
+        countOption=$((countOption + 2))
+    done
+}
+
 whiptailMenu() {
+    echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
     eval `resize`
     itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
@@ -137,72 +218,16 @@ whiptailMenu() {
     fi
 }
 
-help() {
-    echo -e "$CYAN    Options:\n
-   $RED Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
-
-    countOption=0
-    optionVectorSize=${#optionVector[*]}
-    while [ $countOption -lt $optionVectorSize ]; do
-        if echo -e "${optionVector[$countOption+1]}" | grep -q "*"; then
-            useColor=$RED
-        elif echo -e "${optionVector[$countOption+1]}" | grep -q "="; then
-            useColor=$BLUE
-        elif echo -e "${optionVector[$countOption+1]}" | grep -q "+"; then
-            useColor=$PINK
-        else
-            useColor=''
-        fi
-
-        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
-
-        countOption=$((countOption + 2))
-    done
-}
-
-dateUpFunction() { # Need to be run as root
-    ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
-    #ntpVectorSize=${#ntpVector[*]} # size of ntpVector
-    #${ntpVector[$i]}, where $i is the index
-
-    tmpFileNtpError=`mktemp` # Create a TMP-file
-    flagContinue=true
-
-    for ntpValue in $ntpVector; do # Run until flagContinue is false and run the break or ntpVector get his end
-        echo -e "Running: ntpdate -u -b $ntpValue\n"
-        ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
-
-        if ! cat $tmpFileNtpError | grep -q "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
-            if ! cat $tmpFileNtpError | grep -q "time out"; then # Test if ntpdate got error "time out"
-                if ! cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-                    echo -e "\nTime updated: `date`\n"
-                    flagContinue=false # Set false in flagContinue, because time is updated
-                    break
-                fi
-            fi
-        fi
-    done
-
-    if [ $flagContinue ]; then # if true, no ntp server worked
-        echo -e "\nSorry, time not updated: `date`\n"
-        if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
-            echo -e "No connection found - Check your network connections\n"
-        fi
-    fi
-
-    rm $tmpFileNtpError # Delete the tmp file
-}
-
 optionInput=$1
 case $optionInput in
-    '' | 'w' )
-        echo -e "$CYAN# Menu with whiptail (where you can call others options) #$NC\n"
-        whiptailMenu $2 $3
-        ;;
+    "ap-info" )
+        ap-info ;;
+    "date-up" )
+        date-up ;;
     "--help" | "-h" | "help" | 'h' )
-        echo -e "$CYAN# Show this help message (the same result with --help, -h and h) #$NC\n"
-        help
-        ;;
+        help ;;
+    '' | 'w' )
+        whiptailMenu $2 $3 ;;
     "git-gc" )
         echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\n"
         ## All folder in one directory run "git gc --aggressive"
@@ -608,13 +633,6 @@ case $optionInput in
             echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
-    "ap-info" )
-        echo -e "$CYAN# Show information about the AP connected #$NC"
-        echo -e "\n/usr/sbin/iw dev wlan0 link:"
-        /usr/sbin/iw dev wlan0 link
-        echo -e "\n/sbin/iwconfig wlan0:"
-        /sbin/iwconfig wlan0
-        ;;
     "l-iw" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
         su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
@@ -725,17 +743,6 @@ case $optionInput in
                 echo -e "$RED\nError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)$NC"
             fi
         fi
-        ;;
-    "date-up" )
-        echo -e "$CYAN# Update the date #$NC\n"
-        export -f dateUpFunction
-        su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
-
-        # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
-        # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
-        # (2) it changes the environmental variables to those of the new user
-        # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
-        # logged on to a new session (rather than just taking over an existing session)
         ;;
     "lpkg-c" )
         echo -e "$CYAN# Count of packages that are installed in the Slackware #$NC"
