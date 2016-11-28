@@ -268,9 +268,17 @@ case $optionInput in
             gitCommandRun="git gc"
         fi
 
-        for folderGit in `ls`; do
+        folderLocal=`ls -l | grep "^d" | cut -d ":" -f2- | cut -d " " -f2-`
+        folderLocal=`echo -e "$folderLocal" | sed 's/ /\\ /g'`
+
+        folderLocalcount=`echo -e "$folderLocal" | wc -l`
+        folderRun=0
+        while [ $folderRun -lt $folderLocalcount ]; do
+            folderRun=$((folderRun + 1))
+            folderGit=`echo -e "$folderLocal" | head -n $folderRun | tail -n 1`
+
             echo -e "\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\n"
-            cd $folderGit
+            cd "$folderGit"
             $gitCommandRun
             cd ..
         done
@@ -455,14 +463,16 @@ case $optionInput in
 
             if echo $lineStart | grep -q [[:digit:]] && echo $lineEnd | grep -q [[:digit:]]; then
                 if [ $lineStart -gt $lineEnd ]; then
-                    echo -e "$RED\nError: lineStart must be smaller than lineEnd$NC"
-                else
-                    echo -e "\nPrint \"$inputFile\" line $lineStart to $lineEnd\n"
-                    lineStartTmp=$((lineEnd-lineStart))
-                    ((lineStartTmp++))
-
-                    cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
+                    lineStartTmp=$lineEnd
+                    lineEnd=$lineStart
+                    lineStart=$lineStartTmp
                 fi
+
+                echo -e "\nPrint \"$inputFile\" line $lineStart to $lineEnd\n"
+                lineStartTmp=$((lineEnd-lineStart))
+                ((lineStartTmp++))
+
+                cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
             else
                 echo -e "$RED\nError: lineStart and lineEnd must be number$NC"
             fi
@@ -561,8 +571,8 @@ case $optionInput in
         fi
 
         echo -e "\nSearching, please wait..."
-        grep -rn $patternSearch .
-        # -r, --recursive, -n, --line-number print line number with output lines, '.' is equal to $PWD or `pwd`
+        grep -rn "$patternSearch"
+        # -r, --recursive, -n, --line-number print line number with output lines
         ;;
     "ping-test" )
         echo -e "$CYAN# Ping test on domain (default is google.com) #$NC\n"
@@ -572,8 +582,8 @@ case $optionInput in
             domainPing=$2
         fi
 
-        echo -e "\nRunning: ping -c 3 $domainPing\n"
-        ping -c 3 $domainPing
+        echo -e "\nRunning: ping -c 3 \"$domainPing\"\n"
+        ping -c 3 "$domainPing"
         ;;
     "create-wifi" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
@@ -617,7 +627,7 @@ case $optionInput in
 
                         echo -e "\n########### Network configuration ####################"
                         cat $TMPFILE
-                        echo -e "$CYAN######################################################"
+                        echo -e "######################################################"
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
                         wpa_supplicant -i wlan0 -c $TMPFILE -d -B wext # Connect with the network using the TMP-file
