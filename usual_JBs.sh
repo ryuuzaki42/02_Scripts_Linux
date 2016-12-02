@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 23/11/2016
+# Last update: 02/12/2016
 
 useColor () {
     BLACK='\e[1;30m'
@@ -151,6 +151,7 @@ case $optionInput in
         "screenshot   " "   - Screenshot from display :0"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
         "slack-up     " "$RED * - Slackware update"
+        "sub-extrac   " "   - Extract subtitle from a video file"
         "swap-clean   " "$RED * - Clean up the Swap Memory"
         "texlive-up   " "$RED * - Update the texlive packages"
         "up-db        " "$RED * - Update the database for 'locate'"
@@ -236,7 +237,8 @@ case $optionInput in
                         "${optionVector[64]}" "${optionVector[65]}" \
                         "${optionVector[66]}" "${optionVector[67]}" \
                         "${optionVector[68]}" "${optionVector[69]}" \
-                        "${optionVector[70]}" "${optionVector[71]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[70]}" "${optionVector[71]}" \
+                        "${optionVector[72]}" "${optionVector[73]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=`echo $itemSelected | sed 's/ //g'`
@@ -282,6 +284,41 @@ case $optionInput in
             $gitCommandRun
             cd ..
         done
+        ;;
+    "sub-extrac" ) # Need ffmpeg
+        echo -e "$CYAN# Extract subtitle from a video file #$NC\n"
+        fileName=$2
+        if [ "$fileName" != '' ]; then
+            subtitleInfoGeneral=`ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle"`
+            subtitleNumber=`echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g'`
+            subtitleInfo=`echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1`
+
+            echo -e "\nSubtitles avaible in the file \"$fileName\":\n$subtitleInfo"
+            echo -en "\nWich one you want? (Only the number valid: $subtitleNumber): "
+            read subNumber
+
+            if echo "$subNumber" | grep -q "[[:digit:]]"; then
+                countSubtitleInfo=`echo -e "$subtitleInfoGeneral" | wc -l`
+                countSubtitleInfo=$((countSubtitleInfo + 2))
+
+                if [ "$subNumber" -gt 1 ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
+                    lastPart=`echo -e "$subtitleInfo" | grep "$subNumber"`
+                else
+                    lastPart=`echo -e "$subtitleInfo" | head -n 1`
+                    subNumber=2
+                fi
+
+                echo -e "\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
+                fileNameTmp=`echo $fileName | rev | cut -d "." -f2 | rev`
+                echo "That will be save as \"$fileNameTmp-$lastPart.srt\""
+
+                ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "$fileNameTmp"-"$lastPart".srt
+            else
+                echo -e "\nError: The subtitle number must be a number\n"
+            fi
+        else
+            echo -e "\nError: Need pass the file name\n"
+        fi
         ;;
      "mem-use" )
         echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\n"
