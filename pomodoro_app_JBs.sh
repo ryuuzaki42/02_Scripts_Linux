@@ -22,7 +22,7 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Última atualização: 06/06/2016
+# Last update: 06/06/2016
 #
 # Dica: Adicione um atalho para este script
 #

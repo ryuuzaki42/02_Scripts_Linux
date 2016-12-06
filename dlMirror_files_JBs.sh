@@ -97,10 +97,10 @@ if [ $archDL == "x86" ] || [ "$archDL" == "armv7hl" ] || [ "$archDL" == "x86_64"
 
     wget -r -np -nH --cut-dirs=100 -A "$patternDl" $mirrorDl/
     # --cut-dirs=NUMBER  ignore NUMBER remote directory components
-        # --cut-dirs=100 cut 100 directories to be no created
+    #    --cut-dirs=100 cut 100 directories to be no created
     # -nH                don't create host directories
     # -np                don't ascend to the parent directory
-        # Only downloads from the specified sub directory and downwards hierarchy
+    #    Only downloads from the specified sub directory and downwards hierarchy
     # -r                 specify recursive download
 
     cd $initialFolder

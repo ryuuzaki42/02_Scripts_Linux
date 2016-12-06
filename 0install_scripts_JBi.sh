@@ -1,10 +1,10 @@
 #!/bin/sh
-
-## Copy the scripts int this folder to /usr/bin:
-    # You can just execut this script
-
+#
+## Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
+#    You can just execut this script
+#
 # Last update: 14/11/2016
-
+#
 echo -e "This script copy (cp *_JBs.sh) to /usr/bin/\n"
 echo "List of files that will be copied:"
 ls *_JBs.sh

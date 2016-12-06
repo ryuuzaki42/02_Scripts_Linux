@@ -26,7 +26,7 @@
 # Dica: pela interface do KDE-menu (ou outros) altere para o icone do seu editor padrão
 # por este script em vez de executar o "programName"
 #
-# Última atualização: 17/10/2016
+# Last update: 17/10/2016
 #
 # To use, set in icon command:
 # /usr/bin/editor_test_open_JBs.sh programName, for example:

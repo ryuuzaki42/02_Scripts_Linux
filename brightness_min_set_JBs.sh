@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Set the brightness back to limit 1%
+# Script: Keep the brightness up to 1%
 #
 # Last update: 08/10/2016
 #

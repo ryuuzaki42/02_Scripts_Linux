@@ -20,10 +20,10 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: limpeza no sistema (irá precisar do bleachbit estar instalado) e desligar
-
-# Última atualização: 20/09/2016
-
+# Script: Clean up the system (need bleachbit installed) and reboot/halt
+#
+# Last update: 20/09/2016
+#
 if [ $LOGNAME = root ]; then
     echo -e "\n\terro, execute como usuário comum!\n"
 else

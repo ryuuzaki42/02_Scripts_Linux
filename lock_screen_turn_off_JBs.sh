@@ -22,7 +22,7 @@
 #
 # Script: no KDE e XFCE, bloqueia a sessão e deliga a tela
 #
-# Última atualização: 29/04/2016
+# Last update: 29/04/2016
 #
 # Dica: Adicione um atalho para este script
 #

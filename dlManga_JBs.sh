@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link da primeira imagem
 #
-# Última atualização: 06/06/2016
+# Last update: 06/06/2016
 #
 # Set color by tput:
 green=`tput setaf 2`
@@ -155,7 +155,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
 
         wget -q $link$zeroChapter$chapterStart/$startImage$zero$i.jpg # Try download with extension jpg
         wgetReturn=$? # Get result from the command wget
- 
+
         if [ $wgetReturn != 0 ]; then # If fail try with another extension
             wget -q $link$zeroChapter$chapterStart/$zero$i.png
             wgetReturn=$?
@@ -291,7 +291,7 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
         ((i+=1)) # Increase the i to next page
     done
 
-    cd .. # Move to folder up, leaving the chapter folder
+    cd ../ # Move to folder up, leaving the chapter folder
 
     if [ $notZip -eq $tryTimesSequentiallyDl ] && [ $emptyFolder -eq 0 ]; then
         zip -q -r "$nameFolder".zip "$nameFolder" # Zip the folder already downloaded
@@ -309,9 +309,9 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
         echo -e "\nImagens not downloaded: $imagensNotDownload\n"
     fi
     imagensNotDownload=''
-done # end
+done
 
 if [ "$newFolder" != 'n' ]; then
-    cd .. # Move to folder up, leaving the manga folder
+    cd ../ # Move to folder up, leaving the manga folder
 fi
 echo -e "Download finished. \"Long life and prosperity\"\n\n"

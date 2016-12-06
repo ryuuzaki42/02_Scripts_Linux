@@ -23,7 +23,7 @@
 # Script: foco - te avisa se já terminou as $1 hora(s) de trabalho
 # depois 15 minutos de descanso
 #
-# Última atualização: 18/10/2016
+# Last update: 18/10/2016
 #
 timeToFoco=$1
 if [ "$timeToFoco" == '' ]; then

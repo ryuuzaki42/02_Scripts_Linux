@@ -23,7 +23,7 @@
 # Script: apenas para iniciar o unclutter, que esconder o cursor do mouse
 # a cada 1 segundo se nenhum evento de movimento no mouse for detectado
 #
-# Última atualização: 08/06/2016
+# Last update: 08/06/2016
 #
 # Dica: Adicione este script para iniciar com o sistema
 #

@@ -23,45 +23,45 @@
 # Script: Script with common commands executed in boot (/etc/rc.d/rc.local)
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 #
-# Last update: 21/19/2016
+# Last update: 6/12/2016
 #
-## Set brightness in 1%
-    #echo 0 > /sys/class/backlight/acpi_video0/brightness
-    ## or
-    #echo 50 > /sys/class/backlight/intel_backlight/brightness
-    ## or
-    usual_JBs.sh brigh-1
+## Set brightness to 1%
+#    echo 0 > /sys/class/backlight/acpi_video0/brightness
+##    or
+#    echo 50 > /sys/class/backlight/intel_backlight/brightness
+##    or
+/usr/bin/usual_JBs.sh brigh-1
 
 ## Set unicode
-    unicode_start
+unicode_start
 
 ## Set CPU performance. See the actual governor #cpufreq-info
 ## http://docs.slackware.com/howtos:hardware:cpu_frequency_scaling
-    # See the count of CPU you have #cpufreq-info | grep "analyzing CPU"
-    cpufreq-set --cpu 0 --governor performance
-    cpufreq-set --cpu 1 --governor performance
-    cpufreq-set --cpu 2 --governor performance
-    cpufreq-set --cpu 3 --governor performance
+#    See the count of CPU you have #cpufreq-info | grep "analyzing CPU"
+cpufreq-set --cpu 0 --governor performance
+cpufreq-set --cpu 1 --governor performance
+cpufreq-set --cpu 2 --governor performance
+cpufreq-set --cpu 3 --governor performance
 
-## Set brightness >= %1
-    /usr/bin/brightness_min_set_JBs.sh &
+## Keep the brightness >= %1
+/usr/bin/brightness_min_set_JBs.sh &
 
 ## Print message by time
-    echo -e "\n\n"
-    echo -e "\t------------------"
-    echo -e "\t| Happy Day :-)! |"
-    echo -e "\t------------------"
+echo -e "\n\n"
+echo -e "\t------------------"
+echo -e "\t| Happy Day :-)! |"
+echo -e "\t------------------"
 
-    hm=`date +%H%M`
-    hm=900
-    if [ $hm -lt 0601 ]; then
-        echo -e "\t| Boa Madrugada! |"
-    elif [ $hm -lt 1201 ]; then
-        echo -e "\t| Bom dia!       |"
-    elif [ $hm -lt 18001 ]; then
-        echo -e "\t| Boa tarde!     |"
-    else
-        echo -e "\t| Boa noite!     |"
-    fi
-    echo -e "\t------------------\n"
-    echo -e "\t `date`\n\n"
+hm=`date +%H%M`
+hm=900
+if [ $hm -lt 0601 ]; then
+    echo -e "\t| Boa Madrugada! |"
+elif [ $hm -lt 1201 ]; then
+    echo -e "\t| Bom dia!       |"
+elif [ $hm -lt 18001 ]; then
+    echo -e "\t| Boa tarde!     |"
+else
+    echo -e "\t| Boa noite!     |"
+fi
+echo -e "\t------------------\n"
+echo -e "\t `date`\n\n"

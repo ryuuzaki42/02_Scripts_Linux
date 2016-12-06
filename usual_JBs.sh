@@ -23,7 +23,7 @@
 # Script: funções comum do dia a dia
 #
 # Last update: 02/12/2016
-
+#
 useColor () {
     BLACK='\e[1;30m'
     RED='\e[1;31m'
@@ -146,7 +146,7 @@ case $optionInput in
         "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
         "now          " "$RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
-        "ping-test    " "   - Ping test on domain (default is google.com)" 
+        "ping-test    " "   - Ping test on domain (default is google.com)"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"

@@ -24,7 +24,6 @@
 #
 # Last update: 28/11/2016
 #
-
 case "$( uname -m )" in
     i?86) archDL=x86 ;;
     *) archDL=$( uname -m ) ;;
