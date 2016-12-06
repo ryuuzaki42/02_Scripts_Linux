@@ -24,7 +24,6 @@
 #
 # Last update: 28/11/2016
 #
-#!/bin/bash
 
 case "$( uname -m )" in
     i?86) archDL=x86 ;;
@@ -52,4 +51,3 @@ for fileGrep in `echo -e "$runFile"`; do
 done
 
 echo -e "List of files downloaded:\n\n`tree --noreport`\n"
-
