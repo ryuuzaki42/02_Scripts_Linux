@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 02/12/2016
+# Last update: 07/12/2016
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -151,7 +151,7 @@ case $optionInput in
         "screenshot   " "   - Screenshot from display :0"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
         "slack-up     " "$RED * - Slackware update"
-        "sub-extrac   " "   - Extract subtitle from a video file"
+        "sub-extract  " "   - Extract subtitle from a video file"
         "swap-clean   " "$RED * - Clean up the Swap Memory"
         "texlive-up   " "$RED * - Update the texlive packages"
         "up-db        " "$RED * - Update the database for 'locate'"
@@ -285,7 +285,7 @@ case $optionInput in
             cd ..
         done
         ;;
-    "sub-extrac" ) # Need ffmpeg
+    "sub-extract" ) # Need ffmpeg
         echo -e "$CYAN# Extract subtitle from a video file #$NC\n"
         fileName=$2
         if [ "$fileName" != '' ]; then
@@ -309,10 +309,12 @@ case $optionInput in
                 fi
 
                 echo -e "\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
-                fileNameTmp=`echo $fileName | rev | cut -d "." -f2 | rev`
-                echo "That will be save as \"$fileNameTmp-$lastPart.srt\""
+                fileNameTmp=`echo $fileName | rev | cut -d "." -f2- | rev`
+                echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\n"
 
                 ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "$fileNameTmp"-"$lastPart".srt
+
+                echo -e "\nSubtitle \"$lastPart\" from \"$fileName\" \nsaved as \"$fileNameTmp-$lastPart.srt\""
             else
                 echo -e "\nError: The subtitle number must be a number\n"
             fi
