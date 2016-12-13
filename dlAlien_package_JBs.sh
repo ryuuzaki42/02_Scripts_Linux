@@ -22,15 +22,23 @@
 #
 # Script: Download files/packages from one mirror with MD5
 #
-# Last update: 28/11/2016
+# Last update: 13/12/2016
 #
 case "$( uname -m )" in
     i?86) archDL=x86 ;;
     *) archDL=$( uname -m ) ;;
 esac
 
+echo -e "\n# This script download files/packages from one alien mirror #\n"
 echo -n "Type the path/program that want download: "
 read pathDl
+
+echo -en "\nOnly \"t?z\" or all files? 1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
+read allOrNot
+
+if [ "$allOrNot" != '2' ]; then
+    extensionFile=".t\?z"
+fi
 
 mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
 slackVersion="14.2"
@@ -39,7 +47,7 @@ mirrorDl="$mirrorStart/$slackVersion/$archDL"
 
 wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 
-runFile=`cat CHECKSUMS.md5 | grep ".*$pathDl.*" | cut -d '.' -f2-`
+runFile=`cat CHECKSUMS.md5 | grep "$pathDl.*.$extensionFile$" | cut -d '.' -f2-`
 rm CHECKSUMS.md5
 
 mkdir $pathDl-new
