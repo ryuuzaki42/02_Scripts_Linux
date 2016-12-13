@@ -131,6 +131,7 @@ case $optionInput in
         "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
         "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
+        "file-equal   " "   - Look for equal files inside onde folder (PWD)"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
@@ -238,7 +239,8 @@ case $optionInput in
                         "${optionVector[66]}" "${optionVector[67]}" \
                         "${optionVector[68]}" "${optionVector[69]}" \
                         "${optionVector[70]}" "${optionVector[71]}" \
-                        "${optionVector[72]}" "${optionVector[73]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[72]}" "${optionVector[73]}" \
+                        "${optionVector[74]}" "${optionVector[75]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=`echo $itemSelected | sed 's/ //g'`
@@ -285,6 +287,28 @@ case $optionInput in
             cd ..
         done
         ;;
+    "file-equal" )
+        echo -e "$CYAN# Look for equal files inside onde folder (PWD) #$NC\n"
+        fileAndMd5=`md5sum * 2> /dev/null | sort`
+
+        md5Files=`echo "$fileAndMd5" | cut -d " " -f1`
+
+        for value in `echo "$md5Files"`; do
+            if [ "$valueStart" == "$value" ]; then
+                equalFiles=$equalFiles`echo "$value|"`
+            fi
+            valueStart=$value
+        done
+
+        equalFiles=`echo "$equalFiles" | rev | cut -d "|" -f2- | rev`
+
+        if [ "$equalFiles" == '' ]; then
+            echo -e "\nAll file are different by md5sum\n"
+        else
+            echo -e "\nThese file(s) are equal\n"
+            echo "$fileAndMd5" | grep -E "$equalFiles"
+        fi
+    ;;
     "sub-extract" ) # Need ffmpeg
         echo -e "$CYAN# Extract subtitle from a video file #$NC\n"
         fileName=$2
