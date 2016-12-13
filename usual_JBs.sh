@@ -131,7 +131,7 @@ case $optionInput in
         "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
         "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
-        "file-equal   " "   - Look for equal files inside onde folder (PWD)"
+        "file-equal   " "   - Look for equal files inside one folder (PWD)"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
@@ -288,25 +288,38 @@ case $optionInput in
         done
         ;;
     "file-equal" )
-        echo -e "$CYAN# Look for equal files inside onde folder (PWD) #$NC\n"
+        echo -e "$CYAN# Look for equal files inside one folder (PWD) #$NC\n"
         fileAndMd5=`md5sum * 2> /dev/null | sort`
 
         md5Files=`echo "$fileAndMd5" | cut -d " " -f1`
 
         for value in `echo "$md5Files"`; do
-            if [ "$valueStart" == "$value" ]; then
+            if [ "$valueBack" == "$value" ]; then
                 equalFiles=$equalFiles`echo "$value|"`
             fi
-            valueStart=$value
+            valueBack=$value
         done
 
-        equalFiles=`echo "$equalFiles" | rev | cut -d "|" -f2- | rev`
+        equalFiles=${equalFiles::-1} # Remove the last | or the last character
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "\nAll file are different by md5sum\n"
+            echo -e "\nAll file are different by md5sum"
         else
-            echo -e "\nThese file(s) are equal\n"
-            echo "$fileAndMd5" | grep -E "$equalFiles"
+            echo -e "\nThese file(s) are equal"
+            filesDifferent=`echo "$fileAndMd5" | grep -E "$equalFiles"`
+
+            IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
+
+            for value in $filesDifferent; do
+                valueNow=`echo "$value" | cut -d " " -f1`
+
+                if [ $valueNow != $valueBack ]; then
+                    echo # Add a new line between file different in the print in terminal
+                fi
+                valueBack=$valueNow
+
+                echo "$value"
+            done
         fi
     ;;
     "sub-extract" ) # Need ffmpeg
