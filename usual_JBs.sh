@@ -131,7 +131,7 @@ case $optionInput in
         "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
         "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
-        "file-equal   " "   - Look for equal files inside one folder (PWD)"
+        "file-equal   " "   - Look for equal files using md5sum"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
@@ -288,8 +288,20 @@ case $optionInput in
         done
         ;;
     "file-equal" )
-        echo -e "$CYAN# Look for equal files inside one folder (PWD) #$NC\n"
-        fileAndMd5=`md5sum * 2> /dev/null | sort`
+        echo -e "$CYAN# Look for equal files using md5sum #$NC\n"
+        echo "Want check the files recursively (this folder and all his sub directories) or only this folder?"
+        echo -n "1 to recursively - 2 to only this folder (hit enter to all folders): "
+        read allFolderOrNot
+
+        if [ "$allFolderOrNot" == '2' ]; then
+            recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just just folder
+        else
+            recursiveFolderValue=''
+        fi
+
+        echo -en "\nRunning md5sum, can take a while. Please wait..."
+        fileAndMd5=`find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum` # Get md5sum of the files
+        fileAndMd5=`echo "$fileAndMd5" | sort` # Sort by the md5sum
 
         md5Files=`echo "$fileAndMd5" | cut -d " " -f1`
 
