@@ -6,9 +6,9 @@
 # Acrescentei o conceito de movimento e colisões para criar o jogo.
 # Naturalmente uma linguagem compilada deve ser mais eficiente para este tipo de uso,
 # porém esse joguinho serve para mostrar o poder nem sempre reconhecido do shellscript.
-# 
 #
-# Referências e códigos utilizados: 
+#
+# Referências e códigos utilizados:
 # https://raw.github.com/joewing/maze/master/maze.sh
 # http://lendscripts.blogspot.com.br/2012/10/licao-3-programacao-de-jogos-em.html
 #
@@ -150,7 +150,7 @@ sed -i 's/^  //g' $TMP/maze.txt
 
 # Inicializando variáveis
 INPUT="0" # Entrada de dados
-m="0" # Movimento 1 
+m="0" # Movimento 1
 n="1" # Movimento 2
 C="0" # Teste de colisões
 x="3" # Coordenada x

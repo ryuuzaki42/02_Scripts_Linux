@@ -211,7 +211,7 @@ while true; do
         for i in 1 2 3; do
             LX[i]=0 ; CX[i]=0 ; LO[i]=0 ; CO[i]=0 ; DX[i]=0 ; DO[i]=0
         done
-        
+
         for i in 1 2 3; do
             for j in 1 2 3; do
                 [ "${P[$i$j]}" = X ] && LX[i]=$((${LX[$i]}+1))
@@ -224,7 +224,7 @@ while true; do
             [ "${P[$i]}" = X ] && DX[1]=$((${DX[1]}+1))
             [ "${P[$i]}" = O ] && DO[1]=$((${DO[1]}+1))
         done
-        
+
         for i in 13 22 31; do
             [ "${P[$i]}" = X ] && DX[2]=$((${DX[2]}+1))
             [ "${P[$i]}" = O ] && DO[2]=$((${DO[2]}+1))

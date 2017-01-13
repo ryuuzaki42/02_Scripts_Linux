@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# JACKPOT
-# O objetivo deste jogo é adivinhar um número. Você tem 5 tentativas e
-# Jackpot avisará se o número digitado é muito alto ou muito baixo comparado ao número secreto.
+echo "# JACKPOT
+    # O objetivo deste jogo Ã© adivinhar um nÃºmero. VocÃª tem 5 tentativas e
+    # Jackpot avisarÃ¡ se o nÃºmero digitado Ã© muito alto ou muito baixo comparado ao nÃºmero secreto."
 
 # Giulliano G. Minuzzi
 
 Iniciar() {
     vidas=5
-    clear
-    echo  "** Jackpot **"
     echo
     echo Selecione a dificuldade:
     echo "1: Facil (1-15)"

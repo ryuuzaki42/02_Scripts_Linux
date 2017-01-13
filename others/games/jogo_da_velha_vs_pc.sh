@@ -65,12 +65,12 @@ _testfail()
     then
         COUNTER=$(($COUNTER+1))
     fi
-    
+
     if [ $COUNTER == 9 ]
     then
         echo -e " Nenhum vencedor.\n"
         exit
-    fi 
+    fi
 }
 
 _random()
@@ -172,7 +172,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $B $C" == "O O  " ]
@@ -203,7 +203,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$D $E $F" == "O O  " ]
@@ -213,7 +213,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -226,7 +226,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$G $H $I" == "O   O" ]
@@ -236,7 +236,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$G $H $I" == "O O  " ]
@@ -246,7 +246,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -259,7 +259,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $D $G" == "O   O" ]
@@ -269,7 +269,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $D $G" == "O O  " ]
@@ -279,7 +279,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -292,7 +292,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$B $E $H" == "O   O" ]
@@ -302,7 +302,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$B $E $H" == "O O  " ]
@@ -312,7 +312,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -325,7 +325,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $F $I" == "O   O" ]
@@ -335,7 +335,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$C $F $I" == "O O  " ]
@@ -345,7 +345,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 
@@ -358,7 +358,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $E $I" == "O   O" ]
@@ -368,7 +368,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
     if [ $MOVED == 0 ]
     then
         if [ "$A $E $I" == "O O  " ]
@@ -378,7 +378,7 @@ _display()
             MOVED=1
         fi
     fi
-    
+
 
 ################################################################################
 

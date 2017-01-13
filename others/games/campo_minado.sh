@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # campo_minado.sh - jogo de campo minado
-# 
+#
 # Homepage: http://rodneybr.t35.com
 # Autor   : Rodney Barreto <rwbarreto@yahoo.com.br>
 #
@@ -94,7 +94,7 @@ while [ $fim -eq 0 ]; do
          echo -e '\033[4;25H*\033[14B'
          echo '* BOMBA * FIM DE JOGO'
          fim=1
-         ;; 
+         ;;
       15) # Posiciona o cursor na linha 4, coluna 31 e imprime (1)
          echo -e '\033[4;31H1'
          pontos=$(($pontos + 10))
@@ -102,7 +102,7 @@ while [ $fim -eq 0 ]; do
          echo
           ;;
       21) # Posiciona o cursor na linha 6, coluna 7 e imprime (2)
-         echo -e '\033[6;7H2' 
+         echo -e '\033[6;7H2'
          pontos=$(($pontos + 10))
          echo -e "\033[8;50H$pontos PONTOS\033[4B"
          echo
