@@ -48,9 +48,9 @@ minutoinicial=`date +%M` #Pegando minutos atual 0-59
 #esac
 
 echo "Em qual hora quer levantar?"
-read horalevantar 
+read horalevantar
 echo "Em qual minuto quer levantar?"
-read minutolevantar 
+read minutolevantar
 
 #horalevantar=$1
 #minutolevantar=$2

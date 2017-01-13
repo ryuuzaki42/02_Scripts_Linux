@@ -25,7 +25,7 @@ xinputMouse=xinput | grep "Touchpad"
 
 xinputKeyboard=xinput | grep "keyboard"
 
-echo $xinputResult | grep 
+echo $xinputResult | grep
 
 #Fazer o xinput ficar monitorando o mouse em segundo plano e escrevendo um log que será lido.
 nohup xinput test 9 >> mouse.log &

@@ -40,7 +40,7 @@ else
 fi
 localdir="$HOME/petulios"
 
-#Uma mensagem inicial 
+#Uma mensagem inicial
 kdialog --title Petulios --msgbox "Este programa � um software livre;
 voc� pode redistribui-lo e/ou
 modifica-lo dentro dos termos da Licen�a P�blica Geral GNU como

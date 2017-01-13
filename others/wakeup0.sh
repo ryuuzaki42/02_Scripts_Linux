@@ -32,9 +32,9 @@ minutoinicial=`date +%M` #Pegando minutos atual 0-59
 #minutoinicial=37
 
 echo "Em qual hora quer levantar?"
-read horalevantar 
+read horalevantar
 echo "Em qual minuto quer levantar?"
-read minutolevantar 
+read minutolevantar
 
 if [ $horainicial -gt $horalevantar ]; then #hora inicial maior que hora de levantar
     horafinal=$((24 - $horainicial + $horalevantar))

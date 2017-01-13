@@ -8,11 +8,11 @@
 # bits.
 #
 # By default this script does nothing.
-# 
+#
 # -------------------------------------------------------------------
 # IPTABLES - Configuracao personalizada || INICIO
 # -------------------------------------------------------------------
-# Configuracoes das variáveis
+# Configuracoes das variï¿½veis
 # -------------------------------------------------------
 IF_EXTERNA=wlan0
 echo "Interface Externa `echo $IF_EXTERNA`"
@@ -21,13 +21,13 @@ echo "Interface Interna `echo $IF_INTERNA`"
 IP_SERVER=10.0.0.1
 echo "Ip local `echo $IP_SERVER`"
 VER_IP_EXTERNO=`curl ifconfig.me`
-IP_EXTERNO=`echo $VER_IP_EXTERNO`  # Esse é meu ip estático de internet
+IP_EXTERNO=`echo $VER_IP_EXTERNO`  # Esse ï¿½ meu ip estï¿½tico de internet
 echo $IP_EXTERNO
 echo " "
 echo " "
 echo " "
 echo -e " \033[0;31m###################################################################"
-echo -e " \033[0;31m#Adicionando módulos no kernel                                     "
+echo -e " \033[0;31m#Adicionando mï¿½dulos no kernel                                     "
 echo -e " \033[0;31m#Os modulos a seguir, de forma geral, compartilham a internet,     "
 echo -e " \033[0;31m#resolvem problemas de ftp e sao responsaveis pelos logs.          "
 echo -e " \033[0;31m###################################################################"
@@ -133,9 +133,9 @@ if echo "$IPT_MASQUERADE" | egrep 'ipt_MASQUERADE' > /dev/null
 then
 echo -e "\033[0;36m Modulo nao encontrado    \033[1;31m[STOP]  \033[0m" > /dev/null
 else
-echo -e "\033[0;36m Modulo nao encontrado    \033[1;31m[STOP]  \033[0m" 
+echo -e "\033[0;36m Modulo nao encontrado    \033[1;31m[STOP]  \033[0m"
 fi
-################################################################### 
+###################################################################
 # Flush - Limpar regras
 # -------------------------------------------------------------------
 echo "Zerando regras default"
@@ -159,11 +159,11 @@ fi
 #
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 #
-echo "Politica padrão Drop"
+echo "Politica padrï¿½o Drop"
 # -------------------------------------------------------
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
-iptables -P FORWARD DROP 
+iptables -P FORWARD DROP
 #
 # Tabela filter
 #iptables -t filter -P INPUT DROP
@@ -177,14 +177,14 @@ iptables -P FORWARD DROP
 #iptables -t mangle -P PREROUTING ACCEPT
 #iptables -t mangle -P OUTPUT ACCEPT
 #
-# Accept - Regras de liberaçao
+# Accept - Regras de liberaï¿½ao
 # -------------------------------------------------------
 #
 echo "Interface de loopback"
 iptables -A INPUT -p tcp --syn -s 127.0.0.1/255.0.0.0 -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 #
-# Abre para uma faixa de endereços da rede local
+# Abre para uma faixa de endereï¿½os da rede local
 iptables -A INPUT -p tcp --syn -s $IP_SERVER/24 -j ACCEPT
 #
 # Libera os pacotes de retorno da internet
@@ -216,10 +216,10 @@ iptables -t nat -A POSTROUTING -s 0/0 -o $IF_INTERNA -j MASQUERADE # testar
 #iptables -t nat -A PREROUTING -p tcp -i $IF_EXTERNA -d $IP_EXTERNO --dport 3389 -j DNAT --to-destination $IP_SERVER:3389
 #
 #
-echo "Filtros Proteção contra alguns worms"
+echo "Filtros Proteï¿½ï¿½o contra alguns worms"
 iptables -A FORWARD -p tcp --dport 135 -i $IF_INTERNA -j REJECT
 #
-echo "Forçar checagem de pacotes fragmentados"
+echo "Forï¿½ar checagem de pacotes fragmentados"
 iptables -A INPUT -f -j DROP
 #
 echo "Dropar pacotes nulos e malformados"
@@ -231,7 +231,7 @@ echo "Syn packets check (dropar o que nao for um pacote SYN)"
 iptables -A INPUT -p tcp ! --syn -m state --state NEW -j LOG --log-level 6 --log-prefix "FIREWALL: Non SYN packet: "
 iptables -A INPUT -p tcp ! --syn -m state --state NEW -j DROP
 #
-echo "Proteção contra syn-flood"
+echo "Proteï¿½ï¿½o contra syn-flood"
 iptables -A FORWARD -p tcp --syn -m limit --limit 2/s -j LOG --log-level 6 --log-prefix "FIREWALL: SYN flood: "
 iptables -A FORWARD -p tcp --syn -m limit --limit 2/s -j ACCEPT
 #
@@ -240,7 +240,7 @@ iptables -A FORWARD -p udp -s 0/0 -i eth0 --dport 33435:33525 -j LOG --log-level
 iptables -A FORWARD -p udp -s 0/0 -i eth0 --dport 33435:33525 -j DROP
 #
 #
-echo "Proteção contra trojans"
+echo "Proteï¿½ï¿½o contra trojans"
 iptables -N TROJAN
 iptables -A TROJAN -m limit --limit 15/m -j LOG --log-level 6 --log-prefix "FIREWALL: Trojan: "
 iptables -A TROJAN -j DROP
@@ -250,7 +250,7 @@ iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 6666 -j TROJAN
 iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 6006 -j TROJAN
 iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 16660 -j TROJAN
 #
-# Proteção contra trinoo
+# Proteï¿½ï¿½o contra trinoo
 # -------------------------------------------------------
 iptables -N TRINOO
 iptables -A TRINOO -m limit --limit 15/m -j LOG --log-level 6 --log-prefix "FIREWALL: trinoo: "
@@ -261,7 +261,7 @@ iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 31335 -j TRINOO
 iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 34555 -j TRINOO
 iptables -A INPUT -p TCP -i $IF_EXTERNA --dport 35555 -j TRINOO
 #
-echo "Proteção contra port scanners"
+echo "Proteï¿½ï¿½o contra port scanners"
 iptables -N SCANNER
 iptables -A SCANNER -m limit --limit 15/m -j LOG --log-level 6 --log-prefix "FIREWALL: Port scanner: "
 iptables -A SCANNER -j DROP
@@ -271,9 +271,9 @@ iptables -A INPUT -p tcp --tcp-flags ALL ALL -i $IF_EXTERNA -j SCANNER
 iptables -A INPUT -p tcp --tcp-flags ALL FIN,SYN -i $IF_EXTERNA -j SCANNER
 iptables -A INPUT -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -i $IF_EXTERNA -j SCANNER
 iptables -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -i $IF_EXTERNA -j SCANNER
-iptables -A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN -i $IF_EXTERNA -j SCANNER 
+iptables -A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN -i $IF_EXTERNA -j SCANNER
 #
-echo "Proteção contra ping da morte"
+echo "Proteï¿½ï¿½o contra ping da morte"
 iptables -A FORWARD -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
 #
 echo "Recusa de pings"
@@ -293,7 +293,7 @@ iptables -A FORWARD -p icmp --icmp-type echo-request -j DROP
 #
 # KaZaa
 #iptables -A FORWARD -d 213.248.112.0/24 -j DROP
-#iptables -A FORWARD -p TCP --dport 1214 -j DROP 
+#iptables -A FORWARD -p TCP --dport 1214 -j DROP
 #
 # Limewire
 #iptables -A FORWARD -p TCP --dport 6346 -j DROP
@@ -318,7 +318,7 @@ iptables -A FORWARD -p icmp --icmp-type echo-request -j DROP
 #iptables -A FORWARD -d 209.61.186.0/24 -j DROP
 #iptables -A FORWARD -d 64.49.201.0/24-j DROP
 #
-echo "Ativando mascaramento de saída
+echo "Ativando mascaramento de saï¿½da
 -------------------------------------------------------"
 iptables -A POSTROUTING -t nat -o $IF_EXTERNA -j MASQUERADE
 iptables -t nat -A POSTROUTING -o $IF_EXTERNA -j MASQUERADE
