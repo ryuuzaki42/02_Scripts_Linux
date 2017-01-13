@@ -144,7 +144,7 @@ checkFullscreen() {
 }
 
 # check if active window is mplayer, vlc or firefox
-# TODO only window name in the variable activ_win_id, not whole line. 
+# TODO only window name in the variable activ_win_id, not whole line.
 # Then change IFs to detect more specifically the apps "<vlc>" and if process name exist
 
 isAppRunning() {
