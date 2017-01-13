@@ -27,7 +27,7 @@
 # http://www.inf.ufrgs.br/utug/download
 ###########################################################################
 #
-# Alteração em 22/11/2015, por João Batista Ribeiro 
+# Alteração em 22/11/2015, por João Batista Ribeiro
 # texuft8 - script sed que converte acentos Tex para utf-8
 # Modo de utilizacao
 # cat aquivoentrada.tex | ./texuft8 > aquivosaida.tex

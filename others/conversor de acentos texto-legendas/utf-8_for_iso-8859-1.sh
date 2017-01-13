@@ -26,7 +26,7 @@
 #
 if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
     echo "$(basename "$0"): Error of the operands"
-    echo "usage $0 name.extension about the file if you "   
+    echo "usage $0 name.extension about the file if you "
     echo "Try $0 --help"
 fi
 
