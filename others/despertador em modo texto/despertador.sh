@@ -48,15 +48,15 @@ horafinal=0 #Inicializando valor da horafinal
 ###
 
 echo "Em qual hora quer levantar?"
-read horalevantar 
+read horalevantar
 echo "Em qual minuto quer levantar?"
-read minutolevantar 
+read minutolevantar
 
 if [ $horainicial -gt $horalevantar ]; then #hora inicial maior que hora de levantar
   horafinal=$((24 - $horainicial + $horalevantar))
 else
  horafinal=$(($horalevantar - $horainicial))
-fi 
+fi
 
 if [ $minutoinicial -gt $minutolevantar ]; then #minuto inicial maior que o final
   minutofinal=$((60 - $minutoinicial + $minutolevantar))
