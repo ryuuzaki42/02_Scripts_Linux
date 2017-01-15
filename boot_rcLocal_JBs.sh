@@ -26,10 +26,10 @@
 # Last update: 6/12/2016
 #
 ## Set brightness to 1%
-#    echo 0 > /sys/class/backlight/acpi_video0/brightness
-##    or
-#    echo 50 > /sys/class/backlight/intel_backlight/brightness
-##    or
+#echo 0 > /sys/class/backlight/acpi_video0/brightness
+## or
+#echo 50 > /sys/class/backlight/intel_backlight/brightness
+## or
 /usr/bin/usual_JBs.sh brigh-1
 
 ## Set unicode

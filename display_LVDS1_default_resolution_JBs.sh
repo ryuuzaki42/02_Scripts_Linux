@@ -20,12 +20,12 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: script para definir a resolução padrão do monitor do notebook (LVDS1)
+# Script: Define a resolução padrão do monitor do notebook (LVDS1)
 # para o padrão, caso o cabo do VGA1 ou HDMI1 seja removido
 #
 # Last update: 06/06/2016
 #
-echo -e "\nEste script setar o monitor (LVDS1) para resolução padrão, caso a saída VGA1 ou HDMI1 seja removida \n"
+echo -e "\nEste script seta o LVDS1 (notebook display) para resolução padrão, caso a saída VGA1 ou HDMI1 seja removida\n"
 
 LVDS1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
 
