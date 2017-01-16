@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 21/12/2016
+# Last update: 15/01/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -145,7 +145,7 @@ case $optionInput in
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
         "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-        "now          " "$RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially "
+        "now          " "$RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Ping test on domain (default is google.com)"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
@@ -1005,7 +1005,7 @@ case $optionInput in
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "$CYAN# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up n\" and \"up-db\" sequentially #$NC"
+        echo -e "$CYAN# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader texlive-up$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader texlive-up
@@ -1016,8 +1016,8 @@ case $optionInput in
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader swap-clean y
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up n$NC\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader slack-up n
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up y$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader slack-up y
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader up-db$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader up-db
