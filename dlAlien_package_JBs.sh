@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with MD5
 #
-# Last update: 13/12/2016
+# Last update: 31/01/2017
 #
 case "$( uname -m )" in
     i?86) archDL=x86 ;;
@@ -30,6 +30,7 @@ case "$( uname -m )" in
 esac
 
 echo -e "\n# This script download files/packages from one alien mirror #\n"
+echo -e "### Use \"pathDl\"- to download the packages instead the full folder ###"
 echo -n "Type the path/program that want download: "
 read pathDl
 
@@ -50,11 +51,19 @@ wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 runFile=`cat CHECKSUMS.md5 | grep "$pathDl.*.$extensionFile$" | cut -d '.' -f2-`
 rm CHECKSUMS.md5
 
-mkdir $pathDl-new
-cd $pathDl-new
+echo -e "Will download the file(s) listed: \n$runFile\n"
+echo -n "Want to continue? (y)es - (n)o (hit enter to yes): "
+read continueDl
 
-for fileGrep in `echo -e "$runFile"`; do
-    wget -c $mirrorDl/$fileGrep
-done
+if [ "$continueDl" != "n" ]; then
+    mkdir $pathDl-new
+    cd $pathDl-new
 
-echo -e "List of files downloaded:\n\n`tree --noreport`\n"
+    for fileGrep in `echo -e "$runFile"`; do
+        wget -c $mirrorDl/$fileGrep
+    done
+
+    echo -e "List of files downloaded:\n\n`tree --noreport`\n"
+else
+    echo -e "\nJust exiting by user choice\n"
+fi
