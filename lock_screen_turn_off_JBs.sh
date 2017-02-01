@@ -20,12 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: no KDE e XFCE, bloqueia a sessão e deliga a tela
+# Script: in the KDE and XFCE, lock the session and turnoff the screen
 #
-# Last update: 29/04/2016
+# Last update: 01/02/2017
 #
-# Dica: Adicione um atalho para este script
+# Tip: Add a shortcut to this script
 #
+amixer set Master mute # Mute
+
 if [ "$XDG_CURRENT_DESKTOP" = "" ]; then
     desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
 else
