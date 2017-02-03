@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with MD5
 #
-# Last update: 31/01/2017
+# Last update: 03/02/2017
 #
 case "$( uname -m )" in
     i?86) archDL=x86 ;;
@@ -31,8 +31,12 @@ esac
 
 echo -e "\n# This script download files/packages from one alien mirror #\n"
 echo -e "### Use \"pathDl\"- to download the packages instead the full folder ###"
-echo -n "Type the path/program that want download: "
-read pathDl
+
+pathDl=$1
+if [ "$pathDl" == '' ]; then
+    echo -n "T2ype the path/program that want download: "
+    read pathDl
+fi
 
 echo -en "\nOnly \"t?z\" or all files? 1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
 read allOrNot
