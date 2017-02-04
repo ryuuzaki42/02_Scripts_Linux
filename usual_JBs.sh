@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 15/01/2017
+# Last update: 04/02/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -345,8 +345,8 @@ case $optionInput in
             if [ "$subtitleNumber" == '' ]; then
                 echo -e "Not found any subtitle in the file: \"$fileName\""
             else
-                echo -e "\nSubtitles avaible in the file \"$fileName\":\n$subtitleInfo"
-                echo -en "\nWich one you want? (Only the number valid: $subtitleNumber): "
+                echo -e "\nSubtitles available in the file \"$fileName\":\n$subtitleInfo"
+                echo -en "\nWhich one you want? (Only the number valid: $subtitleNumber): "
                 read subNumber
 
                 if echo "$subNumber" | grep -q "[[:digit:]]"; then
@@ -625,7 +625,7 @@ case $optionInput in
                         fi
 
                         if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                            echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't any difference"
+                            echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't have any difference"
                         else
                             echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
                             read showRsyncS
@@ -701,7 +701,7 @@ case $optionInput in
                 if [ "$networkConfigAvailable" == '' ]; then
                     echo -e "$RED\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
                 else
-                    echo "Choose one network to connect"
+                    echo "Choose one network to connect:"
                     cat /etc/wpa_supplicant.conf | grep "ssid$NC"
                     echo -n "Network name: "
                     read networkName
@@ -735,7 +735,7 @@ case $optionInput in
         fi
         ;;
     "dc-wifi" )
-        echo -e "$CYAN# Disconnect to one Wi-Fi network #$NC\n"
+        echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\n"
         su - root -c 'dhclient -r wlan0
         ifconfig wlan0 down
         iw dev wlan0 link'
