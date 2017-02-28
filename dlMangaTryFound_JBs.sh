@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link da primeira imagem
 #
-# Last update: 06/06/2016
+# Last update: 28/02/2017
 #
 # Set color by tput:
 green=`tput setaf 2`
@@ -78,13 +78,8 @@ if [ "$tryTimesSequentiallyDl" == '' ]; then
     tryTimesSequentiallyDl=3
 fi
 
-if [ "$link$zeroChapter" == '' ]; then
-    echo -e "\n\nERRROR\n${magenta}The link <site> is empty (link: \"$link$zeroChapter\").${reset}\n\n"
-    exit 1
-fi
-
-if [ "$chapterStart" == '' ]; then
-    echo -e "\n\nERRROR\n${magenta}The chapter to start is empty (Start: \"$chapterStart\", End: \"$chapterEnd\").${reset}\n\n"
+if [ "$link" == '' ]; then
+    echo -e "\n\nERRROR: ${magenta}The link <site> is empty (link: \"$link\")${reset}\n\n"
     exit 1
 fi
 
@@ -92,8 +87,13 @@ if [ "$chapterEnd" == '' ]; then
     chapterEnd=$chapterStart
 fi
 
+if [ "$chapterStart" == '' ]; then
+    echo -e "\n\nERRROR: ${magenta}The chapter to start is empty (Start: \"$chapterStart\", End: \"$chapterEnd\")${reset}\n\n"
+    exit 1
+fi
+
 if [ $chapterStart -gt $chapterEnd ]; then
-    echo -e "\n\nERRROR\n${magenta}The chapter to start the download is great than chapter end (Start: \"$chapterStart\", End: \"$chapterEnd\").${reset}\n\n"
+    echo -e "\n\nERRROR: ${magenta}The chapter to start the download is great than chapter end (Start: \"$chapterStart\", End: \"$chapterEnd\")${reset}\n\n"
     exit 1
 fi
 
@@ -153,15 +153,15 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
         # C => Chapter, I => Image, S => Status
         echo -n " # C: $chapterStart # P: $zero$i # S: " # Print the try download right now
 
-        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i.jpg # Try download with extension jpg
+        wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i.jpg" # Try download with extension jpg
         wgetReturn=$? # Get result from the command wget
 
         if [ $wgetReturn != 0 ]; then # If fail try with another extension
-            wget -q $link$zeroChapter$chapterStart/$zero$i.png
+            wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i.png"
             wgetReturn=$?
 
             if [ $wgetReturn != 0 ]; then
-                wget -q $link$zeroChapter$chapterStart/$startImage$zero$i.jpeg
+                wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i.jpeg"
                 wgetReturn=$?
 
                 if [ $wgetReturn != 0 ]; then # If fail try with dual page
@@ -175,30 +175,30 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
                         zero2=$zero
                     fi
 
-                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpg
+                    wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpg"
                     wgetReturn=$?
 
                     if [ $wgetReturn != 0 ]; then
-                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.png
+                        wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.png"
                         wgetReturn=$?
 
                         if [ $wgetReturn != 0 ]; then
-                            wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpeg
+                            wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2.jpeg"
                             wgetReturn=$?
 
                             if [ "$smallDifference" != '' ]; then # Start "Try download with the smallDifference"
 
                                 if [ $wgetReturn != 0 ]; then # If fail try with another extension
                                     dualPage=0
-                                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpg # Try download with extension jpg
+                                    wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpg" # Try download with extension jpg
                                     wgetReturn=$?
 
                                     if [ $wgetReturn != 0 ]; then # If fail try with another extension
-                                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.png
+                                        wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.png"
                                         wgetReturn=$?
 
                                         if [ $wgetReturn != 0 ]; then
-                                            wget -q $link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpeg
+                                            wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i$smallDifference.jpeg"
                                             wgetReturn=$?
 
                                             if [ $wgetReturn != 0 ]; then # If fail try with dual page
@@ -212,15 +212,15 @@ while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal t
                                                     zero2=$zero
                                                 fi
 
-                                                wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg
+                                                wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpg"
                                                 wgetReturn=$?
 
                                                 if [ $wgetReturn != 0 ]; then
-                                                    wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png
+                                                    wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.png"
                                                     wgetReturn=$?
 
                                                     if [ $wgetReturn != 0 ]; then
-                                                        wget -q $link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg
+                                                        wget -q "$link$zeroChapter$chapterStart/$startImage$zero$i-$zero2$i2$smallDifference.jpeg"
                                                         wgetReturn=$?
                                                     fi
                                                 fi
