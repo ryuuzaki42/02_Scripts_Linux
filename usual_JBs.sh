@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 04/02/2017
+# Last update: 18/03/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -579,7 +579,7 @@ case $optionInput in
     "folder-diff" )
         echo -e "$CYAN# Show the difference between two folder and (can) make them equal (with rsync) #$NC"
         if [ $# -lt 3 ]; then
-            echo -e "$RED\nError: Need two parameters, $0 folder-dif 'pathSource' 'pathDestination'$NC"
+            echo -e "$RED\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
         else
             echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
             echo -e "The trailing slash (/) at the end of the first argument (source folder)"
@@ -599,47 +599,55 @@ case $optionInput in
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if 'source' exists
                     if [ -e "$pathDestination" ]; then # Test if 'destination' exists
-                        echo -en "\nPlease wait until all files are compared..."
-                        folderChanges=`rsync -aicn --delete "$pathSource" "$pathDestination"`
-                        # -a archive mode; -i output a change-summary for all updates
-                        # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
-                        # --delete delete extraneous files from destination directories
+                        echo -en "$CYAN$GREEN\n1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?$NC "
+                        read syncNowOrNow
 
-                        echo # just a new blank line
-                        filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesDelete" != '' ]; then
-                            echo -e "\nFiles to be deleted:"
-                            echo "$filesDelete" | sort
-                        fi
-
-                        filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesDifferent" != '' ]; then
-                            echo -e "\nFiles different:"
-                            echo "$filesDifferent" | sort
-                        fi
-
-                        filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
-                        if [ "$filesNew" != '' ]; then
-                            echo -e "\nNew files:"
-                            echo "$filesNew" | sort
-                        fi
-
-                        if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                            echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't have any difference"
+                        if [ "$syncNowOrNow" == "2" ]; then
+                            echo -e "$CYAN\nMaking the files equal.$NC Please wait..."
+                            rsync -crvh --delete "$pathSource" "$pathDestination"
                         else
-                            echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
-                            read showRsyncS
-                            if [ "$showRsyncS" == 'y' ]; then
-                                echo -e "\n$folderChanges"
+                            echo -en "\nPlease wait until all files are compared..."
+                            folderChanges=`rsync -aicn --delete "$pathSource" "$pathDestination"`
+                            # -a archive mode; -i output a change-summary for all updates
+                            # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
+                            # --delete delete extraneous files from destination directories
+
+                            echo # just a new blank line
+                            filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
+                            if [ "$filesDelete" != '' ]; then
+                                echo -e "\nFiles to be deleted:"
+                                echo "$filesDelete" | sort
                             fi
 
-                            echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
-                            read continueWriteDisk
-                            if [ "$continueWriteDisk" == 'y' ]; then
-                                echo -e "\nChanges are writing in "$pathDestination". Please wait..."
-                                rsync -crvh --delete "$pathSource" "$pathDestination"
+                            filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
+                            if [ "$filesDifferent" != '' ]; then
+                                echo -e "\nFiles different:"
+                                echo "$filesDifferent" | sort
+                            fi
+
+                            filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
+                            if [ "$filesNew" != '' ]; then
+                                echo -e "\nNew files:"
+                                echo "$filesNew" | sort
+                            fi
+
+                            if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
+                                echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't have any difference"
                             else
-                                echo -e "\n    None change writes in disk"
+                                echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
+                                read showRsyncS
+                                if [ "$showRsyncS" == 'y' ]; then
+                                    echo -e "\n$folderChanges"
+                                fi
+
+                                echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
+                                read continueWriteDisk
+                                if [ "$continueWriteDisk" == 'y' ]; then
+                                    echo -e "$CYAN\nChanges are writing in "$pathDestination".$NC Please wait..."
+                                    rsync -crvh --delete "$pathSource" "$pathDestination"
+                                else
+                                    echo -e "$CYAN\n    None change writes in disk$NC"
+                                fi
                             fi
                         fi
                     else
@@ -649,7 +657,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "\n    None change writes in disk"
+                echo -e "$CYAN\n    None change writes in disk$NC"
             fi
         fi
         ;;
