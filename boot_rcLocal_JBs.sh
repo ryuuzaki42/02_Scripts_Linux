@@ -23,14 +23,14 @@
 # Script: Script with common commands executed in boot (/etc/rc.d/rc.local)
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 #
-# Last update: 28/01/2016
+# Last update: 31/03/2016
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
 ## or
 #echo 50 > /sys/class/backlight/intel_backlight/brightness
 ## or
-/usr/bin/usual_JBs.sh brigh-1 5 # Set brightness to 5%
+/usr/bin/usual_JBs.sh brigh-1 1
 
 ## Set unicode
 unicode_start
@@ -46,19 +46,5 @@ cpufreq-set --cpu 3 --governor performance
 ## Keep the brightness >= %1
 #/usr/bin/brightness_min_set_JBs.sh &
 
-## Print message by time
-echo -e "\n\t-----------------"
-echo -e "\t| Happy Day :-) |"
-echo -e "\t-----------------"
-
-hm=`date +%H%M`
-if [ $hm -lt 0601 ]; then
-    echo -e "\t| Boa Madrugada |"
-elif [ $hm -lt 1201 ]; then
-    echo -e "\t| Bom dia       |"
-elif [ $hm -lt 18001 ]; then
-    echo -e "\t| Boa tarde     |"
-else
-    echo -e "\t| Boa noite     |"
-fi
+echo -e "\n\t-----------------\n\t| Happy Day :-) |"
 echo -e "\t-----------------\n\t`date`\n"
