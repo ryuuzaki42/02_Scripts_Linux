@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link
 #
-# Last update: 28/02/2017
+# Last update: 31/03/2017
 #
 echo -en "Manga name: "
 read mangaName
@@ -65,17 +65,17 @@ else
 
     while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal to end chapter to download
 
-        zeroChapter=0 # Just for zero to 0 to 9, like (0<1,2,3,4,5,6,7,8,9>)
+        zeroChapter=0 # Just for zero to 0 to 9
         if [ $chapterStart -gt 9 ]; then
-            zeroChapter= # More then 9 (10, 11 etc) don't need zero in begin
+            zeroChapter= # Greater then 9, don't need zero in begin
         fi
         chapterDl=$zeroChapter$chapterStart
 
         echo -e "\nDownload html file from page $chapterDl\n"
-        wget "$linkDl/$chapterDl" -O "$chapterDl"
+        wget "$linkDl/$chapterDl" -O "$chapterDl.html"
 
-        linksPageDl=`cat $chapterDl | grep "http.*[[:digit:]].*g" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName"` # Grep link to images (png, jpg)
-        rm $chapterDl # Delete html page file
+        linksPageDl=`cat $chapterDl.html | grep "http.*[[:digit:]].*g" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName"` # Grep link to images (png, jpg)
+        rm $chapterDl.html # Delete html page file
 
         i=1
         countImg=`echo "$linksPageDl" | wc -l`
