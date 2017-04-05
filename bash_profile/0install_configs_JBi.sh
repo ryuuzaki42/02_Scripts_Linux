@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Copy the configs on this folder to ~/ and /root/
     # You can just execut this script

@@ -1,4 +1,4 @@
-
+#!/bin/bash
 # By: Motomagx - facebook.com/motomagx
 
 A=" "

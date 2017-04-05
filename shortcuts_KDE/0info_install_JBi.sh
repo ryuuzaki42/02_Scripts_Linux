@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Copy the this shortcuts to your folder /home/$USER/.local/share/applications/
     # You can just execut this script

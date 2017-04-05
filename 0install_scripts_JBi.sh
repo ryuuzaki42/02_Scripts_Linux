@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ## Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
 #    You can just execut this script

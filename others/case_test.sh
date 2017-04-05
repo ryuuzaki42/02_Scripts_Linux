@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Small example of case in use
 #
 echo "Enter a number between 1 and 10. "
