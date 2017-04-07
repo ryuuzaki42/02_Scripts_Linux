@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 18/03/2017
+# Last update: 07/04/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -145,7 +145,7 @@ case $optionInput in
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
         "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-        "now          " "$RED * - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially "
+        "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Ping test on domain (default is google.com)"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
@@ -1013,10 +1013,7 @@ case $optionInput in
         wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
         ;;
      "now" )
-        echo -e "$CYAN# now - Run \"texlive-up\" \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
-
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader texlive-up$NC\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader texlive-up
+        echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-u$NCp\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader date-up
