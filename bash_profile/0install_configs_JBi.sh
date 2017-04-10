@@ -3,7 +3,7 @@
 ## Copy the configs on this folder to ~/ and /root/
     # You can just execut this script
 
-# Last update: 14/11/2016
+# Last update: 10/04/2017
 
 echo -e "This script copy (cp .??*) to ~/ and /root/\n"
 echo "List of files that will be copied:"
@@ -11,14 +11,12 @@ ls .??*
 echo -e "\t\nBe careful, will overwrite the files if they already exists\n"
 
 echo -en "Want continue and copy this files?\n(y)es - (n)o: "
-read continueCopy
+read -r continueCopy
 
 if [ "$continueCopy" == 'y' ]; then
     cp .??* ~/
-    su - root -c "cd $PWD
-    cp .??* /root/"
-
-    if [ $? == 0 ]; then
+    if su - root -c "cd $PWD
+    cp .??* /root/"; then
         echo -e "\n\tThe Files was copied"
     fi
 else
