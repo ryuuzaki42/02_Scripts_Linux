@@ -1,3 +1,4 @@
+#!/bin/bash
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Críticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
@@ -20,11 +21,11 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 15/11/2016
+# Última atualização: 11/04/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
-. /etc/profile # Loading deafault configs (the file /etc/profile and
+. /etc/profile # Loading default configurations (the file /etc/profile and
     # the files inside /etc/profile.d/ with permission to execute)
 
 # To ignore dups in history
@@ -36,14 +37,14 @@ export PAGER='/usr/bin/most -s' # To display color man pages, using most instead
 
 # Tput setaf * colors => 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 
-if [ $(id -u) -eq 0 ]; then # User root
+if [ "$(id -u)" -eq '0' ]; then # User root
     PS1="\\[$(tput setaf 3)\\][\\u@\\h:\\w]# " # With color
     #PS1="\\[\\][\\u@\\h:\\w]# "               # Without color
 else # "Normal" User
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ " # With color
     #PS1="\\[\\][\\u@\\h:\\w]$ "               # Without color
 
-    echo -e "\n\t #__ Welcome in the host: `hostname` __#"
+    echo -e "\n\t #__ Welcome in the host: $(hostname) __#"
 
     #echo; screenfetch -E; echo # Uncomment if you want to use screenfetch
 
@@ -68,12 +69,12 @@ alias grep='grep --color=auto'
 alias ls='ls -h --color=auto'
 
 echoBlankLines() { # Print x blank lines on terminal
-    lineNumber=$1
-    if [ "$lineNumber" == "" ] || ! echo $lineNumber | grep -q [[:digit:]]; then
-        lineNumber=10
+    lineNumber="$1"
+    if [ "$lineNumber" == '' ] || ! echo "$lineNumber" | grep -q "[[:digit:]]"; then
+        lineNumber="10"
     fi
 
-    countEcho=0
+    countEcho='0'
     while [ "$countEcho" -lt "$lineNumber" ]; do
         echo
         ((countEcho++))
@@ -83,12 +84,12 @@ alias bl='echoBlankLines'
 
 cdMultipleTimes () { # Move up x directories
     countCd=$1
-    if [ "$countCd" == "" ] || ! echo $countCd | grep -q [[:digit:]]; then
-        countCd=1
+    if [ "$countCd" == "" ] || ! echo "$countCd" | grep -q "[[:digit:]]"; then
+        countCd='1'
     fi
 
-    for ((i=$countCd; i > 0; i--)); do
-        cd ..
+    for ((i="$countCd"; i > 0; i--)); do
+        cd ../ || exit
     done
 }
 alias cdm='cdMultipleTimes'

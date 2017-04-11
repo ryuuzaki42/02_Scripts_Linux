@@ -1,3 +1,4 @@
+#!/bin/bash
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Críticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
@@ -20,7 +21,7 @@
 #
 # Descrição: .bashr_profile para carregar o .bashrc com as configuração do perfil
 #
-# Última atualização: 03/11/2016
+# Última atualização: 11/04/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
