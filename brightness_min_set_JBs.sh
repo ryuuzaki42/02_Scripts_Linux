@@ -22,10 +22,10 @@
 #
 # Script: Keep the brightness up to 1%
 #
-# Last update: 08/10/2016
+# Last update: 11/04/2017
 #
-sleepTime=5 # in seconds
-brightnessValueSet=50 # brightness mim value to be set ~ 1%
+sleepTime='5' # in seconds
+brightnessValueSet="50" # brightness mim value to be set ~ 1%
 
 if [ -f /sys/class/backlight/acpi_video0/brightness ]; then # Choose the your path from "files brightness"
     pathFile="/sys/class/backlight/acpi_video0"
@@ -37,11 +37,11 @@ fi
 
 if [ "$pathFile" != '' ]; then
     while true; do
-        brightnessValue=`cat $pathFile/brightness`
+        brightnessValue=$(cat $pathFile/brightness)
         #echo "Actual brightness: $brightnessValue"
 
-        if [ $brightnessValue -lt $brightnessValueSet ]; then
-            echo $brightnessValueSet > $pathFile/brightness
+        if [ "$brightnessValue" -lt "$brightnessValueSet" ]; then
+            echo "$brightnessValueSet" > "$pathFile/brightness"
             #echo "Setting brightness value: $brightnessValueSet"
         fi
 
