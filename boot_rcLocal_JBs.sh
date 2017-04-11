@@ -23,7 +23,7 @@
 # Script: Script with common commands executed in boot (/etc/rc.d/rc.local)
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 #
-# Last update: 31/03/2016
+# Last update: 11/04/2017
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
@@ -37,7 +37,7 @@ unicode_start
 
 ## Set CPU performance. See the actual governor #cpufreq-info
 ## http://docs.slackware.com/howtos:hardware:cpu_frequency_scaling
-#    See the count of CPU you have #cpufreq-info | grep "analyzing CPU"
+## See the count of CPU you have #cpufreq-info | grep "analyzing CPU"
 cpufreq-set --cpu 0 --governor performance
 cpufreq-set --cpu 1 --governor performance
 cpufreq-set --cpu 2 --governor performance
@@ -47,4 +47,4 @@ cpufreq-set --cpu 3 --governor performance
 #/usr/bin/brightness_min_set_JBs.sh &
 
 echo -e "\n\t-----------------\n\t| Happy Day :-) |"
-echo -e "\t-----------------\n\t`date`\n"
+echo -e "\t-----------------\n\t$(date)\n"
