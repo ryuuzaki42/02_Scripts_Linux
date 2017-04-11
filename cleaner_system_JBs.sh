@@ -20,20 +20,20 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean up the system (need bleachbit installed) and reboot/halt
+# Script: Clean up the system (need Bleachbit installed) and reboot/halt
 #
-# Last update: 20/09/2016
+# Last update: 11/04/2017
 #
-if [ $LOGNAME = root ]; then
-    echo -e "\n\terro, execute como usuário comum!\n"
+if [ "$LOGNAME" == "root" ]; then
+    echo -e "\n\tErro, execute como usuário comum!\n"
 else
-    echo -e "\nEste script (para slackware) vai Limpar o seu sistema!"
-    echo -e "\nNecessário ter bleachbit instalado e configurado!"
-    echo "Irá executar o bleachbit como root e como usuário corrente."
+    echo -e "\nEste script (para Slackware) vai Limpar o seu sistema!"
+    echo -e "\nNecessário ter Bleachbit instalado e configurado!"
+    echo "Irá executar o Bleachbit como root e como usuário corrente."
     echo "Além de apagar algumas pastas e arquivos."
 
     echo -en "\nApós a limpar o sistema, deseja (d)esligar ou (r)einiciar: "
-    read rebootOrHalt
+    read -r rebootOrHalt
 
     if [ "$rebootOrHalt" == 'd' ] || [ "$rebootOrHalt" == 'r' ]; then
         if [ "$rebootOrHalt" = 'd' ]; then
@@ -56,9 +56,9 @@ else
         echo "$rebootOrHalt\""
 
         echo -en "\nDeseja continuar: \n(y)es - (n)o: "
-        read RESPOSTA
+        read -r continueOrNot
 
-        if [ "$RESPOSTA" = 'y' ]; then
+        if [ "$continueOrNot" = 'y' ]; then
             bleachbit -c --preset
             echo -e "\nTerminou de executar o bleachbit como usuário comum logado"
             echo "Agora digite a senha do usuário root para executar como ele"
