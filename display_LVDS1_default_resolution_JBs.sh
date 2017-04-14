@@ -23,16 +23,16 @@
 # Script: Define a resolução padrão do monitor do notebook (LVDS1)
 # para o padrão, caso o cabo do VGA1 ou HDMI1 seja removido
 #
-# Last update: 06/06/2016
+# Last update: 14/04/2017
 #
 echo -e "\nEste script seta o LVDS1 (notebook display) para resolução padrão, caso a saída VGA1 ou HDMI1 seja removida\n"
 
-LVDS1_resolution=`xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p"`
+LVDS1_resolution=$(xrandr | grep \+ | grep -v +0 | cut -d' ' -f4 | sed -n "1p")
 
-while [ true ]; do
+while true; do
     value=$(xrandr | grep "*+")
     if [ "$value" == '' ]; then
-        xrandr --output LVDS1 --mode $LVDS1_resolution --primary
+        xrandr --output LVDS1 --mode "$LVDS1_resolution" --primary
         xrandr --output VGA1 --off
         xrandr --output HDMI1 --off
     fi
