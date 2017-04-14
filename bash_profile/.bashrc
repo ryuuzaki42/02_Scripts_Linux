@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 11/04/2017
+# Última atualização: 14/04/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -60,13 +60,18 @@ else # "Normal" User
     # chmod -x /etc/profile.d/bsd-games-login-fortune.*sh
 fi
 
-alias nano='nano -c'
+alias nano='nano -c' # Nano with line number
 
+# egrep/fgrep/grep with color
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
+# ls with color and human readable values
 alias ls='ls -h --color=auto'
+
+# sboinstall PKGTYPE txz instead tgz (Takes up less disk space)
+alias sboinstall='PKGTYPE=txz sboinstall'
 
 echoBlankLines() { # Print x blank lines on terminal
     lineNumber="$1"
