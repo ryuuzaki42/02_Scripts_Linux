@@ -22,7 +22,7 @@
 #
 # Script: Clean up the system (need Bleachbit installed) and reboot/halt
 #
-# Last update: 11/04/2017
+# Last update: 14/04/2017
 #
 if [ "$LOGNAME" == "root" ]; then
     echo -e "\n\tErro, execute como usuário comum!\n"
@@ -36,7 +36,7 @@ else
     read -r rebootOrHalt
 
     if [ "$rebootOrHalt" == 'd' ] || [ "$rebootOrHalt" == 'r' ]; then
-        if [ "$rebootOrHalt" = 'd' ]; then
+        if [ "$rebootOrHalt" == 'd' ]; then
             rebootOrHalt=halt
         elif [ "$rebootOrHalt" == 'r' ]; then
             rebootOrHalt=reboot
@@ -58,7 +58,7 @@ else
         echo -en "\nDeseja continuar: \n(y)es - (n)o: "
         read -r continueOrNot
 
-        if [ "$continueOrNot" = 'y' ]; then
+        if [ "$continueOrNot" == 'y' ]; then
             bleachbit -c --preset
             echo -e "\nTerminou de executar o bleachbit como usuário comum logado"
             echo "Agora digite a senha do usuário root para executar como ele"
