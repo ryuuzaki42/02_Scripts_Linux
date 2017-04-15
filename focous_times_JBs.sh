@@ -23,15 +23,15 @@
 # Script: foco - te avisa se já terminou as $1 hora(s) de trabalho
 # depois 15 minutos de descanso
 #
-# Last update: 18/10/2016
+# Last update: 14/04/2017
 #
 timeToFoco=$1
 if [ "$timeToFoco" == '' ]; then
-    timeToFoco=1
+    timeToFoco='1'
 fi
 
-echo "Begin Foco de $timeToFoco hora..."`date` > /dev/pts/0
+echo "Begin Foco de $timeToFoco hora... $(echo; date)" > /dev/pts/0
 sleep "$timeToFoco"h
-echo "Break of 15 minutos..."`date` > /dev/pts/0
+echo "Break of 15 minutos... $(echo; date)" > /dev/pts/0
 sleep 15m
-echo "Break End..."`date` > /dev/pts/0
+echo "Break End... $(echo; date)" > /dev/pts/0
