@@ -32,7 +32,7 @@ esac
 echo -e "\n# This script download files/packages from one alien mirror #\n"
 echo -e "### Use \"pathDl\"- to download the packages instead the full folder ###"
 
-pathDl="$1"
+pathDl=$1
 if [ "$pathDl" == '' ]; then
     echo -n "T2ype the path/program that want download: "
     read -r pathDl
