@@ -23,7 +23,7 @@
 # Script: script to create a git show file from last commit and compare
 # wit the local file using the meld program
 #
-# Last update: 17/11/2016
+# Last update: 14/04/2017
 #
 # In the SmartGit go:
 # Edit >> Preferences >> Tools, and # >> Add...
@@ -35,10 +35,10 @@
 #
 fullPath=$1 # full path to the file from SmartGit
 rootFolderPath=$2 # path from the project folder from SmartGit
-filePathRoot=`echo ${fullPath#"$rootFolderPath"}` # Get project folder and the file name
+filePathRoot=${fullPath#$rootFolderPath} # Get project folder and the file name
 filePathRoot=${filePathRoot:1} # Remove the frist "/" form "/foder/file"
 
-tmpFile=`mktemp` # Create a TMP-file
+tmpFile=$(mktemp) # Create a TMP-file
 
 # Only for test
 #echo "fullPath $fullPath" >> $tmpFile
@@ -46,11 +46,11 @@ tmpFile=`mktemp` # Create a TMP-file
 #echo "filePathRoot $filePathRoot" >> $tmpFile
 #kwrite $tmpFile
 
-git show HEAD:"$filePathRoot" >> $tmpFile # Generate the a tmpFile from last commit
+git show HEAD:"$filePathRoot" >> "$tmpFile" # Generate the a tmpFile from last commit
 
 # Commit before (~1, ~2, ...)
 #    git show HEAD~1:"$filePathRoot" >> $tmpFile
 
-meld $tmpFile $fullPath # Open meld with the two files
+meld "$tmpFile" "$fullPath" # Open meld with the two files
 
-rm $tmpFile # Delete the tmpFile
+rm "$tmpFile" # Delete the tmpFile
