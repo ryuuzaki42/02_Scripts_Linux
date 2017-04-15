@@ -20,15 +20,20 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: in the KDE and XFCE, lock the session and suspend
+# Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 01/02/2017
+# Last update: 15/04/2017
 #
 # Tip: Add a shortcut to this script
 #
+waitTimeToSuspend=$1 # Time before suspend in minutes
+if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]"; then
+    waitTimeToSuspend='0'
+fi
+
 amixer set Master mute # Mute
 
-if [ "$XDG_CURRENT_DESKTOP" = "" ]; then
+if [ "$XDG_CURRENT_DESKTOP" = '' ]; then
     desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
 else
     desktopGUI=$XDG_CURRENT_DESKTOP
@@ -36,9 +41,19 @@ fi
 
 desktopGUI=${desktopGUI,,} # Convert to lower case
 
-if [ $desktopGUI == "xfce" ]; then
+if [ "$desktopGUI" == "xfce" ]; then
     xflock4 # Lock the session in the XFCE
-elif [ $desktopGUI == "kde" ]; then
+elif [ "$desktopGUI" == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 fi
-dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
+
+sleep 2s
+xset dpms force off # Turn off the screen
+
+notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will syspend in ${waitTimeToSuspend} min $(echo; date)"
+
+sleep "$waitTimeToSuspend"m
+
+if xset q | grep -q "Monitor is Off"; then
+    dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
+fi
