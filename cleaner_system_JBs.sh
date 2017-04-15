@@ -37,9 +37,9 @@ else
 
     if [ "$rebootOrHalt" == 'd' ] || [ "$rebootOrHalt" == 'r' ]; then
         if [ "$rebootOrHalt" == 'd' ]; then
-            rebootOrHalt=halt
+            rebootOrHalt="halt"
         elif [ "$rebootOrHalt" == 'r' ]; then
-            rebootOrHalt=reboot
+            rebootOrHalt="reboot"
         fi
         export rebootOrHalt
 
