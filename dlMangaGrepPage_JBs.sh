@@ -22,76 +22,76 @@
 #
 # Script: Download de imagem (manga) a partir do link
 #
-# Last update: 31/03/2017
+# Last update: 14/04/2017
 #
 echo -en "Manga name: "
-read mangaName
+read -r mangaName
 if [ "$mangaName" == '' ]; then
     echo -e "\nERRROR: The manga name is empty (mangaName: \"$mangaName\")\n"
     exit 1
 fi
 
 echo -en "\nManga link to download (with out chapter number): "
-read linkDl
+read -r linkDl
 if [ "$linkDl" == '' ]; then
     echo -e "\nERRROR: The link <site> is empty (link: \"$linkDl\")\n"
     exit 1
 fi
 
 echo -en "\nChapter to start: "
-read chapterStart
+read -r chapterStart
 if [ "$chapterStart" == '' ]; then
     echo -e "\nERRROR: The chapter to start is empty (Start: \"$chapterStart\")\n"
     exit 1
 fi
 
 echo -en "\nChapter to end: "
-read chapterEnd
+read -r chapterEnd
 if [ "$chapterEnd" == '' ]; then
     chapterEnd=$chapterStart
 fi
 
 echo -en "\nWill download \"$mangaName\" from chapter \"$chapterStart\" to \"$chapterEnd\"\nContinue? (y)es or (n)o (hit enter to yes): "
-read ContinueOrNot
+read -r ContinueOrNot
 
 if [ "$ContinueOrNot" == 'n' ]; then
     echo -e "\nJust exiting by local choice\n"
 else
     mkdir "$mangaName"
-    cd "$mangaName"
+    cd "$mangaName" || exit
 
     ((chapterEnd+=1)) # To download the last chapter in the while condition
     IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 
-    while [ $chapterStart -lt $chapterEnd ]; do # Run until chapter download equal to end chapter to download
+    while [ "$chapterStart" -lt "$chapterEnd" ]; do # Run until chapter download equal to end chapter to download
 
-        zeroChapter=0 # Just for zero to 0 to 9
-        if [ $chapterStart -gt 9 ]; then
-            zeroChapter= # Greater then 9, don't need zero in begin
+        zeroChapter='0' # Just for zero to 0 to 9
+        if [ "$chapterStart" -gt '9' ]; then
+            zeroChapter='' # Greater then 9, don't need zero in begin
         fi
         chapterDl=$zeroChapter$chapterStart
 
         echo -e "\nDownload html file from page $chapterDl\n"
         wget "$linkDl/$chapterDl" -O "$chapterDl.html"
 
-        linksPageDl=`cat $chapterDl.html | grep "http.*[[:digit:]].*g" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName"` # Grep link to images (png, jpg)
-        rm $chapterDl.html # Delete html page file
+        linksPageDl=$(grep "http.*[[:digit:]].*g" < "$chapterDl.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to images (png, jpg)
+        rm "${chapterDl}.html" # Delete html page file
 
         i=1
-        countImg=`echo "$linksPageDl" | wc -l`
+        countImg=$(echo "$linksPageDl" | wc -l)
 
-        mkdir $chapterDl # Create folder to download the images
-        cd $chapterDl
+        mkdir "$chapterDl" # Create folder to download the images
+        cd "$chapterDl" || exit
 
-        for linkImg in `echo "$linksPageDl"`; do
+        for linkImg in $linksPageDl; do
             echo -e "\nDownloading chapter: $chapterDl imagens: $i of $countImg (\"$linkImg\")\n"
             wget "$linkImg"
             ((i++))
         done
 
-        cd ../
-        zip -r $chapterDl.zip $chapterDl
-        rm -r $chapterDl # Delete the folder with the images
+        cd .. || exit
+        zip -r "${chapterDl}.zip" "$chapterDl"
+        rm -r "$chapterDl" # Delete the folder with the images
 
         ((chapterStart++))
     done
