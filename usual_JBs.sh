@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 07/04/2017
+# Last update: 24/04/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -74,22 +74,22 @@ case $optionInput in
         echo -e "$CYAN# Update the date #$NC\n"
 
         dateUpFunction() { # Need to be run as root
-            ntpVector=("ntp.usp.br" "ntp1.ptb.de" "bonehed.lcs.mit.edu") # Ntp servers
+            ntpVector=("ntp1.ptb.de" "ntp.usp.br" "bonehed.lcs.mit.edu") # Ntp servers
             #${#ntpVector[*]} # size of ntpVector
             #${ntpVector[$i]} # value of the $i index in ntpVector
             #${ntpVector[@]} # all value of the vector
 
-            tmpFileNtpError=`mktemp` # Create a TMP-file
-            timeUpdated=false
+            tmpFileNtpError=$(mktemp) # Create a TMP-file
+            timeUpdated="false"
 
-            for ntpValue in ${ntpVector[@]}; do # Run until flagContinue is false and run the break or ntpVector get his end
+            for ntpValue in "${ntpVector[@]}"; do # Run until flagContinue is false and run the break or ntpVector get his end
                 echo -e "Running: ntpdate -u -b $ntpValue\n"
-                ntpdate -u -b $ntpValue 2> $tmpFileNtpError # Run ntpdate with one value of ntpVector and send the errors to a tmp file
+                ntpdate -u -b "$ntpValue" 2> "$tmpFileNtpError" # Run ntpdate with one value of ntpVector and send the errors to a tmp file
 
-                if ! cat $tmpFileNtpError | grep -q -v "no server"; then # Test if ntpdate got error "no server suitable for synchronization found"
-                    if ! cat $tmpFileNtpError | grep -q -v "time out"; then # Test if ntpdate got error "time out"
-                        if ! cat $tmpFileNtpError | grep -q -v "name server cannot be used"; then # Test if can name resolution works
-                            echo -e "\nTime updated: `date`\n"
+                if ! grep -q -v "no server" < "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
+                    if ! grep -q -v "time out" < "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
+                        if ! grep -q -v "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
+                            echo -e "\nTime updated: $(date)\n"
                             timeUpdated=true # Set true in the timeUpdated
                             break
                         fi
@@ -98,13 +98,13 @@ case $optionInput in
             done
 
             if [ "$timeUpdated" == "false" ]; then
-                echo -e "\nSorry, time not updated: `date`\n"
-                if cat $tmpFileNtpError | grep -q "name server cannot be used"; then # Test if can name resolution works
+                echo -e "\nSorry, time not updated: $(date)\n"
+                if grep -q "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
                     echo -e "No connection found - Check your network connections\n"
                 fi
             fi
 
-            rm $tmpFileNtpError # Delete the tmp file
+            rm "$tmpFileNtpError" # Delete the tmp file
         }
 
         export -f dateUpFunction
@@ -173,8 +173,8 @@ case $optionInput in
 
                     countOption=0
                     optionVectorSize=${#optionVector[*]}
-                    while [ $countOption -lt $optionVectorSize ]; do
-                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN $useColor${optionVector[$countOption+1]}$NC"
+                    while [ "$countOption" -lt "$optionVectorSize" ]; do
+                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}$NC"
 
                         countOption=$((countOption + 2))
                     done
@@ -185,7 +185,7 @@ case $optionInput in
             '' | 'w' )
                 whiptailMenu() {
                     echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\n"
-                    eval `resize`
+                    eval "$(resize)"
 
                     heightWhiptail=$((LINES -5))
                     widthWhiptail=$((COLUMNS -5))
@@ -243,14 +243,14 @@ case $optionInput in
                         "${optionVector[74]}" "${optionVector[75]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
-                            itemSelected=`echo $itemSelected | sed 's/ //g'`
+                            itemSelected=${itemSelected// /} # Remove space in the end of selected item
                             echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
-                            $0 $colorPrint notPrintHeader $itemSelected $1 $2
+                            $0 $colorPrint notPrintHeader "$itemSelected" "$1" "$2"
                         fi
                     fi
                 }
 
-                whiptailMenu $2 $3
+                whiptailMenu "$2" "$3"
                 ;;
         esac
         ;;
@@ -262,7 +262,7 @@ case $optionInput in
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
         echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
         echo -n "Which option you want? (hit enter to insert 1): "
-        read gitOptionComand
+        read -r gitOptionComand
 
         if [ "$gitOptionComand" == '2' ]; then
             gitCommandRun="git gc --auto"
