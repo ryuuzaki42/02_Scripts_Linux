@@ -257,7 +257,7 @@ case $optionInput in
     "git-gc" )
         echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\n"
         ## All folder in one directory run "git gc --aggressive"
-        echo "Commands \"git gc\" avaible:"
+        echo "Commands \"git gc\" available:"
         echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
         echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
@@ -272,26 +272,25 @@ case $optionInput in
             gitCommandRun="git gc"
         fi
 
-        folderLocal=`ls -l | grep "^d" | cut -d ":" -f2- | cut -d " " -f2-`
-        folderLocal=`echo -e "$folderLocal" | sed 's/ /\\ /g'`
+        folderLocal=$(ls -d -- */) # List folder names
+        folderLocalcount=$(echo "$folderLocal" | wc -l)
 
-        folderLocalcount=`echo -e "$folderLocal" | wc -l`
-        folderRun=0
-        while [ $folderRun -lt $folderLocalcount ]; do
+        folderRun='0'
+        while [ "$folderRun" -lt "$folderLocalcount" ]; do
             folderRun=$((folderRun + 1))
-            folderGit=`echo -e "$folderLocal" | head -n $folderRun | tail -n 1`
+            folderGit=$(echo -e "$folderLocal" | head -n "$folderRun" | tail -n 1)
 
             echo -e "\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\n"
-            cd "$folderGit"
+            cd "$folderGit" || exit
             $gitCommandRun
-            cd ..
+            cd .. || exit
         done
         ;;
     "file-equal" )
         echo -e "$CYAN# Look for equal files using md5sum #$NC\n"
         echo "Want check the files recursively (this folder and all his sub directories) or only this folder?"
         echo -n "1 to recursively - 2 to only this folder (hit enter to all folders): "
-        read allFolderOrNot
+        read -r allFolderOrNot
 
         if [ "$allFolderOrNot" == '2' ]; then
             recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just just folder
@@ -300,14 +299,14 @@ case $optionInput in
         fi
 
         echo -en "\nRunning md5sum, can take a while. Please wait..."
-        fileAndMd5=`find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum` # Get md5sum of the files
-        fileAndMd5=`echo "$fileAndMd5" | sort` # Sort by the md5sum
+        fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+        fileAndMd5=$(echo "$fileAndMd5" | sort) # Sort by the md5sum
 
-        md5Files=`echo "$fileAndMd5" | cut -d " " -f1`
+        md5Files=$(echo "$fileAndMd5" | cut -d " " -f1)
 
-        for value in `echo "$md5Files"`; do
+        for value in $md5Files; do
             if [ "$valueBack" == "$value" ]; then
-                equalFiles=$equalFiles`echo "$value|"`
+                equalFiles="$equalFiles$value|"
             fi
             valueBack=$value
         done
@@ -318,14 +317,14 @@ case $optionInput in
             echo -e "\nAll file are different by md5sum"
         else
             echo -e "\nThese file(s) are equal"
-            filesDifferent=`echo "$fileAndMd5" | grep -E "$equalFiles"`
+            filesDifferent=$(echo "$fileAndMd5" | grep -E "$equalFiles")
 
             IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 
             for value in $filesDifferent; do
-                valueNow=`echo "$value" | cut -d " " -f1`
+                valueNow=$(echo "$value" | cut -d " " -f1)
 
-                if [ $valueNow != $valueBack ]; then
+                if [ "$valueNow" != "$valueBack" ]; then
                     echo # Add a new line between file different in the print in terminal
                 fi
                 valueBack=$valueNow
