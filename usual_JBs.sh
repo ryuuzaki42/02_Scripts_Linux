@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 24/04/2017
+# Last update: 27/04/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -337,30 +337,30 @@ case $optionInput in
         echo -e "$CYAN# Extract subtitle from a video file #$NC\n"
         fileName=$2
         if [ "$fileName" != '' ]; then
-            subtitleInfoGeneral=`ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle"`
-            subtitleNumber=`echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g'`
-            subtitleInfo=`echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1`
+            subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle")
+            subtitleNumber=$(echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g')
+            subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1)
 
             if [ "$subtitleNumber" == '' ]; then
                 echo -e "Not found any subtitle in the file: \"$fileName\""
             else
                 echo -e "\nSubtitles available in the file \"$fileName\":\n$subtitleInfo"
                 echo -en "\nWhich one you want? (Only the number valid: $subtitleNumber): "
-                read subNumber
+                read -r subNumber
 
                 if echo "$subNumber" | grep -q "[[:digit:]]"; then
-                    countSubtitleInfo=`echo -e "$subtitleInfoGeneral" | wc -l`
+                    countSubtitleInfo=$(echo -e "$subtitleInfoGeneral" | wc -l)
                     countSubtitleInfo=$((countSubtitleInfo + 2))
 
                     if [ "$subNumber" -gt 1 ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
-                        lastPart=`echo -e "$subtitleInfo" | grep "$subNumber"`
+                        lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
                     else
-                        lastPart=`echo -e "$subtitleInfo" | head -n 1`
-                        subNumber=2
+                        lastPart=$(echo -e "$subtitleInfo" | head -n 1)
+                        subNumber='2'
                     fi
 
                     echo -e "\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
-                    fileNameTmp=`echo $fileName | rev | cut -d "." -f2- | rev`
+                    fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
                     echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\n"
 
                     ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "$fileNameTmp"-"$lastPart".srt
@@ -378,29 +378,29 @@ case $optionInput in
         echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\n"
         if [ "$2" == '' ]; then
             echo -n "Insert the pattern (process name) to search: "
-            read process
+            read -r process
         else
             process=$2
         fi
 
         if  [ "$process" != '' ]; then
-            processList=`ps aux | grep $process`
+            processList=$(ps aux)
+            processList=$(echo "$processList" | grep "$process" | grep -v -E "$0|grep")
             #ps -C chrome -o %cpu,%mem,cmd
+            memPercentage=$(echo "$processList" | awk '{print $4}')
 
-            memPercentage=`echo "$processList" | awk '{print $4}'`
-
-            memPercentageSum=0
+            memPercentageSum='0'
             for memPercentageNow in $memPercentage; do
-                memPercentageSum=`echo "scale=2; $memPercentageSum+$memPercentageNow" | bc`
+                memPercentageSum=$(echo "scale=2; $memPercentageSum+$memPercentageNow" | bc)
             done
 
-            totalMem=`free -m | head -n 2 | tail -n 1 | awk '{print $2}'`
-            useMem=`echo "($totalMem*$memPercentageSum)/100" | bc`
+            totalMem=$(free -m | head -n 2 | tail -n 1 | awk '{print $2}')
+            useMem=$(echo "($totalMem*$memPercentageSum)/100" | bc)
 
             echo -e "\nThe process \"$process\" uses: $useMem MiB or $memPercentageSum % of $totalMem MiB\n"
 
             echo -en "Show the process list?\n(y)es - (n)o: "
-            read showProcessList
+            read -r showProcessList
 
             echo
             if [ "$showProcessList" == 'y' ]; then
@@ -415,46 +415,46 @@ case $optionInput in
         echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\n"
         if [ "$2" == '' ]; then
             echo -n "Package file or pattern to search: "
-            read filePackage
+            read -r filePackage
         else
             filePackage=$2
         fi
 
         echo -en "\nSearching, please wait..."
 
-        tmpFileName=`mktemp` # Create a TMP-file
-        tmpFileFull=`mktemp` # Create a TMP-file
+        tmpFileName=$(mktemp) # Create a TMP-file
+        tmpFileFull=$(mktemp) # Create a TMP-file
 
         for fileInTheFolder in /var/log/packages/*; do
-            if cat $fileInTheFolder | grep -q $filePackage; then # Grep the "filePackage" from the file in /var/log/packages
-                cat $fileInTheFolder | grep "PACKAGE NAME" >> $tmpFileName # Grep the package name from the has the "filePackage"
-                cat $fileInTheFolder >> $tmpFileFull # Print all info about the package
-                echo >> $tmpFileFull # Insert one new line
+            if grep -q "$filePackage" < "$fileInTheFolder"; then # Grep the "filePackage" from the file in /var/log/packages
+                grep "PACKAGE NAME" < "$fileInTheFolder" >> "$tmpFileName" # Grep the package name from the has the "filePackage"
+                cat "$fileInTheFolder" >> "$tmpFileFull" # Print all info about the package
+                echo >> "$tmpFileFull" # Insert one new line
             fi
         done
 
-        sizeResultFile=`ls -l $tmpFileName | awk '{print $5}'`
+        sizeResultFile=$(du "$tmpFileName")
 
         if [ "$sizeResultFile" != '0' ]; then
             echo -e "\n\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\n"
 
             echo -en "Open this files with kwrite or print them in the terminal?\n(k)write - (t)erminal: "
-            read openProgram
+            read -r openProgram
 
             if [ "$openProgram" == 'k' ]; then
-                kwrite $tmpFileName
-                kwrite $tmpFileFull
+                kwrite "$tmpFileName"
+                kwrite "$tmpFileFull"
             else
                 echo -e "\nPackage(s) with '$filePackage':\n"
-                cat $tmpFileName
+                cat "$tmpFileName"
 
                 echo -en "\nPrint this package(s) in terminal?\n(y)es - (p)artial, only the matches - (n)o: "
-                read continuePrint
+                read -r continuePrint
                 echo
                 if [ "$continuePrint" == 'y' ]; then
-                    cat $tmpFileFull
+                    cat "$tmpFileFull"
                 elif [ "$continuePrint" == 'p' ]; then
-                    cat $tmpFileFull | grep "$filePackage"
+                    grep "$filePackage" < "$tmpFileFull"
                 fi
             fi
         else
@@ -462,7 +462,7 @@ case $optionInput in
         fi
 
         echo -e "\nDeleting the log files used in this script"
-        rm $tmpFileName $tmpFileFull
+        rm "$tmpFileName" "$tmpFileFull"
         ;;
     "work-fbi" )
         echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
@@ -912,29 +912,29 @@ case $optionInput in
                 filePdfOutput=${filePdfInput::-4}
 
                 fileChangeOption=$3
-                if ! echo "$fileChangeOption" | grep -q [[:digit:]]; then
-                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (hit enter to insert 3): "
-                    read fileChangeOption
+                if ! echo "$fileChangeOption" | grep -q "[[:digit:]]"; then
+                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (hit enter to insert 4): "
+                    read -r fileChangeOption
                 fi
 
                 if [ "$fileChangeOption" == '1' ]; then
                     sizeQuality="ebook"
                 elif [ "$fileChangeOption" == '2' ]; then
                     sizeQuality="screen"
-                elif [ "$fileChangeOption" == '4' ]; then
+                elif [ "$fileChangeOption" == '4' ] || [ "$fileChangeOption" == '' ]; then
                     # $1 = pdf-r, $2 = fileName.pdf, $3 = fileChangeOption
                     echo
-                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 1
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1
                     echo
-                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 2
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2
                     echo
-                    $0 $colorPrint notPrintHeader $1 "$filePdfInput" 3
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3
                 else
                     fileChangeOption='3'
                 fi
 
                 if [ "$fileChangeOption" != '4' ]; then
-                    fileNamePart="_rOp"$fileChangeOption".pdf"
+                    fileNamePart="_rOp${fileChangeOption}.pdf"
 
                     if [ "$fileChangeOption" == '3' ]; then
                         midCode=''
@@ -943,9 +943,9 @@ case $optionInput in
                     fi
 
                     echo -e "\nRunning \"$0 $1 $filePdfInput $fileChangeOption\"\n"
-                    gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput""$fileNamePart" "$filePdfInput"
+                    gs -sDEVICE=pdfwrite "$midCode" -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
 
-                    echo -e "\nThe output PDF: \""$filePdfOutput""$fileNamePart"\" was saved"
+                    echo -e "\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 fi
             else
                 echo -e "$RED\nError: The file \"$filePdfInput\" not exists$NC"
