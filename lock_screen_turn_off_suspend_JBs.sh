@@ -50,9 +50,10 @@ fi
 sleep 2s
 xset dpms force off # Turn off the screen
 
-notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will syspend in ${waitTimeToSuspend} min $(echo; date)"
-
-sleep "$waitTimeToSuspend"m
+if [ "$waitTimeToSuspend" != '0' ]; then
+    notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will syspend in ${waitTimeToSuspend} min $(echo; echo; date)"
+    sleep "$waitTimeToSuspend"m
+fi
 
 if xset q | grep -q "Monitor is Off"; then
     dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
