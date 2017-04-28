@@ -22,7 +22,7 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 15/04/2017
+# Last update: 27/04/2017
 #
 # Tip: Add a shortcut to this script
 #
