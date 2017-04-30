@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/04/2017
+# Last update: 30/04/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -79,7 +79,7 @@ case $optionInput in
             #${ntpVector[$i]} # value of the $i index in ntpVector
             #${ntpVector[@]} # all value of the vector
 
-            tmpFileNtpError=$(mktemp) # Create a TMP-file
+            tmpFileNtpError=$(mktemp) # Create a tmp file
             timeUpdated="false"
 
             for ntpValue in "${ntpVector[@]}"; do # Run until flagContinue is false and run the break or ntpVector get his end
@@ -108,7 +108,7 @@ case $optionInput in
         }
 
         export -f dateUpFunction
-        su root -c 'dateUpFunction' # In this case with out the hypen to no change the environment variables
+        su root -c 'dateUpFunction' # In this case with out the hyphen to no change the environment variables
 
         # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
         # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
@@ -363,9 +363,9 @@ case $optionInput in
                     fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
                     echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\n"
 
-                    ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "$fileNameTmp"-"$lastPart".srt
+                    ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
 
-                    echo -e "\nSubtitle \"$lastPart\" from \"$fileName\" \nsaved as \"$fileNameTmp-$lastPart.srt\""
+                    echo -e "\nSubtitle \"$lastPart\" from \"$fileName\" \nsaved as \"${fileNameTmp}-${lastPart}.srt\""
                 else
                     echo -e "\nError: The subtitle number must be a number\n"
                 fi
@@ -422,8 +422,8 @@ case $optionInput in
 
         echo -en "\nSearching, please wait..."
 
-        tmpFileName=$(mktemp) # Create a TMP-file
-        tmpFileFull=$(mktemp) # Create a TMP-file
+        tmpFileName=$(mktemp) # Create a tmp file
+        tmpFileFull=$(mktemp)
 
         for fileInTheFolder in /var/log/packages/*; do
             if grep -q "$filePackage" < "$fileInTheFolder"; then # Grep the "filePackage" from the file in /var/log/packages
@@ -468,19 +468,19 @@ case $optionInput in
         echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
         echo -e "\nWarning: Depending on how big is the amount of free space, this can take a long time"
 
-        freeSpace=`df . | awk '/[0-9]%/{print $(NF-2)}'` # Free space local/pwd folder
-        freeSpaceMiB=`echo "scale=2; $freeSpace/1024" | bc` # Free space in MiB
-        freeSpaceGiB=`echo "scale=2; $freeSpace/(1024*1024)" | bc` # Free space in GiB
-        timeAvgMin=`echo "($freeSpaceMiB/30)/60" | bc`
+        freeSpace=$(df . | awk '/[0-9]%/{print $(NF-2)}') # Free space local/pwd folder
+        freeSpaceMiB=$(echo "scale=2; $freeSpace/1024" | bc) # Free space in MiB
+        freeSpaceGiB=$(echo "scale=2; $freeSpace/(1024*1024)" | bc) # Free space in GiB
+        timeAvgMin=$(echo "($freeSpaceMiB/30)/60" | bc)
 
         echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
         echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
         echo -en "\nWant continue? (y)es - (n)o: "
-        read contineDd
+        read -r contineDd
 
         if [ "$contineDd" == 'y' ]; then
-            fileName="work-fbi_" # Create a iso file with a random part name
-            fileName+=`date +%s | md5sum | head -c 10`
+            fileName="work-fbi_" # Create a ISO file with a random part name
+            fileName+=$(date +%s | md5sum | head -c 10)
             fileName+=".iso"
 
             echo "You can use <zero> or <random> value"
@@ -488,9 +488,9 @@ case $optionInput in
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
             echo "Long story short, use <zero> if you has not deleted pretty good sensitive data"
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
-            read continueRandomOrZero
+            read -r continueRandomOrZero
 
-            startAtSeconds=`date +%s`
+            startAtSeconds=$(date +%s)
 
             if [ "$continueRandomOrZero" == 'r' ]; then
                 typeWriteDd="random"
@@ -505,8 +505,8 @@ case $optionInput in
                 dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <zero> value to wipe the data
             fi
 
-            endsAtSeconds=`date +%s`
-            timeTakeMin=`echo "scale=2; ($endsAtSeconds - $startAtSeconds)/60" | bc`
+            endsAtSeconds=$(date +%s)
+            timeTakeMin=$(echo "scale=2; ($endsAtSeconds - $startAtSeconds)/60" | bc)
 
             echo -e "\nFinished to write the file - this take $timeTakeMin min"
 
@@ -516,10 +516,10 @@ case $optionInput in
         ;;
     "ip" )
         echo -e "$CYAN# Get your IP #$NC\n"
-        localIP=`/sbin/ifconfig | grep broadcast | awk '{print $2}'`
+        localIP=$(/sbin/ifconfig | grep broadcast | awk '{print $2}')
         echo "Local IP: $localIP"
 
-        externalIP=`wget -qO - icanhazip.com`
+        externalIP=$(wget -qO - icanhazip.com)
         echo "External IP: $externalIP"
         ;;
     "cpu-max" )
@@ -532,8 +532,8 @@ case $optionInput in
         ;;
     "day-install" )
         echo -e "$CYAN# The day the system are installed #$NC"
-        dayInstall=`ls -alct / | tail -n 1 | awk '{print $6, $7, $8}'`
-        echo -e "\nThe system was installed at the time: $dayInstall"
+        dayInstall=$(ls -alct / | tail -n 1 | awk '{print $6, $7, $8}')
+        echo -e "\nThe system was installed in: $dayInstall"
         ;;
     "print-lines" )
         echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
@@ -547,13 +547,13 @@ case $optionInput in
 
             if [ "$lineStart" == '' ] || [ "$lineEnd" == '' ]; then
                 echo -n "Line to start: "
-                read lineStart
+                read -r lineStart
                 echo -n "Line to end: "
-                read lineEnd
+                read -r lineEnd
             fi
 
-            if echo $lineStart | grep -q [[:digit:]] && echo $lineEnd | grep -q [[:digit:]]; then
-                if [ $lineStart -gt $lineEnd ]; then
+            if echo "$lineStart" | grep -q "[[:digit:]]" && echo "$lineEnd" | grep -q "[[:digit:]]"; then
+                if [ "$lineStart" -gt "$lineEnd" ]; then
                     lineStartTmp=$lineEnd
                     lineEnd=$lineStart
                     lineStart=$lineStartTmp
@@ -563,7 +563,7 @@ case $optionInput in
                 lineStartTmp=$((lineEnd-lineStart))
                 ((lineStartTmp++))
 
-                cat -n $inputFile | head -n $lineEnd | tail -n $lineStartTmp
+                cat -n "$inputFile" | head -n "$lineEnd" | tail -n "$lineStartTmp"
             else
                 echo -e "$RED\nError: lineStart and lineEnd must be number$NC"
             fi
@@ -571,9 +571,18 @@ case $optionInput in
         ;;
     "screenshot" )
         echo -e "$CYAN# Screenshot from display :0 #$NC\n"
-        dateNow=`date`
-        import -window root -display :0 screenshot_"$dateNow".jpg
-        echo "Screenshot \"screenshot_"$dateNow".jpg\" saved"
+
+        echo -n "Delay before the screenshot (in seconds): "
+        read -r secondsBeforeScrenshot
+
+        if echo "$secondsBeforeScrenshot" | grep -q "[[:digit:]]"; then
+            sleep "$secondsBeforeScrenshot"
+        fi
+
+        dateNow=$(date +%s)
+        import -window root -display :0 "screenshot_${dateNow}.jpg"
+
+        echo -e "\nScreenshot \"screenshot_${dateNow}.jpg\"\nsaved in the folder \"$(pwd)/\""
         ;;
     "folder-diff" )
         echo -e "$CYAN# Show the difference between two folder and (can) make them equal (with rsync) #$NC"
@@ -593,56 +602,56 @@ case $optionInput in
             echo -e "Destination folder:$GREEN $pathDestination$NC"
 
             echo -en "\nWant continue and use these source and destination folders?\n(y)es - (n)o: "
-            read continueRsync
+            read -r continueRsync
 
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if 'source' exists
                     if [ -e "$pathDestination" ]; then # Test if 'destination' exists
                         echo -en "$CYAN$GREEN\n1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?$NC "
-                        read syncNowOrNow
+                        read -r syncNowOrNow
 
                         if [ "$syncNowOrNow" == "2" ]; then
                             echo -e "$CYAN\nMaking the files equal.$NC Please wait..."
                             rsync -crvh --delete "$pathSource" "$pathDestination"
                         else
                             echo -en "\nPlease wait until all files are compared..."
-                            folderChanges=`rsync -aicn --delete "$pathSource" "$pathDestination"`
+                            folderChanges=$(rsync -aicn --delete "$pathSource" "$pathDestination")
                             # -a archive mode; -i output a change-summary for all updates
                             # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
                             # --delete delete extraneous files from destination directories
 
                             echo # just a new blank line
-                            filesDelete=`echo -e "$folderChanges" | grep "*deleting" | awk '{print substr($0, index($0,$2))}'`
+                            filesDelete=$(echo -e "$folderChanges" | grep "deleting" | awk '{print substr($0, index($0,$2))}')
                             if [ "$filesDelete" != '' ]; then
                                 echo -e "\nFiles to be deleted:"
                                 echo "$filesDelete" | sort
                             fi
 
-                            filesDifferent=`echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}'`
+                            filesDifferent=$(echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}')
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "\nFiles different:"
                                 echo "$filesDifferent" | sort
                             fi
 
-                            filesNew=`echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}'`
+                            filesNew=$(echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}')
                             if [ "$filesNew" != '' ]; then
                                 echo -e "\nNew files:"
                                 echo "$filesNew" | sort
                             fi
 
                             if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                                echo -e "\nThe source folder ("$pathSource") and the destination folder ("$pathDestination") don't have any difference"
+                                echo -e "\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference"
                             else
                                 echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
-                                read showRsyncS
+                                read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
                                     echo -e "\n$folderChanges"
                                 fi
 
                                 echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
-                                read continueWriteDisk
+                                read -r continueWriteDisk
                                 if [ "$continueWriteDisk" == 'y' ]; then
-                                    echo -e "$CYAN\nChanges are writing in "$pathDestination".$NC Please wait..."
+                                    echo -e "$CYAN\nChanges are writing in $pathDestination.$NC Please wait..."
                                     rsync -crvh --delete "$pathSource" "$pathDestination"
                                 else
                                     echo -e "$CYAN\n    None change writes in disk$NC"
@@ -664,14 +673,14 @@ case $optionInput in
         echo -e "$CYAN# Search in this directory (recursive) for a pattern #$NC"
         if [ "$2" == '' ]; then
             echo -en "\nPattern to search: "
-            read patternSearch
+            read -r patternSearch
         else
             patternSearch=$2
         fi
 
-        echo -e "\nSearching, please wait..."
+        echo -e "\nSearching, please wait...\n\n"
         grep -rn "$patternSearch"
-        # -r, --recursive, -n, --line-number print line number with output lines
+        # -r recursive, -n print line number with output lines
         ;;
     "ping-test" )
         echo -e "$CYAN# Ping test on domain (default is google.com) #$NC\n"
@@ -696,7 +705,7 @@ case $optionInput in
         ;;
     "cn-wifi" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
-        if ps faux | grep "NetworkManager" | grep -v -q "grep"; then # Test if NetworkManager is running
+        if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
             echo -e "$RED\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
         else
             if [ "$LOGNAME" != "root" ]; then
@@ -704,34 +713,34 @@ case $optionInput in
             else
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
-                networkConfigAvailable=`cat /etc/wpa_supplicant.conf | grep "ssid"`
+                networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
                 if [ "$networkConfigAvailable" == '' ]; then
                     echo -e "$RED\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
                 else
                     echo "Choose one network to connect:"
-                    cat /etc/wpa_supplicant.conf | grep "ssid$NC"
+                    grep "ssid" < /etc/wpa_supplicant.conf
                     echo -n "Network name: "
-                    read networkName
+                    read -r networkName
 
                     #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
-                    wpaConf=`sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'$networkName'/p}' /etc/wpa_supplicant.conf`
+                    wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
 
                     if [ "$wpaConf" == '' ]; then
                         echo -e "$RED\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
                     else
-                        TMPFILE=`mktemp` # Create a TMP-file
-                        cat /etc/wpa_supplicant.conf | grep -v -E "{|}|ssid|psk" > $TMPFILE
+                        TMPFILE=$(mktemp) # Create a tmp file
+                        grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
 
-                        echo -e "$wpaConf" >> $TMPFILE # Save the configuration of the network on this file
+                        echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
 
                         echo -e "\n########### Network configuration ####################"
-                        cat $TMPFILE
+                        cat "$TMPFILE"
                         echo -e "######################################################"
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-                        wpa_supplicant -i wlan0 -c $TMPFILE -d -B wext # Connect with the network using the TMP-file
+                        wpa_supplicant -i wlan0 -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
 
-                        rm $TMPFILE # Delete the TMP-file
+                        rm "$TMPFILE" # Delete the tmp file
 
                         dhclient wlan0 # Get IP
 
@@ -749,18 +758,18 @@ case $optionInput in
         ;;
     "mem-info" )
         echo -e "$CYAN# Show memory and swap percentage of use #$NC"
-        memTotal=`free -m | grep Mem | awk '{print $2}'` # Get total of memory RAM
-        memUsed=`free -m | grep Mem | awk '{print $3}'` # Get total of used memory RAM
-        memUsedPercentage=`echo "scale=0; ($memUsed*100)/$memTotal" | bc` # Get the percentage "used/total", |valueI*100/valueF|
+        memTotal=$(free -m | grep Mem | awk '{print $2}') # Get total of memory RAM
+        memUsed=$(free -m | grep Mem | awk '{print $3}') # Get total of used memory RAM
+        memUsedPercentage=$(echo "scale=0; ($memUsed*100)/$memTotal" | bc) # Get the percentage "used/total", |valueI*100/valueF|
         echo -e "\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
 
-        testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
-        if [ $testSwap -eq 0 ]; then
+        testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
+        if [ "$testSwap" -eq '0' ]; then
             echo "Swap is not configured in this computer"
         else
-            swapTotal=`free -m | grep Swap | awk '{print $2}'`
-            swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc` # |valueI*100/valueF|
+            swapTotal=$(free -m | grep Swap | awk '{print $2}')
+            swapUsed=$(free -m | grep Swap | awk '{print $3}')
+            swapUsedPercentage=$(echo "scale=0; ($swapUsed*100)/$swapTotal" | bc) # |valueI*100/valueF|
             echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
@@ -783,15 +792,15 @@ case $optionInput in
         ;;
     "brigh-1" )
         echo -e "$CYAN# Set brightness percentage value (accept % value, up and down) #$NC"
-        if [ $# -eq 1 ]; then
-            brightnessValueOriginal=1
+        if [ "$#" -eq '1' ]; then
+            brightnessValueOriginal='1'
         else
             brightnessValueOriginal=$2
         fi
 
-        if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
-            if [ $brightnessValueOriginal -gt "100" ]; then # Test max percentage
-                brightnessValueOriginal=100
+        if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
+            if [ "$brightnessValueOriginal" -gt "100" ]; then # Test max percentage
+                brightnessValueOriginal="100"
             fi
         fi
 
@@ -804,24 +813,24 @@ case $optionInput in
         fi
 
         if [ "$pathFile" != '' ]; then
-            brightnessMax=`cat $pathFile/max_brightness` # Get max_brightness
-            brightnessPercentage=`echo "scale=3; $brightnessMax/100" | bc` # Get the percentage of 1% from max_brightness
+            brightnessMax=$(cat $pathFile/max_brightness) # Get max_brightness
+            brightnessPercentage=$(echo "scale=3; $brightnessMax/100" | bc) # Get the percentage of 1% from max_brightness
 
-            actualBrightness=`cat $pathFile/actual_brightness` # Get actual_brightness
-            actualBrightness=`echo "scale=2; $actualBrightness/$brightnessPercentage" | bc`
+            actualBrightness=$(cat $pathFile/actual_brightness) # Get actual_brightness
+            actualBrightness=$(echo "scale=2; $actualBrightness/$brightnessPercentage" | bc)
 
             brightnessValue=$actualBrightness
             if [ "$2" == "up" ]; then # More 1 % (more 0.1 to appears correct percentage value in the GUI interface)
-                brightnessValue=`scale=2; echo $brightnessValue + 1.1 | bc`
+                brightnessValue=$(echo "scale=2; $brightnessValue" + 1.1 | bc)
             elif [ "$2" == "down" ]; then # Less 1 % (more 0.1 to appears correct percentage value in the GUI interface)
-                brightnessValue=`scale=2; echo $brightnessValue - 1.1 | bc`
+                brightnessValue=$(echo "scale=2; $brightnessValue" - 1.1 | bc)
             else # Set Input value more 0.1 to appears correct percentage value in the GUI interface
-                brightnessValue=`echo "scale=1; $brightnessValueOriginal+0.1" | bc`
+                brightnessValue=$(echo "scale=1; $brightnessValueOriginal+0.1" | bc)
             fi
 
-            brightnessValueFinal=`echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc` # Get no value percentage vs Input value brightness
+            brightnessValueFinal=$(echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc) # Get no value percentage vs Input value brightness
 
-            if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
+            if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
                 if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
                     brightnessValueFinal=$brightnessMax
                 fi
@@ -843,15 +852,15 @@ case $optionInput in
         ;;
     "brigh-2" )
         echo -e "$CYAN# Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %) #$NC"
-        if [ $# -eq 1 ]; then # Option without value set brightness in 1%
+        if [ "$#" -eq '1' ]; then # Option without value set brightness in 1%
             xbacklight -set 1
-        elif [ $# -eq 2 ]; then # Option to one value of input to set
-            if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
+        elif [ "$#" -eq '2' ]; then # Option to one value of input to set
+            if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
                 brightnessValue=$2
-                if [ $brightnessValue -gt "100" ]; then # Test max percentage
-                    brightnessValue=100
+                if [ "$brightnessValue" -gt "100" ]; then # Test max percentage
+                    brightnessValue="100"
                 fi
-                xbacklight -set $brightnessValue
+                xbacklight -set "$brightnessValue"
             else
                 if [ "$2" == "up" ];then
                     xbacklight -inc 1
@@ -861,12 +870,12 @@ case $optionInput in
                     echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             fi
-        else #elif [ $# -eq 3 ]; then # Option to two value of input to set
-            if echo $3 | grep -q [[:digit:]]; then # Test if has only digit
+        else #elif [ "$#" -eq '3' ]; then # Option to two value of input to set
+            if echo "$3" | grep -q "[[:digit:]]"; then # Test if has only digit
                 if [ "$2" == "up" ];then
-                    xbacklight -inc $3
+                    xbacklight -inc "$3"
                 elif [ "$2" == "down" ];then
-                    xbacklight -dec $3
+                    xbacklight -dec "$3"
                 else
                     echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
@@ -877,7 +886,7 @@ case $optionInput in
         ;;
     "lpkg-c" )
         echo -e "$CYAN# Count of packages that are installed in the Slackware #$NC"
-        countPackages=`ls -l /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}'`
+        countPackages=$(find /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}')
         echo -e "\nThere are $countPackages packages installed"
         ;;
     "lpkg-i" | "lpkg-r" )
@@ -890,17 +899,17 @@ case $optionInput in
         fi
         echo -e "$CYAN# List last packages $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\n"
 
-        if [ $# -eq 1 ]; then
-            numberPackages=10
+        if [ "$#" -eq '1' ]; then
+            numberPackages="10"
         else
-            if echo $2 | grep -q [[:digit:]]; then # Test if has only digit
+            if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
                 numberPackages=$2
             else
-                numberPackages=10
+                numberPackages="10"
             fi
         fi
 
-        ls -l --sort=time $workFolder | head -n $numberPackages | grep -v "total [[:digit:]]"
+        ls -lt "$workFolder" | head -n "$numberPackages" | grep -v "total [[:digit:]]"
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
@@ -913,7 +922,7 @@ case $optionInput in
 
                 fileChangeOption=$3
                 if ! echo "$fileChangeOption" | grep -q "[[:digit:]]"; then
-                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhat option you want? (hit enter to insert 4): "
+                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhich option you want? (hit enter to insert 4): "
                     read -r fileChangeOption
                 fi
 
@@ -954,22 +963,22 @@ case $optionInput in
         ;;
     "swap-clean" )
         echo -e "$CYAN# Clean up the Swap Memory #$NC"
-        testSwap=`free -m | grep Swap | awk '{print $2}'` # Test if has Swap configured
-        if [ $testSwap -eq 0 ]; then
-            echo "\nSwap is not configured in this computer"
+        testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
+        if [ "$testSwap" -eq '0' ]; then
+            echo -e "\nSwap is not configured in this computer"
         else
-            swapTotal=`free -m | grep Swap | awk '{print $2}'`
-            swapUsed=`free -m | grep Swap | awk '{print $3}'`
-            swapUsedPercentage=`echo "scale=0; ($swapUsed*100)/$swapTotal" | bc` # |valueI*100/valueF|
+            swapTotal=$(free -m | grep Swap | awk '{print $2}')
+            swapUsed=$(free -m | grep Swap | awk '{print $3}')
+            swapUsedPercentage=$(echo "scale=0; ($swapUsed*100)/$swapTotal" | bc) # |valueI*100/valueF|
 
             echo -e "\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
 
-            if [ $swapUsed -eq 0 ]; then
+            if [ "$swapUsed" -eq '0' ]; then
                 echo -e "\nSwap is already clean"
             else
                 if [ "$2" == '' ]; then
                     echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
-                    read cleanSwap
+                    read -r cleanSwap
                 else
                     cleanSwap='y'
                 fi
@@ -986,7 +995,7 @@ case $optionInput in
         echo -e "$CYAN# Slackware update #$NC"
         if [ "$2" == '' ]; then
             echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
-            read useBL
+            read -r useBL
         else
             useBL=$2
         fi
@@ -1004,7 +1013,7 @@ case $optionInput in
         ;;
     "up-db" )
         echo -e "$CYAN# Update the database for 'locate' #$NC\n"
-        su - root -c "updatedb" # Update de database
+        su - root -c "updatedb" # Update database
         echo -e "\nDatabase updated"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
@@ -1014,7 +1023,7 @@ case $optionInput in
      "now" )
         echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-u$NCp\n" | sed 's/  / /g'
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-up$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader date-up
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\n" | sed 's/  / /g'
