@@ -22,10 +22,10 @@
 #
 # Script: Download files/packages from one mirror with MD5
 #
-# Last update: 14/04/2017
+# Last update: 30/04/2017
 #
 case "$(uname -m)" in
-    i?86) archDL=x86 ;;
+    i?86) archDL="x86" ;;
     *) archDL=$(uname -m) ;;
 esac
 
@@ -59,7 +59,7 @@ echo -e "Will download the file(s) listed: \n$runFile\n"
 echo -n "Want to continue? (y)es - (n)o (hit enter to yes): "
 read -r continueDl
 
-if [ "$continueDl" != "n" ]; then
+if [ "$continueDl" != 'n' ]; then
     mkdir "${pathDl}-new"
     cd "${pathDl}-new" || exit
 
