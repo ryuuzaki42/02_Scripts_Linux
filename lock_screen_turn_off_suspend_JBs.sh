@@ -22,18 +22,21 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 27/04/2017
+# Last update: 30/04/2017
 #
 # Tip: Add a shortcut to this script
 #
 waitTimeToSuspend=$1 # Time before suspend in minutes
-if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]"; then
+
+suspendCommand="dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend" # Suspend
+
+if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
     waitTimeToSuspend='0'
 fi
 
 amixer set Master mute # Mute
 
-if [ "$XDG_CURRENT_DESKTOP" = '' ]; then
+if [ "$XDG_CURRENT_DESKTOP" == '' ]; then
     desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
 else
     desktopGUI=$XDG_CURRENT_DESKTOP
@@ -51,10 +54,14 @@ sleep 2s
 xset dpms force off # Turn off the screen
 
 if [ "$waitTimeToSuspend" != '0' ]; then
-    notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will syspend in ${waitTimeToSuspend} min $(echo; echo; date)"
+    notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will suspend in ${waitTimeToSuspend} min $(echo; echo; date)"
     sleep "$waitTimeToSuspend"m
-fi
 
-if xset q | grep -q "Monitor is Off"; then
-    dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend # Suspend
+    if xset q | grep -q "Monitor is Off"; then
+        $suspendCommand
+    else
+        notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will not suspend because Monitor is On"
+    fi
+else
+    $suspendCommand
 fi
