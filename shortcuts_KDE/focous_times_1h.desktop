@@ -1,6 +1,6 @@
 [Desktop Entry]
 Comment=
-Exec=/usr/bin/focous_times_JBs.sh 1
+Exec=/usr/bin/focus_time_JBs.sh 1
 Icon=applications-education-university
 Name=foco_1h.sh
 NoDisplay=false

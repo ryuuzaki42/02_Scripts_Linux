@@ -20,18 +20,17 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: foco - te avisa se já terminou as $1 hora(s) de trabalho
-# depois 15 minutos de descanso
+# Script: Focus - warning you about a $timeToFocus in work and 15 min of rest
 #
-# Last update: 14/04/2017
+# Last update: 30/04/2017
 #
-timeToFoco=$1
-if [ "$timeToFoco" == '' ]; then
-    timeToFoco='1'
+timeToFocus=$1
+if echo "$timeToFocus" | grep -q -v "[[:digit:]]"; then
+    timeToFocus='1'
 fi
 
-echo "Begin Foco de $timeToFoco hora... $(echo; date)" > /dev/pts/0
-sleep "$timeToFoco"h
-echo "Break of 15 minutos... $(echo; date)" > /dev/pts/0
+echo "Begin focus of $timeToFocus hour... $(echo; date)" > /dev/pts/0
+sleep "$timeToFocus"h
+echo "Break of 15 minutes... $(echo; date)" > /dev/pts/0
 sleep 15m
 echo "Break End... $(echo; date)" > /dev/pts/0
