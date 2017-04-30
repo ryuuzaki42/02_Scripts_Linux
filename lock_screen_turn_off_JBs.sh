@@ -22,13 +22,13 @@
 #
 # Script: in the KDE and XFCE, lock the session and turnoff the screen
 #
-# Last update: 14/04/2017
+# Last update: 30/04/2017
 #
 # Tip: Add a shortcut to this script
 #
 amixer set Master mute # Mute
 
-if [ "$XDG_CURRENT_DESKTOP" = "" ]; then
+if [ "$XDG_CURRENT_DESKTOP" == '' ]; then
     desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
 else
     desktopGUI=$XDG_CURRENT_DESKTOP
