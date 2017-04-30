@@ -22,13 +22,13 @@
 #
 # Script: Download files/packages from one mirror
 #
-# Last update: 14/04/2017
+# Last update: 30/04/2017
 #
 echo -e "\n# This script download files/packages from a repository #\n"
 
 case "$(uname -m)" in
-    i?86) archDL=x86 ;;
-    arm*) archDL=armv7hl ;;
+    i?86) archDL="x86" ;;
+    arm*) archDL="armv7hl" ;;
     *) archDL=$(uname -m) ;;
 esac
 
