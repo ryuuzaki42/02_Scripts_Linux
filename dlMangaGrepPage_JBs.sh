@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link
 #
-# Last update: 14/04/2017
+# Last update: 30/04/2017
 #
 echo -en "Manga name: "
 read -r mangaName
@@ -69,7 +69,7 @@ else
         if [ "$chapterStart" -gt '9' ]; then
             zeroChapter='' # Greater then 9, don't need zero in begin
         fi
-        chapterDl=$zeroChapter$chapterStart
+        chapterDl="$zeroChapter$chapterStart"
 
         echo -e "\nDownload html file from page $chapterDl\n"
         wget "$linkDl/$chapterDl" -O "$chapterDl.html"
