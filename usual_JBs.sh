@@ -245,7 +245,7 @@ case $optionInput in
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
                             echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
-                            $0 $colorPrint notPrintHeader "$itemSelected" "$1" "$2"
+                            $0 $colorPrint notPrintHeader $itemSelected $1 $2
                         fi
                     fi
                 }
