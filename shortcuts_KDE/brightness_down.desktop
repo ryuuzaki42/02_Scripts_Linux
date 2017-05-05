@@ -1,13 +1,9 @@
 [Desktop Entry]
-Comment=
 Exec=/usr/bin/usual_JBs.sh brigh-2 down
 Icon=ktip
 Name=brightness_down
 NoDisplay=false
-Path[$e]=
 StartupNotify=false
 Terminal=0
-TerminalOptions=
 Type=Application
 X-KDE-SubstituteUID=false
-X-KDE-Username=

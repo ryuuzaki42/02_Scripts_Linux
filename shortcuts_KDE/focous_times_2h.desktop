@@ -1,13 +1,9 @@
 [Desktop Entry]
-Comment=
 Exec=/usr/bin/focus_time_JBs.sh 2
 Icon=applications-education-university
 Name=foco_2h.sh
 NoDisplay=false
-Path[$e]=
 StartupNotify=false
 Terminal=0
-TerminalOptions=
 Type=Application
 X-KDE-SubstituteUID=false
-X-KDE-Username=
