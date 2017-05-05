@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=/usr/bin/amixer -D pulse sset Master 10%-
+Icon=preferences-desktop-sound
+Name=volume_down
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+Type=Application
+X-KDE-SubstituteUID=false

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=/usr/bin/amixer set Master unmute; /usr/bin/amixer set Headphone unmute; /usr/bin/amixer -D pulse sset Master 10%+
+Icon=preferences-desktop-sound
+Name=volume_up
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+Type=Application
+X-KDE-SubstituteUID=false
