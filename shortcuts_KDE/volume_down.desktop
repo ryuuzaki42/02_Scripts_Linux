@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/amixer -D pulse sset Master 10%-
+Exec=/usr/bin/volume_pulse_JBs.sh 0 down
 Icon=preferences-desktop-sound
 Name=volume_down
 NoDisplay=false

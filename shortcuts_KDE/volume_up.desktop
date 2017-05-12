@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/amixer set Master unmute; /usr/bin/amixer set Headphone unmute; /usr/bin/amixer -D pulse sset Master 10%+
+Exec=/usr/bin/volume_pulse_JBs.sh 0 up
 Icon=preferences-desktop-sound
 Name=volume_up
 NoDisplay=false
