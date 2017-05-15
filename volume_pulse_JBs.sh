@@ -22,7 +22,7 @@
 #
 # Script: Change the volume percentage
 #
-# Last update: 12/05/2017
+# Last update: 15/05/2017
 #
 
 help () {
@@ -43,8 +43,15 @@ volCurrentPerc=$(pacmd list-sinks | grep "volume" | head -n 1 | cut -d '/' -f2 |
 
 case $optionValue in
     "up" )
-        pactl set-sink-mute "$soundDevice" 0 > /dev/null # Unmute
-        volCurrentPerc=$((volCurrentPerc + volStepChange)) ;;
+        if pacmd list-sinks | grep -q "muted: yes"; then
+            pactl set-sink-mute "$soundDevice" 0 > /dev/null # Unmute
+
+            notify-send "Volume unmuted" "Volume value: $volCurrentPerc%" -i "audio-volume-medium"
+            exit 0
+        else
+            volCurrentPerc=$((volCurrentPerc + volStepChange))
+        fi
+        ;;
     "down" )
         skipOverCheck='1'
         volCurrentPerc=$((volCurrentPerc - volStepChange)) ;;
