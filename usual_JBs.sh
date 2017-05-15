@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 30/04/2017
+# Last update: 15/05/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -615,25 +615,27 @@ case $optionInput in
                             rsync -crvh --delete "$pathSource" "$pathDestination"
                         else
                             echo -en "\nPlease wait until all files are compared..."
-                            folderChanges=$(rsync -aicn --delete "$pathSource" "$pathDestination")
+                            folderChangesFull=$(rsync -aicn --delete "$pathSource" "$pathDestination")
                             # -a archive mode; -i output a change-summary for all updates
                             # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
                             # --delete delete extraneous files from destination directories
 
+                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting")
+
                             echo # just a new blank line
-                            filesDelete=$(echo -e "$folderChanges" | grep "deleting" | awk '{print substr($0, index($0,$2))}')
+                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting"
                             if [ "$filesDelete" != '' ]; then
                                 echo -e "\nFiles to be deleted:"
                                 echo "$filesDelete" | sort
                             fi
 
-                            filesDifferent=$(echo -e "$folderChanges" | grep "fcstp" | awk '{print substr($0, index($0,$2))}')
+                            filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc.tp" | awk '{print substr($0, index($0,$2))}') # ">fc?tp"
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "\nFiles different:"
                                 echo "$filesDifferent" | sort
                             fi
 
-                            filesNew=$(echo -e "$folderChanges" | grep "f+++"| awk '{print substr($0, index($0,$2))}')
+                            filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++"
                             if [ "$filesNew" != '' ]; then
                                 echo -e "\nNew files:"
                                 echo "$filesNew" | sort
@@ -642,10 +644,16 @@ case $optionInput in
                             if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
                                 echo -e "\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference"
                             else
-                                echo -en "\nShow rsync change-summary?\n(y)es - (n)o: "
+                                echo -en "\nShow full rsync change-summary?\n(y)es - (n)o: "
                                 read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
-                                    echo -e "\n$folderChanges"
+                                    echo -e "\n$folderChangesFull"
+                                fi
+
+                                echo -en "\nShow clean rsync change-summary?\n(y)es - (n)o: "
+                                read -r showRsyncS
+                                if [ "$showRsyncS" == 'y' ]; then
+                                    echo -e "\n$folderChangesClean"
                                 fi
 
                                 echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
