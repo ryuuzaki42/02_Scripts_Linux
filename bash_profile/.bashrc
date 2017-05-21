@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 14/04/2017
+# Última atualização: 21/05/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -34,6 +34,8 @@ shopt -s histappend
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 export PAGER='/usr/bin/most -s' # To display color man pages, using most instead less
+alias pagerMore='export PAGER="/usr/bin/most -s"'
+alias pagerLess='export PAGER="/usr/bin/less"'
 
 # Tput setaf * colors => 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 
@@ -60,6 +62,8 @@ else # "Normal" User
     # chmod -x /etc/profile.d/bsd-games-login-fortune.*sh
 fi
 
+tput bold
+alias tb='tput bold' # Bold
 alias nano='nano -c' # Nano with line number
 
 # egrep/fgrep/grep with color
