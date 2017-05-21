@@ -20,22 +20,24 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Change the volume percentage
+# Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 15/05/2017
+# Last update: 21/05/2017
 #
 
 help () {
     echo "Usage: $0 \"soundDevice\" [up|down|min|max|overmax]"
+    echo "You can add 0 at the end the comand to not send notification"
     exit 1
 }
 
-if [ "$#" -ne '2' ]; then
+if [ "$#" -lt '2' ]; then
     help
 fi
 
-soundDevice=$1 # Check with: aplay -l
-optionValue=$2
+soundDevice=$1 # Device number - Check with: aplay -l
+optionValue=$2 # Option wanted - [up|down|min|max|overmax]
+notification=$3 # Send notification? - If 0 will no send
 
 volStepChange='5'
 maxVol="100"
@@ -81,18 +83,20 @@ fi
 
 pactl set-sink-volume "$soundDevice" "${volCurrentPerc}%" > /dev/null
 
-if [ "$volCurrentPerc" == '0' ]; then
-    iconName="audio-volume-muted"
-else
-    if [ "$volCurrentPerc" -lt "33" ]; then
-        iconName="audio-volume-low"
+if [ "$notification" != '0' ]; then
+    if [ "$volCurrentPerc" == '0' ]; then
+        iconName="audio-volume-muted"
     else
-        if [ "$volCurrentPerc" -lt "67" ]; then
-            iconName="audio-volume-medium"
+        if [ "$volCurrentPerc" -lt "33" ]; then
+            iconName="audio-volume-low"
         else
-            iconName="audio-volume-high"
+            if [ "$volCurrentPerc" -lt "67" ]; then
+                iconName="audio-volume-medium"
+            else
+                iconName="audio-volume-high"
+            fi
         fi
     fi
-fi
 
-notify-send "Volume percentage change" "Final value: $volCurrentPerc%" -i $iconName
+    notify-send "Volume percentage change" "Final value: $volCurrentPerc%" -i $iconName
+fi
