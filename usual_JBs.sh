@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 15/05/2017
+# Last update: 21/05/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -960,7 +960,7 @@ case $optionInput in
                     fi
 
                     echo -e "\nRunning \"$0 $1 $filePdfInput $fileChangeOption\"\n"
-                    gs -sDEVICE=pdfwrite "$midCode" -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
+                    gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
 
                     echo -e "\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 fi
