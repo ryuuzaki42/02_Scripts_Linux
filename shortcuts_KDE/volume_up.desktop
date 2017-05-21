@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/volume_pulse_JBs.sh 0 up
+Exec=/usr/bin/volume_pulse_JBs.sh 0 up 0
 Icon=preferences-desktop-sound
 Name=volume_up
 NoDisplay=false
