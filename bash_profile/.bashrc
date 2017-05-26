@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 21/05/2017
+# Última atualização: 26/05/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -40,7 +40,7 @@ alias pagerLess='export PAGER="/usr/bin/less"'
 # Tput setaf * colors => 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
 
 if [ "$(id -u)" -eq '0' ]; then # User root
-    PS1="\\[$(tput setaf 3)\\][\\u@\\h:\\w]# " # With color
+    PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# " # With color
     #PS1="\\[\\][\\u@\\h:\\w]# "               # Without color
 else # "Normal" User
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ " # With color
