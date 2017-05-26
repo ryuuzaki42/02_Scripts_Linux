@@ -22,7 +22,7 @@
 #
 # Script: Download de imagem (manga) a partir do link
 #
-# Last update: 30/04/2017
+# Last update: 26/05/2017
 #
 echo -en "Manga name: "
 read -r mangaName
@@ -70,6 +70,7 @@ else
             zeroChapter='' # Greater then 9, don't need zero in begin
         fi
         chapterDl="$zeroChapter$chapterStart"
+        mangaNameAndChapterDl="$mangaName $chapterDl"
 
         echo -e "\nDownload html file from page $chapterDl\n"
         wget "$linkDl/$chapterDl" -O "$chapterDl.html"
@@ -80,8 +81,8 @@ else
         i=1
         countImg=$(echo "$linksPageDl" | wc -l)
 
-        mkdir "$chapterDl" # Create folder to download the images
-        cd "$chapterDl" || exit
+        mkdir "$mangaNameAndChapterDl" # Create folder to download the images
+        cd "$mangaNameAndChapterDl" || exit
 
         for linkImg in $linksPageDl; do
             echo -e "\nDownloading chapter: $chapterDl imagens: $i of $countImg (\"$linkImg\")\n"
@@ -90,8 +91,8 @@ else
         done
 
         cd .. || exit
-        zip -r "${chapterDl}.zip" "$chapterDl"
-        rm -r "$chapterDl" # Delete the folder with the images
+        zip -r "${mangaNameAndChapterDl}.zip" "$mangaNameAndChapterDl"
+        rm -r "$mangaNameAndChapterDl" # Delete the folder with the images
 
         ((chapterStart++))
     done
