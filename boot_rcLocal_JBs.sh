@@ -23,7 +23,7 @@
 # Script: Script with common commands executed in boot (/etc/rc.d/rc.local)
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 #
-# Last update: 28/04/2017
+# Last update: 28/05/2017
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
