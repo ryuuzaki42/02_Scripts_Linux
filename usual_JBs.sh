@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 21/05/2017
+# Last update: 28/05/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -1001,23 +1001,25 @@ case $optionInput in
         ;;
     "slack-up" )
         echo -e "$CYAN# Slackware update #$NC"
-        if [ "$2" == '' ]; then
+        useBL=$2
+        if [ "$useBL" == '' ]; then
             echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
             read -r useBL
-        else
-            useBL=$2
         fi
-        echo "Use blacklist: $useBL"
 
-        if [ "$useBL" == 'n' ]; then # slackpkg not using USEBL
-            su - root -c "slackpkg update gpg
-            slackpkg update -batch=on
-            USEBL=0 slackpkg upgrade-all"
-        else # slackpkg using USEBL
-            su - root -c "slackpkg update gpg
-            slackpkg update -batch=on
-            USEBL=1 slackpkg upgrade-all"
+        echo -en "\nUsing blacklist: "
+        if [ "$useBL" == 'y' ]; then # Using blacklist
+            echo "Yes"
+            USEBL='1'
+        else # Not using blacklist
+            echo "No"
+            USEBL='0'
         fi
+        export USEBL
+
+        su - root -c "slackpkg update gpg
+        slackpkg update -batch=on
+        USEBL=$USEBL slackpkg upgrade-all"
         ;;
     "up-db" )
         echo -e "$CYAN# Update the database for 'locate' #$NC\n"
