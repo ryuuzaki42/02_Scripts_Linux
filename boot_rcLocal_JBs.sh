@@ -23,14 +23,14 @@
 # Script: Script with common commands executed in boot (/etc/rc.d/rc.local)
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 #
-# Last update: 14/04/2017
+# Last update: 28/04/2017
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
 ## or
 #echo 50 > /sys/class/backlight/intel_backlight/brightness
 ## or
-/usr/bin/usual_JBs.sh brigh-1 1
+/usr/bin/usual_JBs.sh brigh-1 1 > /dev/null
 
 ## Set unicode
 unicode_start
