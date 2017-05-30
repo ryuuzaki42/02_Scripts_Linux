@@ -24,12 +24,14 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 28/05/2017
+# Last update: 30/05/2017
 #
 if [ "$USER" != "root" ]; then
-    echo -e "\nNeed to be superuser (root)\nExiting\n"
+    echo -e "\nNeed to be superuser (root)\nExiting"
 else
-    if cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
+    if [ "$1" == "bootInitial" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh bootInitial
+        optionRun='1' # Will make all change
+    elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
         optionRun='1' # Will make all change
     else
         optionRun='2' # Will set cpu_frequency_scaling to performance
@@ -47,24 +49,76 @@ else
             cpufreq-set --cpu $i --governor "$governorMode"
             ((i++))
         done
-
-        echo -e "CPU frequency: $governorMode\n"
+        echo -e "CPU frequency: $governorMode"
     }
 
-    echo -e "\n# Changes made #"
+    echo -e "\n    # Changes made #"
 
     if [ "$optionRun" == '1' ]; then
         userNormal=$(w | awk '{print $1}' | grep -vE "root" | head -n 3 | tail -n 1) # Grep one normal user
         export soundDevice='0' # Device number
-        su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
         echo "Volume: muted"
+        su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
 
-        /usr/bin/usual_JBs.sh brigh-1 1 > /dev/null # Set brightness to 1%
         echo "Brightness: 1%"
+        /usr/bin/usual_JBs.sh brigh-1 1 > /dev/null # Set brightness to 1%
 
         cpu_frequency_scaling powersave # This sets CPU frequency to the minimum available
 
+        echo "Disabling all wireless devices"
+        rfkill block all
+        # More info: https://wireless.wiki.kernel.org/en/users/documentation/rfkill
+
+        powertop --auto-tune # Tune to use less power with powertop
+        # More info https://wiki.archlinux.org/index.php/powertop
+
+        ## Remove modules from Linux kernel
+        # List modules load an information (if has one)
+        #for value in $(lsmod | grep  '0$' | cut -d ' ' -f1); do echo -e "\n$value"; modinfo -d $value; done
+
+        # Bluetooth
+        modulesToRemove="bluetooth"
+
+        # USB
+        modulesToRemove+=" uas usb_storage ehci_pci"
+
+        # Realtek USB Card Reader
+        modulesToRemove+=" ums_realtek"
+
+        # Joystick
+        modulesToRemove+=" joydev"
+
+        # GamePad + Hid
+        modulesToRemove+=" hid_multitouch hid_microsoft hid_lenovo hid_logitech_hidpp hid_logitech_dj hid_logitech hid_cherry hid_generic"
+        modulesToRemove+=" i2c_hid usbhid uhci_hcd ohci_pci xhci_pci"
+
+        # WebCam - USB Video Class
+        modulesToRemove+=" uvcvideo"
+
+        # KVM
+        modulesToRemove+=" kvm_intel kvm"
+
+        echo "# Removing modules #"
+        for value in $modulesToRemove; do # Remove modules
+            echo "$value"
+            rmmod $value
+        done
+
     elif [ "$optionRun" == '2' ]; then
         cpu_frequency_scaling performance # This sets CPU frequency to the maximum available
+
+        #rfkill unblock all # Enabling all wireless devices
+        if rfkill list wifi | grep -q "Soft blocked: yes"; then
+            echo "Enabling Wi-Fi devices"
+            rfkill unblock wifi
+        fi
+
+        echo "Enable USB device"
+        modprobe ehci_pci
+
+        sleep 3 # Wait for load all dependencies
+        rmmod ums_realtek # Realtek USB Card Reader
+        rmmod joydev # Joystick
     fi
 fi
+echo
