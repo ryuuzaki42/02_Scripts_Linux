@@ -24,12 +24,12 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 30/05/2017
+# Last update: 31/05/2017
 #
-if [ "$USER" != "root" ]; then
+if [ $(whoami) != "root" ]; then
     echo -e "\nNeed to be superuser (root)\nExiting"
 else
-    if [ "$1" == "bootInitial" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh bootInitial
+    if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh boot
         optionRun='1' # Will make all change
     elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
         optionRun='1' # Will make all change
@@ -55,11 +55,6 @@ else
     echo -e "\n    # Changes made #"
 
     if [ "$optionRun" == '1' ]; then
-        userNormal=$(w | awk '{print $1}' | grep -vE "root" | head -n 3 | tail -n 1) # Grep one normal user
-        export soundDevice='0' # Device number
-        echo "Volume: muted"
-        su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
-
         echo "Brightness: 1%"
         /usr/bin/usual_JBs.sh brigh-1 1 > /dev/null # Set brightness to 1%
 
@@ -69,8 +64,10 @@ else
         rfkill block all
         # More info: https://wireless.wiki.kernel.org/en/users/documentation/rfkill
 
+        echo -e "\npowertop --auto-tune"
         powertop --auto-tune # Tune to use less power with powertop
         # More info https://wiki.archlinux.org/index.php/powertop
+        echo
 
         ## Remove modules from Linux kernel
         # List modules load an information (if has one)
@@ -79,11 +76,8 @@ else
         # Bluetooth
         modulesToRemove="bluetooth"
 
-        # USB
-        modulesToRemove+=" uas usb_storage ehci_pci"
-
-        # Realtek USB Card Reader
-        modulesToRemove+=" ums_realtek"
+        # USB + Realtek USB Card Reader
+        modulesToRemove+=" uas ums_realtek usb_storage ehci_pci"
 
         # Joystick
         modulesToRemove+=" joydev"
@@ -98,11 +92,40 @@ else
         # KVM
         modulesToRemove+=" kvm_intel kvm"
 
-        echo "# Removing modules #"
+        echo -n "# Removing modules: "
+        modulePrintCount='0'
         for value in $modulesToRemove; do # Remove modules
-            echo "$value"
+            if [ $(echo "$modulePrintCount%8" | bc) == 0 ]; then
+                echo # Create a new line after print 8 modules
+            fi
+            ((modulePrintCount++))
+
+            echo -n " $value"
             rmmod $value
         done
+
+        muteSound () {
+            continue='0'
+            while [ "$continue" != '1' ]; do
+                if ps -ef | grep -q "X"; then
+                    userNormal=$(w | grep -vE "root|USER|load average" | awk '{print $1}' | tail -n 1) # Grep one normal user
+
+                    if [ "$userNormal" != '' ]; then
+                        export soundDevice='0' # Device number
+
+                        echo -e "Volume: muted\n\n"
+                        su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
+
+                        continue='1'
+                    fi
+                fi
+
+                if [ "$userNormal" != '1' ];
+                    sleep 3s # Wait 3 s to try again
+                fi
+            done
+        }
+        muteSound &
 
     elif [ "$optionRun" == '2' ]; then
         cpu_frequency_scaling performance # This sets CPU frequency to the maximum available
@@ -113,12 +136,15 @@ else
             rfkill unblock wifi
         fi
 
-        echo "Enable USB device"
-        modprobe ehci_pci
+        # See modules loaded: lsmod
+        if lsmod | grep -q "ehci_pci"; then
+            echo "Enable USB device"
+            modprobe ehci_pci
 
-        sleep 3 # Wait for load all dependencies
-        rmmod ums_realtek # Realtek USB Card Reader
-        rmmod joydev # Joystick
+            sleep 3 # Wait for load all dependencies
+            rmmod ums_realtek # Realtek USB Card Reader
+            rmmod joydev # Joystick
+        fi
     fi
 fi
 echo
