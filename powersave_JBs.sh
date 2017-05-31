@@ -120,7 +120,7 @@ else
                     fi
                 fi
 
-                if [ "$userNormal" != '1' ];
+                if [ "$userNormal" != '1' ]; then
                     sleep 3s # Wait 3 s to try again
                 fi
             done
