@@ -3,7 +3,7 @@
 ## Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
 #    You can just execute this script
 #
-# Last update: 11/04/2017
+# Last update: 30/05/2017
 #
 echo -e "This script copy (cp *_JBs.sh) to /usr/bin/\n"
 echo "List of files that will be copied:"
@@ -14,6 +14,8 @@ echo -en "Want continue and copy this files?\n(y)es - (n)o: "
 read -r continueCopy
 
 if [ "$continueCopy" == 'y' ]; then
+    echo
+
     if su - root -c "cd $PWD
     cp *_JBs.sh /usr/bin/"; then
         echo -e "\n\tThe Files was copied"
