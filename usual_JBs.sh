@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 28/05/2017
+# Last update: 01/06/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -198,7 +198,7 @@ case $optionInput in
                         heightMenuBoxWhiptail=$((LINES - 15))
 
                         #whiptail --title "<título da caixa de menu>" --menu "<texto a ser exibido>" <altura> <largura> <altura da caixa de menu> \
-                        #[ <tag> <item> ]  [ <tag> <item> ] [ <tag> <item> ]
+                        #[ <tag> <item> ] [ <tag> <item> ] [ <tag> <item> ]
 
                         itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
 
@@ -607,7 +607,7 @@ case $optionInput in
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if 'source' exists
                     if [ -e "$pathDestination" ]; then # Test if 'destination' exists
-                        echo -en "$CYAN$GREEN\n1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?$NC "
+                        echo -en "$CYAN$GREEN\n1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
                         read -r syncNowOrNow
 
                         if [ "$syncNowOrNow" == "2" ]; then
@@ -620,28 +620,34 @@ case $optionInput in
                             # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
                             # --delete delete extraneous files from destination directories
 
-                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting")
+                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
                             echo # just a new blank line
-                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting"
+                            foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
+                            if [ "$foldersNew" != '' ]; then
+                                echo -e "\nFolders new:"
+                                echo "$foldersNew" | sort
+                            fi
+
+                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting" - files deleted
                             if [ "$filesDelete" != '' ]; then
                                 echo -e "\nFiles to be deleted:"
                                 echo "$filesDelete" | sort
                             fi
 
-                            filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc.tp" | awk '{print substr($0, index($0,$2))}') # ">fc?tp"
+                            filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc" | awk '{print substr($0, index($0,$2))}') # ">fc" - all files changed
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "\nFiles different:"
                                 echo "$filesDifferent" | sort
                             fi
 
-                            filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++"
+                            filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++" - New files
                             if [ "$filesNew" != '' ]; then
                                 echo -e "\nNew files:"
                                 echo "$filesNew" | sort
                             fi
 
-                            if [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
+                            if [ "$foldersNew" == '' ] && [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
                                 echo -e "\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference"
                             else
                                 echo -en "\nShow full rsync change-summary?\n(y)es - (n)o: "
