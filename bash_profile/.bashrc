@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 26/05/2017
+# Última atualização: 10/06/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -76,6 +76,23 @@ alias ls='ls -h --color=auto'
 
 # sboinstall PKGTYPE txz instead tgz (Takes up less disk space)
 alias sboinstall='PKGTYPE=txz sboinstall'
+
+slackwarePKG="/var/log/packages/"
+userHome=$HOME
+downloadFolder="/media/sda2/downloads/"
+gitFolder="/media/sda2/prog/git_clone/"
+
+cdFolder() {
+    echo -e "\n    cd $1\n"
+    cd "$1" || exit
+    ls
+    echo
+}
+
+alias cdpkg='cdFolder $slackwarePKG'
+alias cdh='cdFolder $userHome'
+alias cddl='cdFolder $downloadFolder'
+alias cdgit='cdFolder $gitFolder'
 
 echoBlankLines() { # Print x blank lines on terminal
     lineNumber="$1"
