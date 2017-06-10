@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 01/06/2017
+# Last update: 10/06/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -1052,8 +1052,8 @@ case $optionInput in
         $0 $colorPrint notPrintHeader up-db
         ;;
     * )
-        echo -e "\n    $(basename "$0"): Error of parameters"
-        echo -e "    Try $0 '--help'"
+        echo -e "\n    $(basename $0) - Error: Option \"$1\" not recognized"
+        echo -e "    Try: $0 '--help'"
         ;;
 esac
 
