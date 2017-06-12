@@ -20,54 +20,90 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Download files/packages from one mirror with MD5
+# Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 30/04/2017
+# Last update: 12/06/2017
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
     *) archDL=$(uname -m) ;;
 esac
 
-echo -e "\n# This script download files/packages from one alien mirror #\n"
-echo -e "### Use \"pathDl\"- to download the packages instead the full folder ###"
+echo -e "\n# This script download files/packages from one Alien mirror #\n"
+pathDl=$1 # Use the "pathDl" to download the packages instead the (full) folder
 
-pathDl=$1
+mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
+echo "Default mirror: $mirrorStart"
+
+echo -en "\nWant change the mirror?\n(y)es - (n)o (press enter to no): "
+read -r changeMirror
+
+if [ "$changeMirror" == 'y' ]; then
+    mirrorStart=''
+
+    while echo "$mirrorStart" | grep -v -q -E "ftp|http"; do
+        echo -en " \nType the new mirror: "
+        read -r mirrorStart
+
+        if echo "$mirrorStart" | grep -v -q -E "ftp|http"; then
+            echo -e "\nError: the mirror \"$mirrorStart\" is not valid\nOne valid mirror has \"ftp\" or \"http\""
+        fi
+    done
+    echo -e "\nNew mirror: $mirrorStart"
+fi
+
+echo -en "\nWith version Slackware you want? (press enter to 14.2): "
+read -r versionSlackware
+
+if [ "$versionSlackware" == '' ]; then
+    versionSlackware="14.2"
+fi
+
 if [ "$pathDl" == '' ]; then
-    echo -n "T2ype the path/program that want download: "
+    echo -en "\nType the path/program that want download: "
     read -r pathDl
 fi
 
-echo -en "\nOnly \"t?z\" or all files? 1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
+echo -e "\nExclude some result based on pattern?"
+echo -n "Hit enter to no or type the pattern to be excluded: "
+read -r pathExclude
+
+echo -en "\nOnly \"t?z\" or all files?\n1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
 read -r allOrNot
 
 if [ "$allOrNot" != '2' ]; then
     extensionFile=".t\?z"
 fi
 
-mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
-slackVersion="14.2"
-
-mirrorDl="$mirrorStart/$slackVersion/$archDL"
-
+mirrorDl="$mirrorStart/$versionSlackware/$archDL"
+echo
 wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 
 runFile=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5 | cut -d '.' -f2-)
 rm CHECKSUMS.md5
 
-echo -e "Will download the file(s) listed: \n$runFile\n"
-echo -n "Want to continue? (y)es - (n)o (hit enter to yes): "
+if [ "$pathExclude" != '' ]; then
+    echo "Files excluded with \"$pathExclude\":"
+    echo "$runFile" | grep "$pathExclude"
+
+    runFile=$(echo "$runFile" | grep -v "$pathExclude")
+fi
+
+echo -e "\nPackages found with \"$pathDl\":\n$runFile\n"
+echo -n "Want to continue and download them? (y)es - (n)o (hit enter to yes): "
 read -r continueDl
 
 if [ "$continueDl" != 'n' ]; then
-    mkdir "${pathDl}-new"
-    cd "${pathDl}-new" || exit
+    folderName="${pathDl}_new"
+    mkdir "$folderName"
+    cd "$folderName" || exit
+    echo
 
     for fileGrep in $(echo -e "$runFile"); do
         wget -c "$mirrorDl/$fileGrep"
     done
 
-    echo -e "List of files downloaded:\n\n$(tree --noreport)\n"
+    echo -e "List of files downloaded (save in $folderName/):\n$(ls -l | grep "$pathDl" | grep -v "$pathExclude")\n"
 else
     echo -e "\nJust exiting by user choice\n"
 fi
