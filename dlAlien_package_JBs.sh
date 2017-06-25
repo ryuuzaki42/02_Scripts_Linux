@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 12/06/2017
+# Last update: 25/06/2017
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -89,21 +89,27 @@ if [ "$pathExclude" != '' ]; then
     runFile=$(echo "$runFile" | grep -v "$pathExclude")
 fi
 
-echo -e "\nPackages found with \"$pathDl\":\n$runFile\n"
-echo -n "Want to continue and download them? (y)es - (n)o (hit enter to yes): "
-read -r continueDl
+if [ "$runFile" != '' ]; then
+    echo -e "\nPackages found with \"$pathDl\":\n$runFile\n"
+    echo -n "Want to continue and download them? (y)es - (n)o (hit enter to yes): "
+    read -r continueDl
 
-if [ "$continueDl" != 'n' ]; then
-    folderName="${pathDl}_new"
-    mkdir "$folderName"
-    cd "$folderName" || exit
-    echo
+    if [ "$continueDl" != 'n' ]; then
+        folderName="${pathDl}_new"
+        mkdir "$folderName"
+        cd "$folderName" || exit
+        echo
 
-    for fileGrep in $(echo -e "$runFile"); do
-        wget -c "$mirrorDl/$fileGrep"
-    done
+        for fileGrep in $(echo -e "$runFile"); do
+            wget -c "$mirrorDl/$fileGrep"
+        done
 
-    echo -e "List of files downloaded (save in $folderName/):\n$(ls -l | grep "$pathDl" | grep -v "$pathExclude")\n"
+        echo -e "List of files downloaded (save in $folderName/):"
+        find . -maxdepth 1 | grep "$pathDl" | grep -v "$pathExclude"
+    else
+        echo -e "\nJust exiting by user choice"
+    fi
 else
-    echo -e "\nJust exiting by user choice\n"
+    echo -e "\nNot found any file to download"
 fi
+echo
