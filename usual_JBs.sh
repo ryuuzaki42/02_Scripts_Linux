@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 10/06/2017
+# Last update: 25/06/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -108,6 +108,10 @@ case $optionInput in
         }
 
         export -f dateUpFunction
+        if [ "$(whoami)" != "root" ]; then
+            echo -e "$CYAN\nInsert the root Password to continue$NC"
+        fi
+
         su root -c 'dateUpFunction' # In this case with out the hyphen to no change the environment variables
 
         # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
@@ -156,7 +160,7 @@ case $optionInput in
         "swap-clean   " "$RED * - Clean up the Swap Memory"
         "texlive-up   " "$RED * - Update the texlive packages"
         "up-db        " "$RED * - Update the database for 'locate'"
-        "weather      " "   - Show the weather forecast (you can change the city in the script)"
+        "weather      " "   - Show the weather forecast (you can pass the name of the city as parameter)"
         "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
         "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
         "w            " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
@@ -244,13 +248,13 @@ case $optionInput in
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
-                            echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected $1 $2$CYAN\n" | sed 's/  / /g'
-                            $0 $colorPrint notPrintHeader $itemSelected $1 $2
+                            echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\n" | sed 's/  / /g'
+                            $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
                         fi
                     fi
                 }
 
-                whiptailMenu "$2" "$3"
+                whiptailMenu "${*:2}"
                 ;;
         esac
         ;;
@@ -532,7 +536,7 @@ case $optionInput in
         ;;
     "day-install" )
         echo -e "$CYAN# The day the system are installed #$NC"
-        dayInstall=$(ls -alct / | tail -n 1 | awk '{print $6, $7, $8}')
+        dayInstall=$(stat -c %z / | sort | head -n 1 | cut -d '.' -f1)
         echo -e "\nThe system was installed in: $dayInstall"
         ;;
     "print-lines" )
@@ -709,13 +713,22 @@ case $optionInput in
         ;;
     "create-wifi" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
-        su - root -c 'echo -n "Name of the network (SSID): "
-        read netSSID
+        createWifiConfig () {
+            echo -en "\nName of the network (SSID): "
+            read -r netSSID
 
-        echo -n "Password of this network: "
-        read -s netPassword
+            echo -en "\nPassword of this network: "
+            read -r -s netPassword
 
-        wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf'
+            wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf
+        }
+
+        export -f createWifiConfig
+        if [ "$(whoami)" != "root" ]; then
+            echo -e "$CYAN\nInsert the root Password to continue$NC"
+        fi
+
+        su root -c 'createWifiConfig'
         ;;
     "cn-wifi" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
@@ -959,14 +972,12 @@ case $optionInput in
                 if [ "$fileChangeOption" != '4' ]; then
                     fileNamePart="_rOp${fileChangeOption}.pdf"
 
+                    echo -e "$CYAN\nRunning: $0 $1 $filePdfInput $fileChangeOption\n$NC"
                     if [ "$fileChangeOption" == '3' ]; then
-                        midCode=''
+                        gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
-                        midCode="-dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality"
+                        gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     fi
-
-                    echo -e "\nRunning \"$0 $1 $filePdfInput $fileChangeOption\"\n"
-                    gs -sDEVICE=pdfwrite $midCode -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
 
                     echo -e "\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 fi
@@ -1033,8 +1044,14 @@ case $optionInput in
         echo -e "\nDatabase updated"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
-        echo -e "$CYAN# Show the weather forecast (you can change the city in the script) #$NC\n"
-        wget -qO - http://wttr.in/S%C3%A3o%20Carlos # Download the information weather
+        echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\n"
+        cityName=${*:2} # Get the second parameter to the end
+
+        if [ "$cityName" == '' ]; then
+            cityName="Rio Paranaíba"
+        fi
+
+        wget -qO - "wttr.in/$cityName" # Get the weather information
         ;;
      "now" )
         echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
@@ -1052,7 +1069,7 @@ case $optionInput in
         $0 $colorPrint notPrintHeader up-db
         ;;
     * )
-        echo -e "\n    $(basename $0) - Error: Option \"$1\" not recognized"
+        echo -e "\n    $(basename "$0") - Error: Option \"$1\" not recognized"
         echo -e "    Try: $0 '--help'"
         ;;
 esac
