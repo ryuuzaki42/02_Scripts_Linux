@@ -24,9 +24,9 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 31/05/2017
+# Last update: 25/06/2017
 #
-if [ $(whoami) != "root" ]; then
+if [ "$(whoami)" != "root" ]; then
     echo -e "\nNeed to be superuser (root)\nExiting"
 else
     if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh boot
@@ -95,13 +95,13 @@ else
         echo -n "# Removing modules: "
         modulePrintCount='0'
         for value in $modulesToRemove; do # Remove modules
-            if [ $(echo "$modulePrintCount%8" | bc) == 0 ]; then
+            if [ "$(echo "$modulePrintCount%8" | bc)" == '0' ]; then
                 echo # Create a new line after print 8 modules
             fi
             ((modulePrintCount++))
 
             echo -n " $value"
-            rmmod $value
+            rmmod "$value"
         done
 
         muteSound () {
