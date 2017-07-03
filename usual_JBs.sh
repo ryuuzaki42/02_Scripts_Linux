@@ -61,14 +61,29 @@ if [ "$testColorInput" == "testColor" ]; then
     shift
 fi
 
+loadDevWirelessInterface() {
+    devInterface=$1
+
+    if [ "$devInterface" == '' ]; then
+        devInterface="wlan0"
+    fi
+
+    echo -e "\nWorking with the dev interface: $devInterface"
+    echo -e "You can pass other interface as a parameter\n"
+}
+
 optionInput=$1
 case $optionInput in
     "ap-info" )
         echo -e "$CYAN# Show information about the AP connected #$NC"
-        echo -e "\n/usr/sbin/iw dev wlan0 link:"
-        /usr/sbin/iw dev wlan0 link
-        echo -e "\n/sbin/iwconfig wlan0:"
-        /sbin/iwconfig wlan0
+
+        loadDevWirelessInterface $2
+
+        echo -e "\n/usr/sbin/iw dev $devInterface link:"
+        /usr/sbin/iw dev $devInterface link
+
+        echo -e "\n/sbin/iwconfig $devInterface:"
+        /sbin/iwconfig $devInterface
         ;;
     "date-up" )
         echo -e "$CYAN# Update the date #$NC\n"
@@ -702,10 +717,10 @@ case $optionInput in
         ;;
     "ping-test" )
         echo -e "$CYAN# Ping test on domain (default is google.com) #$NC\n"
-        if [ $# -eq 1 ]; then
+
+        domainPing=$2
+        if [ "$domainPing" == '' ]; then
             domainPing="google.com"
-        else
-            domainPing=$2
         fi
 
         echo -e "\nRunning: ping -c 3 \"$domainPing\"\n"
@@ -765,13 +780,16 @@ case $optionInput in
                         echo -e "######################################################"
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-                        wpa_supplicant -i wlan0 -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
+
+                        loadDevWirelessInterface $2
+
+                        wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
 
                         rm "$TMPFILE" # Delete the tmp file
 
-                        dhclient wlan0 # Get IP
+                        dhclient $devInterface # Get IP
 
-                        iw dev wlan0 link # Show connection status
+                        iw dev $devInterface link # Show connection status
                     fi
                 fi
             fi
@@ -779,9 +797,13 @@ case $optionInput in
         ;;
     "dc-wifi" )
         echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\n"
-        su - root -c 'dhclient -r wlan0
-        ifconfig wlan0 down
-        iw dev wlan0 link'
+
+        loadDevWirelessInterface $2
+        export devInterface
+
+        su - root -c "dhclient -r $devInterface
+        ifconfig $devInterface down
+        iw dev $devInterface link"
         ;;
     "mem-info" )
         echo -e "$CYAN# Show memory and swap percentage of use #$NC"
@@ -802,11 +824,18 @@ case $optionInput in
         ;;
     "l-iw" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
-        su - root -c '/usr/sbin/iw dev wlan0 scan | grep -E "wlan|SSID|signal|WPA|WEP|WPS|Authentication|WPA2"'
+
+        loadDevWirelessInterface $2
+        export devInterface
+
+        su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2'"
         ;;
     "l-iwlist" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\n"
-        /sbin/iwlist wlan0 scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
+
+        loadDevWirelessInterface $2
+
+        /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "texlive-up" )
         echo -e "$CYAN# Update the texlive packages #$NC\n"
