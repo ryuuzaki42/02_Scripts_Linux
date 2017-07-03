@@ -20,14 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Download Slackware packages (txz/tgz) from a pkgs.org website
+# Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
 # Last update: 02/07/2017
 #
 programName=$1
 justUrl=$2
 
-echo -e "\n# Download Slackware packages (txz/tgz) from a pkgs.org website #"
+echo -e "\n# Download Slackware packages (txz/tgz) from a https://pkgs.org/ website #"
 echo -e "\nTip1 use: $(basename "$0") \"programName\" to not be asked about the program name"
 echo "Tip2 use: $(basename "$0") \"programName\" \"url\" to only print the link to download the package"
 
@@ -39,7 +39,7 @@ fi
 if [ "$programName" == '' ]; then
     echo -e "\nThe name of the program/package can't be blank\n"
 else
-    echo -en "\nSlackware version (enter to insert 14.2): "
+    echo -en "\nSlackware version (hit enter to insert 14.2): "
     read -r slackwareVersion
 
     if [ "$slackwareVersion" == '' ]; then
@@ -53,7 +53,7 @@ else
     rm "$programName"
 
     if [ "$packagesLink" != '' ]; then
-        echo -e "\nPackages found: "
+        echo -e "\nPackage(s) found: "
         countPackage=1
 
         for package in $packagesLink; do
@@ -70,8 +70,8 @@ else
         done
         ((countPackage--))
 
-        echo "# Pay attention in the correct arch #"
-        echo -e "Which package you want download?"
+        echo "# Pay attention to the architecture wanted #"
+        echo -e "\nWhich package do you want download?"
         echo -n "Valid numbers 1 to $countPackage: "
         read -r packageNumber
 
