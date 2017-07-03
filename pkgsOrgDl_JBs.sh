@@ -25,8 +25,11 @@
 # Last update: 02/07/2017
 #
 programName=$1
+justUrl=$2
 
 echo -e "\n# Download Slackware packages (txz/tgz) from a pkgs.org website #"
+echo -e "\nTip1 use: $(basename "$0") \"programName\" to not be asked about the program name"
+echo "Tip2 use: $(basename "$0") \"programName\" \"url\" to only print the link to download the package"
 
 if [ "$programName" == '' ]; then
     echo -en "\nProgram name: "
@@ -61,13 +64,15 @@ else
             echo -n "$countPackage - "
             echo "$package" | cut -d '/' -f4-
 
+            echo -e "\t ### $package\n"
+
             ((countPackage++))
         done
         ((countPackage--))
 
-        echo -e "\nWhich package you want download?"
         echo "# Pay attention in the correct arch #"
-        echo -n "Valid number 1 - $countPackage: "
+        echo -e "Which package you want download?"
+        echo -n "Valid numbers 1 to $countPackage: "
         read -r packageNumber
 
         ((countPackage++))
@@ -88,9 +93,13 @@ else
             linkDl=$(grep "Binary package" < "$programName" | cut -d '=' -f4 | cut -d '"' -f2)
             rm "$programName"
 
-            echo -e "\nDownload the package or Just show the link to download?"
-            echo -n "(y)es to download the package or (n)o to only show the link (hit enter to yes): "
-            read -r continueDl
+            if [ "$justUrl" == "url" ]; then
+                continueDl='n'
+            else
+                echo -e "\nDownload the package or Just show the link to download?"
+                echo -n "(y)es to download the package or (n)o to only show the link (hit enter to yes): "
+                read -r continueDl
+            fi
 
             if [ "$continueDl" != 'n' ]; then
                 wget "$linkDl"
