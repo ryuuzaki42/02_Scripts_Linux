@@ -20,11 +20,13 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Download packages Slackware (txz or tgz) from a pkgs.org website
+# Script: Download Slackware packages (txz/tgz) from a pkgs.org website
 #
 # Last update: 02/07/2017
 #
 programName=$1
+
+echo -e "\n# Download Slackware packages (txz/tgz) from a pkgs.org website #"
 
 if [ "$programName" == '' ]; then
     echo -en "\nProgram name: "
@@ -63,7 +65,7 @@ else
         done
         ((countPackage--))
 
-        echo -e "\nWhich package you whant download?"
+        echo -e "\nWhich package you want download?"
         echo "# Pay attention in the correct arch #"
         echo -n "Valid number 1 - $countPackage: "
         read -r packageNumber
@@ -75,7 +77,6 @@ else
             for package in $packagesLink; do
                 if [ "$countTmp" == "$packageNumber" ]; then
                     packagePageLink=$package
-                    echo "packagePageLink: $packagePageLink"
                 fi
 
                 ((countTmp++))
@@ -87,7 +88,18 @@ else
             linkDl=$(grep "Binary package" < "$programName" | cut -d '=' -f4 | cut -d '"' -f2)
             rm "$programName"
 
-            wget "$linkDl"
+            echo -e "\nDownload the package or Just show the link to download?"
+            echo -n "(y)es to download the package or (n)o to only show the link (hit enter to yes): "
+            read -r continueDl
+
+            if [ "$continueDl" != 'n' ]; then
+                wget "$linkDl"
+            else
+                echo -e "\nLink to download the package:"
+                echo "$linkDl"
+            fi
+
+            echo -e "\nSo Long, and Thanks for All the Fish\n"
         else
             echo -e "\nPackage number selected is big than the total of packages found\n"
         fi
