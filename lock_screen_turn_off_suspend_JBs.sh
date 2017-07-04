@@ -22,7 +22,7 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 30/04/2017
+# Last update: 04/07/2017
 #
 # Tip: Add a shortcut to this script
 #
@@ -35,6 +35,8 @@ if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
 fi
 
 amixer set Master mute # Mute
+
+xbacklight -set 1 # Set brightness to 1%
 
 if [ "$XDG_CURRENT_DESKTOP" == '' ]; then
     desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
