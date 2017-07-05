@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 25/06/2017
+# Last update: 05/07/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -77,7 +77,7 @@ case $optionInput in
     "ap-info" )
         echo -e "$CYAN# Show information about the AP connected #$NC"
 
-        loadDevWirelessInterface $2
+        loadDevWirelessInterface "$2"
 
         echo -e "\n/usr/sbin/iw dev $devInterface link:"
         /usr/sbin/iw dev $devInterface link
@@ -127,7 +127,7 @@ case $optionInput in
             echo -e "$CYAN\nInsert the root Password to continue$NC"
         fi
 
-        su root -c 'dateUpFunction' # In this case with out the hyphen to no change the environment variables
+        su root -c 'dateUpFunction' # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
 
         # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
         # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
@@ -164,7 +164,7 @@ case $optionInput in
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
         "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-        "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially "
+        "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Ping test on domain (default is google.com)"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
@@ -743,7 +743,7 @@ case $optionInput in
             echo -e "$CYAN\nInsert the root Password to continue$NC"
         fi
 
-        su root -c 'createWifiConfig'
+        su root -c 'createWifiConfig' # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "cn-wifi" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
@@ -781,7 +781,7 @@ case $optionInput in
 
                         #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
 
-                        loadDevWirelessInterface $2
+                        loadDevWirelessInterface "$2"
 
                         wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
 
@@ -798,7 +798,7 @@ case $optionInput in
     "dc-wifi" )
         echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\n"
 
-        loadDevWirelessInterface $2
+        loadDevWirelessInterface "$2"
         export devInterface
 
         su - root -c "dhclient -r $devInterface
@@ -825,7 +825,7 @@ case $optionInput in
     "l-iw" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
 
-        loadDevWirelessInterface $2
+        loadDevWirelessInterface "$2"
         export devInterface
 
         su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2'"
@@ -833,7 +833,7 @@ case $optionInput in
     "l-iwlist" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\n"
 
-        loadDevWirelessInterface $2
+        loadDevWirelessInterface "$2"
 
         /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
@@ -965,7 +965,8 @@ case $optionInput in
             fi
         fi
 
-        ls -lt "$workFolder" | head -n "$numberPackages" | grep -v "total [[:digit:]]"
+        #ls -lt "$workFolder" | grep -v "total [[:digit:]]" | head -n "$numberPackages"
+        find "$workFolder" -type f -printf "%T+\t%p\n" | sort -r | head -n "$numberPackages"
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
@@ -1047,25 +1048,45 @@ case $optionInput in
         ;;
     "slack-up" )
         echo -e "$CYAN# Slackware update #$NC"
-        useBL=$2
-        if [ "$useBL" == '' ]; then
-            echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
-            read -r useBL
-        fi
+        slackwareUpdate () {
+            USEBL=$1
+            installNew=$2
 
-        echo -en "\nUsing blacklist: "
-        if [ "$useBL" == 'y' ]; then # Using blacklist
-            echo "Yes"
-            USEBL='1'
-        else # Not using blacklist
-            echo "No"
-            USEBL='0'
-        fi
-        export USEBL
+            if [ "$USEBL" == '' ]; then
+                echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
+                read -r USEBL
+            fi
 
-        su - root -c "slackpkg update gpg
-        slackpkg update -batch=on
-        USEBL=$USEBL slackpkg upgrade-all"
+            echo -en "\nUsing blacklist: "
+            if [ "$USEBL" == 'y' ]; then # Using blacklist
+                echo "Yes"
+                USEBL='1'
+            else # Not using blacklist
+                echo "No"
+                USEBL='0'
+            fi
+
+            if [ "$installNew" == '' ]; then
+                echo -en "\nRun \"slackpkg install-new\" for safe profuse?\n(y)es - (n)o (hit enter to no): "
+                read -r installNew
+            fi
+
+            slackpkg update -batch=on
+
+            if [ "$installNew" == 'y' ]; then
+                slackpkg install-new
+            fi
+
+            USEBL=$USEBL slackpkg upgrade-all
+        }
+
+        USEBL=$2
+        installNew=$3
+
+        export -f slackwareUpdate
+        export USEBL installNew
+
+        su root -c "slackwareUpdate $USEBL $installNew" # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "up-db" )
         echo -e "$CYAN# Update the database for 'locate' #$NC\n"
@@ -1083,7 +1104,7 @@ case $optionInput in
         wget -qO - "wttr.in/$cityName" # Get the weather information
         ;;
      "now" )
-        echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y\" and \"up-db\" sequentially #$NC"
+        echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially #$NC"
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-up$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader date-up
@@ -1091,8 +1112,8 @@ case $optionInput in
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader swap-clean y
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up y$NC\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader slack-up y
+        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up y y$NC\n" | sed 's/  / /g'
+        $0 $colorPrint notPrintHeader slack-up y y
 
         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader up-db$NC\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader up-db
