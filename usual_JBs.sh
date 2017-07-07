@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 05/07/2017
+# Last update: 07/07/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -157,16 +157,18 @@ case $optionInput in
         "ip           " "   - Get your IP"
         "l-iw         " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
         "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
-        "lpkg-c       " "   - Count of packages that are installed in the Slackware"
-        "lpkg-i       " "   - List last packages installed (accept 'n', where 'n' is a number of packages, the default is 10)"
-        "lpkg-r       " "   - List last packages removed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "l-pkg-i      " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "l-pkg-r      " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "l-pkg-u      " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
         "mem-max      " "   - Show the 10 process with more memory RAM use"
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
         "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+        "mtr-test     " "$RED -  Run a mtr-test on a domain (default is google.com)"
         "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
-        "ping-test    " "   - Ping test on domain (default is google.com)"
+        "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
+        "pkg-count    " "   - Count of packages that are installed your Slackware"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
@@ -174,7 +176,7 @@ case $optionInput in
         "sub-extract  " "   - Extract subtitle from a video file"
         "swap-clean   " "$RED * - Clean up the Swap Memory"
         "texlive-up   " "$RED * - Update the texlive packages"
-        "up-db        " "$RED * - Update the database for 'locate'"
+        "up-db        " "$RED * - Update the database for the 'locate'"
         "weather      " "   - Show the weather forecast (you can pass the name of the city as parameter)"
         "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
         "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
@@ -259,7 +261,9 @@ case $optionInput in
                         "${optionVector[68]}" "${optionVector[69]}" \
                         "${optionVector[70]}" "${optionVector[71]}" \
                         "${optionVector[72]}" "${optionVector[73]}" \
-                        "${optionVector[74]}" "${optionVector[75]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[74]}" "${optionVector[75]}" \
+                        "${optionVector[76]}" "${optionVector[77]}" \
+                        "${optionVector[78]}" "${optionVector[79]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -281,11 +285,11 @@ case $optionInput in
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
         echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
         echo -n "Which option you want? (hit enter to insert 1): "
-        read -r gitOptionComand
+        read -r gitOptionCommand
 
-        if [ "$gitOptionComand" == '2' ]; then
+        if [ "$gitOptionCommand" == '2' ]; then
             gitCommandRun="git gc --auto"
-        elif [ "$gitOptionComand" == '3' ]; then
+        elif [ "$gitOptionCommand" == '3' ]; then
             gitCommandRun="git gc --aggressive"
         else
             gitCommandRun="git gc"
@@ -715,16 +719,22 @@ case $optionInput in
         grep -rn "$patternSearch"
         # -r recursive, -n print line number with output lines
         ;;
-    "ping-test" )
-        echo -e "$CYAN# Ping test on domain (default is google.com) #$NC\n"
+    "ping-test" | "mtr-test" )
+        echo -e "$CYAN# Running $optionInput to a domain (default is google.com) #$NC\n"
 
-        domainPing=$2
-        if [ "$domainPing" == '' ]; then
-            domainPing="google.com"
+        domainToWork=$2
+        if [ "$domainToWork" == '' ]; then
+            domainToWork="google.com"
         fi
 
-        echo -e "\nRunning: ping -c 3 \"$domainPing\"\n"
-        ping -c 3 "$domainPing"
+        if [ "$optionInput" == "ping-test" ]; then
+            commandToRun="ping -c 3 $domainToWork"
+        else
+            commandToRun="su root -c 'mtr $domainToWork'"
+        fi
+
+        echo -en "\nRunning: $commandToRun\n"
+        eval "$commandToRun"
         ;;
     "create-wifi" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
@@ -940,20 +950,29 @@ case $optionInput in
             fi
         fi
         ;;
-    "lpkg-c" )
-        echo -e "$CYAN# Count of packages that are installed in the Slackware #$NC"
+    "pkg-count" )
+        echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
         countPackages=$(find /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}')
         echo -e "\nThere are $countPackages packages installed"
         ;;
-    "lpkg-i" | "lpkg-r" )
-        if [ "$1" == "lpkg-i" ]; then
+    "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
+
+        if [ "$optionInput" == "l-pkg-i" ]; then
             functionWord="installed"
             workFolder="/var/log/packages/"
-        elif [ "$1" == "lpkg-r" ]; then
-            functionWord="removed"
+        else
             workFolder="/var/log/removed_packages/"
+
+            if [ "$optionInput" == "l-pkg-r" ]; then
+                functionWord="removed"
+                commandPart2='| grep -v "upgrade"'
+            else
+                functionWord="upgrade"
+                commandPart2='| grep "upgrade"'
+            fi
         fi
-        echo -e "$CYAN# List last packages $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\n"
+
+        echo -e "$CYAN# List the last package(s) $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\n"
 
         if [ "$#" -eq '1' ]; then
             numberPackages="10"
@@ -965,8 +984,12 @@ case $optionInput in
             fi
         fi
 
-        #ls -lt "$workFolder" | grep -v "total [[:digit:]]" | head -n "$numberPackages"
-        find "$workFolder" -type f -printf "%T+\t%p\n" | sort -r | head -n "$numberPackages"
+        commandPart1='ls -ltc '"$workFolder"' | grep -v "total [[:digit:]]"'
+        commandPart3='| head -n '"$numberPackages"''
+
+        commandFinal=$commandPart1$commandPart2$commandPart3
+        echo -e "\nRunning: $commandFinal\n"
+        eval "$commandFinal"
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
@@ -1089,7 +1112,7 @@ case $optionInput in
         su root -c "slackwareUpdate $USEBL $installNew" # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "up-db" )
-        echo -e "$CYAN# Update the database for 'locate' #$NC\n"
+        echo -e "$CYAN# Update the database for the 'locate' #$NC\n"
         su - root -c "updatedb" # Update database
         echo -e "\nDatabase updated"
         ;;
