@@ -20,38 +20,72 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Download de imagem (manga) a partir do link
+# Script: Download images (manga) from a link
 #
-# Last update: 26/05/2017
+# Last update: 07/07/2017
 #
-echo -en "Manga name: "
-read -r mangaName
+echo -e "\n# Download images (manga) from a link #\n"
+
+help () {
+    echo "Usage:"
+    echo "  $0 [OPTION] ..."
+    echo "The script's parameters are:"
+    echo "  -h        This help"
+    echo "  -n <name> Manga name to download. With space use '\"' as \"One Piece\""
+    echo "  -l <link> link to download the manga (with out chapter number)"
+    echo "  -s        chapter to start the download"
+    echo "  -e        chapter to end the download"
+    echo
+    exit 0
+}
+
+while getopts "hn:l:s:e:" optionInput; do
+    case $optionInput in
+        'h' ) help ;;
+        'n' ) mangaName=${OPTARG} ;;
+        'l' ) linkDl=${OPTARG} ;;
+        's' ) chapterStart=${OPTARG} ;;
+        'e' ) chapterEnd=${OPTARG} ;;
+    esac
+done
+
 if [ "$mangaName" == '' ]; then
-    echo -e "\nERRROR: The manga name is empty (mangaName: \"$mangaName\")\n"
-    exit 1
+    echo -en "Manga name: "
+    read -r mangaName
+    if [ "$mangaName" == '' ]; then
+        echo -e "\nERRROR: The manga name can't be empty (mangaName: \"$mangaName\")\n"
+        exit 1
+    fi
 fi
 
-echo -en "\nManga link to download (with out chapter number): "
-read -r linkDl
 if [ "$linkDl" == '' ]; then
-    echo -e "\nERRROR: The link <site> is empty (link: \"$linkDl\")\n"
-    exit 1
+    echo -en "\nManga link to download (with out chapter number): "
+    read -r linkDl
+    if [ "$linkDl" == '' ]; then
+        echo -e "\nERRROR: The link <site> can't be empty (link: \"$linkDl\")\n"
+        exit 1
+    fi
 fi
 
-echo -en "\nChapter to start: "
-read -r chapterStart
 if [ "$chapterStart" == '' ]; then
-    echo -e "\nERRROR: The chapter to start is empty (Start: \"$chapterStart\")\n"
-    exit 1
+    echo -en "\nChapter to start: "
+    read -r chapterStart
+    if [ "$chapterStart" == '' ]; then
+        echo -e "\nERRROR: The chapter to start can't be empty (Start: \"$chapterStart\")\n"
+        exit 1
+    fi
 fi
 
-echo -en "\nChapter to end: "
-read -r chapterEnd
 if [ "$chapterEnd" == '' ]; then
-    chapterEnd=$chapterStart
+    echo -en "\nChapter to end: "
+    read -r chapterEnd
+    if [ "$chapterEnd" == '' ]; then
+        chapterEnd=$chapterStart
+    fi
 fi
 
-echo -en "\nWill download \"$mangaName\" from chapter \"$chapterStart\" to \"$chapterEnd\"\nContinue? (y)es or (n)o (hit enter to yes): "
+echo -e "\nWill download \"$mangaName\" from chapter \"$chapterStart\" to \"$chapterEnd\""
+echo -en "From: \"$linkDl\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
 read -r ContinueOrNot
 
 if [ "$ContinueOrNot" == 'n' ]; then
