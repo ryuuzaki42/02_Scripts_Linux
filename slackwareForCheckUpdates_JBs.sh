@@ -64,7 +64,6 @@ getUpdateMirror () {
     
     if [ "$ml" = "file" ]; then
     local=`echo $1 | cut -d ":" -f 2 | cut -c 2-`
-    echo $local
     cp "$local"/ChangeLog.txt $PWD
     else
     wget ${mirrorDl}ChangeLog.txt
