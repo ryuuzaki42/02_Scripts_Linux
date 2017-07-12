@@ -58,7 +58,7 @@ getUpdateMirror () {
     mirrorDl=$1
 
     echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
-    wget "${mirrorDl}ChangeLog.txt" -O "ChangeLog.txt"
+    wget ${mirrorDl}ChangeLog.txt
 
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
