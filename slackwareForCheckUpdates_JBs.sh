@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #
 # Autor= João Batista Ribeiro
@@ -58,8 +59,17 @@ getUpdateMirror () {
     mirrorDl=$1
 
     echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
+    
+    ml=`echo $1 | cut -d ":" -f 1`
+    
+    if [ "$ml" = "file" ]; then
+    local=`echo $1 | cut -d ":" -f 2 | cut -c 2-`
+    echo $local
+    cp "$local"/ChangeLog.txt $PWD
+    else
     wget ${mirrorDl}ChangeLog.txt
-
+    fi
+    
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
     count1="20"
