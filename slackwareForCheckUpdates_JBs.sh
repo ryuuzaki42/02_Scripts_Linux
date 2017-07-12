@@ -31,10 +31,10 @@ echo -e "\n# Script to check for Slackware updates #\n"
 optionInput=$1
 if [ "$optionInput" == '' ]; then
     echo -e "\n# If has a mirror not valid in /etc/slackpkg/mirrors you can use:"
-    echo -e "\t$(basename $0) s - to select one mirror from stable version"
-    echo -e "\t$(basename $0) c - to select one mirror from current"
-    echo -e "\t$(basename $0) f - to use \"file://dir/\" or \"cdrom://dir/\" as the mirror"
-    echo -e "\t$(basename $0) n - to insert your favorite mirror"
+    echo -e "\t$(basename "$0") s - to select one mirror from stable version"
+    echo -e "\t$(basename "$0") c - to select one mirror from current"
+    echo -e "\t$(basename "$0") f - to use \"file://dir/\" or \"cdrom://dir/\" as the mirror"
+    echo -e "\t$(basename "$0") n - to insert your favorite mirror"
 fi
 
 alinPrint () {
@@ -57,7 +57,7 @@ tracePrint () {
 
     countTmp=1
         echo -n " "
-    countTotal=$(echo "$count1 * 2 + $count2 * 2 + 16" | bc)
+    countTotal=$(echo "$count1 * 2 + $count2 * 2 + 17" | bc)
     while [ "$countTmp" -lt "$countTotal" ]; do
         echo -n "-"
         ((countTmp++))
@@ -71,14 +71,14 @@ getUpdateMirror () {
     echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
 
     if [ "$optionInput" == 'f' ]; then
-        cp "$mirrorDl/ChangeLog.txt" $(pwd)
+        cp "$mirrorDl/ChangeLog.txt" "$(pwd)"
     else
         wget "${mirrorDl}ChangeLog.txt"
     fi
 
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
-    count1="20"
+    count1="25"
     count2="50"
 
     echo
@@ -127,20 +127,21 @@ getUpdateMirror () {
 
     countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1  | cut -d: -f1)
     if [ "$countLines" != '' ]; then
-        echo -e "\n+--------------------------+"
         updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
+        updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
+
         echo "$updaesAvailable"
 
         iconName="audio-volume-high"
-        notify-send "$(basename $0)
-Updates available" "$updaesAvailable" -i "$iconName"
+        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
         echo -e "\n\t# Updates not found #"
 
         iconName="audio-volume-muted"
-        notify-send "$(basename $0)
-Updates not found" "No news is good news" -i "$iconName"
+        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
     fi
+
+    eval "$notificationToSend"
     echo
 }
 
@@ -150,14 +151,21 @@ getValidMirror () {
     if [ "$optionInput" == 'f' ]; then
         mirrorDlTest=$(echo "$mirrorDl" | cut -d ":" -f 1)
 
-        if [ "$mirrorDlTest" == "file" ] || [ "$mirrorDlTest" == "cdrom" ]; then
-            mirrorDl=$(echo $mirrorDl | cut -d '/' -f2-)
+        if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
+            mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
         else
             optionInput=''
         fi
-    elif echo "${mirrorDl}" | grep -vqE "http:|ftp:"; then
-        echo -e "\nMirror ative in \"/etc/slackpkg/mirrors\":\n$mirrorDl"
-        echo -e "\t# This mirror is not valid #"
+    fi
+
+    if echo "${mirrorDl}" | grep -vqE "^http:|^ftp:"; then
+        if [ "$mirrorDl" != '' ]; then
+            echo -e "\nMirror active in \"/etc/slackpkg/mirrors\": \"$mirrorDl\""
+            echo -e "\t# This mirror is not valid #"
+        else
+            echo -e "\nThere is no Mirror active in \"/etc/slackpkg/mirrors\""
+            echo -e "\t# Please active one mirror #"
+        fi
 
         slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
         slackwareArch=$(uname -m)
@@ -172,7 +180,6 @@ getValidMirror () {
         fi
         mirrorFinal=$mirrorPart1$mirrorPart2
 
-        optionInput=$1
         if [ "$optionInput" == '' ]; then
             echo -e "\nSuggested mirror to use:"
             echo "s - (stable) - $mirrorFinal"
