@@ -1,10 +1,11 @@
-
 #!/bin/bash
 #
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Críticas "construtivas"
 # Mande me um e-mail. Ficarei Grato!
 # e-mail: joao42lbatista@gmail.com
+#
+# Com contibuições de Rumber (github.com/rumbler)
 #
 # Este programa é um software livre; você pode redistribui-lo e/ou
 # modifica-lo dentro dos termos da Licença Pública Geral GNU como
@@ -32,6 +33,7 @@ if [ "$optionInput" == '' ]; then
     echo -e "\n# If has a mirror not valid in /etc/slackpkg/mirrors you can use:"
     echo -e "\t$(basename $0) s - to select one mirror from stable version"
     echo -e "\t$(basename $0) c - to select one mirror from current"
+    echo -e "\t$(basename $0) f - to use \"file://dir/\" or \"cdrom://dir/\" as the mirror"
     echo -e "\t$(basename $0) n - to insert your favorite mirror"
 fi
 
@@ -67,16 +69,13 @@ getUpdateMirror () {
     mirrorDl=$1
 
     echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
-    
-    ml=`echo $1 | cut -d ":" -f 1`
-    
-    if [ "$ml" = "file" ]; then
-    local=`echo $1 | cut -d ":" -f 2 | cut -c 2-`
-    cp "$local"/ChangeLog.txt $PWD
+
+    if [ "$optionInput" == 'f' ]; then
+        cp "$mirrorDl/ChangeLog.txt" $(pwd)
     else
-    wget ${mirrorDl}ChangeLog.txt
+        wget "${mirrorDl}ChangeLog.txt"
     fi
-    
+
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
     count1="20"
@@ -148,7 +147,15 @@ Updates not found" "No news is good news" -i "$iconName"
 getValidMirror () {
     mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
 
-    if echo "${mirrorDl}" | grep -vqE "http:|ftp:"; then
+    if [ "$optionInput" == 'f' ]; then
+        mirrorDlTest=$(echo "$mirrorDl" | cut -d ":" -f 1)
+
+        if [ "$mirrorDlTest" == "file" ] || [ "$mirrorDlTest" == "cdrom" ]; then
+            mirrorDl=$(echo $mirrorDl | cut -d '/' -f2-)
+        else
+            optionInput=''
+        fi
+    elif echo "${mirrorDl}" | grep -vqE "http:|ftp:"; then
         echo -e "\nMirror ative in \"/etc/slackpkg/mirrors\":\n$mirrorDl"
         echo -e "\t# This mirror is not valid #"
 
@@ -165,19 +172,19 @@ getValidMirror () {
         fi
         mirrorFinal=$mirrorPart1$mirrorPart2
 
-        mirrorChose=$1
-        if [ "$mirrorChose" == '' ]; then
+        optionInput=$1
+        if [ "$optionInput" == '' ]; then
             echo -e "\nSuggested mirror to use:"
             echo "s - (stable) - $mirrorFinal"
             echo "c - (current) - $mirrorCurrent"
             echo "n - Or insert your favorite mirror"
             echo -n "Which mirror you want?: "
-            read -r mirrorChose
+            read -r optionInput
         fi
 
-        if [ "$mirrorChose" == 's' ]; then
+        if [ "$optionInput" == 's' ]; then
             mirrorDl=$mirrorFinal
-        elif [ "$mirrorChose" == 'c' ]; then
+        elif [ "$optionInput" == 'c' ]; then
             mirrorDl=$mirrorCurrent
         else
             mirrorSource=''
