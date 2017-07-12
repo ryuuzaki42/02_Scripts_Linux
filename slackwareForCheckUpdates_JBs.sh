@@ -22,15 +22,9 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 11/07/2017
+# Last update: 12/07/2017
 #
 echo -e "\n# Script to check for Slackware updates #\n"
-
-mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
-echo -e "Download the ChangeLog.txt. Please wait...\n"
-wget "${mirrorDl}ChangeLog.txt" -O "ChangeLog.txt"
-
-changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
 alinPrint () {
     echo -n " # "
@@ -60,58 +54,70 @@ tracePrint () {
     echo
 }
 
-count1="20"
-count2="50"
+getUpdateMirror () {
+    mirrorDl=$1
 
-echo
-alinPrint "Package Name" "$count1"
-alinPrint "Version installed" "$count2"
-alinPrint "Update available" "$count2"
-alinPrint "Status" "$count1"
-echo "#"
-tracePrint "$count1" "$count2"
+    echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
+    wget "${mirrorDl}ChangeLog.txt" -O "ChangeLog.txt"
 
-for value in $changePkgs; do
-    if echo "$value" | grep -qE "txz|tgz"; then # Find one package to update
-        packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
-        packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
+    changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
-        packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | head -n 1 | rev | cut -d '/' -f1 | rev)
+    count1="20"
+    count2="50"
 
-        versionUpdate=$(echo "$packageNameUpdate" | rev | cut -d '-' -f3 | rev)
-        versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
+    echo
+    alinPrint "Package Name" "$count1"
+    alinPrint "Version installed" "$count2"
+    alinPrint "Update available" "$count2"
+    alinPrint "Status" "$count1"
+    echo "#"
+    tracePrint "$count1" "$count2"
 
-        packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2-| rev)
-        locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
+    for value in $changePkgs; do
+        if echo "$value" | grep -qE "txz|tgz"; then # Find one package to update
+            packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
+            packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
 
-        if [ "$locatePackage" == '' ]; then
-            alinPrint "$packageName" "$count1"
-            alinPrint "$packageVersionInstalled" "$count2"
-            alinPrint "$packageNameUpdate" "$count2"
+            packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | head -n 1 | rev | cut -d '/' -f1 | rev)
 
-            if [ "$versionInstalled" == "$versionUpdate" ]; then
-                alinPrint "Rebuilt" "$count1"
+            versionUpdate=$(echo "$packageNameUpdate" | rev | cut -d '-' -f3 | rev)
+            versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
+
+            packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2-| rev)
+            locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
+
+            if [ "$locatePackage" == '' ]; then
+                alinPrint "$packageName" "$count1"
+                alinPrint "$packageVersionInstalled" "$count2"
+                alinPrint "$packageNameUpdate" "$count2"
+
+                if [ "$versionInstalled" == "$versionUpdate" ]; then
+                    alinPrint "Rebuilt" "$count1"
+                else
+                    alinPrint "$versionInstalled to $versionUpdate" "$count1"
+                fi
+
+                echo "#"
+                tracePrint "$count1" "$count2"
             else
-                alinPrint "$versionInstalled to $versionUpdate" "$count1"
+                valueToStopPrint=$packageNameUpdateTmp
+                break
             fi
-
-            echo "#"
-            tracePrint "$count1" "$count2"
-        else
-            valueToStopPrint=$packageNameUpdateTmp
-            break
         fi
+    done
+
+    changesToShow=$(sed '/'"$valueToStopPrint"'/q' ChangeLog.txt)
+    rm ChangeLog.txt
+
+    countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1  | cut -d: -f1)
+    if [ "$countLines" != '' ]; then
+        echo -e "\n+--------------------------+"
+        echo "$changesToShow" | head -n "$countLines"
+    else
+        echo -e "\n\t# Updates not found #"
     fi
-done
+    echo
+}
 
-changesToShow=$(sed '/'"$valueToStopPrint"'/q' ChangeLog.txt)
-rm ChangeLog.txt
-
-countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1  | cut -d: -f1)
-if [ "$countLines" != '' ]; then
-    echo -e "\n+--------------------------+"
-    echo "$changesToShow" | head -n "$countLines"
-else 
-    echo -e "\n\t# Updates not found #"
-fi
-echo
+mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
+getUpdateMirror "$mirrorDl"
