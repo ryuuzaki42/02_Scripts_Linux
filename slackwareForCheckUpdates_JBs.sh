@@ -26,6 +26,14 @@
 #
 echo -e "\n# Script to check for Slackware updates #\n"
 
+optionInput=$1
+if [ "$optionInput" == '' ]; then
+    echo -e "\n# If has a mirror not valid in /etc/slackpkg/mirrors you can use:"
+    echo -e "\t$(basename $0) s - to select one mirror from stable version"
+    echo -e "\t$(basename $0) c - to select one mirror from current"
+    echo -e "\t$(basename $0) n - to insert your favorite mirror"
+fi
+
 alinPrint () {
     echo -n " # "
 
@@ -112,12 +120,74 @@ getUpdateMirror () {
     countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1  | cut -d: -f1)
     if [ "$countLines" != '' ]; then
         echo -e "\n+--------------------------+"
-        echo "$changesToShow" | head -n "$countLines"
+        updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
+        echo "$updaesAvailable"
+
+        iconName="audio-volume-high"
+        notify-send "$(basename $0)
+Updates available" "$updaesAvailable" -i "$iconName"
     else
         echo -e "\n\t# Updates not found #"
+
+        iconName="audio-volume-muted"
+        notify-send "$(basename $0)
+Updates not found" "No news is good news" -i "$iconName"
     fi
     echo
 }
 
-mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
+getValidMirror () {
+    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
+
+    if echo "${mirrorDl}" | grep -vqE "http:|ftp:"; then
+        echo -e "\nMirror ative in \"/etc/slackpkg/mirrors\":\n$mirrorDl"
+        echo -e "\t# This mirror is not valid #"
+
+        slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
+        slackwareArch=$(uname -m)
+
+        mirrorPart1="ftp://mirrors.slackware.com/slackware/"
+        mirrorCurrent="${mirrorPart1}slackware64-current/"
+
+        if echo "$slackwareArch" | grep -q "64"; then
+            mirrorPart2="slackware64-$slackwareVersion/"
+        else
+            mirrorPart2="slackware-$slackwareVersion/"
+        fi
+        mirrorFinal=$mirrorPart1$mirrorPart2
+
+        mirrorChose=$1
+        if [ "$mirrorChose" == '' ]; then
+            echo -e "\nSuggested mirror to use:"
+            echo "s - (stable) - $mirrorFinal"
+            echo "c - (current) - $mirrorCurrent"
+            echo "n - Or insert your favorite mirror"
+            echo -n "Which mirror you want?: "
+            read -r mirrorChose
+        fi
+
+        if [ "$mirrorChose" == 's' ]; then
+            mirrorDl=$mirrorFinal
+        elif [ "$mirrorChose" == 'c' ]; then
+            mirrorDl=$mirrorCurrent
+        else
+            mirrorSource=''
+            while echo "$mirrorSource" | grep -vqE "ftp|http"; do
+                echo -en "$CYAN \nType the new mirror:$NC "
+                read -r mirrorSource
+
+                if echo "$mirrorSource" | grep -vqE "ftp|http"; then
+                    echo -e "$RED\nError: the mirror \"$mirrorSource\" is not valid.\nOne valid mirror has \"ftp\" or \"http\"$NC"
+                fi
+            done
+
+            echo -e "$CYAN\nNew mirror:$GREEN $mirrorSource$NC"
+            mirrorDl=$mirrorSource
+        fi
+    fi
+    echo -e "\nUsing the mirror: $mirrorDl\n"
+}
+
+getValidMirror "$optionInput"
+
 getUpdateMirror "$mirrorDl"
