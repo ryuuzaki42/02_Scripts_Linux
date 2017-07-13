@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 02/07/2017
+# Last update: 13/07/2017
 #
 programName=$1
 justUrl=$2
@@ -35,6 +35,7 @@ if [ "$programName" == '' ]; then
     echo -en "\nProgram name: "
     read -r programName
 fi
+programName=${programName,,} # Convert to lower case
 
 if [ "$programName" == '' ]; then
     echo -e "\nThe name of the program/package can't be blank\n"
