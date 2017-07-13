@@ -121,6 +121,8 @@ cdMultipleTimes () { # Move up x directories
 alias cdm='cdMultipleTimes'
 
 rootRun () {
-    echo -e "\nRunning as root: \"$1\""
-    su root -c "$1" # Without the hyphen (su - root -c 'command') to no change the environment variables
+    commandToRun=$@
+    echo -e "\nRunning as root: \"$commandToRun\""
+
+    su root -c 'eval $commandToRun' # Without the hyphen (su - root -c 'command') to no change the environment variables
 }
