@@ -24,13 +24,13 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 12/07/2017
+# Last update: 13/07/2017
 #
 echo -e "\n# Script to check for Slackware updates #\n"
 
 optionInput=$1
 if [ "$optionInput" == '' ]; then
-    echo -e "\n# If has a mirror not valid in /etc/slackpkg/mirrors you can use:"
+    echo -e "\n# If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
     echo -e "\t$(basename "$0") s - to select one mirror from stable version"
     echo -e "\t$(basename "$0") c - to select one mirror from current"
     echo -e "\t$(basename "$0") f - to use \"file://dir/\" or \"cdrom://dir/\" as the mirror"
@@ -68,7 +68,7 @@ tracePrint () {
 getUpdateMirror () {
     mirrorDl=$1
 
-    echo -e "Download the ChangeLog.txt from: \"$mirrorDl\". Please wait...\n"
+    echo -e "Download the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait...\n"
 
     if [ "$optionInput" == 'f' ]; then
         cp "$mirrorDl/ChangeLog.txt" "$(pwd)"
