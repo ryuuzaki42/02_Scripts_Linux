@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 07/07/2017
+# Last update: 13/07/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -127,7 +127,7 @@ case $optionInput in
             echo -e "$CYAN\nInsert the root Password to continue$NC"
         fi
 
-        su root -c 'dateUpFunction' # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
+        su root -c 'dateUpFunction' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
 
         # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
         # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
@@ -753,7 +753,7 @@ case $optionInput in
             echo -e "$CYAN\nInsert the root Password to continue$NC"
         fi
 
-        su root -c 'createWifiConfig' # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
+        su root -c 'createWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "cn-wifi" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
@@ -1109,7 +1109,7 @@ case $optionInput in
         export -f slackwareUpdate
         export USEBL installNew
 
-        su root -c "slackwareUpdate $USEBL $installNew" # In this case with out the hyphen (su - root -c 'command') to no change the environment variables
+        su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "up-db" )
         echo -e "$CYAN# Update the database for the 'locate' #$NC\n"
