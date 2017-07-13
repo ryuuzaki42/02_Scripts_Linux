@@ -809,7 +809,6 @@ case $optionInput in
         echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\n"
 
         loadDevWirelessInterface "$2"
-        export devInterface
 
         su - root -c "dhclient -r $devInterface
         ifconfig $devInterface down
@@ -836,7 +835,6 @@ case $optionInput in
         echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
 
         loadDevWirelessInterface "$2"
-        export devInterface
 
         su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2'"
         ;;
@@ -1105,9 +1103,7 @@ case $optionInput in
 
         USEBL=$2
         installNew=$3
-
         export -f slackwareUpdate
-        export USEBL installNew
 
         su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
