@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 10/06/2017
+# Última atualização: 13/07/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -119,3 +119,8 @@ cdMultipleTimes () { # Move up x directories
     done
 }
 alias cdm='cdMultipleTimes'
+
+rootRun () {
+    echo -e "\nRunning as root: \"$1\""
+    su root -c "$1" # Without the hyphen (su - root -c 'command') to no change the environment variables
+}
