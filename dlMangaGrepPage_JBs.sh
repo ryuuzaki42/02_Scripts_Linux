@@ -22,20 +22,19 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 07/07/2017
+# Last update: 14/07/2017
 #
 echo -e "\n# Download images (manga) from a link #\n"
 
 help () {
     echo "Usage:"
-    echo "  $0 [OPTION] ..."
+    echo " $0 [OPTION] ..."
     echo "The script's parameters are:"
-    echo "  -h        This help"
-    echo "  -n <name> Manga name to download. With space use '\"' as \"One Piece\""
-    echo "  -l <link> link to download the manga (with out chapter number)"
-    echo "  -s        chapter to start the download"
-    echo "  -e        chapter to end the download"
-    echo
+    echo " -h        This help"
+    echo " -n <name> Manga name to download. With space use \"manga name\" as \"One Piece\""
+    echo " -l <link> Link to download the manga (with out chapter number)"
+    echo " -s        Chapter to start the download"
+    echo -e " -e        Chapter to end the download\n"
     exit 0
 }
 
@@ -52,17 +51,19 @@ done
 if [ "$mangaName" == '' ]; then
     echo -en "Manga name: "
     read -r mangaName
+
     if [ "$mangaName" == '' ]; then
-        echo -e "\nERRROR: The manga name can't be empty (mangaName: \"$mangaName\")\n"
+        echo -e "\nERRROR: The manga name can't be empty\n"
         exit 1
     fi
 fi
 
 if [ "$linkDl" == '' ]; then
-    echo -en "\nManga link to download (with out chapter number): "
+    echo -en "\nManga link to download (without chapter number): "
     read -r linkDl
+
     if [ "$linkDl" == '' ]; then
-        echo -e "\nERRROR: The link <site> can't be empty (link: \"$linkDl\")\n"
+        echo -e "\nERRROR: The link <site> can't be empty\n"
         exit 1
     fi
 fi
@@ -70,8 +71,9 @@ fi
 if [ "$chapterStart" == '' ]; then
     echo -en "\nChapter to start: "
     read -r chapterStart
+
     if [ "$chapterStart" == '' ]; then
-        echo -e "\nERRROR: The chapter to start can't be empty (Start: \"$chapterStart\")\n"
+        echo -e "\nERRROR: The chapter to start can't be empty\n"
         exit 1
     fi
 fi
@@ -79,6 +81,7 @@ fi
 if [ "$chapterEnd" == '' ]; then
     echo -en "\nChapter to end: "
     read -r chapterEnd
+
     if [ "$chapterEnd" == '' ]; then
         chapterEnd=$chapterStart
     fi
@@ -98,7 +101,6 @@ else
     IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 
     while [ "$chapterStart" -lt "$chapterEnd" ]; do # Run until chapter download equal to end chapter to download
-
         zeroChapter='0' # Just for zero to 0 to 9
         if [ "$chapterStart" -gt '9' ]; then
             zeroChapter='' # Greater then 9, don't need zero in begin
@@ -112,7 +114,7 @@ else
         linksPageDl=$(grep "http.*[[:digit:]].*g" < "$chapterDl.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to images (png, jpg)
         rm "${chapterDl}.html" # Delete html page file
 
-        i=1
+        i='1'
         countImg=$(echo "$linksPageDl" | wc -l)
 
         mkdir "$mangaNameAndChapterDl" # Create folder to download the images
