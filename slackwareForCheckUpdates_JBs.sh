@@ -26,10 +26,11 @@
 #
 # Last update: 13/07/2017
 #
-echo -e "\n# Script to check for Slackware updates #\n"
+echo -e "\n# Script to check for Slackware updates #"
+echo -e "\t$(basename "$0") h - for help"
 
 optionInput=$1
-if [ "$optionInput" == '' ]; then
+if [ "$optionInput" == 'h' ]; then
     echo -e "\n# If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
     echo -e "\t$(basename "$0") s - to select one mirror from stable version"
     echo -e "\t$(basename "$0") c - to select one mirror from current"
@@ -39,7 +40,6 @@ fi
 
 alinPrint () {
     echo -n " # "
-
     inputValue=$1
     countSpaces=$2
 
@@ -54,9 +54,9 @@ alinPrint () {
 tracePrint () {
     count1=$1
     count2=$2
+    countTmp='1'
+    echo -n " "
 
-    countTmp=1
-        echo -n " "
     countTotal=$(echo "$count1 * 2 + $count2 * 2 + 17" | bc)
     while [ "$countTmp" -lt "$countTotal" ]; do
         echo -n "-"
@@ -67,7 +67,6 @@ tracePrint () {
 
 getUpdateMirror () {
     mirrorDl=$1
-
     echo -e "Download the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait...\n"
 
     if [ "$optionInput" == 'f' ]; then
@@ -75,7 +74,6 @@ getUpdateMirror () {
     else
         wget "${mirrorDl}ChangeLog.txt"
     fi
-
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
     count1="25"
@@ -125,11 +123,10 @@ getUpdateMirror () {
     changesToShow=$(sed '/'"$valueToStopPrint"'/q' ChangeLog.txt)
     rm ChangeLog.txt
 
-    countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1  | cut -d: -f1)
+    countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1 | cut -d: -f1)
     if [ "$countLines" != '' ]; then
         updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
         updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
-
         echo "$updaesAvailable"
 
         iconName="audio-volume-high"
