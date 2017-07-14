@@ -40,9 +40,7 @@ popcorn_detection='1'
 chrome_flash_detection='1'
 
 defaultdelay="50"
-
 realdisp=$(echo "$DISPLAY" | cut -d. -f1)
-
 inhibitfile="/tmp/lightsOnPlus_JBs_inhibit-$UID-$realdisp"
 pidfile="/tmp/lightsOnPlus_JBs_$UID-$realdisp.pid"
 
@@ -128,6 +126,7 @@ checkFullscreen() {
         else
             isActivWinFullscreen=''
         fi
+
         if [ "${#top_win_id}" -eq '9' ]; then
             isTopWinFullscreen=$(DISPLAY=$realdisp.${display} xprop -id "$top_win_id" | grep _NET_WM_STATE_FULLSCREEN)
         else
@@ -237,29 +236,32 @@ delayScreensaver() {
             # command periodically is one way to prevent the screen from blanking.)
 
             xscreensaver-command -deactivate > /dev/null ;;
-    "gnome-screensaver" )
+        "gnome-screensaver" )
             # New way, first try
             dbus-send --session --dest=org.freedesktop.ScreenSaver --reply-timeout=2000 --type=method_call /ScreenSaver org.freedesktop.ScreenSaver.SimulateUserActivity > /dev/null
             # Old way second try
             dbus-send --session --type=method_call --dest=org.gnome.ScreenSaver --reply-timeout=20000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.SimulateUserActivity > /dev/null ;;
-    "mate-screensaver" )
+        "mate-screensaver" )
             mate-screensaver-command --poke > /dev/null ;;
-    "kscreensaver" )
-        qdbus org.freedesktop.ScreenSaver /ScreenSaver SimulateUserActivity > /dev/null ;;
-    "cinnamon-screensaver" )
-        # Use standard inhibit message, maybe merge with gnome-screensaver
-        dbus-send --session --dest=org.freedesktop.ScreenSaver --reply-timeout=2000 --type=method_call /ScreenSaver org.freedesktop.ScreenSaver.SimulateUserActivity > /dev/null ;;
-    "xautolock" )
-        xautolock -disable
-        xautolock -enable ;;
+        "kscreensaver" )
+            qdbus org.freedesktop.ScreenSaver /ScreenSaver SimulateUserActivity > /dev/null ;;
+        "cinnamon-screensaver" )
+            # Use standard inhibit message, maybe merge with gnome-screensaver
+            dbus-send --session --dest=org.freedesktop.ScreenSaver --reply-timeout=2000 --type=method_call /ScreenSaver org.freedesktop.ScreenSaver.SimulateUserActivity > /dev/null ;;
+        "xautolock" )
+            xautolock -disable
+            xautolock -enable ;;
     esac
 
     # Check if DPMS is on. If it is, deactivate and reactivate again. If it is not, do nothing.
     dpmsStatus=$(xset -q | grep -c 'DPMS is Enabled')
-    [ "$dpmsStatus" == '1' ] && (xset -dpms && xset dpms)
+    if [ "$dpmsStatus" == '1' ]; then
+        xset -dpms
+        xset dpms
+    fi
 }
 
-help() {
+help () {
     echo -e "\nUSAGE: $(basename "$0") [FLAG1 ARG1] ... [FLAGn ARGn]"
     echo -e "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):\n"
     echo " -d, --delay             Time interval in seconds, default is 50s"
@@ -279,6 +281,19 @@ help() {
 # Check if arguments are valid, default to 50s interval if none is given
 delay=$defaultdelay
 
+testValidInput () {
+    flagTmp=$1
+    argTmp=$2
+    detectionTmp=$3
+
+    if [ "$argTmp" == '1' ] || [ "$argTmp" == '0' ]; then
+        eval "$detectionTmp=$argTmp"
+    else
+        echo "Invalid argument. 0 or 1 expected after \"$flagTmp\" flag."
+        exit 1
+    fi
+}
+
 while [ ! -z "$1" ]; do
     case $1 in
        "-d" | "--delay" )
@@ -290,45 +305,15 @@ while [ ! -z "$1" ]; do
             fi
             ;;
        "-mp" | "--mplayer" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                mplayer_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "mplayer_detection" ;;
         "-v" | "--vlc" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                vlc_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "vlc_detection" ;;
         "-t" | "--totem" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                totem_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "totem_detection" ;;
         "-ff" | "--firefox-flash" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                firefox_flash_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "firefox_flash_detection" ;;
         "-cf" | "--chromium-flash" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                chromium_flash_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "chromium_flash_detection" ;;
         "-ca" | "--chrome-app" )
             if [ ! -z "$2" ]; then
                 chrome_app_detection=$1
@@ -339,41 +324,19 @@ while [ ! -z "$1" ]; do
             fi
             ;;
         "-wf" | "--webkit-flash" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                webkit_flash_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "webkit_flash_detection" ;;
         "-h5" | "--html5" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                html5_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "html5_detection" ;;
         "-s" | "--steam" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                steam_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "steam_detection" ;;
         "-mt" | "--minitube" )
-            if [ "$2" -eq '1' ] || [ "$2" -eq '0' ]; then
-                minitube_detection=$2
-            else
-                echo "Invalid argument. 0 or 1 expected after \"$1\" flag."
-                exit 1
-            fi
-            ;;
+            testValidInput "$1" "$2" "minitube_detection" ;;
         "-h" | "--help" )
             help ;;
         * )
-            echo "Ivalid argument. See -h, --help for more information." && exit 1;;
+            echo "Ivalid argument. See -h, --help for more information."
+            exit 1
+            ;;
     esac
     shift 2 # Arguments must be always passed in tuples
 done
