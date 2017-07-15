@@ -64,7 +64,6 @@ tracePrint () {
 }
 
 getUpdateMirror () {
-    mirrorDl=$1
     echo -e "\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
 
     mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
@@ -247,6 +246,6 @@ getValidMirror () {
 
 helpMessage
 
-getValidMirror "$optionInput"
+getValidMirror
 
-getUpdateMirror "$mirrorDl"
+getUpdateMirror
