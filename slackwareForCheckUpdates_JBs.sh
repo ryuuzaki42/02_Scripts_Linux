@@ -78,7 +78,7 @@ getUpdateMirror () {
     fi
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
-    if [ "$countPkg" != '' ]; then
+    if [ "$changePkgs" != '' ]; then
         count1="25"
         count2="55"
 
