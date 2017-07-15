@@ -76,7 +76,7 @@ getUpdateMirror () {
         echo "\nwget \"${mirrorDl}ChangeLog.txt\""
         wget "${mirrorDl}ChangeLog.txt"
     fi
-    changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
+    changePkgs=$(grep -E "txz|tgz" ChangeLog.txt) # Find packages to update
 
     if [ "$changePkgs" != '' ]; then
         count1="25"
@@ -92,52 +92,51 @@ getUpdateMirror () {
         tracePrint
 
         for value in $changePkgs; do
-            if echo "$value" | grep -qE "txz|tgz"; then # Find one package to update
-                packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
-                packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
+            packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
+            packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
 
-                packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | rev | cut -d '/' -f1 | rev)
-                countPkg=$(echo -e "$packageVersionInstalled" | wc -l) # To test if found more than one package with $packageName
-                countPkgTmp='1'
-                for pkg in $packageVersionInstalled; do
-                    pkgTmp=$(echo "$pkg" | rev | cut -d '-' -f4- | rev)
+            packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | rev | cut -d '/' -f1 | rev)
+            countPkg=$(echo -e "$packageVersionInstalled" | wc -l) # To test if found more than one package with "$packageName"
 
-                    if [ "$pkgTmp" == "$packageName" ]; then
-                        packageVersionInstalled=$pkg
-                    else
-                        if [ "$countPkg" == "$countPkgTmp" ]; then
-                            packageVersionInstalled=''
-                        fi
-                    fi
+            countPkgTmp='1'
+            for pkg in $packageVersionInstalled; do
+                pkgTmp=$(echo "$pkg" | rev | cut -d '-' -f4- | rev)
 
-                    ((countPkgTmp++))
-                done
-
-                versionUpdate=$(echo "$packageNameUpdate" | rev | cut -d '-' -f3 | rev)
-                versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
-
-                packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
-                locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
-
-                if [ "$locatePackage" == '' ]; then # To no print the last package (the already update in the Slackware)
-                    if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
-                        alinPrint "$packageName" "$count1"
-                        alinPrint "$packageVersionInstalled" "$count2"
-                        alinPrint "$packageNameUpdate" "$count2"
-
-                        if [ "$versionInstalled" == "$versionUpdate" ]; then
-                            alinPrint "Rebuilt" "$count1"
-                        else
-                            alinPrint "$versionInstalled to $versionUpdate" "$count1"
-                        fi
-
-                        echo "#"
-                        tracePrint
-                    fi
+                if [ "$pkgTmp" == "$packageName" ]; then
+                    packageVersionInstalled=$pkg
                 else
-                    valueToStopPrint=$packageNameUpdateTmp
-                    break
+                    if [ "$countPkg" == "$countPkgTmp" ]; then
+                        packageVersionInstalled=''
+                    fi
                 fi
+
+                ((countPkgTmp++))
+            done
+
+            versionUpdate=$(echo "$packageNameUpdate" | rev | cut -d '-' -f3 | rev)
+            versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
+
+            packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
+            locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
+
+            if [ "$locatePackage" == '' ]; then # To no print the last package (the already update in the Slackware)
+                if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
+                    alinPrint "$packageName" "$count1"
+                    alinPrint "$packageVersionInstalled" "$count2"
+                    alinPrint "$packageNameUpdate" "$count2"
+
+                    if [ "$versionInstalled" == "$versionUpdate" ]; then
+                        alinPrint "Rebuilt" "$count1"
+                    else
+                        alinPrint "$versionInstalled to $versionUpdate" "$count1"
+                    fi
+
+                    echo "#"
+                    tracePrint
+                fi
+            else
+                valueToStopPrint=$packageNameUpdateTmp
+                break
             fi
         done
 
