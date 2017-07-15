@@ -51,9 +51,9 @@ getValidMirror () {
 
     mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
     if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
-        mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
+        mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-        if [ ! -x "$mirrorDl" ]; then
+        if [ ! -x "$mirrorDlTmp" ]; then
             echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
             mirrorTest='1'
         fi
