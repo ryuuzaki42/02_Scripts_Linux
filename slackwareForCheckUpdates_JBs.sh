@@ -70,8 +70,10 @@ getUpdateMirror () {
     if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
         mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
+        echo -e "\ncp \"$mirrorDl/ChangeLog.txt\" \"$(pwd)\""
         cp "$mirrorDl/ChangeLog.txt" "$(pwd)"
     else
+        echo "\nwget \"${mirrorDl}ChangeLog.txt\""
         wget "${mirrorDl}ChangeLog.txt"
     fi
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
