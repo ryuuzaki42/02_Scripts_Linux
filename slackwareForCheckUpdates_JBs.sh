@@ -52,12 +52,10 @@ alinPrint () {
 }
 
 tracePrint () {
-    count1=$1
-    count2=$2
     countTmp='1'
     echo -n " "
-
     countTotal=$(echo "$count1 * 2 + $count2 * 2 + 13" | bc)
+
     while [ "$countTmp" -lt "$countTotal" ]; do
         echo -n "-"
         ((countTmp++))
@@ -84,13 +82,13 @@ getUpdateMirror () {
         count2="55"
 
         echo
-        tracePrint "$count1" "$count2"
+        tracePrint
         alinPrint "Package Name" "$count1"
         alinPrint "Version installed" "$count2"
         alinPrint "Update available" "$count2"
         alinPrint "Summary" "$count1"
         echo "#"
-        tracePrint "$count1" "$count2"
+        tracePrint
 
         for value in $changePkgs; do
             if echo "$value" | grep -qE "txz|tgz"; then # Find one package to update
@@ -133,7 +131,7 @@ getUpdateMirror () {
                         fi
 
                         echo "#"
-                        tracePrint "$count1" "$count2"
+                        tracePrint
                     fi
                 else
                     valueToStopPrint=$packageNameUpdateTmp
