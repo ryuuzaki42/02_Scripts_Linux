@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 13/07/2017
+# Last update: 15/07/2017
 #
 echo -e "\n# Script to check for Slackware updates #"
 echo -e "\t$(basename "$0") h - for help"
@@ -39,11 +39,10 @@ if [ "$optionInput" == 'h' ]; then
 fi
 
 alinPrint () {
-    echo -n " # "
     inputValue=$1
     countSpaces=$2
 
-    echo -en " $inputValue"
+    echo -en " # $inputValue"
     spacesUsed=${#inputValue}
     while [ "$spacesUsed" -lt "$countSpaces" ]; do
         echo -n " "
@@ -57,7 +56,7 @@ tracePrint () {
     countTmp='1'
     echo -n " "
 
-    countTotal=$(echo "$count1 * 2 + $count2 * 2 + 17" | bc)
+    countTotal=$(echo "$count1 * 2 + $count2 * 2 + 13" | bc)
     while [ "$countTmp" -lt "$countTotal" ]; do
         echo -n "-"
         ((countTmp++))
@@ -77,13 +76,14 @@ getUpdateMirror () {
     changePkgs=$(grep -E "txz|tgz|\+---|UTC" ChangeLog.txt)
 
     count1="25"
-    count2="50"
+    count2="55"
 
     echo
+    tracePrint "$count1" "$count2"
     alinPrint "Package Name" "$count1"
     alinPrint "Version installed" "$count2"
     alinPrint "Update available" "$count2"
-    alinPrint "Status" "$count1"
+    alinPrint "Summary" "$count1"
     echo "#"
     tracePrint "$count1" "$count2"
 
@@ -92,27 +92,44 @@ getUpdateMirror () {
             packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
             packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
 
-            packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | head -n 1 | rev | cut -d '/' -f1 | rev)
+            packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | rev | cut -d '/' -f1 | rev)
+            countPkg=$(echo -e "$packageVersionInstalled" | wc -l) # To test if found more than one package with $packageName
+            countPkgTmp='1'
+            for pkg in $packageVersionInstalled; do
+                pkgTmp=$(echo "$pkg" | rev | cut -d '-' -f4- | rev)
+
+                if [ "$pkgTmp" == "$packageName" ]; then
+                    packageVersionInstalled=$pkg
+                else
+                    if [ "$countPkg" == "$countPkgTmp" ]; then
+                        packageVersionInstalled=''
+                    fi
+                fi
+
+                ((countPkgTmp++))
+            done
 
             versionUpdate=$(echo "$packageNameUpdate" | rev | cut -d '-' -f3 | rev)
             versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
 
-            packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2-| rev)
+            packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
             locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
 
-            if [ "$locatePackage" == '' ]; then
-                alinPrint "$packageName" "$count1"
-                alinPrint "$packageVersionInstalled" "$count2"
-                alinPrint "$packageNameUpdate" "$count2"
+            if [ "$locatePackage" == '' ]; then # To no print the last package (the already update in the Slackware)
+                if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
+                    alinPrint "$packageName" "$count1"
+                    alinPrint "$packageVersionInstalled" "$count2"
+                    alinPrint "$packageNameUpdate" "$count2"
 
-                if [ "$versionInstalled" == "$versionUpdate" ]; then
-                    alinPrint "Rebuilt" "$count1"
-                else
-                    alinPrint "$versionInstalled to $versionUpdate" "$count1"
+                    if [ "$versionInstalled" == "$versionUpdate" ]; then
+                        alinPrint "Rebuilt" "$count1"
+                    else
+                        alinPrint "$versionInstalled to $versionUpdate" "$count1"
+                    fi
+
+                    echo "#"
+                    tracePrint "$count1" "$count2"
                 fi
-
-                echo "#"
-                tracePrint "$count1" "$count2"
             else
                 valueToStopPrint=$packageNameUpdateTmp
                 break
@@ -128,6 +145,8 @@ getUpdateMirror () {
         updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
         updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
         echo "$updaesAvailable"
+
+        updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
 
         iconName="audio-volume-high"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
