@@ -26,16 +26,18 @@
 #
 # Last update: 15/07/2017
 #
+optionInput=$1
 echo -e "\n# Script to check for Slackware updates #"
 
-optionInput=$1
-if [ "$optionInput" == 'h' ]; then
-    echo -e "\n# If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
-    echo -e "\t$(basename "$0") h - this help message"
-    echo -e "\t$(basename "$0") s - to select one mirror from stable version"
-    echo -e "\t$(basename "$0") c - to select one mirror from current"
-    echo -e "\t$(basename "$0") n - to insert your favorite mirror"
-fi
+helpMessage () {
+    if [ "$optionInput" == 'h' ]; then
+        echo -e "\n# If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
+        echo -e " s - to select one mirror from stable version"
+        echo -e " c - to select one mirror from current"
+        echo -e " n - to insert your favorite mirror\n"
+        exit 0
+    fi
+}
 
 alinPrint () {
     inputValue=$1
@@ -244,6 +246,8 @@ getValidMirror () {
 
     echo -e "\nUsing the mirror: \"$mirrorDl\""
 }
+
+helpMessage
 
 getValidMirror "$optionInput"
 
