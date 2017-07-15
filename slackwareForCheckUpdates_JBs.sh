@@ -96,11 +96,11 @@ getValidMirror () {
             else
                 mirrorSource=''
                 testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:|^cdrom:\""
-                while eval $testMirrorCommand; do
+                while eval "$testMirrorCommand"; do
                     echo -en "\nType the new mirror: "
                     read -r mirrorSource
 
-                    if eval $testMirrorCommand; then
+                    if eval "$testMirrorCommand"; then
                         echo -e "\nError: the mirror \"$mirrorSource\" is not valid"
                         echo "One valid mirror has \"ftp:\", \"http:\", \"file:\" or \"cdrom:\""
                     fi
@@ -149,7 +149,7 @@ getUpdateMirror () {
         echo -e "\ncp \"$mirrorDl/ChangeLog.txt\" \"$(pwd)\""
         cp "$mirrorDl/ChangeLog.txt" "$(pwd)"
     else
-        echo "\nwget \"${mirrorDl}ChangeLog.txt\""
+        echo -e "\nwget \"${mirrorDl}ChangeLog.txt\""
         wget "${mirrorDl}ChangeLog.txt"
     fi
     changePkgs=$(grep -E "txz|tgz" ChangeLog.txt) # Find packages to update
