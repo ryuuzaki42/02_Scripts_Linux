@@ -180,6 +180,7 @@ getUpdateMirror () {
 
                 if [ "$pkgTmp" == "$packageName" ]; then
                     packageVersionInstalled=$pkg
+                    break
                 else
                     if [ "$countPkg" == "$countPkgTmp" ]; then
                         packageVersionInstalled=''
