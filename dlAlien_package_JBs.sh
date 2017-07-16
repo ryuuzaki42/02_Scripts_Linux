@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 25/06/2017
+# Last update: 16/07/2017
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -98,13 +98,25 @@ if [ "$runFile" != '' ]; then
         folderName="${pathDl}_new"
         mkdir "$folderName"
         cd "$folderName" || exit
-        echo
 
+        tmpFileMd5=$(mktemp)
         for fileGrep in $(echo -e "$runFile"); do
+            echo
             wget -c "$mirrorDl/$fileGrep"
+
+            echo
+            wget -c "$mirrorDl/$fileGrep.md5"
+
+            packageName=$(echo "$fileGrep" | rev | cut -d '/' -f1 | rev)
+            md5sum -c "$packageName.md5" >> "$tmpFileMd5"
+            rm "$packageName.md5"
         done
 
-        echo -e "List of files downloaded (save in $folderName/):"
+        echo -e "Md5sum test of integrate:\n"
+        cat "$tmpFileMd5"
+        rm "$tmpFileMd5"
+
+        echo -e "\nList of files downloaded (save in $folderName/):"
         find . -maxdepth 1 | grep "$pathDl" | grep -v "$pathExclude"
     else
         echo -e "\nJust exiting by user choice"
