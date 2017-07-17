@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 13/07/2017
+# Última atualização: 17/07/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -48,7 +48,7 @@ else # "Normal" User
 
     echo -e "\n\t #__ Welcome in the host: $(hostname) __#"
 
-    #echo; screenfetch -E; echo # Uncomment if you want to use screenfetch
+    #echo; neofetch -E; echo # Uncomment if you want to use neofetch
 
     echo -e "\t\t              mm    "
     echo -e "\t\t  *v*      /^(  )^\ "
@@ -74,8 +74,10 @@ alias grep='grep --color=auto'
 # ls with color and human readable values
 alias ls='ls -h --color=auto'
 
-# sboinstall PKGTYPE txz instead tgz (Takes up less disk space)
+# Sbotools (https://pink-mist.github.io/sbotools/)
+# sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
 alias sboinstall='PKGTYPE=txz sboinstall'
+alias sboupgrade='PKGTYPE=txz sboupgrade'
 
 slackwarePKG="/var/log/packages/"
 userHome=$HOME
