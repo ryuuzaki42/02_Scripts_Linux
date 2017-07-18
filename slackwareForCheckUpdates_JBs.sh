@@ -105,40 +105,42 @@ mirrorSuggestion () {
 }
 
 getValidMirror () {
-    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
 
-    if [ "$mirrorDl" != '' ]; then
-        echo -e "\nMirror active in \"/etc/slackpkg/mirrors\":\n\"$mirrorDl\""
-    else
+    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | sed 's/ //g')
+
+    if [ "$mirrorDl" != '' ]; then    
+        echo -e "\nMirror selected:\n\"$mirrorDl\""
+    else    
         echo -e "\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
         echo -e "\t# Please active one mirror #"
+        mirrorSuggestion
     fi
 
-    mirrorTest='1'
-    mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
-
-    if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
+    mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1 | sed 's/ //g')
+ 
+    if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then    
         mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-        if [ ! -e "$mirrorDlTmp" ]; then
+        if [ ! -d "$mirrorDlTmp" ]; then
             echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
-        else
-            mirrorTest='0'
-        fi
-    fi
-
-    if [ "$mirrorTest" == '1' ]; then
-        if echo "${mirrorDl}" | grep -vqE "^http:|^ftp:"; then
-            if [ "$mirrorDl" != '' ]; then
-                echo -e "\t# This mirror is not valid #"
-            fi
-
             mirrorSuggestion
         fi
+        
+        if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ];then
+            echo -e "\nThe file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+            mirrorSuggestion
+        fi
+        getUpdateMirror
+    fi
+
+    if [ "$mirrorDlTest" == "http:" ] || [ "$mirrorDlTest" == "ftp:" ]; then
+        getUpdateMirror
+    else 
+        echo -e "\t# This mirror is not valid #"
+        mirrorSuggestion
     fi
 
     echo -e "\nUsing the mirror: \"$mirrorDl\""
-    getUpdateMirror
 }
 
 alinPrint () {
@@ -272,6 +274,8 @@ getUpdateMirror () {
         eval "$notificationToSend"
     fi
     echo
+    
+    exit 0
 }
 
 getValidMirror
