@@ -39,6 +39,51 @@ helpMessage () {
     fi
 }
 
+mirrorSuggestion () {
+    slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
+    slackwareArch=$(uname -m)
+
+    mirrorPart1="ftp://mirrors.slackware.com/slackware/"
+    mirrorCurrent="${mirrorPart1}slackware64-current/"
+
+    if echo "$slackwareArch" | grep -q "64"; then
+        mirrorPart2="slackware64-$slackwareVersion/"
+    else
+        mirrorPart2="slackware-$slackwareVersion/"
+    fi
+    mirrorFinal=$mirrorPart1$mirrorPart2
+
+    if [ "$optionInput" == '' ]; then
+        echo -e "\nSuggested mirror to use:"
+        echo "s - (stable) - $mirrorFinal"
+        echo "c - (current) - $mirrorCurrent"
+        echo "n - Or insert your favorite mirror"
+        echo -n "Which mirror you want?: "
+        read -r optionInput
+    fi
+
+    if [ "$optionInput" == 's' ]; then
+        mirrorDl=$mirrorFinal
+    elif [ "$optionInput" == 'c' ]; then
+        mirrorDl=$mirrorCurrent
+    else
+        mirrorSource=''
+        testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:|^cdrom:\""
+        while eval "$testMirrorCommand"; do
+            echo -en "\nType the new mirror: "
+            read -r mirrorSource
+
+            if eval "$testMirrorCommand"; then
+                echo -e "\nError: the mirror \"$mirrorSource\" is not valid"
+                echo "One valid mirror has \"ftp:\", \"http:\", \"file:\" or \"cdrom:\""
+            fi
+        done
+
+        echo -e "\nNew mirror: $mirrorSource"
+        mirrorDl=$mirrorSource
+    fi
+}
+
 getValidMirror () {
     mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors)
 
@@ -68,48 +113,7 @@ getValidMirror () {
                 echo -e "\t# This mirror is not valid #"
             fi
 
-            slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
-            slackwareArch=$(uname -m)
-
-            mirrorPart1="ftp://mirrors.slackware.com/slackware/"
-            mirrorCurrent="${mirrorPart1}slackware64-current/"
-
-            if echo "$slackwareArch" | grep -q "64"; then
-                mirrorPart2="slackware64-$slackwareVersion/"
-            else
-                mirrorPart2="slackware-$slackwareVersion/"
-            fi
-            mirrorFinal=$mirrorPart1$mirrorPart2
-
-            if [ "$optionInput" == '' ]; then
-                echo -e "\nSuggested mirror to use:"
-                echo "s - (stable) - $mirrorFinal"
-                echo "c - (current) - $mirrorCurrent"
-                echo "n - Or insert your favorite mirror"
-                echo -n "Which mirror you want?: "
-                read -r optionInput
-            fi
-
-            if [ "$optionInput" == 's' ]; then
-                mirrorDl=$mirrorFinal
-            elif [ "$optionInput" == 'c' ]; then
-                mirrorDl=$mirrorCurrent
-            else
-                mirrorSource=''
-                testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:|^cdrom:\""
-                while eval "$testMirrorCommand"; do
-                    echo -en "\nType the new mirror: "
-                    read -r mirrorSource
-
-                    if eval "$testMirrorCommand"; then
-                        echo -e "\nError: the mirror \"$mirrorSource\" is not valid"
-                        echo "One valid mirror has \"ftp:\", \"http:\", \"file:\" or \"cdrom:\""
-                    fi
-                done
-
-                echo -e "\nNew mirror: $mirrorSource"
-                mirrorDl=$mirrorSource
-            fi
+            mirrorSuggestion
         fi
     fi
 
