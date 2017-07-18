@@ -26,18 +26,36 @@
 #
 # Last update: 18/07/2017
 #
-optionInput=$1
 echo -e "\n# Script to check for Slackware updates #"
 
 helpMessage () {
-    if [ "$optionInput" == 'h' ]; then
-        echo -e "\n# If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
-        echo -e " s - to select one mirror from stable version"
-        echo -e " c - to select one mirror from current"
-        echo -e " n - to insert your favorite mirror\n"
-        exit 0
-    fi
+    echo -e "\nOptions:\n    -h    this message"
+    echo "    -n    to turn notification off"
+    echo -e "\n    # If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
+    echo "        -s    to select one mirror from stable version"
+    echo "        -c    to select one mirror from current version"
+    echo -e "        -i    to insert your favorite mirror <ftp:|http:|file:|cdrom:>\n"
+    exit 0
 }
+
+optionNotRecognized () {
+    echo -e "\nThe option \"$1\" is not recognized, exiting..."
+    echo -e "For help run:\n$(basename "$0")\n"
+    exit 1
+}
+
+while getopts "hscin" valuesInput; do
+    case $valuesInput in
+        'h' )
+            helpMessage ;;
+        's' | 'c' | 'i' )
+            optionInput=$valuesInput ;;
+        'n' )
+            notificationOff='1' ;;
+        * )
+           optionNotRecognized "$valuesInput" ;;
+    esac
+done
 
 mirrorSuggestion () {
     slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
@@ -54,11 +72,11 @@ mirrorSuggestion () {
     mirrorFinal=$mirrorPart1$mirrorPart2
 
     if [ "$optionInput" == '' ]; then
-        echo -e "\nSuggested mirror to use:"
-        echo "s - (stable) - $mirrorFinal"
-        echo "c - (current) - $mirrorCurrent"
-        echo "n - Or insert your favorite mirror"
-        echo -n "Which mirror you want?: "
+        echo -e "\nSuggested mirrors to use:"
+        echo " s - (stable)  - $mirrorFinal"
+        echo " c - (current) - $mirrorCurrent"
+        echo " i - Or insert your favorite mirror"
+        echo -en "\nWhich mirror you want?: "
         read -r optionInput
     fi
 
@@ -66,7 +84,7 @@ mirrorSuggestion () {
         mirrorDl=$mirrorFinal
     elif [ "$optionInput" == 'c' ]; then
         mirrorDl=$mirrorCurrent
-    else
+    elif [ "$optionInput" == 'i' ]; then
         mirrorSource=''
         testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:|^cdrom:\""
         while eval "$testMirrorCommand"; do
@@ -81,6 +99,8 @@ mirrorSuggestion () {
 
         echo -e "\nNew mirror: $mirrorSource"
         mirrorDl=$mirrorSource
+    else
+        optionNotRecognized "$optionInput"
     fi
 }
 
@@ -118,6 +138,7 @@ getValidMirror () {
     fi
 
     echo -e "\nUsing the mirror: \"$mirrorDl\""
+    getUpdateMirror
 }
 
 alinPrint () {
@@ -247,12 +268,10 @@ getUpdateMirror () {
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
     fi
 
-    eval "$notificationToSend"
+    if [ "$notificationOff" != '1' ]; then
+        eval "$notificationToSend"
+    fi
     echo
 }
 
-helpMessage
-
 getValidMirror
-
-getUpdateMirror
