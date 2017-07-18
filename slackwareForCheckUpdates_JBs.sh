@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 15/07/2017
+# Last update: 18/07/2017
 #
 optionInput=$1
 echo -e "\n# Script to check for Slackware updates #"
@@ -49,16 +49,17 @@ getValidMirror () {
         echo -e "\t# Please active one mirror #"
     fi
 
+    mirrorTest='1'
     mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
+
     if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
         mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-        if [ ! -x "$mirrorDlTmp" ]; then
+        if [ ! -e "$mirrorDlTmp" ]; then
             echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
-            mirrorTest='1'
+        else
+            mirrorTest='0'
         fi
-    else
-        mirrorTest='1'
     fi
 
     if [ "$mirrorTest" == '1' ]; then
