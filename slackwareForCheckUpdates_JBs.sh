@@ -39,8 +39,8 @@ helpMessage () {
 }
 
 optionNotRecognized () {
-    echo -e "\nThe option \"$1\" is not recognized, exiting..."
-    echo -e "For help run:\n$(basename "$0")\n"
+    echo -e "\n    Error: The option: \"$1\" is not recognized"
+    echo -e "    For help run: $(basename "$0") -h\n"
     exit 1
 }
 
