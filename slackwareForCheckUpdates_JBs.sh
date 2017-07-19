@@ -34,7 +34,7 @@ helpMessage () {
     echo -e "\n    # If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
     echo "        -s    to select one mirror from stable version"
     echo "        -c    to select one mirror from current version"
-    echo -e "        -i    to insert your favorite mirror <ftp:|http:|file:|cdrom:>\n"
+    echo -e "        -i    to insert your favorite mirror <ftp:|http:|file:>\n"
     exit 0
 }
 
@@ -86,14 +86,15 @@ mirrorSuggestion () {
         mirrorDl=$mirrorCurrent
     elif [ "$optionInput" == 'i' ]; then
         mirrorSource=''
-        testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:|^cdrom:\""
+        testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:\""
+
         while eval "$testMirrorCommand"; do
             echo -en "\nType the new mirror: "
             read -r mirrorSource
 
             if eval "$testMirrorCommand"; then
                 echo -e "\nError: the mirror \"$mirrorSource\" is not valid"
-                echo "One valid mirror has \"ftp:\", \"http:\", \"file:\" or \"cdrom:\""
+                echo "One valid mirror has \"ftp:\", \"http:\" or \"file:\""
             fi
         done
 
@@ -105,42 +106,45 @@ mirrorSuggestion () {
 }
 
 getValidMirror () {
+    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | head -n 1 | sed 's/ //g')
 
-    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | sed 's/ //g')
+    if [ "$mirrorDl" != '' ]; then
+        echo -e "\nMirror active in \"/etc/slackpkg/mirrors\":\n\"$mirrorDl\""
 
-    if [ "$mirrorDl" != '' ]; then    
-        echo -e "\nMirror selected:\n\"$mirrorDl\""
-    else    
+        mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
+        if [ "$mirrorDlTest" == "file:" ]; then
+            mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
+
+            if [ ! -d "$mirrorDlTmp" ]; then
+                echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
+                mirrorNotValid='1'
+            else
+                if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
+                    echo -e "\nThe ChangeLog.txt file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+                    mirrorNotValid='1'
+                fi
+            fi
+        else
+            if echo "$mirrorDl" | grep -vqE "^http:|^ftp:"; then
+                mirrorNotValid='1'
+            fi
+        fi
+    else
         echo -e "\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
-        echo -e "\t# Please active one mirror #"
-        mirrorSuggestion
+        echo -e "        # Please active one mirror #"
+        mirrorNotValid='1'
     fi
 
-    mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1 | sed 's/ //g')
- 
-    if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then    
-        mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
-
-        if [ ! -d "$mirrorDlTmp" ]; then
-            echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
-            mirrorSuggestion
+    if [ "$mirrorNotValid" == '1' ]; then
+        if [ "$mirrorDl" != '' ]; then
+            echo -e "        # This mirror is not valid #"
         fi
-        
-        if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ];then
-            echo -e "\nThe file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
-            mirrorSuggestion
-        fi
-        getUpdateMirror
-    fi
 
-    if [ "$mirrorDlTest" == "http:" ] || [ "$mirrorDlTest" == "ftp:" ]; then
-        getUpdateMirror
-    else 
-        echo -e "\t# This mirror is not valid #"
         mirrorSuggestion
     fi
 
     echo -e "\nUsing the mirror: \"$mirrorDl\""
+    getUpdateMirror
 }
 
 alinPrint () {
@@ -171,7 +175,7 @@ getUpdateMirror () {
     echo -e "\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
 
     mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
-    if [ "$mirrorDlTest" == "file:" ] || [ "$mirrorDlTest" == "cdrom:" ]; then
+    if [ "$mirrorDlTest" == "file:" ]; then
         mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
         echo -e "\n# cp \"$mirrorDl/ChangeLog.txt\" \"$(pwd)\" #"
@@ -264,7 +268,7 @@ getUpdateMirror () {
         iconName="audio-volume-high"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
-        echo -e "\n\t# Updates not found #"
+        echo -e "\n        # Updates not found #"
 
         iconName="audio-volume-muted"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
@@ -274,8 +278,6 @@ getUpdateMirror () {
         eval "$notificationToSend"
     fi
     echo
-    
-    exit 0
 }
 
 getValidMirror
