@@ -183,7 +183,7 @@ getUpdateMirror () {
         echo -e "\n# cp \"${mirrorDl}ChangeLog.txt\" \"$tmpFile\" #"
         cp "${mirrorDl}ChangeLog.txt" "$tmpFile"
     else
-        echo -e "\n# wget \"${mirrorDl}ChangeLog.txt\" -O "$tmpFile\" #\n"
+        echo -e "\n# wget \"${mirrorDl}ChangeLog.txt\" -O \"$tmpFile\" #\n"
         wget "${mirrorDl}ChangeLog.txt" -O "$tmpFile"
     fi
     changePkgs=$(grep -E "txz|tgz" "$tmpFile") # Find packages to update
