@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 18/07/2017
+# Last update: 19/07/2017
 #
 echo -e "\n# Script to check for Slackware updates #"
 
@@ -120,7 +120,7 @@ getValidMirror () {
                 mirrorNotValid='1'
             else
                 if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
-                    echo -e "\nThe ChangeLog.txt file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+                    echo -e "\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
                     mirrorNotValid='1'
                 fi
             fi
@@ -174,17 +174,19 @@ tracePrint () {
 getUpdateMirror () {
     echo -e "\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
 
+    tmpFile=$(mktemp) # Tmp file to save the "ChangeLog.txt"
+
     mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
     if [ "$mirrorDlTest" == "file:" ]; then
         mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-        echo -e "\n# cp \"$mirrorDl/ChangeLog.txt\" \"$(pwd)\" #"
-        cp "$mirrorDl/ChangeLog.txt" "$(pwd)"
+        echo -e "\n# cp \"${mirrorDl}ChangeLog.txt\" \"$tmpFile\" #"
+        cp "${mirrorDl}ChangeLog.txt" "$tmpFile"
     else
-        echo -e "\n# wget \"${mirrorDl}ChangeLog.txt\" #\n"
-        wget "${mirrorDl}ChangeLog.txt"
+        echo -e "\n# wget \"${mirrorDl}ChangeLog.txt\" -O "$tmpFile\" #\n"
+        wget "${mirrorDl}ChangeLog.txt" -O "$tmpFile"
     fi
-    changePkgs=$(grep -E "txz|tgz" ChangeLog.txt) # Find packages to update
+    changePkgs=$(grep -E "txz|tgz" "$tmpFile") # Find packages to update
 
     if [ "$changePkgs" != '' ]; then
         count1="25"
@@ -249,16 +251,10 @@ getUpdateMirror () {
             fi
         done
 
-        changesToShow=$(sed '/'"$valueToStopPrint"'/q' ChangeLog.txt)
-        rm ChangeLog.txt
+        changesToShow=$(sed '/'"$valueToStopPrint"'/q' "$tmpFile")
 
         countLines=$(echo "$changesToShow" | grep -n "\+---" | tail -n 1 | cut -d: -f1)
-    else
-        rm ChangeLog.txt
-        countLines=''
-    fi
 
-    if [ "$countLines" != '' ]; then
         updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
         updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
         echo "$updaesAvailable"
@@ -273,6 +269,8 @@ getUpdateMirror () {
         iconName="audio-volume-muted"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
     fi
+
+    rm "$tmpFile"
 
     if [ "$notificationOff" != '1' ]; then
         eval "$notificationToSend"
