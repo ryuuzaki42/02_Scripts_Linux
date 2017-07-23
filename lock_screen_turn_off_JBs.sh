@@ -22,7 +22,7 @@
 #
 # Script: in the KDE and XFCE, lock the session and turnoff the screen
 #
-# Last update: 04/07/2017
+# Last update: 23/07/2017
 #
 # Tip: Add a shortcut to this script
 #
@@ -30,18 +30,16 @@ amixer set Master mute # Mute
 
 xbacklight -set 1 # Set brightness to 1%
 
-if [ "$XDG_CURRENT_DESKTOP" == '' ]; then
-    desktopGUI=$(echo "$XDG_DATA_DIRS" | sed 's/.*\(xfce\|kde\|gnome\).*/\1/')
-else
-    desktopGUI=$XDG_CURRENT_DESKTOP
-fi
-
+desktopGUI=$XDG_CURRENT_DESKTOP
 desktopGUI=${desktopGUI,,} # Convert to lower case
 
 if [ "$desktopGUI" == "xfce" ]; then
     xflock4 # Lock the session in the XFCE
 elif [ "$desktopGUI" == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
+else
+    echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
+    exit 1
 fi
 
 sleep 2s
