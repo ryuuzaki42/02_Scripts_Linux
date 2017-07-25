@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 21/07/2017
+# Last update: 24/07/2017
 #
 echo -e "\n# Script to check for Slackware updates #"
 
@@ -193,7 +193,7 @@ getUpdateMirror () {
 
     echo
     tracePrint
-    alinPrint "Package Name" "$count1"
+    alinPrint "Package name" "$count1"
     alinPrint "Version installed" "$count2"
     alinPrint "Update available" "$count2"
     alinPrint "Summary" "$count1"
