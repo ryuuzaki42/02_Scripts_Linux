@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 13/07/2017
+# Last update: 27/07/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -325,35 +325,45 @@ case $optionInput in
         fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         fileAndMd5=$(echo "$fileAndMd5" | sort) # Sort by the md5sum
 
-        md5Files=$(echo "$fileAndMd5" | cut -d " " -f1)
+        md5Files=$(echo "$fileAndMd5" | cut -d " " -f1) # Get only de md5sum
 
         for value in $md5Files; do
-            if [ "$valueBack" == "$value" ]; then
+            if [ "$valueBack" == "$value" ]; then # Look for all values equal
                 equalFiles="$equalFiles$value|"
             fi
             valueBack=$value
         done
 
-        equalFiles=${equalFiles::-1} # Remove the last | or the last character
+        equalFiles=${equalFiles::-1} # Remove the last | (the last character)
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "\nAll file are different by md5sum"
+            echo -e "\n\nAll files are different by md5sum"
         else
-            echo -e "\nThese file(s) are equal"
-            filesDifferent=$(echo "$fileAndMd5" | grep -E "$equalFiles")
+            echo -e "\n\n### These file(s) are equal:"
+            filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
 
             IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 
-            for value in $filesDifferent; do
+            for value in $filesEqual; do
                 valueNow=$(echo "$value" | cut -d " " -f1)
 
                 if [ "$valueNow" != "$valueBack" ]; then
-                    echo # Add a new line between file different in the print in terminal
+                    echo # Add a new line between file different in the print on the terminal
                 fi
                 valueBack=$valueNow
 
                 echo "$value"
             done
+
+            echo -e "\nWant to print the file(s) that are different?"
+            echo -n "(y)es - (n)o (hit enter to yes): "
+            read -r printDifferent
+
+            if [ "$printDifferent" != 'n' ]; then
+                echo -e "\n### These file(s) are different:\n"
+                filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
+                echo "$filesDifferent" | sort -k 2
+            fi
         fi
     ;;
     "sub-extract" ) # Need ffmpeg
