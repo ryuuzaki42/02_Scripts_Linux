@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/07/2017
+# Last update: 31/07/2017
 #
 useColor () {
     BLACK='\e[1;30m'
@@ -192,7 +192,7 @@ case $optionInput in
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
                     echo -e "$CYAN\nOptions:\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
 
-                    countOption=0
+                    countOption='0'
                     optionVectorSize=${#optionVector[*]}
                     while [ "$countOption" -lt "$optionVectorSize" ]; do
                         echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}$NC"
@@ -208,10 +208,10 @@ case $optionInput in
                     echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\n"
                     eval "$(resize)"
 
-                    heightWhiptail=$((LINES -5))
-                    widthWhiptail=$((COLUMNS -5))
+                    heightWhiptail=$((LINES - 5))
+                    widthWhiptail=$((COLUMNS - 5))
 
-                    if [ $LINES -lt 16 ]; then
+                    if [ "$LINES" -lt "16" ]; then
                         echo -e "$RED\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
                         echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\n" | sed 's/  / /g'
                         $0 $colorPrint notPrintHeader --help
@@ -385,7 +385,7 @@ case $optionInput in
                     countSubtitleInfo=$(echo -e "$subtitleInfoGeneral" | wc -l)
                     countSubtitleInfo=$((countSubtitleInfo + 2))
 
-                    if [ "$subNumber" -gt 1 ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
+                    if [ "$subNumber" -gt '1' ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
                         lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
                     else
                         lastPart=$(echo -e "$subtitleInfo" | head -n 1)
@@ -960,7 +960,7 @@ case $optionInput in
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
-        countPackages=$(find /var/log/packages/ | cat -n | tail -n 1 | awk '{print $1}')
+        countPackages=$(find /var/log/packages/ | wc -l)
         echo -e "\nThere are $countPackages packages installed"
         ;;
     "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
@@ -1001,7 +1001,7 @@ case $optionInput in
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
-        if [ $# -eq 1 ]; then
+        if [ "$#" -eq '1' ]; then
             echo -e "$RED\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
             filePdfInput=$2
