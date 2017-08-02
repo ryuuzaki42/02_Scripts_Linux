@@ -22,19 +22,19 @@
 #
 # Script: exemplo de script com funções, por exemplo a de ajuda/help
 #
-# Última atualização: 05/01/2016
+# Última atualização: 02/08/2017
 #
-start () {
+start() {
     clear
     echo "start"
 }
 
-stop () {
+stop() {
     clear
     echo "stop"
 }
 
-ajuda () {
+help() {
     echo "########################"
     echo "Isto e o help"
 }
@@ -47,7 +47,7 @@ case "$1" in
         stop
         ;;
     '--help')
-        ajuda
+        help
         ;;
     *)
         echo "usage $0 start|stop|--help"
