@@ -24,7 +24,7 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 25/06/2017
+# Last update: 02/08/2017
 #
 if [ "$(whoami)" != "root" ]; then
     echo -e "\nNeed to be superuser (root)\nExiting"
@@ -37,7 +37,7 @@ else
         optionRun='2' # Will set cpu_frequency_scaling to performance
     fi
 
-    cpu_frequency_scaling () {
+    cpu_frequency_scaling() {
         governorMode=$1
 
         ## Set CPU performance. See the actual governor # cpufreq-info
@@ -104,7 +104,7 @@ else
             rmmod "$value"
         done
 
-        muteSound () {
+        muteSound() {
             continue='0'
             while [ "$continue" != '1' ]; do
                 if ps -ef | grep -q "X"; then
