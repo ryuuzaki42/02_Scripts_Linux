@@ -22,7 +22,7 @@
 #
 # Script: converte texto utf8 to iso-8859 e vice-versa
 #
-# Last update: 14/04/2017
+# Last update: 02/08/2017
 #
 if [ "$#" -ne '1' ]; then # Verifica se foi passado o nome do arquivo
     echo -e "\n$(basename "$0"): Erro de operandos"
@@ -31,7 +31,7 @@ if [ "$#" -ne '1' ]; then # Verifica se foi passado o nome do arquivo
     exit 0
 fi
 
-ajuda () { # Função de Ajuda
+ajuda() { # Função de Ajuda
     echo -e "\n# Use o nome do arquivo (com a extensão) que deseja converter #"
     echo -e "# Ex.: $0 file.srt                                  #\n"
     exit 0
