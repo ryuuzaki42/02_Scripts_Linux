@@ -22,11 +22,11 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 14/07/2017
+# Last update: 02/08/2017
 #
 echo -e "\n# Download images (manga) from a link #\n"
 
-help () {
+help() {
     echo "Usage:"
     echo " $0 [OPTION] ..."
     echo "The script's parameters are:"
