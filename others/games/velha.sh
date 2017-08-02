@@ -84,12 +84,12 @@ else
     StrFim="Deseja continuar?"
 fi
 
-Escrever () {
+Escrever() {
     ColIni=`expr \( $Cols - length "$2" \) / 2`
     tput cup $1 $ColIni
     echo "$2"
 }
-Iniciar () {
+Iniciar() {
     Jogo=
     for i in 1 2 3; do
         for j in 1 2 3; do
@@ -114,7 +114,7 @@ Iniciar () {
     tput cup 16 `expr $Col0 + 40`
     echo $Ganhei$OBold
 }
-Jogar () {
+Jogar() {
     P[$1]=$2
     Lin=`echo $1 | cut -c1`
     Col=`echo $1 | cut -c2`
@@ -123,7 +123,7 @@ Jogar () {
     tput cup $Lin $Col
     echo $2
 }
-Placar () {
+Placar() {
     tput bold
     if  [ $1 = E ]; then
         Empate=$((Empate+1))
