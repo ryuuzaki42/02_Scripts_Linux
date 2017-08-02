@@ -22,30 +22,29 @@
 #
 # Script: wakeup - reproduz vídeos em determinada hora
 #
-# Última atualização: 05/01/2016
+# Última atualização: 02/08/2017
 #
 horainicial=`date +%H` #Pegando hora atual 0-23
 minutoinicial=`date +%M` #Pegando minutos atual 0-59
 
-#if [ $# -lt 1 ] # verifica se foi passado o nome do arquivo
-#then
-#   echo "$(basename "$0"): Error of the operands"
-#   echo "usage $0 h min"
-#   echo "Try $0 --help"
-#   exit 0
-#fi
+if [ $# -lt 1 ]; then # verifica se foi passado o nome do arquivo
+    echo "$(basename "$0"): Error of the operands"
+    echo "usage $0 h min"
+    echo "Try $0 --help"
+    exit 0
+fi
 
-#ajuda () {
-#  echo "#                                                      #"
-#  echo "# use $0 horas* minutos*                        #"
-#  echo "#* Que deseja acordar                                    #"
-#  exit 0
-#}
+ajuda() {
+    echo "#                                                        #"
+    echo "# use $0 horas* minutos*                        #"
+    echo "# * Que deseja acordar                                   #"
+    exit 0
+}
 
-#case "$1" in
-#'--help')
-#  ajuda
-#esac
+case "$1" in
+    '--help')
+        ajuda ;;
+esac
 
 echo "Em qual hora quer levantar?"
 read horalevantar
