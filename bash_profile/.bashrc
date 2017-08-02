@@ -60,6 +60,17 @@ else # "Normal" User
     /usr/games/fortune -s; echo # Comment if you want to use the fortune (-s Short apothegms only)
     # To disable the fortune in /etc/profile.d/ use:
     # chmod -x /etc/profile.d/bsd-games-login-fortune.*sh
+
+    rootRun() {
+        commandToRun=$*
+        if [ "$commandToRun" == '' ]; then
+            echo -e "\nYou need pass a command to run as root, e.g., rootRun slackpkg update\n"
+        else
+            echo -e "\nRunning as root: \"$commandToRun\""
+
+            su root -c "eval $commandToRun" # Without the hyphen (su - root -c 'command') to no change the environment variables
+        fi
+    }
 fi
 
 tput bold
@@ -79,8 +90,8 @@ alias ls='ls -h --color=auto'
 alias sboinstall='PKGTYPE=txz sboinstall'
 alias sboupgrade='PKGTYPE=txz sboupgrade'
 
+# Change them (folders path) as you like
 slackwarePKG="/var/log/packages/"
-userHome=$HOME
 downloadFolder="/media/sda2/downloads/"
 gitFolder="/media/sda2/prog/git_clone/"
 
@@ -95,7 +106,7 @@ cdFolder() {
 }
 
 alias cdpkg='cdFolder $slackwarePKG'
-alias cdh='cdFolder $userHome'
+alias cdh='cdFolder $Home'
 alias cddl='cdFolder $downloadFolder'
 alias cdgit='cdFolder $gitFolder'
 
@@ -124,10 +135,3 @@ cdMultipleTimes() { # Move up x directories
     done
 }
 alias cdm='cdMultipleTimes'
-
-rootRun() {
-    commandToRun=$*
-    echo -e "\nRunning as root: \"$commandToRun\""
-
-    su root -c "eval $commandToRun" # Without the hyphen (su - root -c 'command') to no change the environment variables
-}
