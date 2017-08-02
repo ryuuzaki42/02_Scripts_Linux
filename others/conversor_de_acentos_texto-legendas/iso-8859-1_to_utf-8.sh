@@ -22,7 +22,7 @@
 #
 # Script: converte de iso-8859-1 to utf-8
 #
-# Última atualização: 05/01/2016
+# Última atualização: 02/08/2017
 #
 if [ $# -ne 1 ]; then # verifica se foi passado o nome do arquivo
     echo "$(basename "$0"): Error of the operands"
@@ -32,7 +32,7 @@ fi
 
 nomeDoArquivo="$1" #Nome do arquivo $1
 
-ajuda () {
+help() {
     echo "#                                                        #"
     echo "# use the file name (with extension) you want to convert #"
     echo "# i.e.: $0 file.srt                  #"
@@ -41,7 +41,7 @@ ajuda () {
 
 case "$1" in
     '--help')
-        ajuda
+        help
 esac
 
 tamString=$(echo "$nomeDoArquivo" | wc -m | sed 's/ '"$nomeDoArquivo"'//g') #Calcula o tamanho da string
