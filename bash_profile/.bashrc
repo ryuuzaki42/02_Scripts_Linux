@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 17/07/2017
+# Última atualização: 02/08/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -87,8 +87,11 @@ gitFolder="/media/sda2/prog/git_clone/"
 cdFolder() {
     echo -e "\n    cd $1\n"
     cd "$1" || exit
-    ls
-    echo
+
+    if [ "$(find . -maxdepth 1 | wc -l)" -lt "20" ]; then
+        ls
+        echo
+    fi
 }
 
 alias cdpkg='cdFolder $slackwarePKG'
@@ -110,7 +113,7 @@ echoBlankLines() { # Print x blank lines on terminal
 }
 alias bl='echoBlankLines'
 
-cdMultipleTimes () { # Move up x directories
+cdMultipleTimes() { # Move up x directories
     countCd=$1
     if [ "$countCd" == "" ] || ! echo "$countCd" | grep -q "[[:digit:]]"; then
         countCd='1'
@@ -122,9 +125,9 @@ cdMultipleTimes () { # Move up x directories
 }
 alias cdm='cdMultipleTimes'
 
-rootRun () {
-    commandToRun=$@
-    echo -e "\nRunning as root: \"$commandToRun\""
+rootRun() {
+    commandToRun=( "$@" )
+    echo -e "\nRunning as root: \"${commandToRun[@]}\""
 
-    su root -c 'eval $commandToRun' # Without the hyphen (su - root -c 'command') to no change the environment variables
+    su root -c "eval ${commandToRun[@]}" # Without the hyphen (su - root -c 'command') to no change the environment variables
 }
