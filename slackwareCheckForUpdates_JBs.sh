@@ -24,11 +24,11 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 24/07/2017
+# Last update: 02/08/2017
 #
 echo -e "\n# Script to check for Slackware updates #"
 
-helpMessage () {
+helpMessage() {
     echo -e "\nOptions:\n    -h    this message"
     echo "    -n    to turn notification off"
     echo -e "\n    # If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
@@ -38,7 +38,7 @@ helpMessage () {
     exit 0
 }
 
-optionNotRecognized () {
+optionNotRecognized() {
     echo -e "\n    Error: The option: \"$1\" is not recognized"
     echo -e "    For help run: $(basename "$0") -h\n"
     exit 1
@@ -57,7 +57,7 @@ while getopts "hscin" valuesInput; do
     esac
 done
 
-mirrorSuggestion () {
+mirrorSuggestion() {
     slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
     slackwareArch=$(uname -m)
 
@@ -105,7 +105,7 @@ mirrorSuggestion () {
     fi
 }
 
-getValidMirror () {
+getValidMirror() {
     mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | head -n 1 | sed 's/ //g')
 
     if [ "$mirrorDl" != '' ]; then
@@ -147,7 +147,7 @@ getValidMirror () {
     getUpdateMirror
 }
 
-alinPrint () {
+alinPrint() {
     inputValue=$1
     countSpaces=$2
 
@@ -159,7 +159,7 @@ alinPrint () {
     done
 }
 
-tracePrint () {
+tracePrint() {
     countTmp='1'
     echo -n " "
     countTotal=$(echo "$count1 * 2 + $count2 * 2 + 13" | bc)
@@ -171,7 +171,7 @@ tracePrint () {
     echo
 }
 
-getUpdateMirror () {
+getUpdateMirror() {
     echo -e "\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
 
     tmpFile=$(mktemp) # Tmp file to save the "ChangeLog.txt"
