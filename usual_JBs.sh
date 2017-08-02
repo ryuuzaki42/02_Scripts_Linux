@@ -22,9 +22,9 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 31/07/2017
+# Last update: 02/08/2017
 #
-useColor () {
+useColor() {
     BLACK='\e[1;30m'
     RED='\e[1;31m'
     GREEN='\e[1;32m'
@@ -35,7 +35,7 @@ useColor () {
     WHITE='\e[1;37m'
 }
 
-notUseColor () {
+notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
 }
 
@@ -748,7 +748,7 @@ case $optionInput in
         ;;
     "create-wifi" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
-        createWifiConfig () {
+        createWifiConfig() {
             echo -en "\nName of the network (SSID): "
             read -r netSSID
 
@@ -1079,7 +1079,7 @@ case $optionInput in
         ;;
     "slack-up" )
         echo -e "$CYAN# Slackware update #$NC"
-        slackwareUpdate () {
+        slackwareUpdate() {
             USEBL=$1
             installNew=$2
 
