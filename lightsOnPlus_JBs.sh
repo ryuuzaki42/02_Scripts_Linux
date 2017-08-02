@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Changed by João Batista (joao42lbatista@gmail.com)
-# Last update: 14/07/2017
+# Last update: 02/08/2017
 
 # based on
 # Copyright (c) 2014 devkral at web de
@@ -259,7 +259,7 @@ delayScreensaver() {
     fi
 }
 
-help () {
+help() {
     echo -e "\nUSAGE: $(basename "$0") [FLAG1 ARG1] ... [FLAGn ARGn]"
     echo -e "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):\n"
     echo " -d, --delay             Time interval in seconds, default is 50s"
@@ -279,7 +279,7 @@ help () {
 # Check if arguments are valid, default to 50s interval if none is given
 delay=$defaultdelay
 
-testValidInput () {
+testValidInput() {
     flagTmp=$1
     argTmp=$2
     detectionTmp=$3
