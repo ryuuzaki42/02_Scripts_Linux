@@ -22,7 +22,7 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 02/08/2017
+# Last update: 06/08/2017
 #
 echo -e "\n# Download images (manga) from a link #\n"
 
@@ -68,6 +68,9 @@ if [ "$linkDl" == '' ]; then
     fi
 fi
 
+echo -en "\nOne change in the Manga link to download (e.g., link/mangaName-01) (hit enter to none): "
+read -r linkBeginChange
+
 if [ "$chapterStart" == '' ]; then
     echo -en "\nChapter to start: "
     read -r chapterStart
@@ -88,7 +91,7 @@ if [ "$chapterEnd" == '' ]; then
 fi
 
 echo -e "\nWill download \"$mangaName\" from chapter \"$chapterStart\" to \"$chapterEnd\""
-echo -en "From: \"$linkDl\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
+echo -en "From: \"$linkDl/$linkBeginChange\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
 read -r ContinueOrNot
 
 if [ "$ContinueOrNot" == 'n' ]; then
@@ -109,7 +112,7 @@ else
         mangaNameAndChapterDl="$mangaName $chapterDl"
 
         echo -e "\nDownload html file from page $chapterDl\n"
-        wget "$linkDl/$chapterDl" -O "$chapterDl.html"
+        wget "$linkDl/$linkBeginChange$chapterDl" -O "$chapterDl.html"
 
         linksPageDl=$(grep "http.*[[:digit:]].*g" < "$chapterDl.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to images (png, jpg)
         rm "${chapterDl}.html" # Delete html page file
