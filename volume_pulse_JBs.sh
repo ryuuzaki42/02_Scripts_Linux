@@ -22,11 +22,12 @@
 #
 # Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 02/08/2017
+# Last update: 07/08/2017
 #
 help() {
-    echo "Usage: $0 \"soundDevice\" [up|down|min|max|overmax]"
-    echo "You can add \'0\' (zero) at the end the comand to not send notification"
+    echo -e "\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
+    echo -e "You can add '0' (zero) at the end the command to not send notification\n"
+    exit 0
 }
 
 if [ "$#" -lt '2' ]; then
