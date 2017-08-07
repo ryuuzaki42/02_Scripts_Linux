@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=/usr/bin/volume_pulse_JBs.sh 0 min 0
 Icon=preferences-desktop-sound
-Name=volume_overmax
+Name=volume_min
 NoDisplay=false
 StartupNotify=false
 Terminal=0
