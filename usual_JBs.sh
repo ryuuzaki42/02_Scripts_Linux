@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 02/08/2017
+# Last update: 12/08/2017
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -634,20 +634,21 @@ case $optionInput in
             echo -e "$CYAN\nSource folder:$GREEN $pathSource$CYAN"
             echo -e "Destination folder:$GREEN $pathDestination$NC"
 
-            echo -en "\nWant continue and use these source and destination folders?\n(y)es - (n)o: "
+            echo -en "$CYAN\nWant continue and use these source and destination folders?\n(y)es - (n)o:$NC "
             read -r continueRsync
 
             if [ "$continueRsync" == 'y' ]; then
-                if [ -e "$pathSource" ]; then # Test if 'source' exists
-                    if [ -e "$pathDestination" ]; then # Test if 'destination' exists
-                        echo -en "$CYAN$GREEN\n1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
+                if [ -e "$pathSource" ]; then # Test if "source" exists
+                    if [ -e "$pathDestination" ]; then # Test if "destination" exists
+                        echo -e "\n\t$RED#-------------------------------------------------------------#"
+                        echo -en "$CYAN$GREEN\t 1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
                         read -r syncNowOrNow
 
                         if [ "$syncNowOrNow" == "2" ]; then
                             echo -e "$CYAN\nMaking the files equal.$NC Please wait..."
                             rsync -crvh --delete "$pathSource" "$pathDestination"
                         else
-                            echo -en "\nPlease wait until all files are compared..."
+                            echo -en "$CYAN\nPlease wait until all files are compared...$NC"
                             folderChangesFull=$(rsync -aicn --delete "$pathSource" "$pathDestination")
                             # -a archive mode; -i output a change-summary for all updates
                             # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
@@ -658,44 +659,45 @@ case $optionInput in
                             echo # just a new blank line
                             foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
                             if [ "$foldersNew" != '' ]; then
-                                echo -e "\nFolders new:"
+                                echo -e "$BLUE\nFolders new:$NC"
                                 echo "$foldersNew" | sort
                             fi
 
                             filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting" - files deleted
                             if [ "$filesDelete" != '' ]; then
-                                echo -e "\nFiles to be deleted:"
+                                echo -e "$BLUE\nFiles to be deleted:$NC"
                                 echo "$filesDelete" | sort
                             fi
 
                             filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc" | awk '{print substr($0, index($0,$2))}') # ">fc" - all files changed
                             if [ "$filesDifferent" != '' ]; then
-                                echo -e "\nFiles different:"
+                                echo -e "$BLUE\nFiles different:$NC"
                                 echo "$filesDifferent" | sort
                             fi
 
                             filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++" - New files
                             if [ "$filesNew" != '' ]; then
-                                echo -e "\nNew files:"
+                                echo -e "$BLUE\nNew files:$NC"
                                 echo "$filesNew" | sort
                             fi
 
                             if [ "$foldersNew" == '' ] && [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                                echo -e "\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference"
+                                echo -e "$GREEN\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
                             else
-                                echo -en "\nShow full rsync change-summary?\n(y)es - (n)o: "
+                                echo -en "$CYAN\nShow full rsync change-summary?\n(y)es - (n)o:$NC "
                                 read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
                                     echo -e "\n$folderChangesFull"
                                 fi
 
-                                echo -en "\nShow clean rsync change-summary?\n(y)es - (n)o: "
+                                echo -en "$CYAN\nShow clean rsync change-summary?\n(y)es - (n)o:$NC "
                                 read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
                                     echo -e "\n$folderChangesClean"
                                 fi
 
-                                echo -en "\nMake this change in the disk?\n(y)es - (n)o: "
+                                echo -e "\n\t$RED#------------------------------#"
+                                echo -en "$CYAN\t Make this change on the disk?\n\t (y)es - (n)o:$NC "
                                 read -r continueWriteDisk
                                 if [ "$continueWriteDisk" == 'y' ]; then
                                     echo -e "$CYAN\nChanges are writing in $pathDestination.$NC Please wait..."
@@ -712,7 +714,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "$CYAN\n    None change writes in disk$NC"
+                echo -e "$CYAN\n    None change writes on the disk$NC"
             fi
         fi
         ;;
