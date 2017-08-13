@@ -22,7 +22,7 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 06/08/2017
+# Last update: 13/08/2017
 #
 echo -e "\n# Download images (manga) from a link #\n"
 
@@ -53,7 +53,7 @@ if [ "$mangaName" == '' ]; then
     read -r mangaName
 
     if [ "$mangaName" == '' ]; then
-        echo -e "\nERRROR: The manga name can't be empty\n"
+        echo -e "\nError: The manga name can't be empty\n"
         exit 1
     fi
 fi
@@ -63,7 +63,7 @@ if [ "$linkDl" == '' ]; then
     read -r linkDl
 
     if [ "$linkDl" == '' ]; then
-        echo -e "\nERRROR: The link <site> can't be empty\n"
+        echo -e "\nError: The link <site> can't be empty\n"
         exit 1
     fi
 fi
@@ -76,7 +76,7 @@ if [ "$chapterStart" == '' ]; then
     read -r chapterStart
 
     if [ "$chapterStart" == '' ]; then
-        echo -e "\nERRROR: The chapter to start can't be empty\n"
+        echo -e "\nError: The chapter to start can't be empty\n"
         exit 1
     fi
 fi
@@ -90,8 +90,8 @@ if [ "$chapterEnd" == '' ]; then
     fi
 fi
 
-echo -e "\nWill download \"$mangaName\" from chapter \"$chapterStart\" to \"$chapterEnd\""
-echo -en "From: \"$linkDl/$linkBeginChange\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
+echo -e "\nWill download \"$mangaName\" from the chapter \"$chapterStart\" to \"$chapterEnd\""
+echo -en "From: \"${linkDl}$linkBeginChange\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
 read -r ContinueOrNot
 
 if [ "$ContinueOrNot" == 'n' ]; then
@@ -111,11 +111,11 @@ else
         chapterDl="$zeroChapter$chapterStart"
         mangaNameAndChapterDl="$mangaName $chapterDl"
 
-        echo -e "\nDownload html file from page $chapterDl\n"
-        wget "$linkDl/$linkBeginChange$chapterDl" -O "$chapterDl.html"
+        echo -e "\nDownload the HTML file from page $chapterDl\n"
+        wget "${linkDl}$linkBeginChange$chapterDl" -O "${chapterDl}.html"
 
-        linksPageDl=$(grep "http.*[[:digit:]].*g" < "$chapterDl.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to images (png, jpg)
-        rm "${chapterDl}.html" # Delete html page file
+        linksPageDl=$(grep "http.*[[:digit:]].*g" < "${chapterDl}.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to all images (png, jpg)
+        rm "${chapterDl}.html" # Delete HTML page file
 
         i='1'
         countImg=$(echo "$linksPageDl" | wc -l)
@@ -124,7 +124,7 @@ else
         cd "$mangaNameAndChapterDl" || exit
 
         for linkImg in $linksPageDl; do
-            echo -e "\nDownloading chapter: $chapterDl imagens: $i of $countImg (\"$linkImg\")\n"
+            echo -e "\nDownloading chapter: $chapterDl images: $i of $countImg (\"$linkImg\")\n"
             wget "$linkImg"
             ((i++))
         done
