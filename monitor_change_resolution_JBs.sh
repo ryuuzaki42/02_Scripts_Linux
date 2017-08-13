@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 12/08/2017
+# Last update: 13/08/2017
 #
 echo -e "\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\n"
 
@@ -248,7 +248,7 @@ case $optionSelected in
                 xrandr --output "$activeOutput2" --primary
                 ;;
             'f' )
-                echo "\n$optionTmpf\n"
+                echo -e "\n$optionTmpf\n"
                 ;;
             * )
                 echo -e "\nError: The option \"$optionSelected\" is not recognized\n"
