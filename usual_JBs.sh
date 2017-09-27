@@ -848,7 +848,7 @@ case $optionInput in
 
         loadDevWirelessInterface "$2"
 
-        su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2'"
+        su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2|: channel'"
         ;;
     "l-iwlist" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\n"
