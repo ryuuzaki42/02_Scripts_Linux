@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 16/07/2017
+# Last update: 05/11/2017
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -42,7 +42,7 @@ if [ "$changeMirror" == 'y' ]; then
     mirrorStart=''
 
     while echo "$mirrorStart" | grep -v -q -E "ftp|http"; do
-        echo -en " \nType the new mirror: "
+        echo -en "\nType the new mirror: "
         read -r mirrorStart
 
         if echo "$mirrorStart" | grep -v -q -E "ftp|http"; then
@@ -64,10 +64,6 @@ if [ "$pathDl" == '' ]; then
     read -r pathDl
 fi
 
-echo -e "\nExclude some result based on pattern?"
-echo -n "Hit enter to no or type the pattern to be excluded: "
-read -r pathExclude
-
 echo -en "\nOnly \"t?z\" or all files?\n1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
 read -r allOrNot
 
@@ -81,6 +77,12 @@ wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 
 runFile=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5 | cut -d '.' -f2-)
 rm CHECKSUMS.md5
+
+echo -e "\nPackages found with \"$pathDl\":\n$runFile\n"
+
+echo -e "\nExclude some results based one a pattern?"
+echo -n "Hit enter to no or type the pattern: "
+read -r pathExclude
 
 if [ "$pathExclude" != '' ]; then
     echo "Files excluded with \"$pathExclude\":"
