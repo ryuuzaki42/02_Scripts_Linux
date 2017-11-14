@@ -145,69 +145,71 @@ isAppRunning() {
     # Get title of active window
     activ_win_title=$(xprop -id "$activ_win_id" | grep "WM_CLASS(STRING)") # I used WM_NAME(STRING) before, WM_CLASS is more accurate
 
+    processInfo=$(ps faux)
+
     if [ "$firefox_flash_detection" == '1' ]; then # Check if plugin-container process is running, pgrep cuts off last character
         if [[ "$activ_win_title" = *unknown* || "$activ_win_title" = *plugin-container* ]]; then
-            [ "$(ps faux | grep -c "plugin-containe")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "plugin-containe")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$chromium_flash_detection" == '1' ]; then
         if [[ "$activ_win_title" = *hromium* ]]; then # Check if Chromium Flash process is running
-            [ "$(ps faux | grep -c "(c|C)hromium --type=ppapi")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "(c|C)hromium --type=ppapi")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$chrome_flash_detection" == '1' ]; then
         if [[ "$activ_win_title" = *hrome* ]]; then # Check if Chrome flash is running (by cadejager)
-            [ "$(ps faux | grep -c "(c|C)hrome --type=ppapi")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "(c|C)hrome --type=ppapi")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$webkit_flash_detection" == '1' ]; then
         if [[ "$activ_win_title" = *WebKitPluginProcess* ]]; then # Check if WebKit Flash process is running
-            [ "$(ps faux | grep -c ".*WebKitPluginProcess.*flashp.*")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c ".*WebKitPluginProcess.*flashp.*")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$html5_detection" == '1' ]; then # check if they are running
         if [[ "$activ_win_title" = *hrome* || "$activ_win_title" = *hromium* || "$activ_win_title" = *irefox* || "$activ_win_title" = *epiphany* || "$activ_win_title" = *opera* ]]; then
-            [[ "$(ps faux | grep -Ec "chrome|firefox|chromium|opera|epiphany")" -ge '2' ]] && return 1
+            [[ "$(echo "$processInfo" | grep -Ec "chrome|firefox|chromium|opera|epiphany")" -ge '2' ]] && return 1
         fi
     fi
 
     if [ "$chrome_app_detection" == '1' ]; then
         if [[ ! -z $chrome_app_name && "$activ_win_title" = *$chrome_app_name* ]]; then # Check if google chrome is runnig in app mode
-            [ "$(ps faux | grep -c "chrome --app")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "chrome --app")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$mplayer_detection" == '1' ]; then
         if [[ "$activ_win_title" = *mplayer* || "$activ_win_title" = *MPlayer* ]]; then # Check if mplayer is running
-            [ "$(ps faux | grep -c "mplayer")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "mplayer")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$vlc_detection" == '1' ]; then
         if [[ "$activ_win_title" = *vlc* || "$activ_win_title" = *VLC* ]]; then # Check if vlc is running
-            [ "$(ps faux | grep -c "vlc")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "vlc")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$totem_detection" == '1' ]; then
         if [[ "$activ_win_title" = *totem* ]]; then # Check if totem is running
-            [ "$(ps faux | grep -c "totem")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "totem")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$steam_detection" == '1' ]; then
         if [[ "$activ_win_title" = *steam* ]]; then # Check if steam is running
-            [ "$(ps faux | grep -c "steam")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "steam")" -ge '2' ] && return 1
         fi
     fi
 
     if [ "$minitube_detection" == '1' ]; then
         if [[ "$activ_win_title" = *minitube* ]]; then # Check if minitube is running
-            [ "$(ps faux | grep -c "minitube")" -ge '2' ] && return 1
+            [ "$(echo "$processInfo" | grep -c "minitube")" -ge '2' ] && return 1
         fi
     fi
 
