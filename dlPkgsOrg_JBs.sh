@@ -22,24 +22,24 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 25/09/2017
+# Last update: 14/11/2017
 #
 programName=$1
 justUrl=$2
 
-echo -e "\n# Download Slackware packages (txz/tgz) from a https://pkgs.org/ website #"
-echo -e "\nTip1 use: $(basename "$0") \"programName\" to not be asked about the program name"
+echo -e "\\n# Download Slackware packages (txz/tgz) from a https://pkgs.org/ website #"
+echo -e "\\nTip1 use: $(basename "$0") \"programName\" to not be asked about the program name"
 echo "Tip2 use: $(basename "$0") \"programName\" \"url\" to only print the link to download the package"
 
 if [ "$programName" == '' ]; then
-    echo -en "\nProgram name: "
+    echo -en "\\nProgram name: "
     read -r programName
 fi
 
 if [ "$programName" == '' ]; then
-    echo -e "\nThe name of the program/package can't be blank\n"
+    echo -e "\\nThe name of the program/package can't be blank\\n"
 else
-    echo -en "\nSlackware version (hit enter to insert 14.2): "
+    echo -en "\\nSlackware version (hit enter to insert 14.2): "
     read -r slackwareVersion
 
     if [ "$slackwareVersion" == '' ]; then
@@ -53,7 +53,7 @@ else
     rm "$programName"
 
     if [ "$packagesLink" != '' ]; then
-        echo -e "\nPackage(s) found: "
+        echo -e "\\nPackage(s) found: "
         countPackage=1
 
         for package in $packagesLink; do
@@ -64,14 +64,14 @@ else
             echo -n "$countPackage - "
             echo "$package" | cut -d '/' -f4-
 
-            echo -e "\t ### $package\n"
+            echo -e "\\t ### $package\\n"
 
             ((countPackage++))
         done
         ((countPackage--))
 
         echo "# Pay attention to the architecture wanted #"
-        echo -e "\nWhich package do you want download?"
+        echo -e "\\nWhich package do you want download?"
         echo -n "Valid numbers 1 to $countPackage: "
         read -r packageNumber
 
@@ -96,7 +96,7 @@ else
             if [ "$justUrl" == "url" ]; then
                 continueDl='n'
             else
-                echo -e "\nDownload the package or Just show the link to download?"
+                echo -e "\\nDownload the package or Just show the link to download?"
                 echo -n "(y)es to download the package or (n)o to only show the link (hit enter to yes): "
                 read -r continueDl
             fi
@@ -109,11 +109,11 @@ else
                 echo "$linkDl"
             fi
 
-            echo -e "\nSo Long, and Thanks for All the Fish\n"
+            echo -e "\\nSo Long, and Thanks for All the Fish\\n"
         else
-            echo -e "\nPackage number selected is big than the total of packages found\n"
+            echo -e "\\nPackage number selected is big than the total of packages found\\n"
         fi
     else
-        echo -e "\nNone package found\n"
+        echo -e "\\nNone package found\\n"
     fi
 fi

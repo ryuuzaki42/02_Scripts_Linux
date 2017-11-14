@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Changed by João Batista (joao42lbatista@gmail.com)
-# Last update: 02/08/2017
+# Last update: 14/11/2017
 
 # based on
 # Copyright (c) 2014 devkral at web de
@@ -52,7 +52,7 @@ pidcreate() { # PID locking
         echo "$$" > "$pidfile"
     else
         if [ -d "/proc/$(cat "$pidfile")" ]; then
-            echo -e "\n\tAn other instance is running, abort!\n" >&2
+            echo -e "\\n\\tAn other instance is running, abort!\\n" >&2
             exit 1
         else
             echo "$$" > "$pidfile"
@@ -62,12 +62,12 @@ pidcreate() { # PID locking
 
 pidremove() {
     if [ ! -e "$pidfile" ]; then
-        echo -e "\n\tError: missing pidfile" >&2
+        echo -e "\\n\\tError: missing pidfile" >&2
     elif [ ! -f "$pidfile" ]; then
-        echo -e "error: \"$pidfile\" is not a file\n" >&2
+        echo -e "error: \"$pidfile\" is not a file\\n" >&2
     else
         if [ "$(cat "$pidfile")" != "$$" ]; then
-            echo -e "\n\tAn other instance is running, abort!" >&2
+            echo -e "\\n\\tAn other instance is running, abort!" >&2
             exit 1
         else
             rm "$pidfile"
@@ -105,7 +105,7 @@ elif find /usr/lib*/kde4/libexec/kscreenlocker* | grep -qc "kscreenlocker"; then
     screensaver="kscreensaver"
 else
     screensaver=''
-    echo -e "\nNo screensaver detected\n"
+    echo -e "\\nNo screensaver detected\\n"
     exit 1
 fi
 
@@ -260,8 +260,8 @@ delayScreensaver() {
 }
 
 help() {
-    echo -e "\nUSAGE: $(basename "$0") [FLAG1 ARG1] ... [FLAGn ARGn]"
-    echo -e "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):\n"
+    echo -e "\\nUSAGE: $(basename "$0") [FLAG1 ARG1] ... [FLAGn ARGn]"
+    echo -e "FLAGS (ARGUMENTS must be 0 or 1, except stated otherwise):\\n"
     echo " -d, --delay             Time interval in seconds, default is 50s"
     echo " -mp, --mplayer          mplayer detection"
     echo " -v, --vlc               VLC detection"
@@ -272,7 +272,7 @@ help() {
     echo " -wf, --webkit-flash     Webkit flash detection"
     echo " -h5, --html5            HTML5 detection"
     echo " -s, --steam             Steam detection"
-    echo -e " -mt, --minitube         MiniTube detection\n"
+    echo -e " -mt, --minitube         MiniTube detection\\n"
     exit 0
 }
 

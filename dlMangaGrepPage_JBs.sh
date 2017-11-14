@@ -22,9 +22,9 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 13/08/2017
+# Last update: 14/11/2017
 #
-echo -e "\n# Download images (manga) from a link #\n"
+echo -e "\\n# Download images (manga) from a link #\\n"
 
 help() {
     echo "Usage:"
@@ -34,7 +34,7 @@ help() {
     echo " -n <name> Manga name to download. With space use \"manga name\" as \"One Piece\""
     echo " -l <link> Link to download the manga (with out chapter number)"
     echo " -s        Chapter to start the download"
-    echo -e " -e        Chapter to end the download\n"
+    echo -e " -e        Chapter to end the download\\n"
     exit 0
 }
 
@@ -45,6 +45,9 @@ while getopts "hn:l:s:e:" optionInput; do
         'l' ) linkDl=${OPTARG} ;;
         's' ) chapterStart=${OPTARG} ;;
         'e' ) chapterEnd=${OPTARG} ;;
+        * )
+        echo "Invalid option inputed"
+        exit 1
     esac
 done
 
@@ -53,36 +56,36 @@ if [ "$mangaName" == '' ]; then
     read -r mangaName
 
     if [ "$mangaName" == '' ]; then
-        echo -e "\nError: The manga name can't be empty\n"
+        echo -e "\\nError: The manga name can't be empty\\n"
         exit 1
     fi
 fi
 
 if [ "$linkDl" == '' ]; then
-    echo -en "\nManga link to download (without chapter number): "
+    echo -en "\\nManga link to download (without chapter number): "
     read -r linkDl
 
     if [ "$linkDl" == '' ]; then
-        echo -e "\nError: The link <site> can't be empty\n"
+        echo -e "\\nError: The link <site> can't be empty\\n"
         exit 1
     fi
 fi
 
-echo -en "\nOne change in the Manga link to download (e.g., link/mangaName-01) (hit enter to none): "
+echo -en "\\nOne change in the Manga link to download (e.g., link/mangaName-01) (hit enter to none): "
 read -r linkBeginChange
 
 if [ "$chapterStart" == '' ]; then
-    echo -en "\nChapter to start: "
+    echo -en "\\nChapter to start: "
     read -r chapterStart
 
     if [ "$chapterStart" == '' ]; then
-        echo -e "\nError: The chapter to start can't be empty\n"
+        echo -e "\\nError: The chapter to start can't be empty\\n"
         exit 1
     fi
 fi
 
 if [ "$chapterEnd" == '' ]; then
-    echo -en "\nChapter to end: "
+    echo -en "\\nChapter to end: "
     read -r chapterEnd
 
     if [ "$chapterEnd" == '' ]; then
@@ -90,18 +93,18 @@ if [ "$chapterEnd" == '' ]; then
     fi
 fi
 
-echo -e "\nWill download \"$mangaName\" from the chapter \"$chapterStart\" to \"$chapterEnd\""
-echo -en "From: \"${linkDl}$linkBeginChange\"\n\nContinue? (y)es or (n)o (hit enter to yes): "
+echo -e "\\nWill download \"$mangaName\" from the chapter \"$chapterStart\" to \"$chapterEnd\""
+echo -en "From: \"${linkDl}$linkBeginChange\"\\n\\nContinue? (y)es or (n)o (hit enter to yes): "
 read -r ContinueOrNot
 
 if [ "$ContinueOrNot" == 'n' ]; then
-    echo -e "\nJust exiting by local choice\n"
+    echo -e "\\nJust exiting by local choice\\n"
 else
     mkdir "$mangaName"
     cd "$mangaName" || exit
 
     ((chapterEnd+=1)) # To download the last chapter in the while condition
-    IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
+    IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\b"
 
     while [ "$chapterStart" -lt "$chapterEnd" ]; do # Run until chapter download equal to end chapter to download
         zeroChapter='0' # Just for zero to 0 to 9
@@ -111,7 +114,7 @@ else
         chapterDl="$zeroChapter$chapterStart"
         mangaNameAndChapterDl="$mangaName $chapterDl"
 
-        echo -e "\nDownload the HTML file from page $chapterDl\n"
+        echo -e "\\nDownload the HTML file from page $chapterDl\\n"
         wget "${linkDl}$linkBeginChange$chapterDl" -O "${chapterDl}.html"
 
         linksPageDl=$(grep "http.*[[:digit:]].*g" < "${chapterDl}.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to all images (png, jpg)
@@ -124,7 +127,7 @@ else
         cd "$mangaNameAndChapterDl" || exit
 
         for linkImg in $linksPageDl; do
-            echo -e "\nDownloading chapter: $chapterDl images: $i of $countImg (\"$linkImg\")\n"
+            echo -e "\\nDownloading chapter: $chapterDl images: $i of $countImg (\"$linkImg\")\\n"
             wget "$linkImg"
             ((i++))
         done
@@ -136,5 +139,5 @@ else
         ((chapterStart++))
     done
 
-    echo -e "\nScript end\n"
+    echo -e "\\nScript end\\n"
 fi

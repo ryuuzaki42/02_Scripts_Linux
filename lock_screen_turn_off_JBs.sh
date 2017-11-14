@@ -22,7 +22,7 @@
 #
 # Script: in the KDE and XFCE, lock the session and turnoff the screen
 #
-# Last update: 23/07/2017
+# Last update: 14/11/2017
 #
 # Tip: Add a shortcut to this script
 #
@@ -38,7 +38,7 @@ if [ "$desktopGUI" == "xfce" ]; then
 elif [ "$desktopGUI" == "kde" ]; then
     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
 else
-    echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
+    echo -e "\\nError: The variable \"\$desktopGUI\" is not set.\\n"
     exit 1
 fi
 
