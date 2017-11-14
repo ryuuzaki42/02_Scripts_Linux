@@ -22,11 +22,11 @@
 #
 # Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 07/08/2017
+# Last update: 14/11/2017
 #
 help() {
-    echo -e "\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
-    echo -e "You can add '0' (zero) at the end the command to not send notification\n"
+    echo -e "\\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
+    echo -e "You can add '0' (zero) at the end the command to not send notification\\n"
     exit 0
 }
 
@@ -70,7 +70,7 @@ case $optionValue in
             volCurrentPerc=$((volCurrentPerc + volStepChange))
         fi
         ;;
-    *)
+    * )
         help ;;
 esac
 

@@ -24,10 +24,10 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 02/08/2017
+# Last update: 14/11/2017
 #
 if [ "$(whoami)" != "root" ]; then
-    echo -e "\nNeed to be superuser (root)\nExiting"
+    echo -e "\\nNeed to be superuser (root)\\nExiting"
 else
     if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh boot
         optionRun='1' # Will make all change
@@ -52,7 +52,7 @@ else
         echo -e "CPU frequency: $governorMode"
     }
 
-    echo -e "\n    # Changes made #"
+    echo -e "\\n    # Changes made #"
 
     if [ "$optionRun" == '1' ]; then
         echo "Brightness: 1%"
@@ -64,7 +64,7 @@ else
         rfkill block all
         # More info: https://wireless.wiki.kernel.org/en/users/documentation/rfkill
 
-        echo -e "\npowertop --auto-tune"
+        echo -e "\\npowertop --auto-tune"
         powertop --auto-tune # Tune to use less power with powertop
         # More info https://wiki.archlinux.org/index.php/powertop
         echo
@@ -107,13 +107,14 @@ else
         muteSound() {
             continue='0'
             while [ "$continue" != '1' ]; do
-                if ps -ef | grep -q "X"; then
+                processInfo=$(ps -ef)
+                if echo "$processInfo" | grep -q "X"; then
                     userNormal=$(w | grep -vE "root|USER|load average" | awk '{print $1}' | tail -n 1) # Grep one normal user
 
                     if [ "$userNormal" != '' ]; then
                         export soundDevice='0' # Device number
 
-                        echo -e "Volume: muted\n\n"
+                        echo -e "Volume: muted\\n\\n"
                         su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
 
                         continue='1'

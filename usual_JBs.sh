@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 12/08/2017
+# Last update: 14/11/2017
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -41,7 +41,7 @@ notUseColor() {
 
 colorPrint=$1
 if [ "$colorPrint" == "noColor" ]; then
-    echo -e "\nColors disabled"
+    echo -e "\\nColors disabled"
     shift
 else # Some colors for script output - Make it easier to follow
     useColor
@@ -50,14 +50,14 @@ fi
 
 notPrintHeaderHeader=$1
 if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
-    echo -e "$BLUE        #___ Script to usual commands ___#$NC\n"
+    echo -e "$BLUE        #___ Script to usual commands ___#$NC\\n"
 else
     shift
 fi
 
 testColorInput=$1
 if [ "$testColorInput" == "testColor" ]; then
-    echo -e "\n    Test colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
+    echo -e "\\n    Test colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\\n"
     shift
 fi
 
@@ -68,8 +68,8 @@ loadDevWirelessInterface() {
         devInterface="wlan0"
     fi
 
-    echo -e "\nWorking with the dev interface: $devInterface"
-    echo -e "You can pass other interface as a parameter\n"
+    echo -e "\\nWorking with the dev interface: $devInterface"
+    echo -e "You can pass other interface as a parameter\\n"
 }
 
 optionInput=$1
@@ -79,14 +79,14 @@ case $optionInput in
 
         loadDevWirelessInterface "$2"
 
-        echo -e "\n/usr/sbin/iw dev $devInterface link:"
+        echo -e "\\n/usr/sbin/iw dev $devInterface link:"
         /usr/sbin/iw dev $devInterface link
 
-        echo -e "\n/sbin/iwconfig $devInterface:"
+        echo -e "\\n/sbin/iwconfig $devInterface:"
         /sbin/iwconfig $devInterface
         ;;
     "date-up" )
-        echo -e "$CYAN# Update the date #$NC\n"
+        echo -e "$CYAN# Update the date #$NC\\n"
 
         dateUpFunction() { # Need to be run as root
             ntpVector=("ntp1.ptb.de" "ntp.usp.br" "bonehed.lcs.mit.edu") # Ntp servers
@@ -98,13 +98,13 @@ case $optionInput in
             timeUpdated="false"
 
             for ntpValue in "${ntpVector[@]}"; do # Run until flagContinue is false and run the break or ntpVector get his end
-                echo -e "Running: ntpdate -u -b $ntpValue\n"
+                echo -e "Running: ntpdate -u -b $ntpValue\\n"
                 ntpdate -u -b "$ntpValue" 2> "$tmpFileNtpError" # Run ntpdate with one value of ntpVector and send the errors to a tmp file
 
                 if ! grep -q -v "no server" < "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
                     if ! grep -q -v "time out" < "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
                         if ! grep -q -v "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                            echo -e "\nTime updated: $(date)\n"
+                            echo -e "\\nTime updated: $(date)\\n"
                             timeUpdated=true # Set true in the timeUpdated
                             break
                         fi
@@ -113,9 +113,9 @@ case $optionInput in
             done
 
             if [ "$timeUpdated" == "false" ]; then
-                echo -e "\nSorry, time not updated: $(date)\n"
+                echo -e "\\nSorry, time not updated: $(date)\\n"
                 if grep -q "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                    echo -e "No connection found - Check your network connections\n"
+                    echo -e "No connection found - Check your network connections\\n"
                 fi
             fi
 
@@ -124,7 +124,7 @@ case $optionInput in
 
         export -f dateUpFunction
         if [ "$(whoami)" != "root" ]; then
-            echo -e "$CYAN\nInsert the root Password to continue$NC"
+            echo -e "$CYAN\\nInsert the root Password to continue$NC"
         fi
 
         su root -c 'dateUpFunction' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
@@ -190,7 +190,7 @@ case $optionInput in
             "--help" | "-h" | "help" | 'h' )
                 help() {
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
-                    echo -e "$CYAN\nOptions:\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\n"
+                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\\n"
 
                     countOption='0'
                     optionVectorSize=${#optionVector[*]}
@@ -205,15 +205,15 @@ case $optionInput in
                 ;;
             '' | 'w' )
                 whiptailMenu() {
-                    echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\n"
+                    echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\\n"
                     eval "$(resize)"
 
                     heightWhiptail=$((LINES - 5))
                     widthWhiptail=$((COLUMNS - 5))
 
                     if [ "$LINES" -lt "16" ]; then
-                        echo -e "$RED\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
-                        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\n" | sed 's/  / /g'
+                        echo -e "$RED\\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
+                        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\\n" | sed 's/  / /g'
                         $0 $colorPrint notPrintHeader --help
                     else
                         heightMenuBoxWhiptail=$((LINES - 15))
@@ -267,7 +267,7 @@ case $optionInput in
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
-                            echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\n" | sed 's/  / /g'
+                            echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\\n" | sed 's/  / /g'
                             $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
                         fi
                     fi
@@ -278,7 +278,7 @@ case $optionInput in
         esac
         ;;
     "git-gc" )
-        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\n"
+        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\\n"
         ## All folder in one directory run "git gc --aggressive"
         echo "Commands \"git gc\" available:"
         echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
@@ -303,14 +303,14 @@ case $optionInput in
             folderRun=$((folderRun + 1))
             folderGit=$(echo -e "$folderLocal" | head -n "$folderRun" | tail -n 1)
 
-            echo -e "\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\n"
+            echo -e "\\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\\n"
             cd "$folderGit" || exit
             $gitCommandRun
             cd .. || exit
         done
         ;;
     "file-equal" )
-        echo -e "$CYAN# Look for equal files using md5sum #$NC\n"
+        echo -e "$CYAN# Look for equal files using md5sum #$NC\\n"
         echo "Want check the files recursively (this folder and all his sub directories) or only this folder?"
         echo -n "1 to recursively - 2 to only this folder (hit enter to all folders): "
         read -r allFolderOrNot
@@ -321,7 +321,7 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
-        echo -en "\nRunning md5sum, can take a while. Please wait..."
+        echo -en "\\nRunning md5sum, can take a while. Please wait..."
         fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         fileAndMd5=$(echo "$fileAndMd5" | sort) # Sort by the md5sum
 
@@ -337,12 +337,12 @@ case $optionInput in
         equalFiles=${equalFiles::-1} # Remove the last | (the last character)
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "\n\nAll files are different by md5sum"
+            echo -e "\\n\\nAll files are different by md5sum"
         else
-            echo -e "\n\n### These file(s) are equal:"
+            echo -e "\\n\\n### These file(s) are equal:"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
 
-            IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
+            IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 
             for value in $filesEqual; do
                 valueNow=$(echo "$value" | cut -d " " -f1)
@@ -355,19 +355,19 @@ case $optionInput in
                 echo "$value"
             done
 
-            echo -e "\nWant to print the file(s) that are different?"
+            echo -e "\\nWant to print the file(s) that are different?"
             echo -n "(y)es - (n)o (hit enter to yes): "
             read -r printDifferent
 
             if [ "$printDifferent" != 'n' ]; then
-                echo -e "\n### These file(s) are different:\n"
+                echo -e "\\n### These file(s) are different:\\n"
                 filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
                 echo "$filesDifferent" | sort -k 2
             fi
         fi
     ;;
     "sub-extract" ) # Need ffmpeg
-        echo -e "$CYAN# Extract subtitle from a video file #$NC\n"
+        echo -e "$CYAN# Extract subtitle from a video file #$NC\\n"
         fileName=$2
         if [ "$fileName" != '' ]; then
             subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle")
@@ -377,8 +377,8 @@ case $optionInput in
             if [ "$subtitleNumber" == '' ]; then
                 echo -e "Not found any subtitle in the file: \"$fileName\""
             else
-                echo -e "\nSubtitles available in the file \"$fileName\":\n$subtitleInfo"
-                echo -en "\nWhich one you want? (Only the number valid: $subtitleNumber): "
+                echo -e "\\nSubtitles available in the file \"$fileName\":\\n$subtitleInfo"
+                echo -en "\\nWhich one you want? (Only the number valid: $subtitleNumber): "
                 read -r subNumber
 
                 if echo "$subNumber" | grep -q "[[:digit:]]"; then
@@ -392,23 +392,23 @@ case $optionInput in
                         subNumber='2'
                     fi
 
-                    echo -e "\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
+                    echo -e "\\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
                     fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
-                    echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\n"
+                    echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
 
                     ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
 
-                    echo -e "\nSubtitle \"$lastPart\" from \"$fileName\" \nsaved as \"${fileNameTmp}-${lastPart}.srt\""
+                    echo -e "\\nSubtitle \"$lastPart\" from \"$fileName\" \\nsaved as \"${fileNameTmp}-${lastPart}.srt\""
                 else
-                    echo -e "\nError: The subtitle number must be a number\n"
+                    echo -e "\\nError: The subtitle number must be a number\\n"
                 fi
             fi
         else
-            echo -e "\nError: Need pass the file name\n"
+            echo -e "\\nError: Need pass the file name\\n"
         fi
         ;;
      "mem-use" )
-        echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\n"
+        echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\\n"
         if [ "$2" == '' ]; then
             echo -n "Insert the pattern (process name) to search: "
             read -r process
@@ -430,9 +430,9 @@ case $optionInput in
             totalMem=$(free -m | head -n 2 | tail -n 1 | awk '{print $2}')
             useMem=$(echo "($totalMem*$memPercentageSum)/100" | bc)
 
-            echo -e "\nThe process \"$process\" uses: $useMem MiB or $memPercentageSum % of $totalMem MiB\n"
+            echo -e "\\nThe process \"$process\" uses: $useMem MiB or $memPercentageSum % of $totalMem MiB\\n"
 
-            echo -en "Show the process list?\n(y)es - (n)o: "
+            echo -en "Show the process list?\\n(y)es - (n)o: "
             read -r showProcessList
 
             echo
@@ -441,11 +441,11 @@ case $optionInput in
                 echo
             fi
         else
-            echo -e "$RED\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
+            echo -e "$RED\\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
         fi
         ;;
      "search-pkg" )
-        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\n"
+        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\\n"
         if [ "$2" == '' ]; then
             echo -n "Package file or pattern to search: "
             read -r filePackage
@@ -453,7 +453,7 @@ case $optionInput in
             filePackage=$2
         fi
 
-        echo -en "\nSearching, please wait..."
+        echo -en "\\nSearching, please wait..."
 
         tmpFileName=$(mktemp) # Create a tmp file
         tmpFileFull=$(mktemp)
@@ -469,19 +469,19 @@ case $optionInput in
         sizeResultFile=$(du "$tmpFileName")
 
         if [ "$sizeResultFile" != '0' ]; then
-            echo -e "\n\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\n"
+            echo -e "\\n\\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\\n"
 
-            echo -en "Open this files with kwrite or print them in the terminal?\n(k)write - (t)erminal: "
+            echo -en "Open this files with kwrite or print them in the terminal?\\n(k)write - (t)erminal: "
             read -r openProgram
 
             if [ "$openProgram" == 'k' ]; then
                 kwrite "$tmpFileName"
                 kwrite "$tmpFileFull"
             else
-                echo -e "\nPackage(s) with '$filePackage':\n"
+                echo -e "\\nPackage(s) with '$filePackage':\\n"
                 cat "$tmpFileName"
 
-                echo -en "\nPrint this package(s) in terminal?\n(y)es - (p)artial, only the matches - (n)o: "
+                echo -en "\\nPrint this package(s) in terminal?\\n(y)es - (p)artial, only the matches - (n)o: "
                 read -r continuePrint
                 echo
                 if [ "$continuePrint" == 'y' ]; then
@@ -491,24 +491,24 @@ case $optionInput in
                 fi
             fi
         else
-            echo -e "\n\n    No result was found"
+            echo -e "\\n\\n    No result was found"
         fi
 
-        echo -e "\nDeleting the log files used in this script"
+        echo -e "\\nDeleting the log files used in this script"
         rm "$tmpFileName" "$tmpFileFull"
         ;;
     "work-fbi" )
         echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
-        echo -e "\nWarning: Depending on how big is the amount of free space, this can take a long time"
+        echo -e "\\nWarning: Depending on how big is the amount of free space, this can take a long time"
 
         freeSpace=$(df . | awk '/[0-9]%/{print $(NF-2)}') # Free space local/pwd folder
         freeSpaceMiB=$(echo "scale=2; $freeSpace/1024" | bc) # Free space in MiB
         freeSpaceGiB=$(echo "scale=2; $freeSpace/(1024*1024)" | bc) # Free space in GiB
         timeAvgMin=$(echo "($freeSpaceMiB/30)/60" | bc)
 
-        echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
+        echo -e "\\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
         echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
-        echo -en "\nWant continue? (y)es - (n)o: "
+        echo -en "\\nWant continue? (y)es - (n)o: "
         read -r contineDd
 
         if [ "$contineDd" == 'y' ]; then
@@ -520,7 +520,7 @@ case $optionInput in
             echo "Using <random> value is better to overwrite your deleted file"
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
             echo "Long story short, use <zero> if you has not deleted pretty good sensitive data"
-            echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
+            echo -en "\\nUse random or zero value?\\n(r)andom - (z)ero: "
             read -r continueRandomOrZero
 
             startAtSeconds=$(date +%s)
@@ -530,7 +530,7 @@ case $optionInput in
             else
                 typeWriteDd="zero"
             fi
-            echo -en "\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait...\n\n"
+            echo -en "\\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait...\\n\\n"
 
             if [ "$continueRandomOrZero" == 'r' ]; then
                 dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
@@ -541,14 +541,14 @@ case $optionInput in
             endsAtSeconds=$(date +%s)
             timeTakeMin=$(echo "scale=2; ($endsAtSeconds - $startAtSeconds)/60" | bc)
 
-            echo -e "\nFinished to write the file - this take $timeTakeMin min"
+            echo -e "\\nFinished to write the file - this take $timeTakeMin min"
 
             rm $fileName # Delete the <big> file generated
-            echo -e "\nThe \"$fileName\" tmp file was deleted and the end of the job"
+            echo -e "\\nThe \"$fileName\" tmp file was deleted and the end of the job"
         fi
         ;;
     "ip" )
-        echo -e "$CYAN# Get your IP #$NC\n"
+        echo -e "$CYAN# Get your IP #$NC\\n"
         localIP=$(/sbin/ifconfig | grep broadcast | awk '{print $2}')
         echo "Local IP: $localIP"
 
@@ -556,24 +556,24 @@ case $optionInput in
         echo "External IP: $externalIP"
         ;;
     "cpu-max" )
-        echo -e "$CYAN# Show the 10 process with more CPU use #$NC\n"
+        echo -e "$CYAN# Show the 10 process with more CPU use #$NC\\n"
         ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head -n 11
         ;;
     "mem-max" )
-        echo -e "$CYAN# Show the 10 process with more memory RAM use #$NC\n"
+        echo -e "$CYAN# Show the 10 process with more memory RAM use #$NC\\n"
         ps axo pid,%cpu,%mem,cmd --sort -rss | head -n 11
         ;;
     "day-install" )
         echo -e "$CYAN# The day the system are installed #$NC"
         dayInstall=$(stat -c %z / | sort | head -n 1 | cut -d '.' -f1)
-        echo -e "\nThe system was installed in: $dayInstall"
+        echo -e "\\nThe system was installed in: $dayInstall"
         ;;
     "print-lines" )
         echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
         inputFile=$2 # File to read
 
         if [ "$inputFile" == '' ]; then
-            echo -e "$RED\nError: You need to pass the file name, e.g., $0 print-lines file.txt$NC"
+            echo -e "$RED\\nError: You need to pass the file name, e.g., $0 print-lines file.txt$NC"
         else
             lineStart=$3
             lineEnd=$4
@@ -592,18 +592,18 @@ case $optionInput in
                     lineStart=$lineStartTmp
                 fi
 
-                echo -e "\nPrint \"$inputFile\" line $lineStart to $lineEnd\n"
+                echo -e "\\nPrint \"$inputFile\" line $lineStart to $lineEnd\\n"
                 lineStartTmp=$((lineEnd-lineStart))
                 ((lineStartTmp++))
 
                 cat -n "$inputFile" | head -n "$lineEnd" | tail -n "$lineStartTmp"
             else
-                echo -e "$RED\nError: lineStart and lineEnd must be number$NC"
+                echo -e "$RED\\nError: lineStart and lineEnd must be number$NC"
             fi
         fi
         ;;
     "screenshot" )
-        echo -e "$CYAN# Screenshot from display :0 #$NC\n"
+        echo -e "$CYAN# Screenshot from display :0 #$NC\\n"
 
         echo -n "Delay before the screenshot (in seconds): "
         read -r secondsBeforeScrenshot
@@ -615,40 +615,40 @@ case $optionInput in
         dateNow=$(date +%s)
         import -window root -display :0 "screenshot_${dateNow}.jpg"
 
-        echo -e "\nScreenshot \"screenshot_${dateNow}.jpg\"\nsaved in the folder \"$(pwd)/\""
+        echo -e "\\nScreenshot \"screenshot_${dateNow}.jpg\"\\nsaved in the folder \"$(pwd)/\""
         ;;
     "folder-diff" )
         echo -e "$CYAN# Show the difference between two folder and (can) make them equal (with rsync) #$NC"
         if [ $# -lt 3 ]; then
-            echo -e "$RED\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
+            echo -e "$RED\\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
         else
-            echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
+            echo -e "\\n$GREEN    ## An Important Note ##$BLUE\\n"
             echo -e "The trailing slash (/) at the end of the first argument (source folder)"
             echo -e "For example: \"rsync -a dir1/ dir2\" is necessary to mean \"the contents of dir1\""
             echo -e "The alternative (without the trailing slash) would place dir1 (including the directory) within dir2"
             echo -e "This would create a hierarchy that looks like: dir2/dir1/[files]"
-            echo -e "\n$CYAN## Please double-check your arguments before continue ##$NC"
+            echo -e "\\n$CYAN## Please double-check your arguments before continue ##$NC"
 
             pathSource=$2
             pathDestination=$3
-            echo -e "$CYAN\nSource folder:$GREEN $pathSource$CYAN"
+            echo -e "$CYAN\\nSource folder:$GREEN $pathSource$CYAN"
             echo -e "Destination folder:$GREEN $pathDestination$NC"
 
-            echo -en "$CYAN\nWant continue and use these source and destination folders?\n(y)es - (n)o:$NC "
+            echo -en "$CYAN\\nWant continue and use these source and destination folders?\\n(y)es - (n)o:$NC "
             read -r continueRsync
 
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if "source" exists
                     if [ -e "$pathDestination" ]; then # Test if "destination" exists
-                        echo -e "\n\t$RED#-------------------------------------------------------------#"
-                        echo -en "$CYAN$GREEN\t 1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
+                        echo -e "\\n\\t$RED#-------------------------------------------------------------#"
+                        echo -en "$CYAN$GREEN\\t 1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
                         read -r syncNowOrNow
 
                         if [ "$syncNowOrNow" == "2" ]; then
-                            echo -e "$CYAN\nMaking the files equal.$NC Please wait..."
+                            echo -e "$CYAN\\nMaking the files equal.$NC Please wait..."
                             rsync -crvh --delete "$pathSource" "$pathDestination"
                         else
-                            echo -en "$CYAN\nPlease wait until all files are compared...$NC"
+                            echo -en "$CYAN\\nPlease wait until all files are compared...$NC"
                             folderChangesFull=$(rsync -aicn --delete "$pathSource" "$pathDestination")
                             # -a archive mode; -i output a change-summary for all updates
                             # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
@@ -659,80 +659,80 @@ case $optionInput in
                             echo # just a new blank line
                             foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
                             if [ "$foldersNew" != '' ]; then
-                                echo -e "$BLUE\nFolders new:$NC"
+                                echo -e "$BLUE\\nFolders new:$NC"
                                 echo "$foldersNew" | sort
                             fi
 
                             filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting" - files deleted
                             if [ "$filesDelete" != '' ]; then
-                                echo -e "$BLUE\nFiles to be deleted:$NC"
+                                echo -e "$BLUE\\nFiles to be deleted:$NC"
                                 echo "$filesDelete" | sort
                             fi
 
                             filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc" | awk '{print substr($0, index($0,$2))}') # ">fc" - all files changed
                             if [ "$filesDifferent" != '' ]; then
-                                echo -e "$BLUE\nFiles different:$NC"
+                                echo -e "$BLUE\\nFiles different:$NC"
                                 echo "$filesDifferent" | sort
                             fi
 
                             filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++" - New files
                             if [ "$filesNew" != '' ]; then
-                                echo -e "$BLUE\nNew files:$NC"
+                                echo -e "$BLUE\\nNew files:$NC"
                                 echo "$filesNew" | sort
                             fi
 
                             if [ "$foldersNew" == '' ] && [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                                echo -e "$GREEN\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
+                                echo -e "$GREEN\\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
                             else
-                                echo -en "$CYAN\nShow full rsync change-summary?\n(y)es - (n)o:$NC "
+                                echo -en "$CYAN\\nShow full rsync change-summary?\\n(y)es - (n)o:$NC "
                                 read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
-                                    echo -e "\n$folderChangesFull"
+                                    echo -e "\\n$folderChangesFull"
                                 fi
 
-                                echo -en "$CYAN\nShow clean rsync change-summary?\n(y)es - (n)o:$NC "
+                                echo -en "$CYAN\\nShow clean rsync change-summary?\\n(y)es - (n)o:$NC "
                                 read -r showRsyncS
                                 if [ "$showRsyncS" == 'y' ]; then
-                                    echo -e "\n$folderChangesClean"
+                                    echo -e "\\n$folderChangesClean"
                                 fi
 
-                                echo -e "\n\t$RED#------------------------------#"
-                                echo -en "$CYAN\t Make this change on the disk?\n\t (y)es - (n)o:$NC "
+                                echo -e "\\n\\t$RED#------------------------------#"
+                                echo -en "$CYAN\\t Make this change on the disk?\\n\\t (y)es - (n)o:$NC "
                                 read -r continueWriteDisk
                                 if [ "$continueWriteDisk" == 'y' ]; then
-                                    echo -e "$CYAN\nChanges are writing in $pathDestination.$NC Please wait..."
+                                    echo -e "$CYAN\\nChanges are writing in $pathDestination.$NC Please wait..."
                                     rsync -crvh --delete "$pathSource" "$pathDestination"
                                 else
-                                    echo -e "$CYAN\n    None change writes in disk$NC"
+                                    echo -e "$CYAN\\n    None change writes in disk$NC"
                                 fi
                             fi
                         fi
                     else
-                        echo -e "$RED\nError: The destination ($pathDestination) don't exist$NC"
+                        echo -e "$RED\\nError: The destination ($pathDestination) don't exist$NC"
                     fi
                 else
-                    echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
+                    echo -e "$RED\\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "$CYAN\n    None change writes on the disk$NC"
+                echo -e "$CYAN\\n    None change writes on the disk$NC"
             fi
         fi
         ;;
     "search-pwd" )
         echo -e "$CYAN# Search in this directory (recursive) for a pattern #$NC"
         if [ "$2" == '' ]; then
-            echo -en "\nPattern to search: "
+            echo -en "\\nPattern to search: "
             read -r patternSearch
         else
             patternSearch=$2
         fi
 
-        echo -e "\nSearching, please wait...\n\n"
+        echo -e "\\nSearching, please wait...\\n\\n"
         grep -rn "$patternSearch"
         # -r recursive, -n print line number with output lines
         ;;
     "ping-test" | "mtr-test" )
-        echo -e "$CYAN# Running $optionInput to a domain (default is google.com) #$NC\n"
+        echo -e "$CYAN# Running $optionInput to a domain (default is google.com) #$NC\\n"
 
         domainToWork=$2
         if [ "$domainToWork" == '' ]; then
@@ -745,16 +745,16 @@ case $optionInput in
             commandToRun="su root -c 'mtr $domainToWork'"
         fi
 
-        echo -en "\nRunning: $commandToRun\n"
+        echo -en "\\nRunning: $commandToRun\\n"
         eval "$commandToRun"
         ;;
     "create-wifi" )
-        echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
+        echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
         createWifiConfig() {
-            echo -en "\nName of the network (SSID): "
+            echo -en "\\nName of the network (SSID): "
             read -r netSSID
 
-            echo -en "\nPassword of this network: "
+            echo -en "\\nPassword of this network: "
             read -r -s netPassword
 
             wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf
@@ -762,24 +762,24 @@ case $optionInput in
 
         export -f createWifiConfig
         if [ "$(whoami)" != "root" ]; then
-            echo -e "$CYAN\nInsert the root Password to continue$NC"
+            echo -e "$CYAN\\nInsert the root Password to continue$NC"
         fi
 
         su root -c 'createWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "cn-wifi" )
-        echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\n"
+        echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
         if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
-            echo -e "$RED\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
+            echo -e "$RED\\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
         else
             if [ "$LOGNAME" != "root" ]; then
-                echo -e "$RED\nError: Execute as root user$NC"
+                echo -e "$RED\\nError: Execute as root user$NC"
             else
                 killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
 
                 networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
                 if [ "$networkConfigAvailable" == '' ]; then
-                    echo -e "$RED\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
+                    echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
                 else
                     echo "Choose one network to connect:"
                     grep "ssid" < /etc/wpa_supplicant.conf
@@ -790,14 +790,14 @@ case $optionInput in
                     wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
 
                     if [ "$wpaConf" == '' ]; then
-                        echo -e "$RED\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\n Try: $0 create-wifi$NC"
+                        echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
                     else
                         TMPFILE=$(mktemp) # Create a tmp file
                         grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
 
                         echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
 
-                        echo -e "\n########### Network configuration ####################"
+                        echo -e "\\n########### Network configuration ####################"
                         cat "$TMPFILE"
                         echo -e "######################################################"
 
@@ -818,7 +818,7 @@ case $optionInput in
         fi
         ;;
     "dc-wifi" )
-        echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\n"
+        echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\\n"
 
         loadDevWirelessInterface "$2"
 
@@ -831,7 +831,7 @@ case $optionInput in
         memTotal=$(free -m | grep Mem | awk '{print $2}') # Get total of memory RAM
         memUsed=$(free -m | grep Mem | awk '{print $3}') # Get total of used memory RAM
         memUsedPercentage=$(echo "scale=0; ($memUsed*100)/$memTotal" | bc) # Get the percentage "used/total", |valueI*100/valueF|
-        echo -e "\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
+        echo -e "\\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
 
         testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
         if [ "$testSwap" -eq '0' ]; then
@@ -844,26 +844,26 @@ case $optionInput in
         fi
         ;;
     "l-iw" )
-        echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\n"
+        echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\\n"
 
         loadDevWirelessInterface "$2"
 
         su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2|: channel'"
         ;;
     "l-iwlist" )
-        echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\n"
+        echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\\n"
 
         loadDevWirelessInterface "$2"
 
         /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "texlive-up" )
-        echo -e "$CYAN# Update the texlive packages #$NC\n"
+        echo -e "$CYAN# Update the texlive packages #$NC\\n"
         su - root -c "tlmgr update --self
         tlmgr update --all"
         ;;
     "nm-list" )
-        echo -e "$CYAN# List the Wi-Fi AP around with the nmcli from NetworkManager #$NC\n"
+        echo -e "$CYAN# List the Wi-Fi AP around with the nmcli from NetworkManager #$NC\\n"
         nmcli device wifi list
         ;;
     "brigh-1" )
@@ -885,7 +885,7 @@ case $optionInput in
         elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
             pathFile="/sys/class/backlight/intel_backlight"
         else
-            echo -e "$RED\nError: File to set brightness not found$NC"
+            echo -e "$RED\\nError: File to set brightness not found$NC"
         fi
 
         if [ "$pathFile" != '' ]; then
@@ -912,11 +912,11 @@ case $optionInput in
                 fi
             fi
 
-            echo -e "\nFile to set brightness: $pathFile/brightness"
+            echo -e "\\nFile to set brightness: $pathFile/brightness"
             echo "Actual brightness: $actualBrightness %"
             echo "Input value brightness: $brightnessValueOriginal"
             echo "Final percentage brightness value: $brightnessValue"
-            echo -e "Final set brightness value: $brightnessValueFinal\n"
+            echo -e "Final set brightness value: $brightnessValueFinal\\n"
 
             # Only for test
             #echo "Max brightness value: $brightnessMax"
@@ -943,7 +943,7 @@ case $optionInput in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec 1
                 else
-                    echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
+                    echo -e "$RED\\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             fi
         else #elif [ "$#" -eq '3' ]; then # Option to two value of input to set
@@ -953,17 +953,17 @@ case $optionInput in
                 elif [ "$2" == "down" ];then
                     xbacklight -dec "$3"
                 else
-                    echo -e "$RED\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
+                    echo -e "$RED\\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             else
-                echo -e "$RED\nError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)$NC"
+                echo -e "$RED\\nError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)$NC"
             fi
         fi
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
         countPackages=$(find /var/log/packages/ | wc -l)
-        echo -e "\nThere are $countPackages packages installed"
+        echo -e "\\nThere are $countPackages packages installed"
         ;;
     "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
 
@@ -982,7 +982,7 @@ case $optionInput in
             fi
         fi
 
-        echo -e "$CYAN# List the last package(s) $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\n"
+        echo -e "$CYAN# List the last package(s) $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\\n"
 
         if [ "$#" -eq '1' ]; then
             numberPackages="10"
@@ -998,13 +998,13 @@ case $optionInput in
         commandPart3='| head -n '"$numberPackages"''
 
         commandFinal=$commandPart1$commandPart2$commandPart3
-        echo -e "\nRunning: $commandFinal\n"
+        echo -e "\\nRunning: $commandFinal\\n"
         eval "$commandFinal"
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
         if [ "$#" -eq '1' ]; then
-            echo -e "$RED\nError: Use $0 pdf-r file.pdf$NC"
+            echo -e "$RED\\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
             filePdfInput=$2
             if [ -e "$filePdfInput" ]; then
@@ -1012,7 +1012,7 @@ case $optionInput in
 
                 fileChangeOption=$3
                 if ! echo "$fileChangeOption" | grep -q "[[:digit:]]"; then
-                    echo -en "\nFile change options:\n1 - Small size\n2 - Better quality\n3 - Minimal changes\n4 - All 3 above\nWhich option you want? (hit enter to insert 4): "
+                    echo -en "\\nFile change options:\\n1 - Small size\\n2 - Better quality\\n3 - Minimal changes\\n4 - All 3 above\\nWhich option you want? (hit enter to insert 4): "
                     read -r fileChangeOption
                 fi
 
@@ -1035,17 +1035,17 @@ case $optionInput in
                 if [ "$fileChangeOption" != '4' ]; then
                     fileNamePart="_rOp${fileChangeOption}.pdf"
 
-                    echo -e "$CYAN\nRunning: $0 $1 $filePdfInput $fileChangeOption\n$NC"
+                    echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption\\n$NC"
                     if [ "$fileChangeOption" == '3' ]; then
                         gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
                         gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     fi
 
-                    echo -e "\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
+                    echo -e "\\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 fi
             else
-                echo -e "$RED\nError: The file \"$filePdfInput\" not exists$NC"
+                echo -e "$RED\\nError: The file \"$filePdfInput\" not exists$NC"
             fi
         fi
         ;;
@@ -1053,26 +1053,26 @@ case $optionInput in
         echo -e "$CYAN# Clean up the Swap Memory #$NC"
         testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
         if [ "$testSwap" -eq '0' ]; then
-            echo -e "\nSwap is not configured in this computer"
+            echo -e "\\nSwap is not configured in this computer"
         else
             swapTotal=$(free -m | grep Swap | awk '{print $2}')
             swapUsed=$(free -m | grep Swap | awk '{print $3}')
             swapUsedPercentage=$(echo "scale=0; ($swapUsed*100)/$swapTotal" | bc) # |valueI*100/valueF|
 
-            echo -e "\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
+            echo -e "\\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
 
             if [ "$swapUsed" -eq '0' ]; then
-                echo -e "\nSwap is already clean"
+                echo -e "\\nSwap is already clean"
             else
                 if [ "$2" == '' ]; then
-                    echo -en "\nTry clean the Swap? \n(y)es - (n)o: "
+                    echo -en "\\nTry clean the Swap? \\n(y)es - (n)o: "
                     read -r cleanSwap
                 else
                     cleanSwap='y'
                 fi
 
                 if [ "$cleanSwap" == 'y' ]; then
-                    su - root -c 'echo -e "\nCleaning swap. Please wait..."
+                    su - root -c 'echo -e "\\nCleaning swap. Please wait..."
                     swapoff -a
                     swapon -a'
                 fi
@@ -1086,11 +1086,11 @@ case $optionInput in
             installNew=$2
 
             if [ "$USEBL" == '' ]; then
-                echo -en "\nUse blacklist?\n(y)es - (n)o (hit enter to no): "
+                echo -en "\\nUse blacklist?\\n(y)es - (n)o (hit enter to no): "
                 read -r USEBL
             fi
 
-            echo -en "\nUsing blacklist: "
+            echo -en "\\nUsing blacklist: "
             if [ "$USEBL" == 'y' ]; then # Using blacklist
                 echo "Yes"
                 USEBL='1'
@@ -1100,7 +1100,7 @@ case $optionInput in
             fi
 
             if [ "$installNew" == '' ]; then
-                echo -en "\nRun \"slackpkg install-new\" for safe profuse?\n(y)es - (n)o (hit enter to no): "
+                echo -en "\\nRun \"slackpkg install-new\" for safe profuse?\\n(y)es - (n)o (hit enter to no): "
                 read -r installNew
             fi
 
@@ -1120,12 +1120,12 @@ case $optionInput in
         su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "up-db" )
-        echo -e "$CYAN# Update the database for the 'locate' #$NC\n"
+        echo -e "$CYAN# Update the database for the 'locate' #$NC\\n"
         su - root -c "updatedb" # Update database
-        echo -e "\nDatabase updated"
+        echo -e "\\nDatabase updated"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
-        echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\n"
+        echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\\n"
         cityName=${*:2} # Get the second parameter to the end
 
         if [ "$cityName" == '' ]; then
@@ -1137,26 +1137,26 @@ case $optionInput in
      "now" )
         echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially #$NC"
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader date-up$NC\n" | sed 's/  / /g'
+        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader date-up$NC\\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader date-up
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\n" | sed 's/  / /g'
+        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader swap-clean y
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader slack-up y y$NC\n" | sed 's/  / /g'
+        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader slack-up y y$NC\\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader slack-up y y
 
-        echo -e "$GREEN\nRunning: $0 $colorPrint notPrintHeader up-db$NC\n" | sed 's/  / /g'
+        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader up-db$NC\\n" | sed 's/  / /g'
         $0 $colorPrint notPrintHeader up-db
         ;;
     * )
-        echo -e "\n    $(basename "$0") - Error: Option \"$1\" not recognized"
+        echo -e "\\n    $(basename "$0") - Error: Option \"$1\" not recognized"
         echo -e "    Try: $0 '--help'"
         ;;
 esac
 
 if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
-    echo -e "$BLUE\n        #___ So Long, and Thanks for All the Fish ___#$NC"
+    echo -e "$BLUE\\n        #___ So Long, and Thanks for All the Fish ___#$NC"
 else
     shift
 fi

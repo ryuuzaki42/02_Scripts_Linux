@@ -46,8 +46,8 @@ while getopts "hn:l:s:e:" optionInput; do
         's' ) chapterStart=${OPTARG} ;;
         'e' ) chapterEnd=${OPTARG} ;;
         * )
-        echo "Invalid option inputed"
-        exit 1
+            echo -e "\\nInvalid option inputed\\n"
+            exit 1
     esac
 done
 
