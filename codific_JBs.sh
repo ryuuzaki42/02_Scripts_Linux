@@ -22,18 +22,18 @@
 #
 # Script: converte texto utf8 to iso-8859 e vice-versa
 #
-# Last update: 02/08/2017
+# Last update: 14/11/2017
 #
 if [ "$#" -ne '1' ]; then # Verifica se foi passado o nome do arquivo
-    echo -e "\n$(basename "$0"): Erro de operandos"
+    echo -e "\\n$(basename "$0"): Erro de operandos"
     echo "Use $0 nome.extensão (do arquivo que deseja converter)"
-    echo -e "Tente $0 --help para mais detalhes\n"
+    echo -e "Tente $0 --help para mais detalhes\\n"
     exit 0
 fi
 
 ajuda() { # Função de Ajuda
-    echo -e "\n# Use o nome do arquivo (com a extensão) que deseja converter #"
-    echo -e "# Ex.: $0 file.srt                                  #\n"
+    echo -e "\\n# Use o nome do arquivo (com a extensão) que deseja converter #"
+    echo -e "# Ex.: $0 file.srt                                  #\\n"
     exit 0
 }
 
@@ -44,7 +44,7 @@ esac
 
 nomeArquivo=$1 # Nome do arquivo $1
 if [ ! -e "$nomeArquivo" ]; then
-    echo -e "\nArquivo passado por parâmetro não existe\nTente \"$0 --help\" ou com outro arquivo\n"
+    echo -e "\\nArquivo passado por parâmetro não existe\\nTente \"$0 --help\" ou com outro arquivo\\n"
     exit 1
 fi
 
@@ -64,23 +64,23 @@ elif echo "$codificacao" | grep -q "UTF-8"; then # Verifica codificação do arq
     codFinal="iso-8859"
     iconv -f utf-8 -t iso-8859-1//TRANSLIT "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" # Converte arquivo para iso-8859 salvando em outro arquivo
 else # Em último caso, se o arquivo não for de nenhuma das duas codificações, o script termina
-    echo -e "\nCodificação desconhecida\nArquivo não pode ser convertido\n"
+    echo -e "\\nCodificação desconhecida\\nArquivo não pode ser convertido\\n"
     exit 1
 fi
 
 if [ "$?" -eq '1' ]; then
-    echo -e "Erro encontrado na execução do iconv\nTente $0 --help"
+    echo -e "Erro encontrado na execução do iconv\\nTente $0 --help"
     exit 1
 else
-    echo -e "\n## Arquivo convertido com sucesso ##\n\"$nomeArquivo\" de $codInicial para $codFinal"
+    echo -e "\\n## Arquivo convertido com sucesso ##\\n\"$nomeArquivo\" de $codInicial para $codFinal"
     echo "$nomeArquivo --> ${nomeArquivo2}_${codFinal}.$extensao"
 
-    echo -en "\nSobrescrever o arquivo original?\n(y)es, (n)o: "
+    echo -en "\\nSobrescrever o arquivo original?\\n(y)es, (n)o: "
     read -r resposta
     if [ "$resposta" == 'y' ]; then
         mv "${nomeArquivo2}_${codFinal}.$extensao" "$nomeArquivo"
-        echo -e "O arquivo foi sobrescrito\n Fim do script\n"
+        echo -e "O arquivo foi sobrescrito\\n Fim do script\\n"
     else
-        echo -e "O arquivo não foi sobrescrito\n Fim do script\n"
+        echo -e "O arquivo não foi sobrescrito\\n Fim do script\\n"
     fi
 fi

@@ -22,7 +22,7 @@
 #
 # Script: Keep the brightness up to 1%
 #
-# Last update: 11/04/2017
+# Last update: 14/11/2017
 #
 sleepTime='5' # in seconds
 brightnessValueSet="50" # brightness mim value to be set ~ 1%
@@ -32,7 +32,7 @@ if [ -f /sys/class/backlight/acpi_video0/brightness ]; then # Choose the your pa
 elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
     pathFile="/sys/class/backlight/intel_backlight"
 else
-    echo -e "\n\tError, file to set brightness not found"
+    echo -e "\\n\\tError, file to set brightness not found"
 fi
 
 if [ "$pathFile" != '' ]; then

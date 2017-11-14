@@ -24,7 +24,7 @@
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 # Add performance at the command to set CPU frequency as performance
 #
-# Last update: 30/05/2017
+# Last update: 14/11/2017
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
@@ -51,5 +51,5 @@ fi
 ## Keep the brightness >= %1
 #/usr/bin/brightness_min_set_JBs.sh &
 
-echo -e "\n\t-----------------\n\t| Happy Day :-) |"
-echo -e "\t-----------------\n\t$(date)\n"
+echo -e "\\n\\t-----------------\\n\\t| Happy Day :-) |"
+echo -e "\\t-----------------\\n\\t$(date)\\n"

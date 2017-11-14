@@ -22,17 +22,17 @@
 #
 # Script: Clean up the system (need Bleachbit installed) and reboot/halt
 #
-# Last update: 14/04/2017
+# Last update: 14/11/2017
 #
 if [ "$LOGNAME" == "root" ]; then
-    echo -e "\n\tErro, execute como usuário comum!\n"
+    echo -e "\\n\\tErro, execute como usuário comum!\\n"
 else
-    echo -e "\nEste script (para Slackware) vai Limpar o seu sistema!"
-    echo -e "\nNecessário ter Bleachbit instalado e configurado!"
+    echo -e "\\nEste script (para Slackware) vai Limpar o seu sistema!"
+    echo -e "\\nNecessário ter Bleachbit instalado e configurado!"
     echo "Irá executar o Bleachbit como root e como usuário corrente."
     echo "Além de apagar algumas pastas e arquivos."
 
-    echo -en "\nApós a limpar o sistema, deseja (d)esligar ou (r)einiciar: "
+    echo -en "\\nApós a limpar o sistema, deseja (d)esligar ou (r)einiciar: "
     read -r rebootOrHalt
 
     if [ "$rebootOrHalt" == 'd' ] || [ "$rebootOrHalt" == 'r' ]; then
@@ -43,8 +43,8 @@ else
         fi
         export rebootOrHalt
 
-        echo -e "\nUsuário corrente:$LOGNAME"
-        echo -e "\nComandos a serem executados:"
+        echo -e "\\nUsuário corrente:$LOGNAME"
+        echo -e "\\nComandos a serem executados:"
         echo "bleachbit -c --preset"
         echo "su - root -c \"bleachbit -c --preset"
         echo "rm -rfv /tmp/*"
@@ -55,12 +55,12 @@ else
         echo "rm /root/.bash_history"
         echo "$rebootOrHalt\""
 
-        echo -en "\nDeseja continuar: \n(y)es - (n)o: "
+        echo -en "\\nDeseja continuar: \\n(y)es - (n)o: "
         read -r continueOrNot
 
         if [ "$continueOrNot" == 'y' ]; then
             bleachbit -c --preset
-            echo -e "\nTerminou de executar o bleachbit como usuário comum logado"
+            echo -e "\\nTerminou de executar o bleachbit como usuário comum logado"
             echo "Agora digite a senha do usuário root para executar como ele"
             su - root -c "bleachbit -c --preset
             rm -rfv /tmp/*
@@ -73,7 +73,7 @@ else
             $rebootOrHalt"
         fi
      else
-        echo -e "\n\tNenhuma mudança foi feita"
+        echo -e "\\n\\tNenhuma mudança foi feita"
     fi
 fi
-echo -e "\nFim do script\n"
+echo -e "\\nFim do script\\n"
