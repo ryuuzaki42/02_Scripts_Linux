@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 02/08/2017
+# Última atualização: 14/11/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -46,14 +46,14 @@ else # "Normal" User
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ " # With color
     #PS1="\\[\\][\\u@\\h:\\w]$ "               # Without color
 
-    echo -e "\n\t #__ Welcome in the host: $(hostname) __#"
+    echo -e "\\n\\t #__ Welcome in the host: $(hostname) __#"
 
     #echo; neofetch -E; echo # Uncomment if you want to use neofetch
 
-    echo -e "\t\t              mm    "
-    echo -e "\t\t  *v*      /^(  )^\ "
-    echo -e "\t\t /(_)\     \,(..),/ "
-    echo -e "\t\t  ^ ^        V~~V   "
+    echo -e "\\t\\t              mm    "
+    echo -e "\\t\\t  *v*      /^(  )^\\ "
+    echo -e "\\t\\t /(_)\\     \\,(..),/ "
+    echo -e "\\t\\t  ^ ^        V~~V   "
 
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
 
@@ -64,9 +64,9 @@ else # "Normal" User
     rootRun() {
         commandToRun=$*
         if [ "$commandToRun" == '' ]; then
-            echo -e "\nYou need pass a command to run as root, e.g., rootRun slackpkg update\n"
+            echo -e "\\nYou need pass a command to run as root, e.g., rootRun slackpkg update\\n"
         else
-            echo -e "\nRunning as root: \"$commandToRun\""
+            echo -e "\\nRunning as root: \"$commandToRun\""
 
             su root -c "eval $commandToRun" # Without the hyphen (su - root -c 'command') to no change the environment variables
         fi
@@ -96,7 +96,7 @@ downloadFolder="/media/sda2/downloads/"
 gitFolder="/media/sda2/prog/git_clone/"
 
 cdFolder() {
-    echo -e "\n    cd $1\n"
+    echo -e "\\n    cd $1\\n"
     cd "$1" || exit
 
     if [ "$(find . -maxdepth 1 | wc -l)" -lt "20" ]; then
@@ -126,11 +126,11 @@ alias bl='echoBlankLines'
 
 cdMultipleTimes() { # Move up x directories
     countCd=$1
-    if [ "$countCd" == "" ] || ! echo "$countCd" | grep -q "[[:digit:]]"; then
+    if [ "$countCd" == '' ] || ! echo "$countCd" | grep -q "[[:digit:]]"; then
         countCd='1'
     fi
 
-    for ((i="$countCd"; i > 0; i--)); do
+    for ((i=$countCd; i > 0; i--)); do
         cd ../ || exit
     done
 }
