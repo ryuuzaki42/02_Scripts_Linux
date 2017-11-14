@@ -295,7 +295,7 @@ case $optionInput in
             gitCommandRun="git gc"
         fi
 
-        folderLocal=$(ls -d -- */) # List folder names
+        folderLocal=$(ls -vd -- */) # List folder names
         folderLocalcount=$(echo "$folderLocal" | wc -l)
 
         folderRun='0'
