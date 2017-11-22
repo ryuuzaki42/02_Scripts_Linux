@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 14/11/2017
+# Last update: 22/11/2017
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -75,10 +75,11 @@ mirrorDl="$mirrorStart/$versionSlackware/$archDL"
 echo
 wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 
-runFile=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5 | cut -d '.' -f2-)
+runFileTmp=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5)
 rm CHECKSUMS.md5
+runFile=$(echo "$runFileTmp" | cut -d '.' -f2-)
 
-echo -e "\\nPackages found with \"$pathDl\":\\n$runFile\\n"
+echo -e "Packages found with \"$pathDl\":\\n$runFile"
 
 echo -e "\\nExclude some results based one a pattern?"
 echo -n "Hit enter to no or type the pattern: "
@@ -88,6 +89,7 @@ if [ "$pathExclude" != '' ]; then
     echo "Files excluded with \"$pathExclude\":"
     echo "$runFile" | grep "$pathExclude"
 
+    runFileTmp=$(echo "$runFileTmp" | grep -v "$pathExclude")
     runFile=$(echo "$runFile" | grep -v "$pathExclude")
 fi
 
@@ -101,25 +103,18 @@ if [ "$runFile" != '' ]; then
         mkdir "$folderName"
         cd "$folderName" || exit
 
-        tmpFileMd5=$(mktemp)
         for fileGrep in $(echo -e "$runFile"); do
             echo
             wget -c "$mirrorDl/$fileGrep"
-
-            echo
-            wget -c "$mirrorDl/$fileGrep.md5"
-
-            packageName=$(echo "$fileGrep" | rev | cut -d '/' -f1 | rev)
-            md5sum -c "$packageName.md5" >> "$tmpFileMd5"
-            rm "$packageName.md5"
         done
 
         echo -e "Md5sum test of integrate:\\n"
-        cat "$tmpFileMd5"
-        rm "$tmpFileMd5"
 
-        echo -e "\\nList of files downloaded (save in $folderName/):"
-        find . -maxdepth 1 | grep "$pathDl" | grep -v "$pathExclude"
+        runFileTmp1=$(echo "$runFileTmp" | cut -d ' ' -f1)
+        runFileTmp2=$(echo "$runFileTmp" | rev | cut -d '/' -f1 | rev)
+
+        runFileMd5=$(paste -d ' ' <(echo "$runFileTmp1") <(echo "$runFileTmp2"))
+        echo "$runFileMd5" | md5sum -c
     else
         echo -e "\\nJust exiting by user choice"
     fi
