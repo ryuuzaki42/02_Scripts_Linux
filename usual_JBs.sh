@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 14/11/2017
+# Last update: 06/12/2017
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -970,15 +970,16 @@ case $optionInput in
         if [ "$optionInput" == "l-pkg-i" ]; then
             functionWord="installed"
             workFolder="/var/log/packages/"
+            commandPart2=''
         else
             workFolder="/var/log/removed_packages/"
 
             if [ "$optionInput" == "l-pkg-r" ]; then
                 functionWord="removed"
-                commandPart2='| grep -v "upgrade"'
+                commandPart2=' | grep -v "upgrade"'
             else
                 functionWord="upgrade"
-                commandPart2='| grep "upgrade"'
+                commandPart2=' | grep "upgrade"'
             fi
         fi
 
@@ -995,7 +996,7 @@ case $optionInput in
         fi
 
         commandPart1='ls -ltc '"$workFolder"' | grep -v "total [[:digit:]]"'
-        commandPart3='| head -n '"$numberPackages"''
+        commandPart3=' | head -n '"$numberPackages"''
 
         commandFinal=$commandPart1$commandPart2$commandPart3
         echo -e "\\nRunning: $commandFinal\\n"
