@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 14/11/2017
+# Última atualização: 06/12/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -130,7 +130,7 @@ cdMultipleTimes() { # Move up x directories
         countCd='1'
     fi
 
-    for ((i=$countCd; i > 0; i--)); do
+    for ((i=countCd; i > 0; i--)); do
         cd ../ || exit
     done
 }
