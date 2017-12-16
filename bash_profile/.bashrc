@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 06/12/2017
+# Última atualização: 16/12/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -84,6 +84,11 @@ alias grep='grep --color=auto'
 
 # ls with color and human readable values
 alias ls='ls -h --color=auto'
+
+# -v = verbose
+alias cp='cp -v'
+alias mv='mv -v'
+alias rm='rm -v'
 
 # Sbotools (https://pink-mist.github.io/sbotools/)
 # sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
