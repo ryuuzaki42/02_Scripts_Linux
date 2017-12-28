@@ -1,0 +1,9 @@
+[Desktop Entry]
+Exec=/usr/bin/usual_JBs.sh brigh-2 up 10
+Icon=ktip
+Name=brightness_up10perc
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+Type=Application
+X-KDE-SubstituteUID=false
