@@ -21,7 +21,7 @@
 #
 # Descrição: .bashrc para carregar configuração do bash
 #
-# Última atualização: 16/12/2017
+# Última atualização: 28/12/2017
 #
 # Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
 #
@@ -42,6 +42,21 @@ alias pagerLess='export PAGER="/usr/bin/less"'
 if [ "$(id -u)" -eq '0' ]; then # User root
     PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# " # With color
     #PS1="\\[\\][\\u@\\h:\\w]# "               # Without color
+
+    runNormalUser() {
+        commandToRun=$*
+        if [ "$commandToRun" == '' ]; then
+            echo -en "\\nYou need pass a command to run a selected normal"
+            echo -e " user, e.g., runNormalUser \"normalUser\" kwrite file.txt\\n"
+        else
+            userToRun=$(echo "$commandToRun" | cut -d ' ' -f1)
+            commandToRunTmp=$(echo "$commandToRun" | cut -d ' ' -f2-)
+
+            echo -e "\\nRunning as $userToRun: \"$commandToRunTmp\"\\n"
+            su "$userToRun" -c "eval $commandToRunTmp"
+            # Without the hyphen (su - $user -c 'command') to no change the environment variables
+        fi
+    }
 else # "Normal" User
     PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ " # With color
     #PS1="\\[\\][\\u@\\h:\\w]$ "               # Without color
@@ -61,14 +76,13 @@ else # "Normal" User
     # To disable the fortune in /etc/profile.d/ use:
     # chmod -x /etc/profile.d/bsd-games-login-fortune.*sh
 
-    rootRun() {
+    runRootUser() {
         commandToRun=$*
         if [ "$commandToRun" == '' ]; then
             echo -e "\\nYou need pass a command to run as root, e.g., rootRun slackpkg update\\n"
         else
-            echo -e "\\nRunning as root: \"$commandToRun\""
-
-            su root -c "eval $commandToRun" # Without the hyphen (su - root -c 'command') to no change the environment variables
+            echo -e "\\nRunning as root: \"$commandToRun\"\\n"
+            su root -c "eval $commandToRun"
         fi
     }
 fi
