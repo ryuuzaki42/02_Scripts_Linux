@@ -19,14 +19,31 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Descrição: .bashrc para carregar configuração do bash
+# Description: .bashrc to load a bash configuration
 #
-# Última atualização: 28/12/2017
+# Last update: 03/01/2018
 #
-# Dica: Copie (cp .bash* ~) tanto para root como para o usuário corrente
+# Tip: Copy (cp .??* ~) for root and also to normal user
 #
-. /etc/profile # Loading default configurations (the file /etc/profile and
-    # the files inside /etc/profile.d/ with permission to execute)
+if [ -e /etc/profile ]; then
+    source /etc/profile # Load /etc/profile and all files in /etc/profile.d/ with permission to execute
+fi
+
+case "$-" in # Mask this command bind to avoid be used in interactive shells only
+    *i*) # And prevent "bind: warning: line editing not enabled"
+        # Search through the .bash_history based on the start letter(s) typed
+        bind '"\e[A": history-search-backward'
+        bind '"\e[B": history-search-forward'
+
+        # That behavior is for pageup and pagedown
+        bind '"\e[5~": previous-history'
+        bind '"\e[6~": next-history'
+
+        bind 'set show-all-if-ambiguous on' # Show possibilities if tab ambiguous
+        bind 'set completion-ignore-case on' # Ignore case when completing
+
+        bind -f /etc/inputrc # Load /etc/inputrc
+esac
 
 # To ignore dups in history
 HISTCONTROL=ignoredups:erasedups
@@ -65,10 +82,10 @@ else # "Normal" User
 
     #echo; neofetch -E; echo # Uncomment if you want to use neofetch
 
-    echo -e "\\t\\t              mm    "
-    echo -e "\\t\\t  *v*      /^(  )^\\ "
-    echo -e "\\t\\t /(_)\\     \\,(..),/ "
-    echo -e "\\t\\t  ^ ^        V~~V   "
+    echo -e "\\t\\t              mm"
+    echo -e "\\t\\t  *v*      /^(  )^\\"
+    echo -e "\\t\\t /(_)\\     \\,(..),/"
+    echo -e "\\t\\t  ^ ^        V~~V"
 
     date '+ %t %A, %B %d, %Y (%d/%m/%y) at: %T%n'
 
