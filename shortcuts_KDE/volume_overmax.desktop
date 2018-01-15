@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/volume_pulse_JBs.sh 0 overmax 0
+Exec=/usr/bin/volume_pulse_JBs.sh overmax
 Icon=preferences-desktop-sound
 Name=volume_overmax
 NoDisplay=false
