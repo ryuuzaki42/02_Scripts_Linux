@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 14/11/2017
+# Last update: 21/01/2018
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -34,32 +34,50 @@ else
     optionSelectedTmp=$2
 fi
 
-outputConnected=$(xrandr | grep " connected" | cut -d ' ' -f1) # Grep connected outputs
+outputConnected=$(xrandr | grep " connected") # Grep connected outputs
 
-activeOutput1=$(echo -e  "$outputConnected" | sed -n '1p') # Grep the name of the first output
-activeOutput2=$(echo -e  "$outputConnected" | sed -n '2p')
+activeOutput1=$(echo -e "$outputConnected" | sed -n '1p') # Grep the name of the first output
+activeOutput2=$(echo -e "$outputConnected" | sed -n '2p')
 
 #activeOutput3=$(echo -e  "$outputConnected" | sed -n '3p') # Implementation in the future
 
-outputResolution=$(xrandr | grep \+ | grep -v "+0" | grep -v "connected" | cut -d ' ' -f4) # Grep the resolution to the output active
+activeOutput1Resolution=$(echo "$activeOutput1" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1) # Grep the actual resolution of the first output
+activeOutput2Resolution=$(echo "$activeOutput2" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1)
 
-activeOutput1Resolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep the maximum resolution to the first output
-activeOutput2Resolution=$(echo -e "$outputResolution" | sed -n '2p')
+activeOutput1=$(echo -e "$activeOutput1" | cut -d ' ' -f1) # Grep the name of the first output
+activeOutput2=$(echo -e "$activeOutput2" | cut -d ' ' -f1)
+
+outputResolution=$(xrandr | grep \+ | grep -v "connected" | cut -d ' ' -f4) # Grep the resolution to the output active
+
+activeOutput1MaxResolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep the maximum resolution of the first output
+activeOutput2MaxResolution=$(echo -e "$outputResolution" | sed -n '2p')
 
 printTrace () {
-    echo -e "\\t+-----------------------------+"
+    echo -e "\\t+-----------------------------------------+"
 }
 
+echo -e "\\t Output + Status     + Maximum Resolution"
 printTrace
-echo -e "\\t+ Output + Maximum Resolution"
-printTrace
-echo -e "\\t+ $activeOutput1  + $activeOutput1Resolution"
+if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+    echo -e "\\t $activeOutput1  + $activeOutput1Resolution   + $activeOutput1MaxResolution"
+else
+    echo -e "\\t $activeOutput1  + Not active + $activeOutput1MaxResolution"
+fi
 
 printTrace
 if [ "$activeOutput2" != '' ]; then
-    echo -e "\\t+ $activeOutput2  + $activeOutput2Resolution"
+    if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
+        echo -e "\\t $activeOutput2  + $activeOutput2Resolution  + $activeOutput2MaxResolution"
+    else
+        echo -e "\\t $activeOutput2  + Not active + $activeOutput2MaxResolution"
+    fi
 else
     echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\n\\tExiting...\\n"
+
+    if ! echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+        echo -e "\\nThe output $activeOutput1 was not active, activating\\n"
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
+    fi
     exit 0
 fi
 printTrace
@@ -80,14 +98,15 @@ for value1 in $specificResolution1; do
     fi
 done
 
-optionTmp1="1 - $activeOutput1 $activeOutput1Resolution on, $activeOutput2 off"
-optionTmp2="2 - $activeOutput1 off, $activeOutput2 $activeOutput2Resolution on"
-optionTmp3="3 - $activeOutput1 e $activeOutput2 $maximumEqualResolution (mirror - maximumEqualResolution)"
-optionTmp4="4 - $activeOutput1 e $activeOutput2 1024x768 (mirror)"
-optionTmp5="5 - $activeOutput1 $activeOutput1Resolution (primary) left-of $activeOutput2 $activeOutput2Resolution"
-optionTmp6="6 - $activeOutput1 $activeOutput1Resolution right-of $activeOutput2 $activeOutput2Resolution (primary)"
-optionTmp0="0 - Other options"
-optionTmpf="f - Finish"
+optionTmp1=" 1 - $activeOutput1 $activeOutput1MaxResolution on, $activeOutput2 off"
+optionTmp2=" 2 - $activeOutput1 off, $activeOutput2 $activeOutput2MaxResolution on"
+optionTmp3=" 3 - $activeOutput1 e $activeOutput2 $maximumEqualResolution (mirror - maximumEqualResolution)"
+optionTmp4=" 4 - $activeOutput1 e $activeOutput2 1024x768 (mirror)"
+optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $activeOutput2 $activeOutput2MaxResolution"
+optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
+optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
+optionTmp0=" 0 - Other options"
+optionTmpf=" f - Finish"
 
 if [ "$optionSelected" == '' ]; then
     echo -e "\\n$optionTmp1"
@@ -96,6 +115,7 @@ if [ "$optionSelected" == '' ]; then
     echo "$optionTmp4"
     echo "$optionTmp5"
     echo "$optionTmp6"
+    echo "$optionTmpc"
     echo "$optionTmp0"
     echo "$optionTmpf"
 
@@ -111,32 +131,40 @@ fi
 case $optionSelected in
     '5' | '6' | '0' )
         # "$activeOutput1" part resolution
-        activeOutput1Resolution_Part1=$(echo "$activeOutput1Resolution" | cut -d 'x' -f1)
-        activeOutput1Resolution_Part2=$(echo "$activeOutput1Resolution" | cut -d 'x' -f2)
+        activeOutput1MaxResolution_Part1=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f1)
+        activeOutput1MaxResolution_Part2=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f2)
 
         # "$activeOutput2" part resolution
-        activeOutput2Resolution_Part1=$(echo "$activeOutput2Resolution" | cut -d 'x' -f1)
-        activeOutput2Resolution_Part2=$(echo "$activeOutput2Resolution" | cut -d 'x' -f2)
+        activeOutput2MaxResolution_Part1=$(echo "$activeOutput2MaxResolution" | cut -d 'x' -f1)
+        activeOutput2MaxResolution_Part2=$(echo "$activeOutput2MaxResolution" | cut -d 'x' -f2)
 
         # Diff "$activeOutput2"_p2 - "$activeOutput1"_p2
-        diffResolutionPart2=$(echo "$activeOutput2Resolution_Part2 - $activeOutput1Resolution_Part2" | bc)
+        diffResolutionPart2=$(echo "$activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2" | bc)
 
         if [ "$1" == "test" ]; then # Test propose
-            echo -e "\\nactiveOutput1: $activeOutput1Resolution_Part1 x $activeOutput1Resolution_Part2"
-            echo "$activeOutput2: $activeOutput2Resolution_Part1 x $activeOutput2Resolution_Part2"
-            echo "Diff_part2: ($activeOutput2Resolution_Part2 - $activeOutput1Resolution_Part2) = $diffResolutionPart2"
+            echo -e "\\nactiveOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2"
+            echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2"
+            echo "Diff_part2: ($activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2) = $diffResolutionPart2"
         fi
 esac
+
+if [ $optionSelected == 'c' ]; then
+    if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+        optionSelected=2
+    else
+        optionSelected=1
+    fi
+fi
 
 case $optionSelected in
     '1' )
         echo -e "\\n$optionTmp1\\n"
-        xrandr --output "$activeOutput1" --mode "$activeOutput1Resolution" --primary
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
         xrandr --output "$activeOutput2" --off
         ;;
     '2' )
         echo -e "\\n$optionTmp2\\n"
-        xrandr --output "$activeOutput2" --mode "$activeOutput2Resolution" --primary
+        xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary
         xrandr --output "$activeOutput1" --off
         ;;
     '3' )
@@ -151,19 +179,19 @@ case $optionSelected in
         ;;
     '5' )
         echo -e "\\n$optionTmp5\\n"
-        xrandr --output "$activeOutput1" --mode "$activeOutput1Resolution" --primary --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2Resolution" --pos "${activeOutput1Resolution_Part1}x0"
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos "${activeOutput1MaxResolution_Part1}x0"
         ;;
     '6' )
         echo -e "\\n$optionTmp6\\n"
-        xrandr --output "$activeOutput1" --mode "$activeOutput1Resolution" --pos "${activeOutput2Resolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2Resolution" --primary --pos 0x0
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary --pos 0x0
         ;;
     '0' )
         echo -e "\\n$optionTmp0"
         optionSelected=$optionSelectedTmp
 
-        optionTmp7="7 - $activeOutput1 left-of $activeOutput2"
-        optionTmp8="8 - $activeOutput1 right-of $activeOutput2"
-        optionTmp9="9 - $activeOutput1 above-of $activeOutput2"
+        optionTmp7=" 7 - $activeOutput1 left-of $activeOutput2"
+        optionTmp8=" 8 - $activeOutput1 right-of $activeOutput2"
+        optionTmp9=" 9 - $activeOutput1 above-of $activeOutput2"
         optionTmp10="10 - $activeOutput1 below-of $activeOutput2"
         optionTmp11="11 - $activeOutput1 primary"
         optionTmp12="12 - $activeOutput2 primary"
@@ -186,19 +214,19 @@ case $optionSelected in
             fi
         fi
 
-        activeOutput1Resolution_actual=$(xrandr | grep "$activeOutput1" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
-        activeOutput2Resolution_actual=$(xrandr | grep "$activeOutput2" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
+        activeOutput1MaxResolution_actual=$(xrandr | grep "$activeOutput1" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
+        activeOutput2MaxResolution_actual=$(xrandr | grep "$activeOutput2" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
 
         if [ "$1" == "test" ]; then ## Test propose
-            echo -e "\\n$activeOutput1: $activeOutput1Resolution_actual"
-            echo "$activeOutput2: $activeOutput2Resolution_actual"
+            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_actual"
+            echo "$activeOutput2: $activeOutput2MaxResolution_actual"
         fi
 
-        if echo "$activeOutput1Resolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is ative
+        if echo "$activeOutput1MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is ative
             echo -e "\\n\\tError: $activeOutput1 is not active\\n"
             activeOutputNotAtive='1'
         else
-            if echo "$activeOutput2Resolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is ative
+            if echo "$activeOutput2MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is ative
                 echo -e "\\n\\tError: $activeOutput2 is not active\\n"
                 activeOutputNotAtive='1'
             fi
@@ -209,27 +237,27 @@ case $optionSelected in
             read -r continueOrNot
 
             if [ "$continueOrNot" == '1' ]; then # Set the maximum resolution for both and continue
-                xrandr --output "$activeOutput1" --mode "$activeOutput1Resolution"
-                xrandr --output "$activeOutput2" --mode "$activeOutput2Resolution"
+                xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution"
+                xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution"
             else # Just terminate
                 exit 0
             fi
         fi
 
         if [ "$1" == "test" ]; then # Test propose
-            echo -e "\\n$activeOutput1: $activeOutput1Resolution_Part1 x $activeOutput1Resolution_Part2"
-            echo "$activeOutput2: $activeOutput2Resolution_Part1 x $activeOutput2Resolution_Part2"
-            echo "Diff_part2: ($activeOutput2Resolution_Part2 - $activeOutput1Resolution_Part2) = $diffResolutionPart2"
+            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2"
+            echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2"
+            echo "Diff_part2: ($activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2) = $diffResolutionPart2"
         fi
 
         case $optionSelected in
             '7' )
                 echo -e "\\n$optionTmp7\\n"
-                xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1Resolution_Part1}x0"
+                xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1MaxResolution_Part1}x0"
                 ;;
             '8' )
                 echo -e "\\n$optionTmp8\\n"
-                xrandr --output "$activeOutput1" --pos "${activeOutput2Resolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
+                xrandr --output "$activeOutput1" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
                 ;;
             '9' )
                 echo -e "\\n$optionTmp9\\n"
