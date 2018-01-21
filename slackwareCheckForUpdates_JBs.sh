@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 14/11/2017
+# Last update: 21/01/2018
 #
 echo -e "\\n# Script to check for Slackware updates #"
 
@@ -256,9 +256,15 @@ getUpdateMirror() {
     countLines=$(echo "$changesToShow" | grep -n "\\+---" | tail -n 1 | cut -d: -f1)
 
     if [ "$updatesFound" == '1' ]; then
-        updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
+        if [ "$countLines" == '' ]; then
+            updaesAvailable=$(echo "$changesToShow")
+        else
+            updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
+        fi
+
         updaesAvailable=$(echo -e "\\n+--------------------------+\\n$updaesAvailable")
-        echo -e "$updaesAvailable\\n"
+        echo -e "$updaesAvailable"
+        echo -e "+--------------------------+\\n"
 
         updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
 
