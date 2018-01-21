@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/profile_audio_change_JBs.sh
+Exec=/usr/bin/audio_profile_change_JBs.sh
 Icon=preferences-desktop-sound
 Name=audio_profile_change
 NoDisplay=false
