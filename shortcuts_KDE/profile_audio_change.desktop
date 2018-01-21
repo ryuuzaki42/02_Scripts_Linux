@@ -1,0 +1,10 @@
+[Desktop Entry]
+Exec=/usr/bin/profile_audio_change_JBs.sh
+Icon=preferences-desktop-sound
+Name=profile_audio_change
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+Type=Application
+X-KDE-SubstituteUID=false
+# shortcut = Ctrl + Meta + p
