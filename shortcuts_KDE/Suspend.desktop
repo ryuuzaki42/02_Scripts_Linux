@@ -7,3 +7,4 @@ StartupNotify=false
 Terminal=0
 Type=Application
 X-KDE-SubstituteUID=false
+# shortcut = Ctrl + Alt + s
