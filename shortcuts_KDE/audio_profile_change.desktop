@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=/usr/bin/profile_audio_change_JBs.sh
 Icon=preferences-desktop-sound
-Name=profile_audio_change
+Name=audio_profile_change
 NoDisplay=false
 StartupNotify=false
 Terminal=0
