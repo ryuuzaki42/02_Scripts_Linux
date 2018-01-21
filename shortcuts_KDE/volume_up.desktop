@@ -1,9 +1,10 @@
 [Desktop Entry]
 Exec=/usr/bin/volume_pulse_JBs.sh up
-Icon=preferences-desktop-sound
+Icon=audio-volume-medium
 Name=volume_up
 NoDisplay=false
 StartupNotify=false
 Terminal=0
 Type=Application
 X-KDE-SubstituteUID=false
+# shortcut = Shift + Meta + Up

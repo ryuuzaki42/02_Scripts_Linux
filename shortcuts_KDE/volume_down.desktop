@@ -1,9 +1,10 @@
 [Desktop Entry]
 Exec=/usr/bin/volume_pulse_JBs.sh down
-Icon=preferences-desktop-sound
+Icon=audio-volume-low
 Name=volume_down
 NoDisplay=false
 StartupNotify=false
 Terminal=0
 Type=Application
 X-KDE-SubstituteUID=false
+# shortcut = Shift + Meta + Down

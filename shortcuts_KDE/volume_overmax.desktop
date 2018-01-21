@@ -1,9 +1,10 @@
 [Desktop Entry]
 Exec=/usr/bin/volume_pulse_JBs.sh overmax
-Icon=preferences-desktop-sound
+Icon=audio-volume-high
 Name=volume_overmax
 NoDisplay=false
 StartupNotify=false
 Terminal=0
 Type=Application
 X-KDE-SubstituteUID=false
+# shortcut = Shift + Meta + Right
