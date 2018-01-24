@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 21/01/2018
+# Last update: 24/01/2018
 #
 echo -e "\\n# Script to check for Slackware updates #"
 
@@ -263,8 +263,7 @@ getUpdateMirror() {
         fi
 
         updaesAvailable=$(echo -e "\\n+--------------------------+\\n$updaesAvailable")
-        echo -e "$updaesAvailable"
-        echo -e "+--------------------------+\\n"
+        echo -e "$updaesAvailable\\n"
 
         updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
 
