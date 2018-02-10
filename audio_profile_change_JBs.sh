@@ -22,13 +22,18 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 21/01/2018
+# Last update: 10/02/2018
 #
 #Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
-#
-speakersAudio="output:analog-stereo"
-hdmiAudio="output:hdmi-stereo"
+
+# Stereo without input
+#speakersAudio="output:analog-stereo"
+#hdmiAudio="output:hdmi-stereo"
+
+# Stereo with input
+speakersAudio="output:analog-stereo+input:analog-stereo"
+hdmiAudio="output:hdmi-stereo+input:analog-stereo"
 
 profileActive=$(pacmd list-cards | grep "active profile" | tr -d "[:space:]" | cut -d '<' -f2 | cut -d '>' -f1)
 
