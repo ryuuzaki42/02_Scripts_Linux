@@ -74,6 +74,17 @@ loadDevWirelessInterface() {
 
 optionInput=$1
 case $optionInput in
+    "ap-info" )
+        echo -e "$CYAN# Show information about the AP connected #$NC"
+
+        loadDevWirelessInterface "$2"
+
+        echo -e "\\n/usr/sbin/iw dev $devInterface link:"
+        /usr/sbin/iw dev $devInterface link
+
+        echo -e "\\n/sbin/iwconfig $devInterface:"
+        /sbin/iwconfig $devInterface
+        ;;
     "--help" | "-h" | "help" | 'h' | '' | 'w' )
         if [ "$optionInput" == '' ] || [ "$optionInput" == 'w' ]; then # whiptailMenu()
             notUseColor

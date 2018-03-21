@@ -74,17 +74,6 @@ loadDevWirelessInterface() {
 
 optionInput=$1
 case $optionInput in
-    "ap-info" )
-        echo -e "$CYAN# Show information about the AP connected #$NC"
-
-        loadDevWirelessInterface "$2"
-
-        echo -e "\\n/usr/sbin/iw dev $devInterface link:"
-        /usr/sbin/iw dev $devInterface link
-
-        echo -e "\\n/sbin/iwconfig $devInterface:"
-        /sbin/iwconfig $devInterface
-        ;;
     "date-up" )
         echo -e "$CYAN# Update the date #$NC\\n"
 
@@ -141,8 +130,7 @@ case $optionInput in
         fi
 
         # Options text
-        optionVector=("ap-info      " "   - Show information about the AP connected"
-        "brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
+        optionVector=("brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2      " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
         "cpu-max      " "   - Show the 10 process with more CPU use"
         "date-up      " "$RED * - Update the date"
