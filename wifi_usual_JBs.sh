@@ -72,6 +72,12 @@ loadDevWirelessInterface() {
     echo -e "You can pass other interface as a parameter\\n"
 }
 
+insertRootPasswordMsg() {
+    if [ "$(whoami)" != "root" ]; then
+        echo -e "$CYAN\\nInsert the root password to continue$NC\\n"
+    fi
+}
+
 optionInput=$1
 case $optionInput in
     "ap-info" )
@@ -166,6 +172,11 @@ case $optionInput in
         ;;
     "create-wifi" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
+
+        loadDevWirelessInterface "$2"
+        echo "Visible networks:"
+        /sbin/iwlist $devInterface scan | grep "ESSID" | uniq
+
         createWifiConfig() {
             echo -en "\\nName of the network (SSID): "
             read -r netSSID
@@ -174,69 +185,82 @@ case $optionInput in
             read -r -s netPassword
 
             wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf
+            echo -e "\\nConfiguration of the network \"$netSSID\" saved\\n"
         }
-
         export -f createWifiConfig
-        if [ "$(whoami)" != "root" ]; then
-            echo -e "$CYAN\\nInsert the root Password to continue$NC"
-        fi
+
+        insertRootPasswordMsg
 
         su root -c 'createWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "cn-wifi" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
-        if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
-            echo -e "$RED\\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
+
+        loadDevWirelessInterface "$2"
+
+        networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
+        if [ "$networkConfigAvailable" == '' ]; then
+            echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
         else
-            if [ "$LOGNAME" != "root" ]; then
-                echo -e "$RED\\nError: Execute as root user$NC"
-            else
-                killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
-
-                networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
-                if [ "$networkConfigAvailable" == '' ]; then
-                    echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
-                else
-                    echo "Choose one network to connect:"
-                    grep "ssid" < /etc/wpa_supplicant.conf
-                    echo -n "Network name: "
-                    read -r networkName
-
-                    #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
-                    wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
-
-                    if [ "$wpaConf" == '' ]; then
-                        echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
-                    else
-                        TMPFILE=$(mktemp) # Create a tmp file
-                        grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
-
-                        echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
-
-                        echo -e "\\n########### Network configuration ####################"
-                        cat "$TMPFILE"
-                        echo -e "######################################################"
-
-                        #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-
-                        loadDevWirelessInterface "$2"
-
-                        wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
-
-                        rm "$TMPFILE" # Delete the tmp file
-
-                        dhclient $devInterface # Get IP
-
-                        iw dev $devInterface link # Show connection status
-                    fi
+            connectWifiConfig() {
+                set -x
+                if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
+                    echo -en "\\nKilling NetworkManager..."
+                    killall NetworkManager # kill the previous wpa_supplicant "configuration"
                 fi
-            fi
+
+                if pgrep -f "wpa_supplicant" > /dev/null; then # Test if wpa_supplicant is running
+                    echo -en "\\nKilling wpa_supplicant..."
+                    killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
+                fi
+
+                echo -e "\\nChoose one network to connect:\\n"
+                grep "ssid" < /etc/wpa_supplicant.conf
+                echo -en "\\nNetwork name: "
+                read -r networkName
+
+                #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
+                wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
+
+                if [ "$wpaConf" == '' ]; then
+                    echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
+                else
+                    TMPFILE=$(mktemp) # Create a tmp file
+                    grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
+
+                    echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
+
+                    echo -e "\\n########### Network configuration ####################"
+                    cat "$TMPFILE"
+                    echo -e "######################################################\\n"
+
+                    echo -e "\\nConnecting to $networkName by the device $devInterface\\n"
+                    #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
+                    wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
+
+                    rm "$TMPFILE" # Delete the tmp file
+
+                    echo -e "\\nGetting IP\\n"
+                    dhclient $devInterface # Get IP
+
+                    echo -e "\\nNetwork status\\n"
+                    iw dev $devInterface link # Show connection status
+                fi
+            }
+            export -f connectWifiConfig
+            export devInterface
+
+            insertRootPasswordMsg
+
+            su root -c 'connectWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         fi
         ;;
     "dc-wifi" )
         echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\\n"
 
         loadDevWirelessInterface "$2"
+
+        insertRootPasswordMsg
 
         su - root -c "dhclient -r $devInterface
         ifconfig $devInterface down
@@ -247,12 +271,16 @@ case $optionInput in
 
         loadDevWirelessInterface "$2"
 
+        insertRootPasswordMsg
+
         su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2|: channel'"
         ;;
     "l-iwlist" )
         echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\\n"
 
         loadDevWirelessInterface "$2"
+
+        insertRootPasswordMsg
 
         /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
