@@ -144,26 +144,20 @@ case $optionInput in
         optionVector=("ap-info      " "   - Show information about the AP connected"
         "brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2      " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-        "cn-wifi      " "$RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
         "cpu-max      " "   - Show the 10 process with more CPU use"
-        "create-wifi  " "$RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
         "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
-        "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
         "file-equal   " "   - Look for equal files using md5sum"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
         "ip           " "   - Get your IP"
-        "l-iw         " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
-        "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
         "l-pkg-i      " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-r      " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-u      " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
         "mem-max      " "   - Show the 10 process with more memory RAM use"
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
-        "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
         "mtr-test     " "$RED -  Run a mtr-test on a domain (default is google.com)"
         "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
@@ -256,14 +250,7 @@ case $optionInput in
                         "${optionVector[58]}" "${optionVector[59]}" \
                         "${optionVector[60]}" "${optionVector[61]}" \
                         "${optionVector[62]}" "${optionVector[63]}" \
-                        "${optionVector[64]}" "${optionVector[65]}" \
-                        "${optionVector[66]}" "${optionVector[67]}" \
-                        "${optionVector[68]}" "${optionVector[69]}" \
-                        "${optionVector[70]}" "${optionVector[71]}" \
-                        "${optionVector[72]}" "${optionVector[73]}" \
-                        "${optionVector[74]}" "${optionVector[75]}" \
-                        "${optionVector[76]}" "${optionVector[77]}" \
-                        "${optionVector[78]}" "${optionVector[79]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[64]}" "${optionVector[65]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -407,7 +394,7 @@ case $optionInput in
             echo -e "\\nError: Need pass the file name\\n"
         fi
         ;;
-     "mem-use" )
+    "mem-use" )
         echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\\n"
         if [ "$2" == '' ]; then
             echo -n "Insert the pattern (process name) to search: "
@@ -444,7 +431,7 @@ case $optionInput in
             echo -e "$RED\\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
         fi
         ;;
-     "search-pkg" )
+    "search-pkg" )
         echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\\n"
         if [ "$2" == '' ]; then
             echo -n "Package file or pattern to search: "
@@ -748,84 +735,6 @@ case $optionInput in
         echo -en "\\nRunning: $commandToRun\\n"
         eval "$commandToRun"
         ;;
-    "create-wifi" )
-        echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
-        createWifiConfig() {
-            echo -en "\\nName of the network (SSID): "
-            read -r netSSID
-
-            echo -en "\\nPassword of this network: "
-            read -r -s netPassword
-
-            wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf
-        }
-
-        export -f createWifiConfig
-        if [ "$(whoami)" != "root" ]; then
-            echo -e "$CYAN\\nInsert the root Password to continue$NC"
-        fi
-
-        su root -c 'createWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
-        ;;
-    "cn-wifi" )
-        echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
-        if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
-            echo -e "$RED\\nError: NetworkManager is running, please kill him with: killall NetworkManager$NC"
-        else
-            if [ "$LOGNAME" != "root" ]; then
-                echo -e "$RED\\nError: Execute as root user$NC"
-            else
-                killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
-
-                networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
-                if [ "$networkConfigAvailable" == '' ]; then
-                    echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
-                else
-                    echo "Choose one network to connect:"
-                    grep "ssid" < /etc/wpa_supplicant.conf
-                    echo -n "Network name: "
-                    read -r networkName
-
-                    #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
-                    wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
-
-                    if [ "$wpaConf" == '' ]; then
-                        echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
-                    else
-                        TMPFILE=$(mktemp) # Create a tmp file
-                        grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
-
-                        echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
-
-                        echo -e "\\n########### Network configuration ####################"
-                        cat "$TMPFILE"
-                        echo -e "######################################################"
-
-                        #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-
-                        loadDevWirelessInterface "$2"
-
-                        wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
-
-                        rm "$TMPFILE" # Delete the tmp file
-
-                        dhclient $devInterface # Get IP
-
-                        iw dev $devInterface link # Show connection status
-                    fi
-                fi
-            fi
-        fi
-        ;;
-    "dc-wifi" )
-        echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\\n"
-
-        loadDevWirelessInterface "$2"
-
-        su - root -c "dhclient -r $devInterface
-        ifconfig $devInterface down
-        iw dev $devInterface link"
-        ;;
     "mem-info" )
         echo -e "$CYAN# Show memory and swap percentage of use #$NC"
         memTotal=$(free -m | grep Mem | awk '{print $2}') # Get total of memory RAM
@@ -843,28 +752,10 @@ case $optionInput in
             echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
         fi
         ;;
-    "l-iw" )
-        echo -e "$CYAN# List the Wi-Fi AP around, with iw (show WPS and more infos) #$NC\\n"
-
-        loadDevWirelessInterface "$2"
-
-        su - root -c "/usr/sbin/iw dev $devInterface scan | grep -E '$devInterface|SSID|signal|WPA|WEP|WPS|Authentication|WPA2|: channel'"
-        ;;
-    "l-iwlist" )
-        echo -e "$CYAN# List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos) #$NC\\n"
-
-        loadDevWirelessInterface "$2"
-
-        /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
-        ;;
     "texlive-up" )
         echo -e "$CYAN# Update the texlive packages #$NC\\n"
         su - root -c "tlmgr update --self
         tlmgr update --all"
-        ;;
-    "nm-list" )
-        echo -e "$CYAN# List the Wi-Fi AP around with the nmcli from NetworkManager #$NC\\n"
-        nmcli device wifi list
         ;;
     "brigh-1" )
         echo -e "$CYAN# Set brightness percentage value (accept % value, up and down) #$NC"
