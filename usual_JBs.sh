@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 06/12/2017
+# Last update: 21/03/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -640,8 +640,8 @@ case $optionInput in
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if "source" exists
                     if [ -e "$pathDestination" ]; then # Test if "destination" exists
-                        echo -e "\\n\\t$RED#-------------------------------------------------------------#"
-                        echo -en "$CYAN$GREEN\\t 1$CYAN - See the differences first or$GREEN 2$CYAN - Make them equal now?:$NC "
+                        echo -e "\\n\\t$RED#-----------------------------------------------------------------------------#"
+                        echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
                         read -r syncNowOrNow
 
                         if [ "$syncNowOrNow" == "2" ]; then
