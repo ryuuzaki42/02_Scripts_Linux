@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 21/03/2018
+# Last update: 27/03/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -146,7 +146,7 @@ case $optionInput in
         "mem-max      " "   - Show the 10 process with more memory RAM use"
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
-        "mtr-test     " "$RED -  Run a mtr-test on a domain (default is google.com)"
+        "mtr-test     " "$RED   -  Run a mtr-test on a domain (default is google.com)"
         "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
@@ -172,7 +172,7 @@ case $optionInput in
             "--help" | "-h" | "help" | 'h' )
                 help() {
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
-                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\\n"
+                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$BLUE = X server required$CYAN\\n"
 
                     countOption='0'
                     optionVectorSize=${#optionVector[*]}
