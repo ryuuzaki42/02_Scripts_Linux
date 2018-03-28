@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 21/03/2018
+# Last update: 27/03/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -97,15 +97,15 @@ case $optionInput in
         fi
 
         # Options text
-        optionVector=("ap-info      " "   - Show information about the AP connected"
-        "cn-wifi      " "$RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-        "create-wifi  " "$RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
-        "dc-wifi      " "$RED * - Disconnect to one Wi-Fi network"
-        "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
-        "l-iw         " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
-        "l-iwlist     " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
-        "nm-list      " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
-        "w            " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
+        optionVector=("ap-info  " "   - Show information about the AP connected"
+        "cn       " "$RED * - Connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "cr       " "$RED * - Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf)"
+        "dc       " "$RED * - Disconnect to one Wi-Fi network"
+        "h        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'help')"
+        "l-iw     " "$RED * - List the Wi-Fi AP around, with iw (show WPS and more infos)"
+        "l-iwlist " "   - List the Wi-Fi AP around, with iwlist (show WPA/2 and more infos)"
+        "nm-list  " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
+        "w        " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
 
         if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
             useColor
@@ -115,7 +115,7 @@ case $optionInput in
             "--help" | "-h" | "help" | 'h' )
                 help() {
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
-                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required,$BLUE = X server required$CYAN\\n"
+                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required$CYAN\\n"
 
                     countOption='0'
                     optionVectorSize=${#optionVector[*]}
@@ -170,7 +170,7 @@ case $optionInput in
                 ;;
         esac
         ;;
-    "create-wifi" )
+    "cr" )
         echo -e "$CYAN# Create configuration to connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
 
         loadDevWirelessInterface "$2"
@@ -193,7 +193,7 @@ case $optionInput in
 
         su root -c 'createWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
-    "cn-wifi" )
+    "cn" )
         echo -e "$CYAN# Connect to Wi-Fi network (in /etc/wpa_supplicant.conf) #$NC\\n"
 
         loadDevWirelessInterface "$2"
@@ -203,7 +203,6 @@ case $optionInput in
             echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
         else
             connectWifiConfig() {
-                set -x
                 if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
                     echo -en "\\nKilling NetworkManager..."
                     killall NetworkManager # kill the previous wpa_supplicant "configuration"
@@ -255,7 +254,7 @@ case $optionInput in
             su root -c 'connectWifiConfig' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         fi
         ;;
-    "dc-wifi" )
+    "dc" )
         echo -e "$CYAN# Disconnect of one Wi-Fi network #$NC\\n"
 
         loadDevWirelessInterface "$2"
