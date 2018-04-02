@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/03/2018
+# Last update: 02/04/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -200,7 +200,7 @@ case $optionInput in
 
         networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
         if [ "$networkConfigAvailable" == '' ]; then
-            echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
+            echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $scriptName cr$NC"
         else
             connectWifiConfig() {
                 if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
@@ -213,31 +213,42 @@ case $optionInput in
                     killall wpa_supplicant # kill the previous wpa_supplicant "configuration"
                 fi
 
-                echo -e "\\nChoose one network to connect:\\n"
-                grep "ssid" < /etc/wpa_supplicant.conf
-                echo -en "\\nNetwork name: "
-                read -r networkName
+                echo -e "\\nChoose one network to connect\\n"
+                TmpFile=$(mktemp) # Create a tmp file
+                networkConfigs=''
+                netNumber=1
+
+                for value in $(grep "ssid" < /etc/wpa_supplicant.conf); do
+                    echo " $netNumber $value" >> "$TmpFile"
+                    ((netNumber++))
+                done
+ 
+                cat "$TmpFile"
+                echo -en "\\nNetwork number: "
+                read -r networkNumber
+                networkName=$(sed 's/^.* s/s/g' <<< $(grep "$networkNumber ssid" < "$TmpFile"))
+                rm "$TmpFile" # Delete the tmp file
 
                 #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
                 wpaConf=$(sed -n '/network/!b;:a;/}/!{$!{N;ba}};{/'"$networkName"'/p}' /etc/wpa_supplicant.conf)
 
                 if [ "$wpaConf" == '' ]; then
-                    echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $0 create-wifi$NC"
+                    echo -e "$RED\\nError: Not find configuration to network '$networkName' (in /etc/wpa_supplicant.conf).\\n Try: $scriptName cr$NC"
                 else
-                    TMPFILE=$(mktemp) # Create a tmp file
-                    grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TMPFILE"
+                    TmpFile=$(mktemp)
+                    grep -v -E "{|}|ssid|psk" < /etc/wpa_supplicant.conf > "$TmpFile"
 
-                    echo -e "$wpaConf" >> "$TMPFILE" # Save the configuration of the network on this file
+                    echo -e "$wpaConf" >> "$TmpFile" # Save the configuration of the network on this file
 
                     echo -e "\\n########### Network configuration ####################"
-                    cat "$TMPFILE"
+                    cat "$TmpFile"
                     echo -e "######################################################\\n"
 
                     echo -e "\\nConnecting to $networkName by the device $devInterface\\n"
                     #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-                    wpa_supplicant -i $devInterface -c "$TMPFILE" -d -B wext # Connect with the network using the tmp file
+                    wpa_supplicant -i $devInterface -c "$TmpFile" -d -B wext # Connect with the network using the tmp file
 
-                    rm "$TMPFILE" # Delete the tmp file
+                    rm "$TmpFile"
 
                     echo -e "\\nGetting IP\\n"
                     dhclient $devInterface # Get IP
@@ -248,6 +259,9 @@ case $optionInput in
             }
             export -f connectWifiConfig
             export devInterface
+
+            scriptName=$0
+            export scriptName
 
             insertRootPasswordMsg
 
