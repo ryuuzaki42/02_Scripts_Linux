@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 02/04/2018
+# Last update: 03/04/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -178,11 +178,20 @@ case $optionInput in
         /sbin/iwlist $devInterface scan | grep "ESSID" | uniq
 
         createWifiConfig() {
-            echo -en "\\nName of the network (SSID): "
-            read -r netSSID
+            continueOrNot='0'
+            while [ "$continueOrNot" == '0' ]; do
+                echo -en "\\nName of the network (SSID): "
+                read -r netSSID
 
-            echo -en "\\nPassword of this network: "
-            read -r -s netPassword
+                echo -en "\\nPassword of this network: "
+                read -r -s netPassword
+
+                if [ "$(wc -c <<< "$netPassword")" -lt '8' ]; then
+                    echo -e "\\n\\nError: Passphrase must be 8..63 characters\\n Insert the values again!"
+                else
+                    continueOrNot='1'
+                fi
+            done
 
             wpa_passphrase "$netSSID" "$netPassword" | grep -v "#psk" >> /etc/wpa_supplicant.conf
             echo -e "\\nConfiguration of the network \"$netSSID\" saved\\n"
@@ -200,7 +209,7 @@ case $optionInput in
 
         networkConfigAvailable=$(grep "ssid" < /etc/wpa_supplicant.conf)
         if [ "$networkConfigAvailable" == '' ]; then
-            echo -e "$RED\\nError: Not find configuration of anyone network (in /etc/wpa_supplicant.conf).\\n Try: $scriptName cr$NC"
+            echo -e "$RED\\nError: Not fond any configuration of Wi-Fi networks (in /etc/wpa_supplicant.conf).\\n Try: $0 cr$NC"
         else
             connectWifiConfig() {
                 if pgrep -f "NetworkManager" > /dev/null; then # Test if NetworkManager is running
@@ -215,18 +224,19 @@ case $optionInput in
 
                 echo -e "\\nChoose one network to connect\\n"
                 TmpFile=$(mktemp) # Create a tmp file
-                networkConfigs=''
                 netNumber=1
 
-                for value in $(grep "ssid" < /etc/wpa_supplicant.conf); do
+                networkName=$(grep "ssid" < /etc/wpa_supplicant.conf)
+                for value in $networkName; do
                     echo " $netNumber $value" >> "$TmpFile"
                     ((netNumber++))
                 done
- 
+
                 cat "$TmpFile"
                 echo -en "\\nNetwork number: "
                 read -r networkNumber
-                networkName=$(sed 's/^.* s/s/g' <<< $(grep "$networkNumber ssid" < "$TmpFile"))
+                networkName=$(grep "$networkNumber ssid" < "$TmpFile")
+                networkName=$(sed 's/^.* s/s/g' <<< "$networkName")
                 rm "$TmpFile" # Delete the tmp file
 
                 #sed -n '/Beginning of block/!b;:a;/End of block/!{$!{N;ba}};{/some_pattern/p}' fileName # sed in block text
