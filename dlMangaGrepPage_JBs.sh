@@ -22,7 +22,7 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 14/11/2017
+# Last update: 15/04/2018
 #
 echo -e "\\n# Download images (manga) from a link #\\n"
 
@@ -117,8 +117,10 @@ else
         echo -e "\\nDownload the HTML file from page $chapterDl\\n"
         wget "${linkDl}$linkBeginChange$chapterDl" -O "${chapterDl}.html"
 
-        linksPageDl=$(grep "http.*[[:digit:]].*g" < "${chapterDl}.html" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to all images (png, jpg)
+        linksPageDl=$(grep -E ".jpg|.png" "${chapterDl}.html" | grep "[[:digit:]]" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to all images (png, jpg)
         rm "${chapterDl}.html" # Delete HTML page file
+
+        linksPageDl=$(echo -e "$linksPageDl" | sed 's/^\/\///g') # Remove "//" from the begin of some links
 
         i='1'
         countImg=$(echo "$linksPageDl" | wc -l)
