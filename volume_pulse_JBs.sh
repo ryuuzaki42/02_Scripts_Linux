@@ -22,7 +22,7 @@
 #
 # Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 15/01/2018
+# Last update: 22/04/2018
 #
 help() {
     echo -e "\\nHelp message:\\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
@@ -49,19 +49,19 @@ if echo "$soundDevice" | grep -vq "[[:digit:]]"; then # Shift the value if sound
     notification=$2
 fi
 
+# If muted, unmute and finish
+if pacmd list-sinks | grep -q "muted: yes"; then
+    pactl set-sink-mute "$soundDevice" 0 > /dev/null # Unmute
+
+    if [ "$notification" != '0' ]; then
+        notify-send "Volume unmuted" "Volume value: $volCurrentPerc%" -i "audio-volume-medium"
+    fi
+    exit 0
+fi
+
 case $optionValue in
     "up" )
-        if pacmd list-sinks | grep -q "muted: yes"; then
-            pactl set-sink-mute "$soundDevice" 0 > /dev/null # Unmute
-
-            if [ "$notification" != '0' ]; then
-                notify-send "Volume unmuted" "Volume value: $volCurrentPerc%" -i "audio-volume-medium"
-            fi
-            exit 0
-        else
-            volCurrentPerc=$((volCurrentPerc + volStepChange))
-        fi
-        ;;
+        volCurrentPerc=$((volCurrentPerc + volStepChange)) ;;
     "down" )
         skipOverCheck='1'
 
