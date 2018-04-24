@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/03/2018
+# Last update: 24/04/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -900,16 +900,8 @@ case $optionInput in
                     sizeQuality="ebook"
                 elif [ "$fileChangeOption" == '2' ]; then
                     sizeQuality="screen"
-                elif [ "$fileChangeOption" == '4' ] || [ "$fileChangeOption" == '' ]; then
-                    # $1 = pdf-r, $2 = fileName.pdf, $3 = fileChangeOption
-                    echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1
-                    echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2
-                    echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3
-                else
-                    fileChangeOption='3'
+                elif [ "$fileChangeOption" != '3' ]; then
+                    fileChangeOption='4'
                 fi
 
                 if [ "$fileChangeOption" != '4' ]; then
@@ -923,6 +915,13 @@ case $optionInput in
                     fi
 
                     echo -e "\\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
+                else
+                    echo
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1
+                    echo
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2
+                    echo
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3
                 fi
             else
                 echo -e "$RED\\nError: The file \"$filePdfInput\" not exists$NC"
