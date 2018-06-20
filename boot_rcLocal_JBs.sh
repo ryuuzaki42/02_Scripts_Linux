@@ -24,7 +24,7 @@
 # Adding: echo "/usr/bin/boot_rcLocal_JBs.sh" >> /etc/rc.d/rc.local
 # Add performance at the command to set CPU frequency as performance
 #
-# Last update: 14/11/2017
+# Last update: 20/06/2018
 #
 ## Set brightness to 1%
 #echo 0 > /sys/class/backlight/acpi_video0/brightness
@@ -44,6 +44,7 @@ if [ "$1" == "performance" ]; then
     i='0'
     while [ "$i" -lt "$countCPU" ]; do
         cpufreq-set --cpu $i --governor performance
+        echo "cpufreq-set --cpu $i --governor performance"
         ((i++))
     done
 fi
