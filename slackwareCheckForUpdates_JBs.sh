@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 24/01/2018
+# Last update: 03/08/2018
 #
 echo -e "\\n# Script to check for Slackware updates #"
 
