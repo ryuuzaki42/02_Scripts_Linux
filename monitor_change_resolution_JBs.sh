@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 21/01/2018
+# Last update: 03/08/2018
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -148,7 +148,7 @@ case $optionSelected in
         fi
 esac
 
-if [ $optionSelected == 'c' ]; then
+if [ "$optionSelected" == 'c' ]; then
     if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
         optionSelected=2
     else
