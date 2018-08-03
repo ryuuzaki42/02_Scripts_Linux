@@ -257,7 +257,7 @@ getUpdateMirror() {
 
     if [ "$updatesFound" == '1' ]; then
         if [ "$countLines" == '' ]; then
-            updaesAvailable=$(echo "$changesToShow")
+            updaesAvailable=$changesToShow
         else
             updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
         fi
