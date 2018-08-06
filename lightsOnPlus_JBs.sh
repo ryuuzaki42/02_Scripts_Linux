@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Changed by João Batista (joao42lbatista@gmail.com)
-# Last update: 14/11/2017
+# Last update: 05/08/2018
+# URL: https://github.com/ryuuzaki42/2_scripts_slackware/blob/master/lightsOnPlus_JBs.sh
 
 # based on
 # Copyright (c) 2014 devkral at web de
@@ -18,7 +19,7 @@
 # can also be detected. One of {x, k, gnome-}screensaver must be installed.
 
 # HOW TO USE:
-# "./lightsOnPlus_JBs.sh 120 &" will Check every 120 seconds if Mplayer,
+# "./lightsOnPlus_JBs.sh -d 120 &" will Check every 120 seconds if Mplayer,
 # VLC, Firefox, Chromium or Chrome are fullscreen and delay screensaver and Power Management if so.
 # You want the number of seconds to be ~10 seconds less than the time it takes
 # your screensaver or Power Management to activate.
@@ -89,9 +90,6 @@ done< <(xvinfo | sed -n 's/^screen #\([0-9]\+\)$/\1/p')
 if [ "$(pgrep -l xscreensave | grep -wc "xscreensave")" -ge '1' ]; then
     screensaver="xscreensaver"
 elif [ "$(pgrep -l gnome-screensave | grep -wc "gnome-screensave")" -ge '1' ] || [ "$(pgrep -l gnome-shel | grep -wc gnome-shel)" -ge '1' ] ;then
-    screensaver="gnome-screensaver"
-# Make sure that the command exists then execute
-elif [ "$(which gnome-screensaver-command 2> /dev/null;echo $?)" -eq '0' ] && [ "$("$(which gnome-screensaver-command)" -q  | grep -c "active")" -ge '1' ]; then
     screensaver="gnome-screensaver"
 elif [ "$(pgrep -l mate-screensave | grep -wc "mate-screensave")" -ge '1' ]; then
     screensaver="mate-screensaver"
