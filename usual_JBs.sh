@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 24/04/2018
+# Last update: 11/08/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -147,7 +147,6 @@ case $optionInput in
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
         "mtr-test     " "$RED   -  Run a mtr-test on a domain (default is google.com)"
-        "now          " "$RED * - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially "
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
         "pkg-count    " "   - Count of packages that are installed your Slackware"
@@ -237,8 +236,7 @@ case $optionInput in
                         "${optionVector[56]}" "${optionVector[57]}" \
                         "${optionVector[58]}" "${optionVector[59]}" \
                         "${optionVector[60]}" "${optionVector[61]}" \
-                        "${optionVector[62]}" "${optionVector[63]}" \
-                        "${optionVector[64]}" "${optionVector[65]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[62]}" "${optionVector[63]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -965,27 +963,27 @@ case $optionInput in
             installNew=$2
 
             if [ "$USEBL" == '' ]; then
-                echo -en "\\nUse blacklist?\\n(y)es - (n)o (hit enter to no): "
+                echo -en "\\nUse blacklist?\\n(y)es - (n)o (hit enter to yes): "
                 read -r USEBL
             fi
 
             echo -en "\\nUsing blacklist: "
-            if [ "$USEBL" == 'y' ]; then # Using blacklist
-                echo "Yes"
-                USEBL='1'
-            else # Not using blacklist
+            if [ "$USEBL" == 'n' ]; then # Not using blacklist
                 echo "No"
                 USEBL='0'
+            else # Using blacklist
+                echo "Yes"
+                USEBL='1'
             fi
 
             if [ "$installNew" == '' ]; then
-                echo -en "\\nRun \"slackpkg install-new\" for safe profuse?\\n(y)es - (n)o (hit enter to no): "
+                echo -en "\\nRun \"slackpkg install-new\" for safe profuse?\\n(y)es - (n)o (hit enter to yes): "
                 read -r installNew
             fi
 
-            slackpkg update -batch=on
+            slackpkg update -batch=on -default_answer=y
 
-            if [ "$installNew" == 'y' ]; then
+            if [ "$installNew" != 'n' ]; then
                 slackpkg install-new
             fi
 
@@ -1012,21 +1010,6 @@ case $optionInput in
         fi
 
         wget -qO - "wttr.in/$cityName" # Get the weather information
-        ;;
-     "now" )
-        echo -e "$CYAN# now - Run \"date-up\" \"swap-clean\" \"slack-up y y\" and \"up-db\" sequentially #$NC"
-
-        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader date-up$NC\\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader date-up
-
-        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader swap-clean y$NC\\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader swap-clean y
-
-        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader slack-up y y$NC\\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader slack-up y y
-
-        echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader up-db$NC\\n" | sed 's/  / /g'
-        $0 $colorPrint notPrintHeader up-db
         ;;
     * )
         echo -e "\\n    $(basename "$0") - Error: Option \"$1\" not recognized"
