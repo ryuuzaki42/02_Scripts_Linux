@@ -1,7 +1,7 @@
 [Desktop Entry]
-Exec=/usr/bin/usual_JBs.sh brigh-2 up 10
+Exec=/usr/bin/usual_JBs.sh brigh-2 up 5
 Icon=ktip
-Name=brightness_up10perc
+Name=brightness_up5perc
 NoDisplay=false
 StartupNotify=false
 Terminal=0
