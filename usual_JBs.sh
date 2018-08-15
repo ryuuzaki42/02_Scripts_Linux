@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 11/08/2018
+# Last update: 15/08/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -75,7 +75,7 @@ loadDevWirelessInterface() {
 optionInput=$1
 case $optionInput in
     "date-up" )
-        echo -e "$CYAN# Update the date #$NC\\n"
+        echo -e "$CYAN# Update the date #$NC"
 
         dateUpFunction() { # Need to be run as root
             ntpVector=("ntp1.ptb.de" "ntp.usp.br" "bonehed.lcs.mit.edu") # Ntp servers
@@ -104,7 +104,7 @@ case $optionInput in
             if [ "$timeUpdated" == "false" ]; then
                 echo -e "\\nSorry, time not updated: $(date)\\n"
                 if grep -q "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                    echo -e "No connection found - Check your network connections\\n"
+                    echo -e "$RED\\nError: No connection found - Check your network connections\\n$NC"
                 fi
             fi
 
@@ -132,6 +132,7 @@ case $optionInput in
         # Options text
         optionVector=("brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2      " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+        "check-pkg-i  " "   - Check if all packages in a folder (and subfolders) are installed "
         "cpu-max      " "   - Show the 10 process with more CPU use"
         "date-up      " "$RED * - Update the date"
         "day-install  " "   - The day the system are installed"
@@ -186,7 +187,7 @@ case $optionInput in
                 ;;
             '' | 'w' )
                 whiptailMenu() {
-                    echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC\\n"
+                    echo -e "$CYAN# Menu with whiptail, where you can call the options above (the same result with 'w' or '') #$NC"
                     eval "$(resize)"
 
                     heightWhiptail=$((LINES - 5))
@@ -241,7 +242,12 @@ case $optionInput in
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
                             echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\\n" | sed 's/  / /g'
-                            $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
+
+                            if [ "${*}" != '' ]; then # Check if has more parameters
+                                $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
+                            else
+                                $0 $colorPrint notPrintHeader "$itemSelected"
+                            fi
                         fi
                     fi
                 }
@@ -250,10 +256,33 @@ case $optionInput in
                 ;;
         esac
         ;;
+    "check-pkg-i" )
+        echo -e "$CYAN# Check if all packages in a folder (and subfolders) are installed #$NC"
+
+        folderWork=$2
+        if [ "$folderWork" == '' ]; then
+            echo -e "$RED\\nError: You need pass the folder to work"
+        elif [ ! -d "$folderWork" ]; then
+            echo -e "$RED\\nError: The directory \"$folderWork\" not exist"
+        else
+            files=$(find "$folderWork" | grep -E "txz$|tgz$")
+            filesName=$(echo "$files" | rev | cut -d '.' -f2- | cut -d '/' -f1 | rev)
+            filesName=$(echo "$filesName" | sort)
+
+            echo -e "Packages not installed:\\n"
+            for pkg in $filesName; do
+                locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
+
+                if [ "$locatePkg" == '' ]; then
+                    echo "$pkg"
+                fi
+            done
+        fi
+        ;;
     "git-gc" )
-        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC\\n"
+        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC"
         ## All folder in one directory run "git gc --aggressive"
-        echo "Commands \"git gc\" available:"
+        echo -e "\\nCommands \"git gc\" available:"
         echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
         echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
@@ -283,8 +312,8 @@ case $optionInput in
         done
         ;;
     "file-equal" )
-        echo -e "$CYAN# Look for equal files using md5sum #$NC\\n"
-        echo "Want check the files recursively (this folder and all his sub directories) or only this folder?"
+        echo -e "$CYAN# Look for equal files using md5sum #$NC"
+        echo -e "\\nWant check the files recursively (this folder and all his sub directories) or only this folder?"
         echo -n "1 to recursively - 2 to only this folder (hit enter to all folders): "
         read -r allFolderOrNot
 
@@ -340,7 +369,7 @@ case $optionInput in
         fi
     ;;
     "sub-extract" ) # Need ffmpeg
-        echo -e "$CYAN# Extract subtitle from a video file #$NC\\n"
+        echo -e "$CYAN# Extract subtitle from a video file #$NC"
         fileName=$2
         if [ "$fileName" != '' ]; then
             subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle")
@@ -348,7 +377,7 @@ case $optionInput in
             subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1)
 
             if [ "$subtitleNumber" == '' ]; then
-                echo -e "Not found any subtitle in the file: \"$fileName\""
+                echo -e "$RED\\nError: Not found any subtitle in the file: \"$fileName\""
             else
                 echo -e "\\nSubtitles available in the file \"$fileName\":\\n$subtitleInfo"
                 echo -en "\\nWhich one you want? (Only the number valid: $subtitleNumber): "
@@ -373,17 +402,17 @@ case $optionInput in
 
                     echo -e "\\nSubtitle \"$lastPart\" from \"$fileName\" \\nsaved as \"${fileNameTmp}-${lastPart}.srt\""
                 else
-                    echo -e "\\nError: The subtitle number must be a number\\n"
+                    echo -e "$RED\\nError: The subtitle number must be a number$NC"
                 fi
             fi
         else
-            echo -e "\\nError: Need pass the file name\\n"
+            echo -e "$RED\\nError: Need pass the file name$NC"
         fi
         ;;
     "mem-use" )
-        echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC\\n"
+        echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC"
         if [ "$2" == '' ]; then
-            echo -n "Insert the pattern (process name) to search: "
+            echo -en "\\nInsert the pattern (process name) to search: "
             read -r process
         else
             process=$2
@@ -418,15 +447,15 @@ case $optionInput in
         fi
         ;;
     "search-pkg" )
-        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC\\n"
+        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC"
         if [ "$2" == '' ]; then
-            echo -n "Package file or pattern to search: "
+            echo -en "$CYAN\\nPackage file or pattern to search:$NC "
             read -r filePackage
         else
             filePackage=$2
         fi
 
-        echo -en "\\nSearching, please wait..."
+        echo -en "$CYAN\\nSearching, please wait...$NC"
 
         tmpFileName=$(mktemp) # Create a tmp file
         tmpFileFull=$(mktemp)
@@ -521,12 +550,12 @@ case $optionInput in
         fi
         ;;
     "ip" )
-        echo -e "$CYAN# Get your IP #$NC\\n"
+        echo -e "$CYAN# Get your IP #$NC"
         localIP=$(/sbin/ifconfig | grep broadcast | awk '{print $2}')
-        echo "Local IP: $localIP"
+        echo -e "$CYAN\\nLocal IP:$GREEN $localIP$CYAN"
 
         externalIP=$(wget -qO - icanhazip.com)
-        echo "External IP: $externalIP"
+        echo -e "External IP:$GREEN $externalIP$NC"
         ;;
     "cpu-max" )
         echo -e "$CYAN# Show the 10 process with more CPU use #$NC\\n"
@@ -539,7 +568,7 @@ case $optionInput in
     "day-install" )
         echo -e "$CYAN# The day the system are installed #$NC"
         dayInstall=$(stat -c %z / | sort | head -n 1 | cut -d '.' -f1)
-        echo -e "\\nThe system was installed in: $dayInstall"
+        echo -e "$CYAN\\nThe system was installed in:$GREEN $dayInstall$NC"
         ;;
     "print-lines" )
         echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
@@ -576,9 +605,9 @@ case $optionInput in
         fi
         ;;
     "screenshot" )
-        echo -e "$CYAN# Screenshot from display :0 #$NC\\n"
+        echo -e "$CYAN# Screenshot from display :0 #$NC"
 
-        echo -n "Delay before the screenshot (in seconds): "
+        echo -en "$CYAN\\nDelay before the screenshot (in seconds):$NC "
         read -r secondsBeforeScrenshot
 
         if echo "$secondsBeforeScrenshot" | grep -q "[[:digit:]]"; then
@@ -694,18 +723,18 @@ case $optionInput in
     "search-pwd" )
         echo -e "$CYAN# Search in this directory (recursive) for a pattern #$NC"
         if [ "$2" == '' ]; then
-            echo -en "\\nPattern to search: "
+            echo -en "$CYAN\\nPattern to search: $NC"
             read -r patternSearch
         else
             patternSearch=$2
         fi
 
-        echo -e "\\nSearching, please wait...\\n\\n"
+        echo -e "$CYAN\\nSearching, please wait...$NC\\n\\n"
         grep -rn "$patternSearch"
         # -r recursive, -n print line number with output lines
         ;;
     "ping-test" | "mtr-test" )
-        echo -e "$CYAN# Running $optionInput to a domain (default is google.com) #$NC\\n"
+        echo -e "$CYAN# Running $optionInput to a domain (default is google.com) #$NC"
 
         domainToWork=$2
         if [ "$domainToWork" == '' ]; then
@@ -718,7 +747,7 @@ case $optionInput in
             commandToRun="su root -c 'mtr $domainToWork'"
         fi
 
-        echo -en "\\nRunning: $commandToRun\\n"
+        echo -en "$CYAN\\nRunning: $commandToRun$NC\\n"
         eval "$commandToRun"
         ;;
     "mem-info" )
@@ -726,16 +755,16 @@ case $optionInput in
         memTotal=$(free -m | grep Mem | awk '{print $2}') # Get total of memory RAM
         memUsed=$(free -m | grep Mem | awk '{print $3}') # Get total of used memory RAM
         memUsedPercentage=$(echo "scale=0; ($memUsed*100)/$memTotal" | bc) # Get the percentage "used/total", |valueI*100/valueF|
-        echo -e "\\nMemory used: ~ $memUsedPercentage % ($memUsed of $memTotal MiB)"
+        echo -e "$CYAN\\nMemory used: ~ $GREEN$memUsedPercentage % ($memUsed of $memTotal MiB)$CYAN"
 
         testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
         if [ "$testSwap" -eq '0' ]; then
-            echo "Swap is not configured in this computer"
+            echo -e "Swap is not configured in this computer$NC"
         else
             swapTotal=$(free -m | grep Swap | awk '{print $2}')
             swapUsed=$(free -m | grep Swap | awk '{print $3}')
             swapUsedPercentage=$(echo "scale=0; ($swapUsed*100)/$swapTotal" | bc) # |valueI*100/valueF|
-            echo "Swap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
+            echo -e "Swap used: ~ $GREEN$swapUsedPercentage % ($swapUsed of $swapTotal MiB)$NC"
         fi
         ;;
     "texlive-up" )
@@ -789,11 +818,11 @@ case $optionInput in
                 fi
             fi
 
-            echo -e "\\nFile to set brightness: $pathFile/brightness"
+            echo -e "$CYAN\\nFile to set brightness: $pathFile/brightness"
             echo "Actual brightness: $actualBrightness %"
             echo "Input value brightness: $brightnessValueOriginal"
             echo "Final percentage brightness value: $brightnessValue"
-            echo -e "Final set brightness value: $brightnessValueFinal\\n"
+            echo -e "Final set brightness value: $brightnessValueFinal$NC\\n"
 
             # Only for test
             #echo "Max brightness value: $brightnessMax"
@@ -840,7 +869,7 @@ case $optionInput in
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
         countPackages=$(find /var/log/packages/ | wc -l)
-        echo -e "\\nThere are $countPackages packages installed"
+        echo -e "$CYAN\\nThere are $countPackages packages installed$NC"
         ;;
     "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
 
@@ -876,7 +905,7 @@ case $optionInput in
         commandPart3=' | head -n '"$numberPackages"''
 
         commandFinal=$commandPart1$commandPart2$commandPart3
-        echo -e "\\nRunning: $commandFinal\\n"
+        echo -e "$CYAN\\nRunning: $commandFinal$NC\\n"
         eval "$commandFinal"
         ;;
     "pdf-r" ) # Need Ghostscript
@@ -905,7 +934,7 @@ case $optionInput in
                 if [ "$fileChangeOption" != '4' ]; then
                     fileNamePart="_rOp${fileChangeOption}.pdf"
 
-                    echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption\\n$NC"
+                    echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption$NC\\n"
                     if [ "$fileChangeOption" == '3' ]; then
                         gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
@@ -963,21 +992,21 @@ case $optionInput in
             installNew=$2
 
             if [ "$USEBL" == '' ]; then
-                echo -en "\\nUse blacklist?\\n(y)es - (n)o (hit enter to yes): "
+                echo -en "$CYAN\\nUse blacklist?\\n(y)es - (n)o (hit enter to yes):$NC "
                 read -r USEBL
             fi
 
-            echo -en "\\nUsing blacklist: "
+            echo -en "$CYAN\\nUsing blacklist: "
             if [ "$USEBL" == 'n' ]; then # Not using blacklist
-                echo "No"
+                echo "No$NC"
                 USEBL='0'
             else # Using blacklist
-                echo "Yes"
+                echo "Yes$NC"
                 USEBL='1'
             fi
 
             if [ "$installNew" == '' ]; then
-                echo -en "\\nRun \"slackpkg install-new\" for safe profuse?\\n(y)es - (n)o (hit enter to yes): "
+                echo -en "$CYAN\\nRun \"slackpkg install-new\" for safe profuse?\\n(y)es - (n)o (hit enter to yes):$NC "
                 read -r installNew
             fi
 
@@ -999,7 +1028,7 @@ case $optionInput in
     "up-db" )
         echo -e "$CYAN# Update the database for the 'locate' #$NC\\n"
         su - root -c "updatedb" # Update database
-        echo -e "\\nDatabase updated"
+        echo -e "$CYAN\\nDatabase updated$NC"
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\\n"
@@ -1012,8 +1041,8 @@ case $optionInput in
         wget -qO - "wttr.in/$cityName" # Get the weather information
         ;;
     * )
-        echo -e "\\n    $(basename "$0") - Error: Option \"$1\" not recognized"
-        echo -e "    Try: $0 '--help'"
+        echo -e "\\n$CYAN    $(basename "$0") -$RED Error: Option \"$1\" not recognized$CYAN"
+        echo -e "    Try: $0 '--help'$NC"
         ;;
 esac
 
