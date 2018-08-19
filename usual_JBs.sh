@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 15/08/2018
+# Last update: 19/08/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -93,7 +93,7 @@ case $optionInput in
                 if ! grep -q -v "no server" < "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
                     if ! grep -q -v "time out" < "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
                         if ! grep -q -v "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                            echo -e "\\nTime updated: $(date)\\n"
+                            echo -e "\\nTime updated: $(date)"
                             timeUpdated=true # Set true in the timeUpdated
                             break
                         fi
@@ -104,7 +104,7 @@ case $optionInput in
             if [ "$timeUpdated" == "false" ]; then
                 echo -e "\\nSorry, time not updated: $(date)\\n"
                 if grep -q "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                    echo -e "$RED\\nError: No connection found - Check your network connections\\n$NC"
+                    echo -e "$RED\\nError: No connection found - Check your network connections$NC"
                 fi
             fi
 
@@ -147,7 +147,7 @@ case $optionInput in
         "mem-max      " "   - Show the 10 process with more memory RAM use"
         "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
         "mem-info     " "   - Show memory and swap percentage of use"
-        "mtr-test     " "$RED   -  Run a mtr-test on a domain (default is google.com)"
+        "mtr-test     " "$RED   - Run a mtr-test on a domain (default is google.com)"
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
         "pkg-count    " "   - Count of packages that are installed your Slackware"
@@ -200,7 +200,7 @@ case $optionInput in
                     else
                         heightMenuBoxWhiptail=$((LINES - 15))
 
-                        #whiptail --title "<título da caixa de menu>" --menu "<texto a ser exibido>" <altura> <largura> <altura da caixa de menu> \
+                        #whiptail --title "<title of box menu>" --menu "<text to be show>" <height> <width> <height of box menu> \
                         #[ <tag> <item> ] [ <tag> <item> ] [ <tag> <item> ]
 
                         itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
@@ -869,7 +869,7 @@ case $optionInput in
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
         countPackages=$(find /var/log/packages/ | wc -l)
-        echo -e "$CYAN\\nThere are $countPackages packages installed$NC"
+        echo -e "$CYAN\\nThere are $GREEN$countPackages$CYAN packages installed$NC"
         ;;
     "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
 
@@ -965,19 +965,19 @@ case $optionInput in
             swapUsed=$(free -m | grep Swap | awk '{print $3}')
             swapUsedPercentage=$(echo "scale=0; ($swapUsed*100)/$swapTotal" | bc) # |valueI*100/valueF|
 
-            echo -e "\\nSwap used: ~ $swapUsedPercentage % ($swapUsed of $swapTotal MiB)"
+            echo -e "$CYAN\\nSwap used: ~ $GREEN$swapUsedPercentage % ($swapUsed of $swapTotal MiB)$NC"
 
             if [ "$swapUsed" -eq '0' ]; then
-                echo -e "\\nSwap is already clean"
+                echo -e "$CYAN\\nSwap is already clean$NC"
             else
                 if [ "$2" == '' ]; then
-                    echo -en "\\nTry clean the Swap? \\n(y)es - (n)o: "
+                    echo -en "$CYAN\\nTry clean the Swap? \\n(y)es - (n)o (hit enter to yes):$NC "
                     read -r cleanSwap
                 else
                     cleanSwap='y'
                 fi
 
-                if [ "$cleanSwap" == 'y' ]; then
+                if [ "$cleanSwap" != 'n' ]; then
                     su - root -c 'echo -e "\\nCleaning swap. Please wait..."
                     swapoff -a
                     swapon -a'
@@ -1026,7 +1026,7 @@ case $optionInput in
         su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
     "up-db" )
-        echo -e "$CYAN# Update the database for the 'locate' #$NC\\n"
+        echo -e "$CYAN# Update the database for the 'locate' #$NC"
         su - root -c "updatedb" # Update database
         echo -e "$CYAN\\nDatabase updated$NC"
         ;;
