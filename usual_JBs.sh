@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 19/08/2018
+# Last update: 23/08/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -153,6 +153,7 @@ case $optionInput in
         "pkg-count    " "   - Count of packages that are installed your Slackware"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
+        "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
         "slack-up     " "$RED * - Slackware update"
         "sub-extract  " "   - Extract subtitle from a video file"
@@ -161,7 +162,6 @@ case $optionInput in
         "up-db        " "$RED * - Update the database for the 'locate'"
         "weather      " "   - Show the weather forecast (you can pass the name of the city as parameter)"
         "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
-        "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
         "w            " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
 
         if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
@@ -269,7 +269,7 @@ case $optionInput in
             filesName=$(echo "$files" | rev | cut -d '.' -f2- | cut -d '/' -f1 | rev)
             filesName=$(echo "$filesName" | sort)
 
-            echo -e "Packages not installed:\\n"
+            echo -e "$CYAN\\nPackages not installed:$NC\\n"
             for pkg in $filesName; do
                 locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
 
