@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 23/08/2018
+# Last update: 27/08/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -313,8 +313,8 @@ case $optionInput in
         ;;
     "file-equal" )
         echo -e "$CYAN# Look for equal files using md5sum #$NC"
-        echo -e "\\nWant check the files recursively (this folder and all his sub directories) or only this folder?"
-        echo -n "1 to recursively - 2 to only this folder (hit enter to all folders): "
+        echo -e "$CYAN\\nWant check the files recursively (this folder and all his sub directories) or only this folder?$NC"
+        echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
         read -r allFolderOrNot
 
         if [ "$allFolderOrNot" == '2' ]; then
@@ -323,7 +323,7 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
-        echo -en "\\nRunning md5sum, can take a while. Please wait..."
+        echo -en "$CYAN\\nRunning md5sum, can take a while. Please wait...$NC"
         fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         fileAndMd5=$(echo "$fileAndMd5" | sort) # Sort by the md5sum
 
@@ -339,9 +339,9 @@ case $optionInput in
         equalFiles=${equalFiles::-1} # Remove the last | (the last character)
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "\\n\\nAll files are different by md5sum"
+            echo -e "$CYAN\\n\\nAll files are different by md5sum$NC"
         else
-            echo -e "\\n\\n### These file(s) are equal:"
+            echo -e "$CYAN\\n\\n### These file(s) are equal:$NC"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
 
             IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
@@ -351,21 +351,54 @@ case $optionInput in
 
                 if [ "$valueNow" != "$valueBack" ]; then
                     echo # Add a new line between file different in the print on the terminal
+                else
+                    fileTmp=$(echo "$value" | cut -d "/" -f2-)
+                    FilesToWork=$FilesToWork$(echo -e "\\n$fileTmp")
                 fi
                 valueBack=$valueNow
 
                 echo "$value"
             done
 
-            echo -e "\\nWant to print the file(s) that are different?"
-            echo -n "(y)es - (n)o (hit enter to yes): "
+            echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
+            echo -en "$CYAN(y)es - (n)o (hit enter to no):$NC "
             read -r printDifferent
 
-            if [ "$printDifferent" != 'n' ]; then
-                echo -e "\\n### These file(s) are different:\\n"
+            if [ "$printDifferent" == 'y' ]; then
+                echo -e "$CYAN\\n### These file(s) are different:\\n$NC"
                 filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
                 echo "$filesDifferent" | sort -k 2
             fi
+
+            tmpFolder="equal_files_"$RANDOM
+            echo -e "$CYAN\\nWant to move (leave one) the equal file(s) to a TMP folder ($tmpFolder)?$NC"
+            echo -e "$CYAN\\n### Files to be moved:$NC\\n$FilesToWork\\n"
+            echo -en "$CYAN(y)es - (n)o (hit enter to no):$NC "
+            read -r moveEqual
+
+            if [ "$moveEqual" == 'y' ]; then
+                mkdir "$tmpFolder" 2> /dev/null
+
+                for value in $FilesToWork; do
+                    createFolder=$(echo "$value" | grep "/")
+
+                    if [ "$createFolder" != '' ]; then
+                        folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
+                        folderToCreate=$tmpFolder"/"$folderToCreate
+
+                        mkdir "$folderToCreate" 2> /dev/null
+                    else
+                        folderToCreate=$tmpFolder
+                    fi
+
+                    mv "$value" "$folderToCreate"
+                done
+
+                echo -e "$CYAN\\nFiles moved to: $PWD/$tmpFolder$NC"
+            else
+                echo -e "$CYAN\\nFiles not moved"
+            fi
+
         fi
     ;;
     "sub-extract" ) # Need ffmpeg
