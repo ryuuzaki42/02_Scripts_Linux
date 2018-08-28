@@ -34,7 +34,7 @@ longBreak="15"
 
 startEnter() {
     echo -n "Press enter to start..."
-    read
+    read -r
 }
 
 waitTime() {
