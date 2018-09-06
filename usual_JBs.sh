@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/08/2018
+# Last update: 06/09/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -151,6 +151,8 @@ case $optionInput in
         "pdf-r        " "   - Reduce a PDF file"
         "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
         "pkg-count    " "   - Count of packages that are installed your Slackware"
+        "pkg-i        " "$RED * - Install packge(s) from a folder (and subfolders) in the Slackware"
+        "pkg-u        " "$RED * - Upgrade packge(s) from a folder (and subfolders) in the Slackware"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
         "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
@@ -265,6 +267,7 @@ case $optionInput in
         elif [ ! -d "$folderWork" ]; then
             echo -e "$RED\\nError: The directory \"$folderWork\" not exist"
         else
+            echo -e "\\n$CYAN Folder to work with: $folderWork$NC\\n"
             files=$(find "$folderWork" | grep -E "txz$|tgz$")
             filesName=$(echo "$files" | rev | cut -d '.' -f2- | cut -d '/' -f1 | rev)
             filesName=$(echo "$filesName" | sort)
@@ -318,7 +321,7 @@ case $optionInput in
         read -r allFolderOrNot
 
         if [ "$allFolderOrNot" == '2' ]; then
-            recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just just folder
+            recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
         else
             recursiveFolderValue=''
         fi
@@ -1062,6 +1065,79 @@ case $optionInput in
         echo -e "$CYAN# Update the database for the 'locate' #$NC"
         su - root -c "updatedb" # Update database
         echo -e "$CYAN\\nDatabase updated$NC"
+        ;;
+    "pkg-i" | "pkg-u" )
+        folderWork=$2
+        if [ "$folderWork" == '' ]; then
+            echo -e "$RED\\nError: You need pass the folder to work"
+        else
+            echo -e "\\n$CYAN Folder to work with: $folderWork$NC\\n"
+            if [ "$optionInput" = "pkg-i" ]; then
+                functionWord="Install"
+                commandToRun="upgradepkg --install-new"
+            elif [ "$optionInput" = "pkg-u" ]; then
+                functionWord="Upgrade"
+                commandToRun="upgradepkg"
+            fi
+            echo -e "$CYAN# $functionWord packge(s) in a folder (and subfolders) in the Slackware #$NC"
+
+            updateInstallpkg () {
+                echo -e "$CYAN\\nWant check work recursively (this folder and all his sub directories) or only this folder?$NC"
+                echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to only this folder):$NC "
+                read -r allFolderOrNot
+
+                if [ "$allFolderOrNot" == '1' ]; then
+                    recursiveFolderValue=''
+                else
+                    recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
+                fi
+
+                packagesToUpdate=$(find "$folderWork" $recursiveFolderValue -type f | grep -E ".txz$|.tgz$") # Get the packages
+                if [ "$packagesToUpdate" == '' ]; then
+                    echo -e "$RED\\nNot found any package valid (extension .tgz or txz)$NC"
+                else
+                    echo -en "$CYAN\\nPackages to $functionWord:\\n\\n$NC$packagesToUpdate\\n"
+
+                    echo -en "$CYAN\\nWant to continue? (y)es or (n)o:$NC "
+                    read -r contineOrNot
+
+                    if [ "$contineOrNot" == "y" ]; then
+                        kernelMd5sum=$(md5sum /boot/vmlinuz 2>/dev/null)
+
+                        for value in $packagesToUpdate; do
+                            eval "$commandToRun $value"
+                        done
+
+                        NewkernelMd5sum=$(md5sum /boot/vmlinuz 2>/dev/null)
+                        if [ "$kernelMd5sum" != "$NewkernelMd5sum" ]; then
+                            if [ -x /sbin/lilo ]; then
+                                echo -e "\\nYour kernel image was updated.  We highly recommend you run: lilo"
+                                echo "Do you want slackpkg to run lilo now? (y/n)"
+                                read -r runLilo
+
+                                if [ "$runLilo" != "n" ]; then
+                                    /sbin/lilo
+                                fi
+                            else
+                                echo -e "\\nYour kernel image was updated and lilo is not found on your system."
+                                echo "You may need to adjust your boot manager(like GRUB) to boot appropriate kernel."
+                            fi
+                        fi
+                    else
+                        echo -e "$CYAN\\nJust exiting.$NC"
+                    fi
+                fi
+            }
+
+            export -f updateInstallpkg
+            export functionWord commandToRun CYAN NC RED folderWork
+
+            if [ "$(whoami)" != "root" ]; then
+                echo -e "$CYAN\\nInsert the root Password to continue$NC"
+            fi
+
+            su root -c 'updateInstallpkg' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
+        fi
         ;;
     "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\\n"
