@@ -24,9 +24,10 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 03/08/2018
+# Last update: 06/09/2018
 #
 echo -e "\\n# Script to check for Slackware updates #"
+echo " # Simple check: can make false negative #"
 
 helpMessage() {
     echo -e "\\nOptions:\\n    -h    this message"
@@ -201,10 +202,11 @@ getUpdateMirror() {
     tracePrint
 
     for value in $changePkgs; do
-        packageName=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | cut -d '-' -f4- | rev)
-        packageNameUpdate=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1 | rev)
+        packageNameTmp=$(echo "$value" | cut -d ':' -f1 | rev | cut -d '/' -f1)
+        packageName=$(echo "$packageNameTmp" | cut -d '-' -f4- | rev)
+        packageNameUpdate=$(echo "$packageNameTmp" | rev)
 
-        packageVersionInstalled=$(find /var/log/packages/ | grep "/$packageName-" | rev | cut -d '/' -f1 | rev)
+        packageVersionInstalled=$(find /var/log/packages/ -type f | grep "$packageName" | rev | cut -d '/' -f1 | rev)
         countPkg=$(echo -e "$packageVersionInstalled" | wc -l) # To test if found more than one package with "$packageName"
 
         countPkgTmp='1'
@@ -227,9 +229,9 @@ getUpdateMirror() {
         versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
 
         packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
-        locatePackage=$(find /var/log/packages/ | grep "$packageNameUpdateTmp")
+        locatePackage=$(find /var/log/packages/ -type f | grep "$packageNameUpdateTmp")
 
-        if [ "$locatePackage" == '' ]; then # To no print the last package (the already update in the Slackware)
+        if [ "$locatePackage" == '' ]; then # To not print the last package (the already update in the Slackware)
             if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
                updatesFound='1'
 
@@ -253,16 +255,20 @@ getUpdateMirror() {
     done
 
     changesToShow=$(sed '/'"$valueToStopPrint"'/q' "$tmpFile")
-    countLines=$(echo "$changesToShow" | grep -n "\\+---" | tail -n 1 | cut -d: -f1)
+
+    countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-")
+    if [ "$countLinesTmp" == '0' ]; then
+        countLinesTmp='1'
+    else
+        ((countLinesTmp++))
+    fi
+
+    lastLineToPrint=$(cat -n "$tmpFile" | grep "\+\-\-\-\-\-\-" | grep -v '^\-\-$' | sed ''"$countLinesTmp"' q' | tail -n 1 | awk '{print $1}')
 
     if [ "$updatesFound" == '1' ]; then
-        if [ "$countLines" == '' ]; then
-            updaesAvailable=$changesToShow
-        else
-            updaesAvailable=$(echo "$changesToShow" | head -n "$countLines")
-        fi
-
+        updaesAvailable=$(sed ''"$lastLineToPrint"' q' "$tmpFile")
         updaesAvailable=$(echo -e "\\n+--------------------------+\\n$updaesAvailable")
+
         echo -e "$updaesAvailable\\n"
 
         updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
@@ -270,10 +276,20 @@ getUpdateMirror() {
         iconName="audio-volume-high"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
-        echo -e "\\n        # Updates not found #\\n"
+        lastKernelUpdate=$(grep "linux.*\/\*" "$tmpFile" | head -n 1 | cut -d "-" -f2 | cut -d "/" -f1)
+        lastKernelInstalled=$(ls "/var/log/packages/kernel-*$lastKernelUpdate*" 2> /dev/null)
 
-        iconName="audio-volume-muted"
-        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
+        if [ "$lastKernelInstalled" == '' ]; then
+            echo -e "\n # Kernel update: $lastKernelUpdate #\n"
+
+            iconName="audio-volume-high"
+            notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"Kernel update: $lastKernelUpdate\" -i \"$iconName\"")
+        else
+            echo -e "\\n        # Updates not found #\\n"
+
+            iconName="audio-volume-muted"
+            notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
+        fi
     fi
 
     rm "$tmpFile"
