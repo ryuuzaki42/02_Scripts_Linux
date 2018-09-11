@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 14/11/2017
+# Last update: 11/09/2018
 #
 programName=$1
 justUrl=$2
@@ -49,7 +49,7 @@ else
     echo
     wget "https://pkgs.org/download/$programName" -O "$programName"
 
-    packagesLink=$(grep -E "txz|tgz" < "$programName" | grep "$slackwareVersion" | cut -d '=' -f2- | cut -d '>' -f1 | cut -d '"' -f2)
+    packagesLink=$(grep -E "txz|tgz" < "$programName" | grep "$slackwareVersion" | grep -o 'http[^"]*')
     rm "$programName"
 
     if [ "$packagesLink" != '' ]; then
