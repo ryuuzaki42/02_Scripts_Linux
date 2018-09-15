@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 11/09/2018
+# Last update: 15/09/2018
 #
 programName=$1
 justUrl=$2
@@ -90,7 +90,7 @@ else
             echo
             wget "$packagePageLink" -O "$programName"
 
-            linkDl=$(grep "Binary package" < "$programName" | cut -d '=' -f4 | cut -d '"' -f2)
+            linkDl=$(grep -C 10 "[b|B]inary [p|P]ackage" < "$programName" | grep "href" | grep -o 'http[^"]*')
             rm "$programName"
 
             if [ "$justUrl" == "url" ]; then
