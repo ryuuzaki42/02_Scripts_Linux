@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=/usr/bin/monitor_change_resolution_JBs.sh p
 Icon=preferences-desktop-wallpaper
-Name=monitor_change_display
+Name=monitor_change_display_projetor
 NoDisplay=false
 StartupNotify=false
 Terminal=0
