@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 03/08/2018
+# Last update: 10/10/2018
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -105,6 +105,7 @@ optionTmp4=" 4 - $activeOutput1 e $activeOutput2 1024x768 (mirror)"
 optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $activeOutput2 $activeOutput2MaxResolution"
 optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
 optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
+optionTmpd=" p - Set ($activeOutput1 1024x768) or ($activeOutput2 1024x768) in turn"
 optionTmp0=" 0 - Other options"
 optionTmpf=" f - Finish"
 
@@ -149,14 +150,25 @@ case $optionSelected in
 esac
 
 if [ "$optionSelected" == 'c' ]; then
+    echo -e "\\n$optionTmpc\\n"
     if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-        optionSelected=2
+        optionSelected='2'
     else
-        optionSelected=1
+        optionSelected='1'
     fi
 fi
 
 case $optionSelected in
+    'p' )
+        echo -e "\\n$optionTmpd\\n"
+        if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+            xrandr --output "$activeOutput2" --mode 1024x768
+            xrandr --output "$activeOutput1" --off
+        else
+            xrandr --output "$activeOutput1" --mode 1024x768
+            xrandr --output "$activeOutput2" --off
+        fi
+        ;;
     '1' )
         echo -e "\\n$optionTmp1\\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
