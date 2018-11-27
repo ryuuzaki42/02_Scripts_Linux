@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 06/09/2018
+# Last update: 27/11/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -950,6 +950,22 @@ case $optionInput in
             echo -e "$RED\\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
             filePdfInput=$2
+
+            annotationsUse=$4
+            if ! echo "$annotationsUse" | grep -Eq "y|n"; then
+                echo -en "\n${CYAN}Keep link annotations? (y)es - (n)o (hit enter to yes):$NC "
+                read -r annotationsUse
+            fi
+
+            if [ "$annotationsUse" == 'n' ]; then
+                printedUse=''
+                echo -e "\nWill remove link annotations"
+            else
+                printedUse="-dPrinted=false"
+                annotationsUse='y'
+                echo -e "\nWill keep link annotations"
+            fi
+
             if [ -e "$filePdfInput" ]; then
                 filePdfOutput=${filePdfInput::-4}
 
@@ -972,19 +988,19 @@ case $optionInput in
 
                     echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption$NC\\n"
                     if [ "$fileChangeOption" == '3' ]; then
-                        gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
+                        gs -sDEVICE=pdfwrite -dNOPAUSE $printedUse -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
-                        gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
+                        gs -sDEVICE=pdfwrite $printedUse -dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     fi
 
                     echo -e "\\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 else
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1 "$annotationsUse"
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2 "$annotationsUse"
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3
+                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3 "$annotationsUse"
                 fi
             else
                 echo -e "$RED\\nError: The file \"$filePdfInput\" not exists$NC"
