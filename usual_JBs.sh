@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 27/11/2018
+# Last update: 01/12/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -957,14 +957,16 @@ case $optionInput in
                 read -r annotationsUse
             fi
 
+            echo -en "$GREEN\nWill "
             if [ "$annotationsUse" == 'n' ]; then
                 printedUse=''
-                echo -e "\nWill remove link annotations"
+                echo -en "${RED}remove"
             else
                 printedUse="-dPrinted=false"
                 annotationsUse='y'
-                echo -e "\nWill keep link annotations"
+                echo -en "${BLUE}keep"
             fi
+            echo -e "$GREEN link annotations$NC"
 
             if [ -e "$filePdfInput" ]; then
                 filePdfOutput=${filePdfInput::-4}
@@ -984,7 +986,7 @@ case $optionInput in
                 fi
 
                 if [ "$fileChangeOption" != '4' ]; then
-                    fileNamePart="_rOp${fileChangeOption}.pdf"
+                    fileNamePart="_r${fileChangeOption}l${annotationsUse}.pdf" # r (reduce), l (link)
 
                     echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption$NC\\n"
                     if [ "$fileChangeOption" == '3' ]; then
