@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 01/12/2018
+# Last update: 18/12/2018
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -364,10 +364,10 @@ case $optionInput in
             done
 
             echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
-            echo -en "$CYAN(y)es - (n)o (hit enter to no):$NC "
+            echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
             read -r printDifferent
 
-            if [ "$printDifferent" == 'y' ]; then
+            if [ "$printDifferent" != 'n' ]; then
                 echo -e "$CYAN\\n### These file(s) are different:\\n$NC"
                 filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
                 echo "$filesDifferent" | sort -k 2
@@ -389,7 +389,7 @@ case $optionInput in
                         folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
                         folderToCreate=$tmpFolder"/"$folderToCreate
 
-                        mkdir "$folderToCreate" 2> /dev/null
+                        mkdir -p "$folderToCreate" 2> /dev/null
                     else
                         folderToCreate=$tmpFolder
                     fi
