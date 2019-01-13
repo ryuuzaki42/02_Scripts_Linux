@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 03/01/2018
+# Last update: 13/01/2019
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -128,21 +128,21 @@ alias sboupgrade='PKGTYPE=txz sboupgrade'
 
 # Change them (folders path) as you like
 slackwarePKG="/var/log/packages/"
-downloadFolder="/media/sda2/downloads/"
-gitFolder="/media/sda2/prog/git_clone/"
+downloadFolder="/media/sda2/0_home_j/Downloads/"
+gitFolder="/media/sda2/git_clone/"
 
 cdFolder() {
     echo -e "\\n    cd $1\\n"
     cd "$1" || exit
 
-    if [ "$(find . -maxdepth 1 | wc -l)" -lt "20" ]; then
+    if [ "$(find . -maxdepth 1 | wc -l)" -lt "10" ]; then
         ls
         echo
     fi
 }
 
 alias cdpkg='cdFolder $slackwarePKG'
-alias cdh='cdFolder $Home'
+alias cdh='cdFolder $HOME'
 alias cddl='cdFolder $downloadFolder'
 alias cdgit='cdFolder $gitFolder'
 
