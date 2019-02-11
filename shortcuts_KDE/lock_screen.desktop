@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=/usr/bin/lock_screen_turn_off_JBs.sh
 Icon=preferences-desktop-wallpaper
-Name=Lock Screen
+Name=lock_screen
 NoDisplay=false
 StartupNotify=false
 Terminal=0
