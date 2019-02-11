@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=/usr/bin/lock_screen_turn_off_suspend_JBs.sh 5
 Icon=preferences-desktop-screensaver
-Name=SuspendWait5m
+Name=suspend_wait5m
 NoDisplay=false
 StartupNotify=false
 Terminal=0
