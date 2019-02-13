@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 18/12/2018
+# Last update: 12/02/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -135,7 +135,7 @@ case $optionInput in
         "check-pkg-i  " "   - Check if all packages in a folder (and subfolders) are installed "
         "cpu-max      " "   - Show the 10 process with more CPU use"
         "date-up      " "$RED * - Update the date"
-        "day-install  " "   - The day the system are installed"
+        "day-s-i      " "$RED * - The day the system was installed"
         "file-equal   " "   - Look for equal files using md5sum"
         "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
@@ -601,10 +601,15 @@ case $optionInput in
         echo -e "$CYAN# Show the 10 process with more memory RAM use #$NC\\n"
         ps axo pid,%cpu,%mem,cmd --sort -rss | head -n 11
         ;;
-    "day-install" )
-        echo -e "$CYAN# The day the system are installed #$NC"
-        dayInstall=$(stat -c %z / | sort | head -n 1 | cut -d '.' -f1)
-        echo -e "$CYAN\\nThe system was installed in:$GREEN $dayInstall$NC"
+    "day-s-i" )
+        echo -e "$CYAN# The day the system was installed #$NC"
+        partitionRoot=$(mount | grep "on / t" | cut -d ' ' -f1)
+
+        # tune2fs -l /dev/sda1 or dumpe2fs /dev/sda1
+        dayCreated=$(dumpe2fs $partitionRoot 2> /dev/null | grep "Filesystem created")
+        echo -en "$CYAN\\nThe system was installed in:$GREEN "
+        echo $dayCreated | cut -d ' ' -f3-
+        echo -e "$CYAN\nObs: In some of the cases is just the day partition was created$NC"
         ;;
     "print-lines" )
         echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
