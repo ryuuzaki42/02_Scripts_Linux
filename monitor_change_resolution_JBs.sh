@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 10/10/2018
+# Last update: 04/03/2019
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -105,7 +105,7 @@ optionTmp4=" 4 - $activeOutput1 e $activeOutput2 1024x768 (mirror)"
 optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $activeOutput2 $activeOutput2MaxResolution"
 optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
 optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
-optionTmpd=" p - Set ($activeOutput1 1024x768) or ($activeOutput2 1024x768) in turn"
+optionTmpp=" p - Set ($activeOutput1 1024x768) or ($activeOutput2 1024x768) in turn"
 optionTmp0=" 0 - Other options"
 optionTmpf=" f - Finish"
 
@@ -117,6 +117,7 @@ if [ "$optionSelected" == '' ]; then
     echo "$optionTmp5"
     echo "$optionTmp6"
     echo "$optionTmpc"
+    echo "$optionTmpp"
     echo "$optionTmp0"
     echo "$optionTmpf"
 
