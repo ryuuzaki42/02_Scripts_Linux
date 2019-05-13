@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 04/03/2019
+# Last update: 13/05/2019
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -161,7 +161,7 @@ fi
 
 case $optionSelected in
     'p' )
-        echo -e "\\n$optionTmpd\\n"
+        echo -e "\\n$optionTmpp\\n"
         if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput2" --mode 1024x768
             xrandr --output "$activeOutput1" --off
