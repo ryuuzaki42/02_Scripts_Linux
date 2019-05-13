@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 12/02/2019
+# Last update: 13/05/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -112,6 +112,7 @@ case $optionInput in
         }
 
         export -f dateUpFunction
+        export CYAN NC RED
         if [ "$(whoami)" != "root" ]; then
             echo -e "$CYAN\\nInsert the root Password to continue$NC"
         fi
@@ -316,6 +317,14 @@ case $optionInput in
         ;;
     "file-equal" )
         echo -e "$CYAN# Look for equal files using md5sum #$NC"
+
+        fileType=$2
+        if [ "$fileType" == '' ]; then
+            echo -e "$CYAN\\nWant check all files or just a type of files?$NC"
+            echo -en "$CYAN hit enter to all files or the type (e.g. txt or pdf):$NC "
+            read -r fileType
+        fi
+
         echo -e "$CYAN\\nWant check the files recursively (this folder and all his sub directories) or only this folder?$NC"
         echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
         read -r allFolderOrNot
@@ -326,8 +335,20 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
-        echo -en "$CYAN\\nRunning md5sum, can take a while. Please wait...$NC"
-        fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+        echo -en "$CYAN\\nRunning md5sum, can take a while.\nPlease wait, checking "
+        if [ "$fileType" == '' ]; then
+            echo -en "all files...$NC"
+            fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+        else
+            echo -en "the files with \"$fileType\" in the name...$NC"
+            fileAndMd5Tmp=$(find . $recursiveFolderValue -type f | grep "$fileType")
+
+            for file in $fileAndMd5Tmp; do
+                fileAndMd5=$fileAndMd5"\n"$(md5sum "$file")
+            done
+
+            fileAndMd5=$(echo -e "$fileAndMd5") # "Create" the new lines
+        fi
         fileAndMd5=$(echo "$fileAndMd5" | sort) # Sort by the md5sum
 
         md5Files=$(echo "$fileAndMd5" | cut -d " " -f1) # Get only de md5sum
@@ -349,6 +370,7 @@ case $optionInput in
 
             IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 
+            valueBack='' # Clean the value in valueBack
             for value in $filesEqual; do
                 valueNow=$(echo "$value" | cut -d " " -f1)
 
@@ -603,13 +625,19 @@ case $optionInput in
         ;;
     "day-s-i" )
         echo -e "$CYAN# The day the system was installed #$NC"
-        partitionRoot=$(mount | grep "on / t" | cut -d ' ' -f1)
 
-        # tune2fs -l /dev/sda1 or dumpe2fs /dev/sda1
-        dayCreated=$(dumpe2fs $partitionRoot 2> /dev/null | grep "Filesystem created")
-        echo -en "$CYAN\\nThe system was installed in:$GREEN "
-        echo $dayCreated | cut -d ' ' -f3-
-        echo -e "$CYAN\nObs: In some of the cases is just the day partition was created$NC"
+        dayInstall() {
+            # tune2fs -l /dev/sda1 or dumpe2fs /dev/sda1
+            partitionRoot=$(mount | grep "on / t" | cut -d ' ' -f1)
+            dayCreated=$(dumpe2fs "$partitionRoot" 2> /dev/null | grep "Filesystem created")
+            echo -en "$CYAN\\nThe system was installed in:$GREEN "
+            echo -e "$dayCreated" | cut -d ' ' -f3-
+            echo -e "$CYAN\nObs: In some of the cases is just the day partition was created$NC"
+        }
+
+        export -f dayInstall
+        export CYAN NC GREEN
+        su root -c 'dayInstall'
         ;;
     "print-lines" )
         echo -e "$CYAN# Print part of file (lineStart to lineEnd) #$NC"
@@ -1057,10 +1085,10 @@ case $optionInput in
 
             echo -en "$CYAN\\nUsing blacklist: "
             if [ "$USEBL" == 'n' ]; then # Not using blacklist
-                echo "No$NC"
+                echo -e "${GREEN}No$NC"
                 USEBL='0'
             else # Using blacklist
-                echo "Yes$NC"
+                echo -e "${GREEN}Yes$NC"
                 USEBL='1'
             fi
 
@@ -1081,6 +1109,7 @@ case $optionInput in
         USEBL=$2
         installNew=$3
         export -f slackwareUpdate
+        export CYAN NC GREEN
 
         su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
