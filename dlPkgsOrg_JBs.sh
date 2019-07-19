@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 15/09/2018
+# Last update: 19/07/2019
 #
 programName=$1
 justUrl=$2
@@ -47,7 +47,7 @@ else
     fi
 
     echo
-    wget "https://pkgs.org/download/$programName" -O "$programName"
+    wget -c "https://pkgs.org/download/$programName" -O "$programName"
 
     packagesLink=$(grep -E "txz|tgz" < "$programName" | grep "$slackwareVersion" | grep -o 'http[^"]*')
     rm "$programName"
@@ -88,7 +88,7 @@ else
             done
 
             echo
-            wget "$packagePageLink" -O "$programName"
+            wget -c "$packagePageLink" -O "$programName"
 
             linkDl=$(grep -C 10 "[b|B]inary [p|P]ackage" < "$programName" | grep "href" | grep -o 'http[^"]*')
             rm "$programName"
@@ -103,7 +103,12 @@ else
 
             echo
             if [ "$continueDl" != 'n' ]; then
-                wget "$linkDl"
+                wget -c "$linkDl"
+                wget -c "${linkDl}.md5"
+
+                fileName=$(echo "$linkDl" | rev | cut -d '/' -f1 | rev)
+                md5sum -c "${fileName}.md5"
+                rm "${fileName}.md5"
             else
                 echo "Link to download the package:"
                 echo "$linkDl"
