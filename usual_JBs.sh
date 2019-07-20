@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 13/05/2019
+# Last update: 20/05/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -335,6 +335,8 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+
         echo -en "$CYAN\\nRunning md5sum, can take a while.\nPlease wait, checking "
         if [ "$fileType" == '' ]; then
             echo -en "all files...$NC"
@@ -367,8 +369,6 @@ case $optionInput in
         else
             echo -e "$CYAN\\n\\n### These file(s) are equal:$NC"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
-
-            IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 
             valueBack='' # Clean the value in valueBack
             for value in $filesEqual; do
