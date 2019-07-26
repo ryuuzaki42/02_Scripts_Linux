@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 20/05/2019
+# Last update: 25/07/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -269,18 +269,23 @@ case $optionInput in
             echo -e "$RED\\nError: The directory \"$folderWork\" not exist"
         else
             echo -e "\\n$CYAN Folder to work with: $folderWork$NC\\n"
-            files=$(find "$folderWork" | grep -E "txz$|tgz$")
+            files=$(find "$folderWork" -type f | grep -E "txz$|tgz$")
             filesName=$(echo "$files" | rev | cut -d '.' -f2- | cut -d '/' -f1 | rev)
-            filesName=$(echo "$filesName" | sort)
+            filesName=$(echo "$filesName")
 
-            echo -e "$CYAN\\nPackages not installed:$NC\\n"
+            echo -e "$CYAN\\nPackages not installed:$NC"
+            linePkg=1
+            pkgNotInstalled=''
             for pkg in $filesName; do
                 locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
 
                 if [ "$locatePkg" == '' ]; then
-                    echo "$pkg"
+                    pkgNotInstalled=$pkgNotInstalled$(echo "$files" | sed -n ${linePkg}p)$(echo "\\n")
                 fi
+
+                ((linePkg++))
             done
+            echo -e "$pkgNotInstalled" | sort
         fi
         ;;
     "git-gc" )
@@ -937,7 +942,7 @@ case $optionInput in
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
-        countPackages=$(find /var/log/packages/ | wc -l)
+        countPackages=$(find /var/log/packages/ -type f | wc -l)
         echo -e "$CYAN\\nThere are $GREEN$countPackages$CYAN packages installed$NC"
         ;;
     "l-pkg-i" | "l-pkg-r" | "l-pkg-u" )
