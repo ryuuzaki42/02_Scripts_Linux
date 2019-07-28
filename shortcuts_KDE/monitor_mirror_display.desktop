@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/monitor_change_resolution_JBs.sh 3
+Exec=/usr/bin/monitor_change_resolution_JBs.sh 3 1 1
 Icon=preferences-desktop-wallpaper
 Name=monitor_mirror_display
 NoDisplay=false
