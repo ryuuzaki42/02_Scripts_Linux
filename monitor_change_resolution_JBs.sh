@@ -22,16 +22,18 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 13/05/2019
+# Last update: 28/07/2019
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
 if [ "$1" == "test" ]; then
     optionSelected=$2
     optionSelectedTmp=$3
+    resolutionOk=$4
 else
     optionSelected=$1
     optionSelectedTmp=$2
+    resolutionOk=$3
 fi
 
 outputConnected=$(xrandr | grep " connected") # Grep connected outputs
@@ -44,6 +46,17 @@ activeOutput2=$(echo -e "$outputConnected" | sed -n '2p')
 activeOutput1Resolution=$(echo "$activeOutput1" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1) # Grep the actual resolution of the first output
 activeOutput2Resolution=$(echo "$activeOutput2" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1)
 
+activeOutput1Primary=$(echo "$activeOutput1" | grep "primary")
+activeOutput2Primary=$(echo "$activeOutput2" | grep "primary")
+
+if [ "$activeOutput1Primary" != '' ]; then
+    activeOutput1Primary="primary"
+    activeOutput2Primary="secondary"
+else
+    activeOutput1Primary="secondary"
+    activeOutput2Primary="primary"
+fi
+
 activeOutput1=$(echo -e "$activeOutput1" | cut -d ' ' -f1) # Grep the name of the first output
 activeOutput2=$(echo -e "$activeOutput2" | cut -d ' ' -f1)
 
@@ -53,26 +66,34 @@ activeOutput1MaxResolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep t
 activeOutput2MaxResolution=$(echo -e "$outputResolution" | sed -n '2p')
 
 printTrace () {
-    echo -e "\\t+-----------------------------------------+"
+    echo -e "\\t+----------------------------------------------------+"
 }
 
-echo -e "\\t Output + Status     + Maximum Resolution"
+echo -e "\\t Output + Status     + Maximum Resolution + Order"
 printTrace
+echo -en "\\t $activeOutput1  "
+
 if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-    echo -e "\\t $activeOutput1  + $activeOutput1Resolution   + $activeOutput1MaxResolution"
+    printf '+ %-11s' "$activeOutput1Resolution"
 else
-    echo -e "\\t $activeOutput1  + Not active + $activeOutput1MaxResolution"
+    printf '+ %-11s' "Not active"
 fi
+printf '+ %-19s' "$activeOutput1MaxResolution"
+echo "+ $activeOutput1Primary"
 
 printTrace
 if [ "$activeOutput2" != '' ]; then
+    echo -en "\\t $activeOutput2  "
     if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
-        echo -e "\\t $activeOutput2  + $activeOutput2Resolution  + $activeOutput2MaxResolution"
+        printf '+ %-11s' "$activeOutput2Resolution"
     else
-        echo -e "\\t $activeOutput2  + Not active + $activeOutput2MaxResolution"
+        printf '+ %-11s' "Not active"
     fi
+    printf '+ %-19s' "$activeOutput2MaxResolution"
+    echo "+ $activeOutput2Primary"
 else
-    echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\n\\tExiting...\\n"
+    echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\nExiting...\\n"
+    notify-send "Monitor configuration not changed!" "Just one output (\"$activeOutput1\") connected.\\nExiting..." -i "preferences-desktop-wallpaper"
 
     if ! echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
         echo -e "\\nThe output $activeOutput1 was not active, activating\\n"
@@ -100,8 +121,8 @@ done
 
 optionTmp1=" 1 - $activeOutput1 $activeOutput1MaxResolution on, $activeOutput2 off"
 optionTmp2=" 2 - $activeOutput1 off, $activeOutput2 $activeOutput2MaxResolution on"
-optionTmp3=" 3 - $activeOutput1 e $activeOutput2 $maximumEqualResolution (mirror - maximumEqualResolution)"
-optionTmp4=" 4 - $activeOutput1 e $activeOutput2 1024x768 (mirror)"
+optionTmp3=" 3 - $activeOutput1 and $activeOutput2 $maximumEqualResolution (mirror - maximumEqualResolution)"
+optionTmp4=" 4 - $activeOutput1 and $activeOutput2 1024x768 (mirror)"
 optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $activeOutput2 $activeOutput2MaxResolution"
 optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
 optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
@@ -301,3 +322,31 @@ case $optionSelected in
     * )
         echo -e "\\nError: The option \"$optionSelected\" is not recognized\\n"
 esac
+
+if [ "$resolutionOk" == '' ]; then
+    echo -n "Resolution changed. Everything OK? (y)es or (n)o (hit enter to no): "
+    read -r resolutionOk
+fi
+
+if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
+    if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+        xrandr --output "$activeOutput1" --mode "$activeOutput1Resolution"
+    else
+        xrandr --output "$activeOutput1" --off
+    fi
+
+    if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
+        xrandr --output "$activeOutput2" --mode "$activeOutput2Resolution"
+    else
+        xrandr --output "$activeOutput2" --off
+    fi
+
+    if [ "$activeOutput1Primary" != '' ]; then
+        xrandr --output "$activeOutput1" --primary
+    else
+        xrandr --output "$activeOutput2" --primary
+    fi
+fi
+
+configurationSelected="optionTmp$optionSelected!"
+notify-send "Monitor configuration changed" "${!configurationSelected}" -i "preferences-desktop-wallpaper"
