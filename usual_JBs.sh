@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 25/07/2019
+# Last update: 16/08/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -1168,7 +1168,7 @@ case $optionInput in
                         NewkernelMd5sum=$(md5sum /boot/vmlinuz 2>/dev/null)
                         if [ "$kernelMd5sum" != "$NewkernelMd5sum" ]; then
                             if [ -x /sbin/lilo ]; then
-                                echo -e "\\nYour kernel image was updated.  We highly recommend you run: lilo"
+                                echo -e "\\nYour kernel image was updated. We highly recommend you run: lilo"
                                 echo "Do you want slackpkg to run lilo now? (y/n)"
                                 read -r runLilo
 
@@ -1177,7 +1177,7 @@ case $optionInput in
                                 fi
                             else
                                 echo -e "\\nYour kernel image was updated and lilo is not found on your system."
-                                echo "You may need to adjust your boot manager(like GRUB) to boot appropriate kernel."
+                                echo "You may need to adjust your boot manager (like GRUB) to boot appropriate kernel."
                             fi
                         fi
                     else
