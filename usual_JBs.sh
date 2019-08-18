@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 16/08/2019
+# Last update: 18/08/2019
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -268,24 +268,32 @@ case $optionInput in
         elif [ ! -d "$folderWork" ]; then
             echo -e "$RED\\nError: The directory \"$folderWork\" not exist"
         else
-            echo -e "\\n$CYAN Folder to work with: $folderWork$NC\\n"
+            echo -e "\\n$CYAN Folder to work with: $folderWork$NC"
             files=$(find "$folderWork" -type f | grep -E "txz$|tgz$")
             filesName=$(echo "$files" | rev | cut -d '.' -f2- | cut -d '/' -f1 | rev)
-            filesName=$(echo "$filesName")
 
             echo -e "$CYAN\\nPackages not installed:$NC"
             linePkg=1
+            pkgInstalled=''
             pkgNotInstalled=''
             for pkg in $filesName; do
                 locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
 
                 if [ "$locatePkg" == '' ]; then
-                    pkgNotInstalled=$pkgNotInstalled$(echo "$files" | sed -n ${linePkg}p)$(echo "\\n")
+                    pkgNotInstalled=$pkgNotInstalled$(echo "$files" | sed -n ${linePkg}p)"\\n"
+                else
+                    pkgInstalled=$pkgInstalled$(echo "$files" | sed -n ${linePkg}p)"\\n"
                 fi
 
                 ((linePkg++))
             done
             echo -e "$pkgNotInstalled" | sort
+
+            echo -en "$CYAN\\nPrint the packages installed? (y)es or (n)o: $NC"
+            read -r printPkg
+            if [ "$printPkg" == 'y' ]; then
+                echo -e "$pkgInstalled" | sort
+            fi
         fi
         ;;
     "git-gc" )
