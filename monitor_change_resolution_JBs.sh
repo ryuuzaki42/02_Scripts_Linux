@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 28/07/2019
+# Last update: 08/10/2019
 #
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
@@ -125,6 +125,8 @@ optionTmp3=" 3 - $activeOutput1 and $activeOutput2 $maximumEqualResolution (mirr
 optionTmp4=" 4 - $activeOutput1 and $activeOutput2 1024x768 (mirror)"
 optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $activeOutput2 $activeOutput2MaxResolution"
 optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
+optionTmp7=" 7 - $activeOutput1 off"
+optionTmp8=" 8 - $activeOutput2 off"
 optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
 optionTmpp=" p - Set ($activeOutput1 1024x768) or ($activeOutput2 1024x768) in turn"
 optionTmp0=" 0 - Other options"
@@ -137,6 +139,8 @@ if [ "$optionSelected" == '' ]; then
     echo "$optionTmp4"
     echo "$optionTmp5"
     echo "$optionTmp6"
+    echo "$optionTmp7"
+    echo "$optionTmp8"
     echo "$optionTmpc"
     echo "$optionTmpp"
     echo "$optionTmp0"
@@ -219,24 +223,42 @@ case $optionSelected in
         echo -e "\\n$optionTmp6\\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary --pos 0x0
         ;;
+    '7' )
+        echo -e "\\n$optionTmp7\\n"
+        if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
+            xrandr --output "$activeOutput1" --off
+        else
+            echo -e "\\n\\tError: $activeOutput2 is off"
+            exit 1
+        fi
+        ;;
+    '8' )
+        echo -e "\\n$optionTmp8\\n"
+        if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
+            xrandr --output "$activeOutput2" --off
+        else
+            echo -e "\\n\\tError: $activeOutput1 is off"
+            exit 1
+        fi
+        ;;
     '0' )
         echo -e "\\n$optionTmp0"
         optionSelected=$optionSelectedTmp
 
-        optionTmp7=" 7 - $activeOutput1 left-of $activeOutput2"
-        optionTmp8=" 8 - $activeOutput1 right-of $activeOutput2"
-        optionTmp9=" 9 - $activeOutput1 above-of $activeOutput2"
-        optionTmp10="10 - $activeOutput1 below-of $activeOutput2"
-        optionTmp11="11 - $activeOutput1 primary"
-        optionTmp12="12 - $activeOutput2 primary"
+        optionTmp9=" 9 - $activeOutput1 left-of $activeOutput2"
+        optionTmp10="10 - $activeOutput1 right-of $activeOutput2"
+        optionTmp11="11 - $activeOutput1 above-of $activeOutput2"
+        optionTmp12="12 - $activeOutput1 below-of $activeOutput2"
+        optionTmp13="13 - $activeOutput1 primary"
+        optionTmp14="14 - $activeOutput2 primary"
 
         if [ "$optionSelected" == '' ]; then
-            echo -e "\\n$optionTmp7"
-            echo "$optionTmp8"
-            echo "$optionTmp9"
+            echo -e "\\n$optionTmp9"
             echo "$optionTmp10"
             echo "$optionTmp11"
             echo "$optionTmp12"
+            echo "$optionTmp13"
+            echo "$optionTmp14"
             echo "$optionTmpf"
 
             echo -en "\\nWith option you wish?: "
@@ -285,42 +307,44 @@ case $optionSelected in
         fi
 
         case $optionSelected in
-            '7' )
-                echo -e "\\n$optionTmp7\\n"
-                xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1MaxResolution_Part1}x0"
-                ;;
-            '8' )
-                echo -e "\\n$optionTmp8\\n"
-                xrandr --output "$activeOutput1" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
-                ;;
             '9' )
                 echo -e "\\n$optionTmp9\\n"
-                xrandr --output "$activeOutput1" --above "$activeOutput2"
+                xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1MaxResolution_Part1}x0"
                 ;;
-            "10" )
+            '10' )
                 echo -e "\\n$optionTmp10\\n"
-                xrandr --output "$activeOutput1" --below "$activeOutput2"
+                xrandr --output "$activeOutput1" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
                 ;;
-            "11" )
+            '11' )
                 echo -e "\\n$optionTmp11\\n"
-                xrandr --output "$activeOutput1" --primary
+                xrandr --output "$activeOutput1" --above "$activeOutput2"
                 ;;
             "12" )
                 echo -e "\\n$optionTmp12\\n"
+                xrandr --output "$activeOutput1" --below "$activeOutput2"
+                ;;
+            "13" )
+                echo -e "\\n$optionTmp13\\n"
+                xrandr --output "$activeOutput1" --primary
+                ;;
+            "14" )
+                echo -e "\\n$optionTmp14\\n"
                 xrandr --output "$activeOutput2" --primary
                 ;;
             'f' )
                 echo -e "\\n$optionTmpf\\n"
                 ;;
             * )
-                echo -e "\\nError: The option \"$optionSelected\" is not recognized\\n"
+                echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
+                exit 1
         esac
         ;;
     'f' )
         echo -e "\\n$optionTmpf\\n"
         ;;
     * )
-        echo -e "\\nError: The option \"$optionSelected\" is not recognized\\n"
+        echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
+        exit 1
 esac
 
 if [ "$resolutionOk" == '' ]; then
@@ -348,5 +372,5 @@ if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
     fi
 fi
 
-configurationSelected="optionTmp$optionSelected!"
+configurationSelected="optionTmp$optionSelected"
 notify-send "Monitor configuration changed" "${!configurationSelected}" -i "preferences-desktop-wallpaper"
