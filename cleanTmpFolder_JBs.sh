@@ -24,7 +24,7 @@
 #
 # Last update: 17/02/2020
 #
-cd /tmp/
+cd /tmp/ || exit
 
 rm -r skype-*/ 2> /dev/null
 rm -r SBo/ 2> /dev/null
