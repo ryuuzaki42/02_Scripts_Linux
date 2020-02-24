@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 18/08/2019
+# Last update: 24/02/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -403,15 +403,15 @@ case $optionInput in
             read -r printDifferent
 
             if [ "$printDifferent" != 'n' ]; then
-                echo -e "$CYAN\\n### These file(s) are different:\\n$NC"
+                echo -e "$BLUE\\n### These file(s) are different:\\n$NC"
                 filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
                 echo "$filesDifferent" | sort -k 2
             fi
 
             tmpFolder="equal_files_"$RANDOM
-            echo -e "$CYAN\\nWant to move (leave one) the equal file(s) to a TMP folder ($tmpFolder)?$NC"
-            echo -e "$CYAN\\n### Files to be moved:$NC\\n$FilesToWork\\n"
-            echo -en "$CYAN(y)es - (n)o (hit enter to no):$NC "
+            echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
+            echo -e "$RED\\n### Files to be moved:$GREEN\\n$FilesToWork\\n"
+            echo -en "$RED(y)es - (n)o (hit enter to no):$NC "
             read -r moveEqual
 
             if [ "$moveEqual" == 'y' ]; then
@@ -781,7 +781,7 @@ case $optionInput in
                                 fi
 
                                 echo -e "\\n\\t$RED#------------------------------#"
-                                echo -en "$CYAN\\t Make this change on the disk?\\n\\t (y)es - (n)o:$NC "
+                                echo -en "\\t Make this change on the disk?\\n\\t (y)es - (n)o:$NC "
                                 read -r continueWriteDisk
                                 if [ "$continueWriteDisk" == 'y' ]; then
                                     echo -e "$CYAN\\nChanges are writing in $pathDestination.$NC Please wait..."
