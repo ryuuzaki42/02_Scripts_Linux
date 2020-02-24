@@ -20,9 +20,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean /tmp/
+# Script: Clean /tmp/ folder
 #
-# Last update: 20/02/2020
+# Last update: 24/02/2020
 #
 cd /tmp/ || exit
 
@@ -40,7 +40,7 @@ rm -r Temp-*/ 2> /dev/null
 rm -r hsperfdata_*/ 2> /dev/null
 rm dropbox-antifreeze-* 2> /dev/null
 rm -r .vbox-*-ipc/ 2> /dev/null
-rm -r gameoverlayui.log* 2> /dev/null
-rm -r .org.chromium.Chromium.*/ 2> /dev/null
+rm gameoverlayui.log* 2> /dev/null
+rm .org.chromium.Chromium.* 2> /dev/null
 rm -r Slack\ Crashes/ 2> /dev/null
 rm mastersingleapp-master* 2> /dev/null
