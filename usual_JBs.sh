@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 24/02/2020
+# Last update: 28/02/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -240,7 +240,9 @@ case $optionInput in
                         "${optionVector[56]}" "${optionVector[57]}" \
                         "${optionVector[58]}" "${optionVector[59]}" \
                         "${optionVector[60]}" "${optionVector[61]}" \
-                        "${optionVector[62]}" "${optionVector[63]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[62]}" "${optionVector[63]}" \
+                        "${optionVector[64]}" "${optionVector[65]}" \
+                        "${optionVector[66]}" "${optionVector[67]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -1209,10 +1211,12 @@ case $optionInput in
         cityName=${*:2} # Get the second parameter to the end
 
         if [ "$cityName" == '' ]; then
-            cityName="Rio Paranaíba"
+            cityName="Rio Paranaiba"
         fi
 
         wget -qO - "wttr.in/$cityName" # Get the weather information
+        echo
+        curl "v2.wttr.in/$cityName"
         ;;
     * )
         echo -e "\\n$CYAN    $(basename "$0") -$RED Error: Option \"$1\" not recognized$CYAN"
