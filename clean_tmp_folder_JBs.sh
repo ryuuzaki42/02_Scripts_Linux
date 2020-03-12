@@ -20,27 +20,38 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean /tmp/ folder
+# Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 24/02/2020
+# Last update: 13/03/2020
 #
-cd /tmp/ || exit
 
-rm -r skype-*/ 2> /dev/null
-rm -r SBo/ 2> /dev/null
-rm -r skypeforlinux*/ 2> /dev/null
-rm -r smartsynchronize-* 2> /dev/null
-rm lastChance* 2> /dev/null
-rm -r .esd-1000/ 2> /dev/null
-rm -r runtime-*/ 2> /dev/null
-rm -r dumps/ 2> /dev/null
-rm qtsingleapp-* 2> /dev/null
-rm .ktorrent_kde4_* 2> /dev/null
-rm -r Temp-*/ 2> /dev/null
-rm -r hsperfdata_*/ 2> /dev/null
-rm dropbox-antifreeze-* 2> /dev/null
-rm -r .vbox-*-ipc/ 2> /dev/null
-rm gameoverlayui.log* 2> /dev/null
-rm .org.chromium.Chromium.* 2> /dev/null
-rm -r Slack\ Crashes/ 2> /dev/null
-rm mastersingleapp-master* 2> /dev/null
+folderHomeToClean="/media/sda2/home/j"
+rm -fv $folderHomeToClean/.xsession-errors
+# rm -fr $folderHomeToClean/.cache/
+rm -fvr $folderHomeToClean/.thumbnails/
+rm -fvr $folderHomeToClean/.config/VirtualBox/*log*
+rm -fvr $folderHomeToClean/VirtualBox\ VMs/*/Logs/
+
+rm -fv /tmp/lastChance*
+rm -fv /tmp/qtsingleapp-*
+rm -fv /tmp/.ktorrent_kde4_*
+rm -fv /tmp/dropbox-antifreeze-*
+rm -fv /tmp/gameoverlayui.log*
+rm -fv /tmp/.org.chromium.Chromium.*
+rm -fv /tmp/mastersingleapp-master*
+rm -fv /tmp/OSL_PIPE_1000_SingleOfficeIPC_*
+rm -fv /tmp/steam_chrome_shmem_uid*
+
+rm -fvr /tmp/skype-*/
+rm -fvr /tmp/SBo/
+rm -fvr /tmp/skypeforlinux*/
+rm -fvr /tmp/smartsynchronize-*/
+rm -fvr /tmp/.esd-1000/
+rm -fvr /tmp/runtime-*/
+rm -fvr /tmp/dumps/
+rm -fvr /tmp/Temp-*/
+rm -fvr /tmp/hsperfdata_*/
+rm -fvr /tmp/.vbox-*-ipc/
+rm -fvr /tmp/Slack\ Crashes/
+rm -fvr /tmp/org.cogroo.addon.*/
+rm -fvr /tmp/lu*.tmp/
