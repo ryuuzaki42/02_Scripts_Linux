@@ -1,0 +1,10 @@
+[Desktop Entry]
+Exec=/usr/bin/monitor_change_resolution_JBs.sh 5 1 1
+Icon=preferences-desktop-wallpaper
+Name=monitor_both_display
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+Type=Application
+X-KDE-SubstituteUID=false
+# shortcut = ctrl + meta + b
