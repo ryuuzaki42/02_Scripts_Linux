@@ -22,36 +22,37 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 13/03/2020
+# Last update: 03/04/2020
 #
 
 folderHomeToClean="/media/sda2/home/j"
-rm -fv $folderHomeToClean/.xsession-errors
 # rm -fr $folderHomeToClean/.cache/
 rm -fvr $folderHomeToClean/.thumbnails/
+rm -fv $folderHomeToClean/.xsession-errors
 rm -fvr $folderHomeToClean/.config/VirtualBox/*log*
 rm -fvr $folderHomeToClean/VirtualBox\ VMs/*/Logs/
 
+rm -fv /tmp/tmpaddon*
 rm -fv /tmp/lastChance*
 rm -fv /tmp/qtsingleapp-*
 rm -fv /tmp/.ktorrent_kde4_*
-rm -fv /tmp/dropbox-antifreeze-*
 rm -fv /tmp/gameoverlayui.log*
-rm -fv /tmp/.org.chromium.Chromium.*
+rm -fv /tmp/dropbox-antifreeze-*
+rm -fv /tmp/steam_chrome_shmem_uid*
 rm -fv /tmp/mastersingleapp-master*
 rm -fv /tmp/OSL_PIPE_1000_SingleOfficeIPC_*
-rm -fv /tmp/steam_chrome_shmem_uid*
 
-rm -fvr /tmp/skype-*/
 rm -fvr /tmp/SBo/
-rm -fvr /tmp/skypeforlinux*/
-rm -fvr /tmp/smartsynchronize-*/
-rm -fvr /tmp/.esd-1000/
-rm -fvr /tmp/runtime-*/
 rm -fvr /tmp/dumps/
 rm -fvr /tmp/Temp-*/
-rm -fvr /tmp/hsperfdata_*/
-rm -fvr /tmp/.vbox-*-ipc/
-rm -fvr /tmp/Slack\ Crashes/
-rm -fvr /tmp/org.cogroo.addon.*/
 rm -fvr /tmp/lu*.tmp/
+rm -fvr /tmp/skype-*/
+rm -fvr /tmp/.esd-1000/
+rm -fvr /tmp/runtime-*/
+rm -fvr /tmp/.vbox-*-ipc/
+rm -fvr /tmp/hsperfdata_*/
+rm -fvr /tmp/skypeforlinux*/
+rm -fvr /tmp/Slack\ Crashes/
+rm -fvr /tmp/smartsynchronize-*/
+rm -fvr /tmp/org.cogroo.addon.*/
+rm -fvr /tmp/.org.chromium.Chromium.*/
