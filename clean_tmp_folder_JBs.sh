@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 03/04/2020
+# Last update: 13/04/2020
 #
 
 folderHomeToClean="/media/sda2/home/j"
@@ -40,6 +40,7 @@ rm -fv /tmp/gameoverlayui.log*
 rm -fv /tmp/dropbox-antifreeze-*
 rm -fv /tmp/steam_chrome_shmem_uid*
 rm -fv /tmp/mastersingleapp-master*
+rm -fv /tmp/.org.chromium.Chromium.*
 rm -fv /tmp/OSL_PIPE_1000_SingleOfficeIPC_*
 
 rm -fvr /tmp/SBo/
@@ -55,4 +56,3 @@ rm -fvr /tmp/skypeforlinux*/
 rm -fvr /tmp/Slack\ Crashes/
 rm -fvr /tmp/smartsynchronize-*/
 rm -fvr /tmp/org.cogroo.addon.*/
-rm -fvr /tmp/.org.chromium.Chromium.*/
