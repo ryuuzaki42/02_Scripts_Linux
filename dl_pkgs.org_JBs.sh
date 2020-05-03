@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 19/07/2019
+# Last update: 03/05/2020
 #
 programName=$1
 justUrl=$2
@@ -47,7 +47,7 @@ else
     fi
 
     echo
-    wget -c "https://pkgs.org/download/$programName" -O "$programName"
+    wget -U firefox -c "https://pkgs.org/download/$programName" -O "$programName"
 
     packagesLink=$(grep -E "txz|tgz" < "$programName" | grep "$slackwareVersion" | grep -o 'http[^"]*')
     rm "$programName"
@@ -88,9 +88,9 @@ else
             done
 
             echo
-            wget -c "$packagePageLink" -O "$programName"
+            wget -U firefox -c "$packagePageLink" -O "$programName"
 
-            linkDl=$(grep -C 10 "[b|B]inary [p|P]ackage" < "$programName" | grep "href" | grep -o 'http[^"]*')
+            linkDl=$(grep -C 10 "[b|B]inary [p|P]ackage" < "$programName" | grep -o 'http[^"]*' | cut -d '<' -f1)
             rm "$programName"
 
             if [ "$justUrl" == "url" ]; then
