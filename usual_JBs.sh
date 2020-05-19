@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 28/02/2020
+# Last update: 19/05/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -350,8 +350,6 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
-        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
-
         echo -en "$CYAN\\nRunning md5sum, can take a while.\nPlease wait, checking "
         if [ "$fileType" == '' ]; then
             echo -en "all files...$NC"
@@ -370,6 +368,7 @@ case $optionInput in
 
         md5Files=$(echo "$fileAndMd5" | cut -d " " -f1) # Get only de md5sum
 
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         for value in $md5Files; do
             if [ "$valueBack" == "$value" ]; then # Look for all values equal
                 equalFiles="$equalFiles$value|"
