@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 13/04/2020
+# Last update: 25/05/2020
 #
 
 folderHomeToClean="/media/sda2/home/j"
@@ -56,3 +56,4 @@ rm -fvr /tmp/skypeforlinux*/
 rm -fvr /tmp/Slack\ Crashes/
 rm -fvr /tmp/smartsynchronize-*/
 rm -fvr /tmp/org.cogroo.addon.*/
+rm -fvr /tmp/.org.chromium.Chromium.*
