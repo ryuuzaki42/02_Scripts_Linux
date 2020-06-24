@@ -22,7 +22,9 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 03/04/2018
+# Last update: 24/06/2020
+#
+# If you have NetworkManager installed an running you can use nmtui
 #
 useColor() {
     BLACK='\e[1;30m'
