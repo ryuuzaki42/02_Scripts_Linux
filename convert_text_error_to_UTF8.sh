@@ -29,11 +29,14 @@
 #
 # Script: Converte erros comuns de acentos Latini para UFT-8
 #
-# Last update: 14/12/2019
+# Last update: 21/07/2020
 #
 fileName=$1
 
-fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
+if [ "$fileName" == '' ]; then
+    echo -e "\\nError: Need to test if pass file as parameter to work\\n"
+    exit 1
+fi
 
 fileNameExtension=$(echo "$fileName" | rev | cut -d "." -f1 | rev)
 
@@ -95,3 +98,5 @@ s/Ã›/Û/g
 s/Ãœ/Ü/g
 
 s/Ã‡/Ç/g' > "${fileName}_converted.$fileNameExtension"
+
+echo -e "\\nFile converted: ${fileName}_converted.$fileNameExtension\\n"
