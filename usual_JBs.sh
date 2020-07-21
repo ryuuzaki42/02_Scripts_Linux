@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 19/05/2020
+# Last update: 21/07/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -350,7 +350,7 @@ case $optionInput in
             recursiveFolderValue=''
         fi
 
-        echo -en "$CYAN\\nRunning md5sum, can take a while.\nPlease wait, checking "
+        echo -en "$GREEN\\nRunning md5sum, can take a while. Please wait, checking "
         if [ "$fileType" == '' ]; then
             echo -en "all files...$NC"
             fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
@@ -411,8 +411,10 @@ case $optionInput in
 
             tmpFolder="equal_files_"$RANDOM
             echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
-            echo -e "$RED\\n### Files to be moved:$GREEN\\n$FilesToWork\\n"
-            echo -en "$RED(y)es - (n)o (hit enter to no):$NC "
+            echo -e "$RED\\n### Files to be moved:$GREEN"
+            echo "$FilesToWork" | sort -k 2
+            echo -en "\\n$RED(y)es - (n)o (hit enter to no):$NC "
+
             read -r moveEqual
 
             if [ "$moveEqual" == 'y' ]; then
@@ -463,16 +465,19 @@ case $optionInput in
                         lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
                     else
                         lastPart=$(echo -e "$subtitleInfo" | head -n 1)
-                        subNumber='2'
+                        subNumber='1'
                     fi
 
                     echo -e "\\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
                     fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
                     echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
 
-                    ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
-
-                    echo -e "\\nSubtitle \"$lastPart\" from \"$fileName\" \\nsaved as \"${fileNameTmp}-${lastPart}.srt\""
+                    echo -e "${GREEN}Running:\\nffmpeg -i \"$fileName\" -an -vn -map 0:$subNumber -c:s:0 srt \"${fileNameTmp}-${lastPart}.srt\"\\n$NC"
+                    if ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"; then
+                        echo -e "\\nSubtitle \"$lastPart\" from \"$fileName\" \\nsaved as \"${fileNameTmp}-${lastPart}.srt\""
+                    else
+                        echo -e "$RED\\nError: The subtitle number not found$NC"
+                    fi
                 else
                     echo -e "$RED\\nError: The subtitle number must be a number$NC"
                 fi
