@@ -22,7 +22,7 @@
 #
 # Script: remove one parte in the files name.
 #
-# Last update: 25/07/2020
+# Last update: 26/07/2020
 #
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPartToRemove=$1
@@ -30,22 +30,23 @@ set -e
 
 if [ "$equalPartToRemove" == '' ]; then
     echo -e "\\nError: Need to pass the part to remove in the name of the files"
-    echo -e "\\nExample: $(basename $0) \".720p. 10bit.WEBRip.2CH \""
+    echo -e "\\nExample: $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
     echo "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\""
     exit
 fi
 
-echo -e "\\nRemover \"$equalPartToRemove\" in this files:"
-for file in *$equalPartToRemove*; do
-    file2=$(echo "$file" | sed 's/'"$equalPartToRemove"'//1')
-    printf "%-80s -> %20s\n" "$file" "$file2"
+echo -e "\\nRemover \"$equalPartToRemove\" in this files:\\n"
+for file in *"$equalPartToRemove"*; do
+    file2=${file//$equalPartToRemove/}
+    printf "%-50s -> %s\n" "$file" "$file2"
 done
 
-read -p "(y)es or (n)o - hit enter to no): " continueOrNot
+echo
+read -rp "(y)es or (n)o - hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
-    for file in *$equalPartToRemove*; do
-        file2=$(echo "$file" | sed 's/'"$equalPartToRemove"'//1')
+    for file in *"$equalPartToRemove"*; do
+        file2=${file//$equalPartToRemove/}
         mv -v "$file" "$file2"
     done
 else
