@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 21/07/2020
+# Last update: 01/08/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -156,7 +156,8 @@ case $optionInput in
         "pkg-u        " "$RED * - Upgrade packge(s) from a folder (and subfolders) in the Slackware"
         "print-lines  " "   - Print part of file (lineStart to lineEnd)"
         "screenshot   " "   - Screenshot from display :0"
-        "search-pkg   " "   - Search in the installed package folder (/var/log/packages/) for one pattern"
+        "s-pkg-f      " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
+        "s-pkg-s      " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
         "search-pwd   " "   - Search in this directory (recursive) for a pattern"
         "slack-up     " "$RED * - Slackware update"
         "sub-extract  " "   - Extract subtitle from a video file"
@@ -242,7 +243,8 @@ case $optionInput in
                         "${optionVector[60]}" "${optionVector[61]}" \
                         "${optionVector[62]}" "${optionVector[63]}" \
                         "${optionVector[64]}" "${optionVector[65]}" \
-                        "${optionVector[66]}" "${optionVector[67]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[66]}" "${optionVector[67]}" \
+                        "${optionVector[68]}" "${optionVector[69]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -441,7 +443,7 @@ case $optionInput in
             fi
 
         fi
-    ;;
+        ;;
     "sub-extract" ) # Need ffmpeg
         echo -e "$CYAN# Extract subtitle from a video file #$NC"
         fileName=$2
@@ -523,8 +525,20 @@ case $optionInput in
             echo -e "$RED\\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
         fi
         ;;
-    "search-pkg" )
-        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern #$NC"
+    "s-pkg-f" )
+        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast) #$NC"
+        if [ "$2" == '' ]; then
+            echo -en "$CYAN\\nPackage file or pattern to search:$NC "
+            read -r filePackage
+        else
+            filePackage=$2
+        fi
+
+        echo -en "$CYAN\\nSearching, please wait...$NC\\n"
+        grep -rn "$filePackage" /var/log/packages/* --color=auto
+        ;;
+    "s-pkg-s" )
+        echo -e "$CYAN# Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files) #$NC"
         if [ "$2" == '' ]; then
             echo -en "$CYAN\\nPackage file or pattern to search:$NC "
             read -r filePackage
@@ -545,7 +559,7 @@ case $optionInput in
             fi
         done
 
-        sizeResultFile=$(du "$tmpFileName")
+        sizeResultFile=$(du "$tmpFileName" | cut -f1)
 
         if [ "$sizeResultFile" != '0' ]; then
             echo -e "\\n\\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\\n"
@@ -573,7 +587,7 @@ case $optionInput in
             echo -e "\\n\\n    No result was found"
         fi
 
-        echo -e "\\nDeleting the log files used in this script"
+        echo -e "\\nDeleting the log files used in this script\\n"
         rm "$tmpFileName" "$tmpFileFull"
         ;;
     "work-fbi" )
@@ -818,7 +832,7 @@ case $optionInput in
         fi
 
         echo -e "$CYAN\\nSearching, please wait...$NC\\n\\n"
-        grep -rn "$patternSearch"
+        grep -rn "$patternSearch" --color=auto
         # -r recursive, -n print line number with output lines
         ;;
     "ping-test" | "mtr-test" )
