@@ -26,17 +26,30 @@
 #
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPartToRemove=$1
+partToChange=$2
 
 if [ "$equalPartToRemove" == '' ]; then
-    echo -e "\\nError: Need to pass the part to remove in the name of the files"
-    echo -e "\\nExample: $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
-    echo "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\""
+    echo -e "\\n# Error: Need to pass parametres to remove or change in the name of the files"
+    echo -e "\\nExample 1 (remove part of the name): $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
+    echo -e "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\"\\n"
+    echo -e "# Or two values, to change the firt by the seccond"
+    echo -e "\\nExample 2 (change part of the name): $(basename "$0") \"file2\" \"The movie\""
+    echo -e "mv \"file2.mkv\" -> \"The movie.mkv\"\\n"
     exit
 fi
 
+setFile2(){
+    file=$1
+    if [ "$partToChange" == '' ]; then
+        file2=${file//$equalPartToRemove/}
+    else
+        file2=${file//$equalPartToRemove/$partToChange}
+    fi
+}
+
 echo -e "\\nRemover \"$equalPartToRemove\" in this files:\\n"
 for file in *"$equalPartToRemove"*; do
-    file2=${file//$equalPartToRemove/}
+    setFile2 "$file"
     printf "%-80s -> $file2\n" "$file"
 done
 
@@ -45,7 +58,7 @@ read -rp "(y)es or (n)o - (hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
     for file in *"$equalPartToRemove"*; do
-        file2=${file//$equalPartToRemove/}
+        setFile2 "$file"
         mv -v "$file" "$file2"
     done
 else
