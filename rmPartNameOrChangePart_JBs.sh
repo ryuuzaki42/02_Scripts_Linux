@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove one parte in the files name.
+# Script: remove one part in the files name.
 #
 # Last update: 07/08/2020
 #
@@ -29,10 +29,10 @@ equalPartToRemove=$1
 partToChange=$2
 
 if [ "$equalPartToRemove" == '' ]; then
-    echo -e "\\n# Error: Need to pass parametres to remove or change in the name of the files"
+    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
     echo -e "\\nExample 1 (remove part of the name): $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
     echo -e "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\"\\n"
-    echo -e "# Or two values, to change the firt by the seccond"
+    echo -e "# Or two values, to change the first by the second"
     echo -e "\\nExample 2 (change part of the name): $(basename "$0") \"file2\" \"The movie\""
     echo -e "mv \"file2.mkv\" -> \"The movie.mkv\"\\n"
     exit
@@ -47,7 +47,7 @@ setFile2(){
     fi
 }
 
-echo -e "\\nRemover \"$equalPartToRemove\" in this files:\\n"
+echo -e "\\nRemove \"$equalPartToRemove\" in this files:\\n"
 for file in *"$equalPartToRemove"*; do
     setFile2 "$file"
     printf "%-80s -> $file2\n" "$file"
