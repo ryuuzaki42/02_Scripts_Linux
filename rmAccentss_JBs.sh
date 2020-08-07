@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove accentss in the files name.
+# Script: remove accents in the files name.
 #
 # Last update: 07/08/2020
 #
@@ -34,7 +34,7 @@ if [ "$equalPart" == '' ]; then
     exit
 fi
 
-removeAccentss(){
+removeAccents(){
     file2=$1
 
     file2=${file2//á/a}
@@ -73,9 +73,9 @@ removeAccentss(){
     file2=${file2//–/-}
 }
 
-echo -e "\\nRemove accentss int \"$equalPart\" files:\\n"
+echo -e "\\nRemove accents in \"*$equalPart*\" files:\\n"
 for file in *"$equalPart"*; do
-    removeAccentss "$file"
+    removeAccents "$file"
     printf "%-80s -> $file2\n" "$file"
 done
 
@@ -84,7 +84,7 @@ read -rp "(y)es or (n)o - (hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
     for file in *"$equalPart"*; do
-        removeAccentss "$file"
+        removeAccents "$file"
         mv -v "$file" "$file2"
     done
 else
