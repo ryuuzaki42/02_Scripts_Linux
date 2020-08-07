@@ -29,8 +29,8 @@ equalPart=$1
 
 if [ "$equalPart" == '' ]; then
     echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
-    echo -e "\\nExample: $(basename "$0") \"fíléWithàccentss\""
-    echo -e "mv \"fíléWithÀccentss.ext\" -> \"fileWithAccentss.ext\"\\n"
+    echo -e "\\nExample: $(basename "$0") \"fíléWithàccents\""
+    echo -e "mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\\n"
     exit
 fi
 
