@@ -24,25 +24,15 @@
 #
 # Last update: 07/08/2020
 #
-
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
-equalPartToRemove=$1
+equalPart=$1
 
-if [ "$equalPartToRemove" == '' ]; then
+if [ "$equalPart" == '' ]; then
     echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
     echo -e "\\nExample: $(basename "$0") \"fíléWithàccentss\""
     echo -e "mv \"fíléWithÀccentss.ext\" -> \"fileWithAccentss.ext\"\\n"
     exit
 fi
-
-setFiles(){
-    file=$1
-    if [ "$partToChange" == '' ]; then
-        file2=${file//$equalPartToRemove/}
-    else
-        file2=${file//$equalPartToRemove/$partToChange}
-    fi
-}
 
 removeAccentss(){
     file2=$1
@@ -83,9 +73,9 @@ removeAccentss(){
     file2=${file2//–/-}
 }
 
-echo -e "\\nRemover \"$equalPartToRemove\" in this files:\\n"
-for file in *"$equalPartToRemove"*; do
-    removeAccentss $file
+echo -e "\\nRemove accentss int \"$equalPart\" files:\\n"
+for file in *"$equalPart"*; do
+    removeAccentss "$file"
     printf "%-80s -> $file2\n" "$file"
 done
 
@@ -93,8 +83,8 @@ echo
 read -rp "(y)es or (n)o - (hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
-    for file in *"$equalPartToRemove"*; do
-        removeAccentss $file
+    for file in *"$equalPart"*; do
+        removeAccentss "$file"
         mv -v "$file" "$file2"
     done
 else
