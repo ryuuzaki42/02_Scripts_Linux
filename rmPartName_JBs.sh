@@ -22,11 +22,10 @@
 #
 # Script: remove one parte in the files name.
 #
-# Last update: 26/07/2020
+# Last update: 07/08/2020
 #
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPartToRemove=$1
-set -e
 
 if [ "$equalPartToRemove" == '' ]; then
     echo -e "\\nError: Need to pass the part to remove in the name of the files"
@@ -38,11 +37,11 @@ fi
 echo -e "\\nRemover \"$equalPartToRemove\" in this files:\\n"
 for file in *"$equalPartToRemove"*; do
     file2=${file//$equalPartToRemove/}
-    printf "%-50s -> %s\n" "$file" "$file2"
+    printf "%-80s -> $file2\n" "$file"
 done
 
 echo
-read -rp "(y)es or (n)o - hit enter to no): " continueOrNot
+read -rp "(y)es or (n)o - (hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
     for file in *"$equalPartToRemove"*; do
