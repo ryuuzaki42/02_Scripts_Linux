@@ -62,5 +62,6 @@ if [ "$continueOrNot" == 'y' ]; then
         mv -v "$file" "$file2"
     done
 else
-    echo -e "\\nJust exiting\\n"
+    echo -e "\\nJust exiting"
 fi
+echo
