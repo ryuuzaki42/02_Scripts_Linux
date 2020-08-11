@@ -34,13 +34,15 @@ if [ "$equalPart" == '' ]; then
     exit
 fi
 
-removeAccents(){
-    file2=$(echo $1 | tr '[:upper:]' '[:lower:]')
-}
+# file2=${file,,}
+# ^ first character of the string to uppercase
+# ^^ whole string to the uppercase
+# , first character of the string to lowercase
+# ,, whole string to the lowercase
 
 echo -e "\\nRemove uppercase in \"*$equalPart*\" files:\\n"
 for file in *"$equalPart"*; do
-    removeAccents "$file"
+    file2=${file,,}
     printf "%-80s -> $file2\n" "$file"
 done
 
@@ -49,7 +51,7 @@ read -rp "(y)es or (n)o - (hit enter to no): " continueOrNot
 if [ "$continueOrNot" == 'y' ]; then
     echo
     for file in *"$equalPart"*; do
-        removeAccents "$file"
+        file2=${file,,}
         mv -v "$file" "$file2"
     done
 else
