@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 01/08/2020
+# Last update: 11/08/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -748,15 +748,18 @@ case $optionInput in
                         echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
                         read -r syncNowOrNow
 
+                        rsyncCommand="rsync -achirv --delete --progress"
+                        # -a archive mode; -c skip based on checksum, not mod-time & size
+                        # -h output numbers in a human-readable format; -i output a change-summary for all updates
+                        # -r recurse into directories; -v increase verbosity; --delete delete extraneous files from destination directories
+                        # --progress show progress during transfer; -n perform a trial run with no changes made
+
                         if [ "$syncNowOrNow" == "2" ]; then
                             echo -e "$CYAN\\nMaking the files equal.$NC Please wait..."
-                            rsync -crvh --delete "$pathSource" "$pathDestination"
+                            $rsyncCommand "$pathSource" "$pathDestination"
                         else
                             echo -en "$CYAN\\nPlease wait until all files are compared...$NC"
-                            folderChangesFull=$(rsync -aicn --delete "$pathSource" "$pathDestination")
-                            # -a archive mode; -i output a change-summary for all updates
-                            # -c skip based on checksum, not mod-time & size; -n perform a trial run with no changes made
-                            # --delete delete extraneous files from destination directories
+                            folderChangesFull=$($rsyncCommand -n "$pathSource" "$pathDestination")
 
                             folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
@@ -805,7 +808,7 @@ case $optionInput in
                                 read -r continueWriteDisk
                                 if [ "$continueWriteDisk" == 'y' ]; then
                                     echo -e "$CYAN\\nChanges are writing in $pathDestination.$NC Please wait..."
-                                    rsync -crvh --delete "$pathSource" "$pathDestination"
+                                    $rsyncCommand "$pathSource" "$pathDestination"
                                 else
                                     echo -e "$CYAN\\n    None change writes in disk$NC"
                                 fi
