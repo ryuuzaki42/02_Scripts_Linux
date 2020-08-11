@@ -35,34 +35,7 @@ if [ "$equalPart" == '' ]; then
 fi
 
 removeAccents(){
-    file2=$1
-
-    file2=${file2//A/a}
-    file2=${file2//B/b}
-    file2=${file2//C/c}
-    file2=${file2//D/d}
-    file2=${file2//E/e}
-    file2=${file2//F/f}
-    file2=${file2//G/g}
-    file2=${file2//H/h}
-    file2=${file2//I/i}
-    file2=${file2//J/j}
-    file2=${file2//K/k}
-    file2=${file2//L/l}
-    file2=${file2//M/m}
-    file2=${file2//N/n}
-    file2=${file2//O/o}
-    file2=${file2//P/p}
-    file2=${file2//Q/q}
-    file2=${file2//R/r}
-    file2=${file2//S/s}
-    file2=${file2//T/t}
-    file2=${file2//U/u}
-    file2=${file2//V/v}
-    file2=${file2//X/x}
-    file2=${file2//W/w}
-    file2=${file2//Y/y}
-    file2=${file2//Z/z}
+    file2=$(echo $1 | tr '[:upper:]' '[:lower:]')
 }
 
 echo -e "\\nRemove uppercase in \"*$equalPart*\" files:\\n"
