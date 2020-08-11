@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 13/01/2019
+# Last update: 11/08/2020
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -51,10 +51,15 @@ shopt -s histappend
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 export PAGER='/usr/bin/most -s' # To display color man pages, using most instead less
-alias pagerMore='export PAGER="/usr/bin/most -s"'
+alias pagerMost='export PAGER="/usr/bin/most -s"'
+alias pagerMore='export PAGER="/usr/bin/more"'
 alias pagerLess='export PAGER="/usr/bin/less"'
 
 # Tput setaf * colors => 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan, 7 white
+
+#export HISTTIMEFORMAT="%d/%m/%y - %H:%M:%S " # Time in history
+
+#HISTFILESIZE=500 # Count commands save in the history file
 
 if [ "$(id -u)" -eq '0' ]; then # User root
     PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# " # With color
