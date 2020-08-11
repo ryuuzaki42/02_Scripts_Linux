@@ -29,7 +29,7 @@
 #
 # Script: Converte erros comuns de acentos Latini para UFT-8
 #
-# Last update: 21/07/2020
+# Last update: 11/08/2020
 #
 fileName=$1
 
@@ -38,7 +38,8 @@ if [ "$fileName" == '' ]; then
     exit 1
 fi
 
-fileNameExtension=$(echo "$fileName" | rev | cut -d "." -f1 | rev)
+fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
+fileExtension=$(echo "$fileName" | rev | cut -d "." -f1 | rev)
 
 cat "$fileName" | sed '
 s/Ã¡/á/g
@@ -97,6 +98,6 @@ s/Ã™/Ù/g
 s/Ã›/Û/g
 s/Ãœ/Ü/g
 
-s/Ã‡/Ç/g' > "${fileName}_converted.$fileNameExtension"
+s/Ã‡/Ç/g' > "${fileNameTmp}_c.$fileExtension"
 
-echo -e "\\nFile converted: ${fileName}_converted.$fileNameExtension\\n"
+echo -e "\\nFile converted: ${fileNameTmp}_c.$fileExtension\\n"
