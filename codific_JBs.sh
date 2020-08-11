@@ -64,11 +64,11 @@ elif echo "$codification" | grep -q "UTF-8"; then # Check if codification is utf
 
     iconv -f utf-8 -t iso-8859-1//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to iso-8859 and save in another file
 elif echo "$codification" | grep -q "Non-ISO extended-ASCII text"; then # Check if codification is "Non-ISO extended-ASCII text"
-    codStart="Non-ISO extended-ASCII text - maybe CP1250"
+    codStart="Non-ISO extended-ASCII text - maybe iso-8859-1"
     codEnd="utf-8"
     fileName2="${fileName2Tmp}_${codEnd}.$extension"
 
-    iconv -f CP1250 -t utf-8//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to utf-8 and save in another file
+    iconv -f iso-8859-1 -t utf-8//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to utf-8 and save in another file
 else # In last case, if not one of the cod bellow, the script ends with error
     echo -e "\\n codification unknown\\n The file was not converted\\n"
     exit 1
