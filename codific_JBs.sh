@@ -20,67 +20,73 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: converte texto utf8 to iso-8859 e vice-versa
+# Script: Convert text utf8 to iso-8859 and others
 #
-# Last update: 14/11/2017
+# Last update: 11/08/2020
 #
-if [ "$#" -ne '1' ]; then # Verifica se foi passado o nome do arquivo
-    echo -e "\\n$(basename "$0"): Erro de operandos"
-    echo "Use $0 nome.extensão (do arquivo que deseja converter)"
-    echo -e "Tente $0 --help para mais detalhes\\n"
-    exit 0
-fi
-
-ajuda() { # Função de Ajuda
-    echo -e "\\n# Use o nome do arquivo (com a extensão) que deseja converter #"
-    echo -e "# Ex.: $0 file.srt                                  #\\n"
+help() {
+    echo -e "\\nUse the file name (with extension) that want to convert"
+    echo -e "Example: $(basename "$0") file.srt\\n"
     exit 0
 }
 
-case $1 in # Case verifica chamada da função ajuda
-    '--help')
-        ajuda
+if [ "$#" -ne '1' ]; then # Check if has passed the file name
+    echo -e "\\n$(basename "$0"): Error - need the pass file name\\n"
+    help
+fi
+
+case $1 in # case to call help
+    '--help' | '-h')
+        help
 esac
 
-nomeArquivo=$1 # Nome do arquivo $1
-if [ ! -e "$nomeArquivo" ]; then
-    echo -e "\\nArquivo passado por parâmetro não existe\\nTente \"$0 --help\" ou com outro arquivo\\n"
+fileName=$1
+if [ ! -e "$fileName" ]; then
+    echo -e "\\nThe file \"$fileName\" don't exist\\nTry \"$(basename "$0") -h\" or with another file\\n"
     exit 1
 fi
 
-tamanhoNome=${#nomeArquivo} # Calcula o tamanho do nome
-tamanhoNome2=$((tamanhoNome - 5)) # Tamanho do nome do arquivo sem a extensão
-nomeArquivo2=$(echo "$nomeArquivo" | cut -c1-$tamanhoNome2) # Nome do arquivo sem extensão
-tamanhoNome2=$((tamanhoNome - 2)) # Tamanho do nome do arquivo sem a extensão pra pegar a extensão
-extensao=$(echo "$nomeArquivo" | cut -c$tamanhoNome2-) # Extensão do arquivo
-codificacao=$(file "$nomeArquivo") # Verifica codificação do arquivo
+fileName2Tmp=$(echo "$fileName" | rev | cut -d '.' -f2- | rev) # File name without extension
+extension=$(echo "$fileName" | rev | cut -d '.' -f1 | rev) # Extension of the file
 
-if echo "$codificacao" | grep -q "ISO-8859"; then # Verifica codificação do arquivo é iso-8859
-    codInicial="iso-8859"
-    codFinal="utf-8"
-    iconv -f iso-8859-1 -t utf-8//TRANSLIT "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" # Converte arquivo para utf-8 salvando em outro arquivo
-elif echo "$codificacao" | grep -q "UTF-8"; then # Verifica codificação do arquivo é iso-8859
-    codInicial="utf-8"
-    codFinal="iso-8859"
-    iconv -f utf-8 -t iso-8859-1//TRANSLIT "$nomeArquivo" > "$nomeArquivo2"_"$codFinal"."$extensao" # Converte arquivo para iso-8859 salvando em outro arquivo
-else # Em último caso, se o arquivo não for de nenhuma das duas codificações, o script termina
-    echo -e "\\nCodificação desconhecida\\nArquivo não pode ser convertido\\n"
+codification=$(file "$fileName") # Get the codification of the file
+
+if echo "$codification" | grep -q "ISO-8859"; then # Check if codification is iso-8859
+    codStart="iso-8859"
+    codEnd="utf-8"
+    fileName2="${fileName2Tmp}_${codEnd}.$extension"
+
+    iconv -f iso-8859-1 -t utf-8//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to utf-8 and save in another file
+elif echo "$codification" | grep -q "UTF-8"; then # Check if codification is utf8
+    codStart="utf-8"
+    codEnd="iso-8859"
+    fileName2="${fileName2Tmp}_${codEnd}.$extension"
+
+    iconv -f utf-8 -t iso-8859-1//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to iso-8859 and save in another file
+elif echo "$codification" | grep -q "Non-ISO extended-ASCII text"; then # Check if codification is "Non-ISO extended-ASCII text"
+    codStart="Non-ISO extended-ASCII text - maybe CP1250"
+    codEnd="utf-8"
+    fileName2="${fileName2Tmp}_${codEnd}.$extension"
+
+    iconv -f CP1250 -t utf-8//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to utf-8 and save in another file
+else # In last case, if not one of the cod bellow, the script ends with error
+    echo -e "\\n codification unknown\\n The file was not converted\\n"
     exit 1
 fi
 
 if [ "$?" -eq '1' ]; then
-    echo -e "Erro encontrado na execução do iconv\\nTente $0 --help"
+    echo -e "Error in the run of iconv\\nTry $(basename "$0") -h"
     exit 1
 else
-    echo -e "\\n## Arquivo convertido com sucesso ##\\n\"$nomeArquivo\" de $codInicial para $codFinal"
-    echo "$nomeArquivo --> ${nomeArquivo2}_${codFinal}.$extensao"
+    echo -e "\\n## File has been converted with success ##\\n\"$fileName\" from $codStart to $codEnd"
+    echo "\"$fileName\" -> \"$fileName2\""
 
-    echo -en "\\nSobrescrever o arquivo original?\\n(y)es, (n)o: "
-    read -r resposta
-    if [ "$resposta" == 'y' ]; then
-        mv "${nomeArquivo2}_${codFinal}.$extensao" "$nomeArquivo"
-        echo -e "O arquivo foi sobrescrito\\n Fim do script\\n"
+    echo -en "\\nOverwrite the original file?\\n(y)es, (n)o (hit enter to no): "
+    read -r answerOver
+    if [ "$answerOver" == 'y' ]; then
+        mv -v "$fileName2" "$fileName"
+        echo -e "\\nThe file has been overwrite\\n"
     else
-        echo -e "O arquivo não foi sobrescrito\\n Fim do script\\n"
+        echo -e "\\nThe file has not been overwrite\\n"
     fi
 fi
