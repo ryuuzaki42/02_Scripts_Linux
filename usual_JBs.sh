@@ -748,18 +748,18 @@ case $optionInput in
                         echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
                         read -r syncNowOrNow
 
-                        rsyncCommand="rsync -achirv --delete --progress"
-                        # -a archive mode; -c skip based on checksum, not mod-time & size
-                        # -h output numbers in a human-readable format; -i output a change-summary for all updates
-                        # -r recurse into directories; -v increase verbosity; --delete delete extraneous files from destination directories
-                        # --progress show progress during transfer; -n perform a trial run with no changes made
+                        rsyncCommand="rsync -achv --delete"
+                        # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
+                        # -c skip based on checksum, not mod-time & size; -h output numbers in a human-readable format
+                        # -v increase verbosity; --delete delete extraneous files from destination directories
+                        # -n perform a trial run with no changes made; -i output a change-summary for all updates
 
                         if [ "$syncNowOrNow" == "2" ]; then
                             echo -e "$CYAN\\nMaking the files equal.$NC Please wait..."
                             $rsyncCommand "$pathSource" "$pathDestination"
                         else
                             echo -en "$CYAN\\nPlease wait until all files are compared...$NC"
-                            folderChangesFull=$($rsyncCommand -n "$pathSource" "$pathDestination")
+                            folderChangesFull=$($rsyncCommand -in "$pathSource" "$pathDestination")
 
                             folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
