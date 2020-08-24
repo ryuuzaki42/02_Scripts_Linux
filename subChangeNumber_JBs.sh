@@ -27,11 +27,17 @@
 # Last update: 24/08/2020
 #
 fileToWork=$1
-fileToWork2=${fileToWork::-3}"-TMP"
+if [ "$fileToWork" == '' ]; then
+    echo -e "\\n# Error: Need to pass parameters (file name) to work with"
+    echo -e "\\nExample: $(basename "$0") movie.srt"
+    exit
+fi
+
+# Tmp file as result
+fileToWork2=${fileToWork::-4}"-TMP."$(echo $fileToWork | rev | cut -d '.' -f1 | rev)
 
 # Grep cont line
 countLines=$(grep -E "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
-# echo $countLines
 
 # Work with tmp file
 cp "$fileToWork" "$fileToWork2"
@@ -40,26 +46,14 @@ cp "$fileToWork" "$fileToWork2"
 sedComands=$(
 i=1
 for j in $(seq 2 "$countLines"); do
-    echo -n "s/^$j$/$i/g; "
+    echo -n "s/^$j'$'/$i/g; "
     ((i++))
 done
 )
 
-# Change $ to '$' to seed work correctly
-sedComands2=${sedComands//$/\'$\'}
-
 # Create the full command sed
-sedCommandComplete=$(echo "sed -i '$sedComands2' $(pwd)/$fileToWork2")
+sedCommandComplete=$(echo -e "sed -i '$sedComands' $(pwd)/$fileToWork2")
 
-# Tmp file to be the script with the sed complete command
-scriptTmp=$(mktemp)
-echo "$sedCommandComplete" > $scriptTmp
-
-# Add permission to run the script and rum
-chmod +x $scriptTmp
-$scriptTmp
-
-# Delete the script not need any more
-rm $scriptTmp
-
-echo "File result: $fileToWork2"
+# Run the command
+eval $sedCommandComplete
+echo "Result file: $fileToWork2"
