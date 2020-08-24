@@ -34,19 +34,19 @@ if [ "$fileToWork" == '' ]; then
 fi
 
 # Tmp file as result
-fileToWork2=${fileToWork::-4}"-TMP."$(echo $fileToWork | rev | cut -d '.' -f1 | rev)
+fileToWork2=${fileToWork::-4}"-TMP."$(echo "$fileToWork" | rev | cut -d '.' -f1 | rev)
 
-# Grep cont line
+# Grep the count line
 countLines=$(grep -E "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
 
-# Work with tmp file
+# Create a TMP File to work with
 cp "$fileToWork" "$fileToWork2"
 
-# Remove '\r' in file
+# Remove '\r' in the file
 sed -i 's/\r$//' "$fileToWork2"
 
 # Make the sed part to change the values, 2 to 1, 3 to 2, and so on
-sedComands=$(
+sedCommands=$(
     i=1
     for j in $(seq 2 "$countLines"); do
         echo -n "s/^$j$/$i/g; "
@@ -55,8 +55,8 @@ sedComands=$(
 )
 
 # Create the full command sed
-sedCommandComplete=$(echo -e "sed -i '$sedComands' \"$(pwd)/$fileToWork2\"")
+sedCommandComplete=$(echo -e "sed -i '$sedCommands' \"$(pwd)/$fileToWork2\"")
 
 # Run the command
-eval $sedCommandComplete
+eval "$sedCommandComplete"
 echo "Result file: $fileToWork2"
