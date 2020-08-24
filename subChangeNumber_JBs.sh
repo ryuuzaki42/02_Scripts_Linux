@@ -26,17 +26,40 @@
 #
 # Last update: 24/08/2020
 #
-fileToWork="a.srt"
-fileToWork2="tmpFile.srt"
+fileToWork=$1
+fileToWork2=${fileToWork::-3}"-TMP"
 
-countLines=$(egrep "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
+# Grep cont line
+countLines=$(grep -E "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
+# echo $countLines
 
+# Work with tmp file
 cp "$fileToWork" "$fileToWork2"
 
-fileMemory=$(cat "$fileToWork2")
+# Make the sed part to change the values, 2 to 1, 3 to 2, and so on
+sedComands=$(
 i=1
-for j in $(seq 2 $countLines); do
-    echo "$j - $i"
-    sed -i 's/'^''"$j"''$'/'"$i"'/g' $fileToWork2
+for j in $(seq 2 "$countLines"); do
+    echo -n "s/^$j$/$i/g; "
     ((i++))
-done 
+done
+)
+
+# Change $ to '$' to seed work correctly
+sedComands2=${sedComands//$/\'$\'}
+
+# Create the full command sed
+sedCommandComplete=$(echo "sed -i '$sedComands2' $(pwd)/$fileToWork2")
+
+# Tmp file to be the script with the sed complete command
+scriptTmp=$(mktemp)
+echo "$sedCommandComplete" > $scriptTmp
+
+# Add permission to run the script and rum
+chmod +x $scriptTmp
+$scriptTmp
+
+# Delete the script not need any more
+rm $scriptTmp
+
+echo "File result: $fileToWork2"
