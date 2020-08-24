@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 11/08/2020
+# Last update: 24/08/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -455,30 +455,34 @@ case $optionInput in
             if [ "$subtitleNumber" == '' ]; then
                 echo -e "$RED\\nError: Not found any subtitle in the file: \"$fileName\""
             else
-                echo -e "\\nSubtitles available in the file \"$fileName\":\\n$subtitleInfo"
-                echo -en "\\nWhich one you want? (Only the number valid: $subtitleNumber): "
+                echo -e "$CYAN\\nSubtitles available in the file $GREEN\"$fileName\"$CYAN:$GREEN\\n$subtitleInfo"
+                echo -en "$CYAN\\nWhich one you want? (only valid numbers: $GREEN$subtitleNumber$CYAN): $NC"
                 read -r subNumber
 
                 if echo "$subNumber" | grep -q "[[:digit:]]"; then
-                    countSubtitleInfo=$(echo -e "$subtitleInfoGeneral" | wc -l)
-                    countSubtitleInfo=$((countSubtitleInfo + 2))
+                    if echo "$subtitleNumber" | grep -q "$subNumber"; then
+                        countSubtitleInfo=$(echo -e "$subtitleInfoGeneral" | wc -l)
+                        countSubtitleInfo=$((countSubtitleInfo + 3))
 
-                    if [ "$subNumber" -gt '1' ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
-                        lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
+                        if [ "$subNumber" -gt '0' ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
+                            lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
+                        else
+                            lastPart=$(echo -e "$subtitleInfo" | head -n 1)
+                            subNumber='1'
+                        fi
+
+                        echo -e "\\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
+                        fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
+                        echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
+
+                        echo -e "${GREEN}Running:\\nffmpeg -i \"$fileName\" -an -vn -map 0:$subNumber -c:s:0 srt \"${fileNameTmp}-${lastPart}.srt\"\\n$NC"
+                        if ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"; then
+                            echo -e "$CYAN\\nSubtitle $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
+                        else
+                            echo -e "$RED\\nError: The subtitle number not found$NC"
+                        fi
                     else
-                        lastPart=$(echo -e "$subtitleInfo" | head -n 1)
-                        subNumber='1'
-                    fi
-
-                    echo -e "\\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
-                    fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
-                    echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
-
-                    echo -e "${GREEN}Running:\\nffmpeg -i \"$fileName\" -an -vn -map 0:$subNumber -c:s:0 srt \"${fileNameTmp}-${lastPart}.srt\"\\n$NC"
-                    if ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"; then
-                        echo -e "\\nSubtitle \"$lastPart\" from \"$fileName\" \\nsaved as \"${fileNameTmp}-${lastPart}.srt\""
-                    else
-                        echo -e "$RED\\nError: The subtitle number not found$NC"
+                        echo -e "$RED\\nError: The subtitle number is not valid. Must one of: $GREEN$subtitleNumber$NC"
                     fi
                 else
                     echo -e "$RED\\nError: The subtitle number must be a number$NC"
