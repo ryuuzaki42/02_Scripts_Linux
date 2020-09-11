@@ -39,6 +39,12 @@ notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
 }
 
+emptySpaces=$1
+if [ "$emptySpaces" == '' ]; then
+    echo -e "\\nRemove empty spaces"
+    shift
+fi
+
 colorPrint=$1
 if [ "$colorPrint" == "noColor" ]; then
     echo -e "\\nColors disabled"
@@ -200,7 +206,7 @@ case $optionInput in
                     if [ "$LINES" -lt "16" ]; then
                         echo -e "$RED\\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
                         echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\\n" | sed 's/  / /g'
-                        $0 $colorPrint notPrintHeader --help
+                        $0 "$colorPrint" notPrintHeader --help
                     else
                         heightMenuBoxWhiptail=$((LINES - 15))
 
@@ -251,9 +257,9 @@ case $optionInput in
                             echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\\n" | sed 's/  / /g'
 
                             if [ "${*}" != '' ]; then # Check if has more parameters
-                                $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
+                                $0 "$colorPrint" notPrintHeader "$itemSelected" "${*}"
                             else
-                                $0 $colorPrint notPrintHeader "$itemSelected"
+                                $0 "$colorPrint" notPrintHeader "$itemSelected"
                             fi
                         fi
                     fi
@@ -453,7 +459,7 @@ case $optionInput in
             subtitleNumber=$(echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g') # Grep subtitles numbers
             subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1) # Grep subtitles number and language
 
-            if [ "$subtitleNumber" == '' ]; then # Empty any subtitle number was found in the file
+            if [ "$subtitleNumber" == '' ]; then # Empty if not found any subtitle in the file
                 echo -e "$RED\\nError: Not found any subtitle in the file: $GREEN\"$fileName\""
             else
                 echo -e "$CYAN\\nSubtitles available in the file $GREEN\"$fileName\"$CYAN:$GREEN\\n$subtitleInfo"
@@ -1060,11 +1066,11 @@ case $optionInput in
                     echo -e "\\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
                 else
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 1 "$annotationsUse"
+                    $0 "$colorPrint" notPrintHeader "$1" "$filePdfInput" 1 "$annotationsUse"
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 2 "$annotationsUse"
+                    $0 "$colorPrint" notPrintHeader "$1" "$filePdfInput" 2 "$annotationsUse"
                     echo
-                    $0 $colorPrint notPrintHeader "$1" "$filePdfInput" 3 "$annotationsUse"
+                    $0 "$colorPrint" notPrintHeader "$1" "$filePdfInput" 3 "$annotationsUse"
                 fi
             else
                 echo -e "$RED\\nError: The file \"$filePdfInput\" not exists$NC"
