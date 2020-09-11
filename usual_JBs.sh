@@ -361,10 +361,10 @@ case $optionInput in
         echo -en "$GREEN\\nRunning md5sum, can take a while. Please wait, checking "
         if [ "$fileType" == '' ]; then
             echo -en "all files...$NC"
-            fileAndMd5=$(find . $recursiveFolderValue -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+            fileAndMd5=$(eval find . "$recursiveFolderValue" -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         else
             echo -en "the files with \"$fileType\" in the name...$NC"
-            fileAndMd5Tmp=$(find . $recursiveFolderValue -type f | grep "$fileType")
+            fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType")
 
             for file in $fileAndMd5Tmp; do
                 fileAndMd5=$fileAndMd5"\n"$(md5sum "$file")
@@ -474,7 +474,7 @@ case $optionInput in
                         echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
 
                         echo -e "${GREEN}Running:\\nffmpeg -i \"$fileName\" -an -vn -map 0:$subNumber -c:s:0 srt \"${fileNameTmp}-${lastPart}.srt\"\\n$NC"
-                        ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
+                        ffmpeg -i "$fileName" -an -vn -map 0:"$subNumber" -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
                         echo -e "$CYAN\\nSubtitle $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
                     else
                         echo -e "$RED\\nError: Not found the subtitle $GREEN\"$subNumber\"$RED in the file: $GREEN\"$fileName\"\\n$CYAN one of: $GREEN$subtitleNumber$NC"
@@ -1179,7 +1179,7 @@ case $optionInput in
                     recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
                 fi
 
-                packagesToUpdate=$(find "$folderWork" $recursiveFolderValue -type f | grep -E ".txz$|.tgz$") # Get the packages
+                packagesToUpdate=$(eval find "$folderWork" "$recursiveFolderValue" -type f | grep -E ".txz$|.tgz$") # Get the packages
                 if [ "$packagesToUpdate" == '' ]; then
                     echo -e "$RED\\nNot found any package valid (extension .tgz or txz)$NC"
                 else
