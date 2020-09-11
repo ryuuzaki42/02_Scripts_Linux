@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 24/08/2020
+# Last update: 11/09/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -446,43 +446,32 @@ case $optionInput in
         ;;
     "sub-extract" ) # Need ffmpeg
         echo -e "$CYAN# Extract subtitle from a video file #$NC"
+
         fileName=$2
         if [ "$fileName" != '' ]; then
-            subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle")
-            subtitleNumber=$(echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g')
-            subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1)
+            subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle") # Grep infos about subtitles in the file
+            subtitleNumber=$(echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g') # Grep subtitles numbers
+            subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1) # Grep subtitles number and language
 
-            if [ "$subtitleNumber" == '' ]; then
-                echo -e "$RED\\nError: Not found any subtitle in the file: \"$fileName\""
+            if [ "$subtitleNumber" == '' ]; then # Empty any subtitle number was found in the file
+                echo -e "$RED\\nError: Not found any subtitle in the file: $GREEN\"$fileName\""
             else
                 echo -e "$CYAN\\nSubtitles available in the file $GREEN\"$fileName\"$CYAN:$GREEN\\n$subtitleInfo"
                 echo -en "$CYAN\\nWhich one you want? (only valid numbers: $GREEN$subtitleNumber$CYAN): $NC"
                 read -r subNumber
 
-                if echo "$subNumber" | grep -q "[[:digit:]]"; then
-                    if echo "$subtitleNumber" | grep -q "$subNumber"; then
-                        countSubtitleInfo=$(echo -e "$subtitleInfoGeneral" | wc -l)
-                        countSubtitleInfo=$((countSubtitleInfo + 3))
-
-                        if [ "$subNumber" -gt '0' ] && [ "$subNumber" -lt "$countSubtitleInfo" ]; then
-                            lastPart=$(echo -e "$subtitleInfo" | grep "$subNumber")
-                        else
-                            lastPart=$(echo -e "$subtitleInfo" | head -n 1)
-                            subNumber='1'
-                        fi
-
+                if echo "$subNumber" | grep -q "[[:digit:]]"; then # Test if was insert only number
+                    lastPart=$(echo "$subtitleInfo" | grep "^$subNumber ") # Grep the info (number language) about the subtitle wanted, if exists
+                    if [ "$lastPart" != '' ]; then
                         echo -e "\\nExtracting the subtitle \"$lastPart\" from the file \"$fileName\""
                         fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
                         echo -e "That will be save as \"$fileNameTmp-$lastPart.srt\"\\n"
 
                         echo -e "${GREEN}Running:\\nffmpeg -i \"$fileName\" -an -vn -map 0:$subNumber -c:s:0 srt \"${fileNameTmp}-${lastPart}.srt\"\\n$NC"
-                        if ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"; then
-                            echo -e "$CYAN\\nSubtitle $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
-                        else
-                            echo -e "$RED\\nError: The subtitle number not found$NC"
-                        fi
+                        ffmpeg -i "$fileName" -an -vn -map 0:$subNumber -c:s:0 srt "${fileNameTmp}-${lastPart}.srt"
+                        echo -e "$CYAN\\nSubtitle $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
                     else
-                        echo -e "$RED\\nError: The subtitle number is not valid. Must one of: $GREEN$subtitleNumber$NC"
+                        echo -e "$RED\\nError: Not found the subtitle $GREEN\"$subNumber\"$RED in the file: $GREEN\"$fileName\"\\n$CYAN one of: $GREEN$subtitleNumber$NC"
                     fi
                 else
                     echo -e "$RED\\nError: The subtitle number must be a number$NC"
