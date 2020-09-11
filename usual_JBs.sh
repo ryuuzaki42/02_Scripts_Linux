@@ -39,9 +39,8 @@ notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
 }
 
-emptySpaces=$1
+emptySpaces=$1 # Remove empty space form calls in this script to itself with $colorPrint empty
 if [ "$emptySpaces" == '' ]; then
-    echo -e "\\nRemove empty spaces"
     shift
 fi
 
@@ -455,7 +454,7 @@ case $optionInput in
 
         fileName=$2
         if [ "$fileName" != '' ]; then
-            subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle") # Grep infos about subtitles in the file
+            subtitleInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Subtitle") # Grep information about subtitles in the file
             subtitleNumber=$(echo -e "$subtitleInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g') # Grep subtitles numbers
             subtitleInfo=$(echo "$subtitleInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1) # Grep subtitles number and language
 
