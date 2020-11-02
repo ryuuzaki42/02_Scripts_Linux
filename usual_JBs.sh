@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 11/09/2020
+# Last update: 02/11/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -746,10 +746,10 @@ case $optionInput in
                         echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
                         read -r syncNowOrNow
 
-                        rsyncCommand="rsync -achv --delete"
+                        rsyncCommand="rsync -ahv --delete"
                         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
-                        # -c skip based on checksum, not mod-time & size; -h output numbers in a human-readable format
-                        # -v increase verbosity; --delete delete extraneous files from destination directories
+                        # -h output numbers in a human-readable format; -v increase verbosity
+                        # --delete delete extraneous files from destination directories
                         # -n perform a trial run with no changes made; -i output a change-summary for all updates
 
                         if [ "$syncNowOrNow" == "2" ]; then
