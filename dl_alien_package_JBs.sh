@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 22/11/2017
+# Last update: 10/11/2020
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -32,7 +32,8 @@ esac
 echo -e "\\n# This script download files/packages from one Alien mirror #\\n"
 pathDl=$1 # Use the "pathDl" to download the packages instead the (full) folder
 
-mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
+#mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
+mirrorStart="http://slackware.uk/people/alien/sbrepos"
 echo "Default mirror: $mirrorStart"
 
 echo -en "\\nWant change the mirror?\\n(y)es - (n)o (press enter to no): "
@@ -77,7 +78,7 @@ wget "$mirrorDl/CHECKSUMS.md5" -O CHECKSUMS.md5
 
 runFileTmp=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5)
 rm CHECKSUMS.md5
-runFile=$(echo "$runFileTmp" | cut -d '.' -f2-)
+runFile=$(echo "$runFileTmp" | cut -d '/' -f2-)
 
 echo -e "Packages found with \"$pathDl\":\\n$runFile"
 
@@ -106,15 +107,11 @@ if [ "$runFile" != '' ]; then
         for fileGrep in $(echo -e "$runFile"); do
             echo
             wget -c "$mirrorDl/$fileGrep"
+            wget -c "$mirrorDl/$fileGrep.md5"
         done
 
-        echo -e "Md5sum test of integrate:\\n"
-
-        runFileTmp1=$(echo "$runFileTmp" | cut -d ' ' -f1)
-        runFileTmp2=$(echo "$runFileTmp" | rev | cut -d '/' -f1 | rev)
-
-        runFileMd5=$(paste -d ' ' <(echo "$runFileTmp1") <(echo "$runFileTmp2"))
-        echo "$runFileMd5" | md5sum -c
+        echo -e "Md5sum test of integrate:"
+        md5sum -c *.md5
     else
         echo -e "\\nJust exiting by user choice"
     fi
