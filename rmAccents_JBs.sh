@@ -22,7 +22,7 @@
 #
 # Script: remove accents in the files name.
 #
-# Last update: 07/08/2020
+# Last update: 23/11/2020
 #
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPart=$1
@@ -58,7 +58,7 @@ removeAccents(){
     file2=${file2//Ô/O}
 
     file2=${file2//ã/a}
-    file2=${file2//ã/a}
+    file2=${file2//Ã/A}
 
     file2=${file2//õ/o}
     file2=${file2//Õ/O}
