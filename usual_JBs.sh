@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 02/11/2020
+# Last update: 23/11/2020
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -340,6 +340,7 @@ case $optionInput in
     "file-equal" )
         echo -e "$CYAN# Look for equal files using md5sum #$NC"
 
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         fileType=$2
         if [ "$fileType" == '' ]; then
             echo -e "$CYAN\\nWant check all files or just a type of files?$NC"
@@ -375,7 +376,6 @@ case $optionInput in
 
         md5Files=$(echo "$fileAndMd5" | cut -d " " -f1) # Get only de md5sum
 
-        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         for value in $md5Files; do
             if [ "$valueBack" == "$value" ]; then # Look for all values equal
                 equalFiles="$equalFiles$value|"
