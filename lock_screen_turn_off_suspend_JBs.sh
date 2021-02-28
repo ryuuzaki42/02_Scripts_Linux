@@ -22,13 +22,13 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 14/11/2017
+# Last update: 28/02/2021
 #
 # Tip: Add a shortcut to this script
 #
 waitTimeToSuspend=$1 # Time before suspend in minutes
 
-suspendCommand="dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend"
+suspendCommand="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
 if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
     waitTimeToSuspend='0'
