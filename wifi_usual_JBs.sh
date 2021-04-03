@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 24/06/2020
+# Last update: 03/04/2021
 #
 # If you have NetworkManager installed an running you can use nmtui
 #
@@ -36,6 +36,11 @@ useColor() {
     CYAN='\e[1;36m'
     WHITE='\e[1;37m'
 }
+
+emptySpaces=$1 # Remove empty space form calls in this script to itself with $colorPrint empty
+if [ "$emptySpaces" == '' ]; then
+    shift
+fi
 
 notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
@@ -141,7 +146,7 @@ case $optionInput in
                     if [ "$LINES" -lt "16" ]; then
                         echo -e "$RED\\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
                         echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\\n" | sed 's/  / /g'
-                        $0 $colorPrint notPrintHeader --help
+                        $0 "$colorPrint" notPrintHeader --help
                     else
                         heightMenuBoxWhiptail=$((LINES - 15))
 
@@ -163,7 +168,7 @@ case $optionInput in
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
                             echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader $itemSelected ${*} $CYAN\\n" | sed 's/  / /g'
-                            $0 $colorPrint notPrintHeader "$itemSelected" "${*}"
+                            $0 "$colorPrint" notPrintHeader "$itemSelected" "${*}"
                         fi
                     fi
                 }
