@@ -1,7 +1,7 @@
 [Desktop Entry]
-Exec=/usr/bin/focus_time_JBs.sh 2h
+Exec=/usr/bin/focus_time_JBs.sh 30m
 Icon=applications-education-university
-Name=focus_2h.sh
+Name=focus_30m.sh
 NoDisplay=false
 StartupNotify=false
 Terminal=0
