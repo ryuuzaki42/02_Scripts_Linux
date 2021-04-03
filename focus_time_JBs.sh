@@ -20,17 +20,33 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Focus - warning you about a $timeToFocus in work and 15 min of rest
+# Script: Focus - warning you about a $timeToFocus in work and $timeToRest min of rest
+# Tip: Pass the time to the Script (timeToFocus and timeToRest)
 #
-# Last update: 30/04/2017
+# Last update: 03/04/2021
 #
 timeToFocus=$1
+timeToRest=$2
+
 if echo "$timeToFocus" | grep -q -v "[[:digit:]]"; then
-    timeToFocus='1'
+    timeToFocus='60m'
 fi
 
-echo "Begin focus of $timeToFocus hour... $(echo; date)" > /dev/pts/0
-sleep "$timeToFocus"h
-echo "Break of 15 minutes... $(echo; date)" > /dev/pts/0
-sleep 15m
-echo "Break End... $(echo; date)" > /dev/pts/0
+if echo "$timeToRest" | grep -q -v "[[:digit:]]"; then
+    timeToRest='10m'
+fi
+
+echo "Begin focus of $timeToFocus - $(date)"
+echo "Begin focus of $timeToFocus $(echo; date)" > /dev/pts/0
+
+echo "sleep $timeToFocus"
+sleep "$timeToFocus"
+
+echo "Break of $timeToRest - $(date)"
+echo "Break of $timeToRest $(echo; date)" > /dev/pts/0
+
+echo "sleep $timeToRest"
+sleep $timeToRest
+
+echo "Break End ... $(date)"
+echo "Break End ... $(echo; date)" > /dev/pts/0
