@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 23/11/2020
+# Last update: 30/05/2021
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -742,11 +742,21 @@ case $optionInput in
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if "source" exists
                     if [ -e "$pathDestination" ]; then # Test if "destination" exists
+
+                        echo -en "$CYAN\\nWant to use checksum to check/compare the files?:$NC "
+                        echo -en "$CYAN\\nMuch more slower, but more security, especially to USB flash drive.\\n(y)es - (n)o:$NC "
+                        read -r useChecksum
+
                         echo -e "\\n\\t$RED#-----------------------------------------------------------------------------#"
                         echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
                         read -r syncNowOrNow
 
-                        rsyncCommand="rsync -ahv --delete"
+                        if [ "$useChecksum" == 'y' ]; then
+                            rsyncCommand="rsync -achv --delete" # check based on checksum, not mod-time & size
+                        else
+                            rsyncCommand="rsync -ahv --delete" # check based on mod-time & size
+                        fi
+
                         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
                         # -h output numbers in a human-readable format; -v increase verbosity
                         # --delete delete extraneous files from destination directories
