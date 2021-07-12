@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 11/08/2020
+# Last update: 12/07/2021
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -62,7 +62,7 @@ alias pagerLess='export PAGER="/usr/bin/less"'
 #HISTFILESIZE=500 # Count commands save in the history file
 
 if [ "$(id -u)" -eq '0' ]; then # User root
-    PS1="\\[$(tput setaf 1)\\][\\u@\\h:\\w]# " # With color
+    PS1="\\[$(tput setaf 1)\\][\\u@\\h \D{%d/%m/%y %H:%M} \\w]# " # With color
     #PS1="\\[\\][\\u@\\h:\\w]# "               # Without color
 
     runNormalUser() {
@@ -80,7 +80,7 @@ if [ "$(id -u)" -eq '0' ]; then # User root
         fi
     }
 else # "Normal" User
-    PS1="\\[$(tput setaf 2)\\][\\u@\\h:\\w]$ " # With color
+    PS1="\\[$(tput setaf 2)\\][\\u@\\h \D{%d/%m/%y %H:%M} \\w]$ " # With color
     #PS1="\\[\\][\\u@\\h:\\w]$ "               # Without color
 
     echo -e "\\n\\t #__ Welcome in the host: $(hostname) __#"
