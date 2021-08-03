@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 30/05/2021
+# Last update: 03/08/2021
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -778,19 +778,19 @@ case $optionInput in
                                 echo "$foldersNew" | sort
                             fi
 
-                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "*deleting" - files deleted
+                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - files deleted
                             if [ "$filesDelete" != '' ]; then
                                 echo -e "$BLUE\\nFiles to be deleted:$NC"
                                 echo "$filesDelete" | sort
                             fi
 
-                            filesDifferent=$(echo -e "$folderChangesClean" | grep "^>fc" | awk '{print substr($0, index($0,$2))}') # ">fc" - all files changed
+                            filesDifferent=$(echo -e "$folderChangesClean" | grep -E "^>fc|^>f.st" | awk '{print substr($0, index($0,$2))}') # "^>fc|^>f.st" - all files changed
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "$BLUE\\nFiles different:$NC"
                                 echo "$filesDifferent" | sort
                             fi
 
-                            filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # ">f++++" - New files
+                            filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # "^>f++++" - New files
                             if [ "$filesNew" != '' ]; then
                                 echo -e "$BLUE\\nNew files:$NC"
                                 echo "$filesNew" | sort
