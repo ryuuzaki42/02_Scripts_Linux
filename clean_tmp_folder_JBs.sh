@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 14/04/2021
+# Last update: 04/08/2021
 #
 
 folderHomeToClean="/media/sda2/home/j"
@@ -39,6 +39,7 @@ rm -fv /tmp/.ktorrent_kde4_*
 rm -fv /tmp/gameoverlayui.log*
 rm -fv /tmp/dropbox-antifreeze-*
 rm -fv /tmp/steam_chrome_shmem_uid*
+rm -fv /tmp/steam_chrome_overlay_uid*
 rm -fv /tmp/mastersingleapp-master*
 rm -fv /tmp/.org.chromium.Chromium.*
 rm -fv /tmp/OSL_PIPE_1000_SingleOfficeIPC_*
