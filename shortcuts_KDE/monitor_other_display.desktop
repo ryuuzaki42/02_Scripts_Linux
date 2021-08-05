@@ -1,10 +1,10 @@
 [Desktop Entry]
 Exec=/usr/bin/monitor_change_resolution_JBs.sh c 1 1
 Icon=preferences-desktop-wallpaper
-Name=monitor_change_display
+Name=monitor_other_display
 NoDisplay=false
 StartupNotify=false
 Terminal=0
 Type=Application
 X-KDE-SubstituteUID=false
-# shortcut = Ctrl + Shift + C
+# shortcut = Ctrl + Shift + O
