@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ## Copy the this shortcuts to your folder ${HOME}.local/share/applications/
-    # You can just execut this script
+    # You can just execute this script
 
-# Last update: 25/07/2019
+# Last update: 05/08/2021
 
-# Dica: Adicione no KDE-menu os atalhos de teclado:
-# audio_profile_change => shortcut = ctrl + meta + a
-# ...
+# Tip: Add in "KDE Menu Editor" the shortcut as suggested in *.desktop
+    # Start icon in the panel > right click > Edit Applications...
+# audio_profile_change => shortcut = Ctrl + Shift + A
 
 echo -e "This script copy (cp $(pwd)/*.desktop) to ${HOME}.local/share/applications/\\n"
 
@@ -20,8 +20,9 @@ read -r continueCopy
 
 if [ "$continueCopy" == 'y' ]; then
     cp ./*.desktop "${HOME}/.local/share/applications/"
+    echo -e "\\n\\tThe files (*.desktop) was copied"
 else
-    echo -e "\\n\\tThe Files was not copied"
+    echo -e "\\n\\tThe files (*.desktop) was not copied"
 fi
 
 echo -e "\\nEnd of the script\\n"
