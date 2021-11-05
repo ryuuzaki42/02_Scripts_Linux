@@ -46,10 +46,10 @@ if echo "$profileActive" | grep -q "$speakersAudio"; then # Check if speakersAud
 
     if [ "$profilePriority" == '6' ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
         finalValue=$hdmiAudioA
-        echo -e "\\n\\n    hdmiAudioA\\n" # To test
+#         echo -e "\\n\\n    hdmiAudioA\\n" # To test
     else
         finalValue=$hdmiAudioB
-        echo -e "\\n\\n    hdmiAudioB\\n" # To test
+#         echo -e "\\n\\n    hdmiAudioB\\n" # To test
     fi
 else
     finalValue=$speakersAudio
@@ -57,7 +57,7 @@ fi
 
 pactl set-card-profile 0 $finalValue
 
-echo -e "$finalValue\\n" # To test
+# echo -e "$finalValue\\n" # To test
 iconName="audio-volume-medium"
 
 notify-send "Profile audio changed" "Final value $finalValue" -i $iconName
