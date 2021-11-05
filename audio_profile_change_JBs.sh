@@ -22,9 +22,9 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 12/11/2019
+# Last update: 04/11/2021
 #
-#Tip: To list all profiles available use the command below
+# Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
 
 # Stereo without input
@@ -32,25 +32,32 @@
 #hdmiAudio="output:hdmi-stereo"
 
 # Stereo with input
-speakersAudio="output:analog-stereo+input:analog-stereo"
-hdmiAudio="output:hdmi-stereo-extra1+input:analog-stereo"
+speakersAudio="output:analog-stereo+input:analog-stereo"   # Notebook audio
+hdmiAudioA="output:hdmi-stereo-extra1+input:analog-stereo" # HDMI audio - starting with the cable not plugged
+hdmiAudioB="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starting with the cable plugged
 
-profileActive=$(pacmd list-cards | grep "active profile" | tr -d "[:space:]" | cut -d '<' -f2 | cut -d '>' -f1)
+profileActive=$(pacmd list-cards | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
 
 echo -e "Profile now active $profileActive"
 echo -n "Profile changed to "
 
-if echo "$profileActive" | grep -q "$speakersAudio"; then
-    pactl set-card-profile 0 "$hdmiAudio"
+if echo "$profileActive" | grep -q "$speakersAudio"; then # Check if speakersAudio is active
+    profilePriority=$(pacmd list-cards | grep $hdmiAudioA | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
 
-    finalValue=$hdmiAudio
+    if [ "$profilePriority" == '6' ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
+        finalValue=$hdmiAudioA
+        echo -e "\\n\\n    hdmiAudioA\\n" # To test
+    else
+        finalValue=$hdmiAudioB
+        echo -e "\\n\\n    hdmiAudioB\\n" # To test
+    fi
 else
-    pactl set-card-profile 0 "$speakersAudio"
-
     finalValue=$speakersAudio
 fi
 
-echo "$finalValue"
+pactl set-card-profile 0 $finalValue
+
+echo -e "$finalValue\\n" # To test
 iconName="audio-volume-medium"
 
 notify-send "Profile audio changed" "Final value $finalValue" -i $iconName
