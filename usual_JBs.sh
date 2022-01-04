@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 03/08/2021
+# Last update: 04/01/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -784,7 +784,7 @@ case $optionInput in
                                 echo "$filesDelete" | sort
                             fi
 
-                            filesDifferent=$(echo -e "$folderChangesClean" | grep -E "^>fc|^>f.st" | awk '{print substr($0, index($0,$2))}') # "^>fc|^>f.st" - all files changed
+                            filesDifferent=$(echo -e "$folderChangesClean" | grep -E "^>fc|^>f.st|^>f..t" | awk '{print substr($0, index($0,$2))}') # "^>fc|^>f.st|^>f..t" - all files changed
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "$BLUE\\nFiles different:$NC"
                                 echo "$filesDifferent" | sort
