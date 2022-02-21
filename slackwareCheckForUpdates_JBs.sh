@@ -24,9 +24,9 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 06/09/2018
+# Last update: 21/02/2022
 #
-echo -e "\\n# Script to check for Slackware updates #"
+echo -e "\\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
 
 helpMessage() {
@@ -62,7 +62,7 @@ mirrorSuggestion() {
     slackwareVersion=$(grep "VERSION=" /etc/os-release | cut -d '"' -f2)
     slackwareArch=$(uname -m)
 
-    mirrorPart1="ftp://mirrors.slackware.com/slackware/"
+    mirrorPart1="http://slackware.uk/slackware/"
     mirrorCurrent="${mirrorPart1}slackware64-current/"
 
     if echo "$slackwareArch" | grep -q "64"; then
@@ -107,33 +107,35 @@ mirrorSuggestion() {
 }
 
 getValidMirror() {
-    mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | head -n 1 | sed 's/ //g')
+   if [ "$mirrorDl" == '' ]; then # Check if mirrorDl was set by mirrorSuggestion()
+        mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | head -n 1 | sed 's/ //g')
 
-    if [ "$mirrorDl" != '' ]; then
-        echo -e "\\nMirror active in \"/etc/slackpkg/mirrors\":\\n\"$mirrorDl\""
+        if [ "$mirrorDl" != '' ]; then
+            echo -e "\\nMirror active in \"/etc/slackpkg/mirrors\":\\n\"$mirrorDl\""
 
-        mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
-        if [ "$mirrorDlTest" == "file:" ]; then
-            mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
+            mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
+            if [ "$mirrorDlTest" == "file:" ]; then
+                mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-            if [ ! -d "$mirrorDlTmp" ]; then
-                echo -e "\\nThe mirror folder don't exist: \"$mirrorDl\""
-                mirrorNotValid='1'
+                if [ ! -d "$mirrorDlTmp" ]; then
+                    echo -e "\\nThe mirror folder don't exist: \"$mirrorDl\""
+                    mirrorNotValid='1'
+                else
+                    if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
+                        echo -e "\\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+                        mirrorNotValid='1'
+                    fi
+                fi
             else
-                if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
-                    echo -e "\\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+                if echo "$mirrorDl" | grep -vqE "^http:|^ftp:"; then
                     mirrorNotValid='1'
                 fi
             fi
         else
-            if echo "$mirrorDl" | grep -vqE "^http:|^ftp:"; then
-                mirrorNotValid='1'
-            fi
+            echo -e "\\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
+            echo -e "        # Please active one mirror #"
+            mirrorNotValid='1'
         fi
-    else
-        echo -e "\\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
-        echo -e "        # Please active one mirror #"
-        mirrorNotValid='1'
     fi
 
     if [ "$mirrorNotValid" == '1' ]; then
@@ -189,7 +191,7 @@ getUpdateMirror() {
     fi
     changePkgs=$(grep -E "txz|tgz" "$tmpFile") # Find packages to update
 
-    count1="25"
+    count1="20"
     count2="55"
 
     echo
@@ -276,8 +278,8 @@ getUpdateMirror() {
         iconName="audio-volume-high"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
-        lastKernelUpdate=$(grep "linux.*\/\*" "$tmpFile" | head -n 1 | cut -d "-" -f2 | cut -d "/" -f1)
-        lastKernelInstalled=$(ls "/var/log/packages/kernel-*$lastKernelUpdate*" 2> /dev/null)
+        lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
+        lastKernelInstalled=$(ls /var/log/packages/kernel-*$lastKernelUpdate* 2> /dev/null)
 
         if [ "$lastKernelInstalled" == '' ]; then
             echo -e "\n # Kernel update: $lastKernelUpdate #\n"
@@ -298,5 +300,9 @@ getUpdateMirror() {
         eval "$notificationToSend"
     fi
 }
+
+if [ "$optionInput" != '' ]; then
+    mirrorSuggestion
+fi
 
 getValidMirror
