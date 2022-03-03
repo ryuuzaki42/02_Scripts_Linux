@@ -1,17 +1,17 @@
 # README
 
-## Scritps para facilitar o uso do Slackware - (www.slackware.com)
+## Scripts to make Slackware easier to use - (www.slackware.com)
 
-### Links úteis:
+### Useful links:
 
-[Site official](http://www.slackware.com/) - Baixe o Slackware 14.2  [aqui](http://www.slackware.com/getslack/) ou via torrent ([32-bit x86](http://www.slackware.com/torrents/slackware-14.2-install-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
+[Official site](http://www.slackware.com/) - Download Slackware 14.2  [here](http://www.slackware.com/getslack/) or by torrent ([32-bit x86](http://www.slackware.com/torrents/slackware-14.2-install-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
 
-[Slackbuilds](https://slackbuilds.org/) - Scripts para construir pacotes/programas para Slackware
+[Slackbuilds](https://slackbuilds.org/) - Scripts to build packages/programs for Slackware
 
-[Alien Pastures](http://alien.slackbook.org/blog/) - Blog focado no Slackware
+[Alien Pastures](http://alien.slackbook.org/blog/) - Blog focused on Slackware
 
-[~alien-slackbuids](http://www.slackware.com/~alien/slackbuilds/) - Vários pacotes compilados pelo [AlienBob](http://www.slackware.com/~alien/)
+[~alien-slackbuids](http://www.slackware.com/~alien/slackbuilds/) - Various packages compiled by AlienBob [AlienBob](http://www.slackware.com/~alien/)
 
-[Slackware Brasil](https://www.facebook.com/groups/slackwarebr/) - Grupo no Facebook
+[Slackware Brazil](https://www.facebook.com/groups/slackwarebr/) - Facebook Group
 
-[Slack Show BR](https://telegram.me/slackshowbr) - Grupo no Telegram
+[Slack Show BR](https://telegram.me/slackshowbr) - Telegram Group
