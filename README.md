@@ -1,21 +1,18 @@
 
 ## Scripts to make Slackware easier to use
 
-### Useful links:
+#### Useful links:
 
-[Official site](http://www.slackware.com/)
+[Official site](http://www.slackware.com/) - Download Slackware 15.0 ([here](http://www.slackware.com/getslack/) or [here](https://seedbox.slackware.uk/)). Torrent:
+[32-bit x86](https://seedbox.slackware.uk/torrents/slackware-15.0-install-dvd.torrent), [64-bit x86_64](https://seedbox.slackware.uk/torrents/slackware64-15.0-install-dvd.torrent)
 
-Download Slackware 15.0 [here](http://www.slackware.com/getslack/) or by torrent
-([32-bit x86](https://seedbox.slackware.uk/torrents/slackware64-15.0-install-dvd.torrent),
-[64-bit x86_64](https://seedbox.slackware.uk/torrents/slackware64-15.0-install-dvd.torrent)) - https://seedbox.slackware.uk/
-
-[Slackware live](https://download.liveslak.org/)
+[Slackware live](https://download.liveslak.org/) - Live Edition of Slackware
 
 [Slackbuilds](https://slackbuilds.org/) - Scripts to build packages/programs for Slackware
 
 [Alien Pastures](https://alien.slackbook.org/blog/) - Blog focused on Slackware
 
-[~alien-slackbuids](http://www.slackware.com/~alien/slackbuilds/) - Various packages compiled by AlienBob [AlienBob](http://www.slackware.com/~alien/)
+[~alien-slackbuids](http://www.slackware.com/~alien/slackbuilds/) - Various packages compiled by [AlienBob](http://www.slackware.com/~alien/)
 
 [Slackware Brazil](https://www.facebook.com/groups/slackwarebr/) - Facebook Group
 
@@ -31,4 +28,4 @@ Download Slackware 15.0 [here](http://www.slackware.com/getslack/) or by torrent
 
 [3_slackware_jb_packages](https://github.com/ryuuzaki42/3_slackware_jb_packages) - Some packages (txz) and some shell scripts to create packages to Slacwkare
 
-Download others packages in the Telegram group or request packages/programs - [SlackwarePackages](https://t.me/SlackwarePackages)
+[SlackwarePackages](https://t.me/SlackwarePackages) - Telegram group to download packages or request new ones
