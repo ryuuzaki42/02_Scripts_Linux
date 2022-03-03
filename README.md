@@ -1,10 +1,14 @@
 # README
 
-## Scripts to make Slackware easier to use - (www.slackware.com)
+## Scripts to make Slackware easier to use
 
 ### Useful links:
 
-[Official site](http://www.slackware.com/) - Download Slackware 14.2  [here](http://www.slackware.com/getslack/) or by torrent ([32-bit x86](http://www.slackware.com/torrents/slackware-14.2-install-dvd.torrent), [64-bit x86_64](http://www.slackware.com/torrents/slackware64-14.2-install-dvd.torrent))
+[Official site](http://www.slackware.com/)
+
+Download Slackware 15.0 [here](http://www.slackware.com/getslack/) or by torrent
+([32-bit x86](https://seedbox.slackware.uk/torrents/slackware64-15.0-install-dvd.torrent),
+[64-bit x86_64](https://seedbox.slackware.uk/torrents/slackware64-15.0-install-dvd.torrent))
 
 [Slackbuilds](https://slackbuilds.org/) - Scripts to build packages/programs for Slackware
 
