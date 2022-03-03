@@ -1,4 +1,3 @@
-# README
 
 ## Scripts to make Slackware easier to use
 
@@ -21,6 +20,10 @@ Download Slackware 15.0 [here](http://www.slackware.com/getslack/) or by torrent
 [Slackware Brazil](https://www.facebook.com/groups/slackwarebr/) - Facebook Group
 
 [Slack Show BR](https://telegram.me/slackshowbr) - Telegram Group
+
+[Bumblebee-SlackBuilds](https://github.com/WhiteWolf1776/Bumblebee-SlackBuilds) - Bumblebee to NVIDIA Optimus
+
+[14_Bumblebee-SlackBuilds-Packages](https://github.com/ryuuzaki42/14_Bumblebee-SlackBuilds-Packages) - Bumblebee packages (txz) to Slackware
 
 [12_clone_Slackware_repo_rsync](https://github.com/ryuuzaki42/12_clone_Slackware_repo_rsync) - Clone Slackware mirror to a local folder using rsync
 
