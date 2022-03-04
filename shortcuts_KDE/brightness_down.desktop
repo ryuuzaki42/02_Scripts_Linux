@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=/usr/bin/usual_JBs.sh brigh-2 down
-Icon=ktip
+Icon=high-brightness
 Name=brightness_down
 NoDisplay=false
 StartupNotify=false
