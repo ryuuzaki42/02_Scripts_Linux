@@ -1,13 +1,10 @@
 [Desktop Entry]
-Comment=
 Exec=/usr/bin/usual_JBs.sh brigh-2 up
 Icon=high-brightness
 Name=brightness_up
 NoDisplay=false
-Path[$e]=
 StartupNotify=false
 Terminal=0
-TerminalOptions=
 Type=Application
 X-KDE-SubstituteUID=false
-X-KDE-Username=
+# shortcut = Ctrl + Meta + Up
