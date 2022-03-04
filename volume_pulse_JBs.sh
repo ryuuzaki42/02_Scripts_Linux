@@ -22,7 +22,7 @@
 #
 # Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 22/04/2018
+# Last update: 04/03/2022
 #
 help() {
     echo -e "\\nHelp message:\\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
@@ -113,5 +113,5 @@ if [ "$notification" != '0' ]; then
         fi
     fi
 
-    notify-send "Volume percentage change" "Final value: $volCurrentPerc%" -i $iconName
+    notify-send "Volume percentage change" "Final value: $volCurrentPerc %" -i $iconName
 fi
