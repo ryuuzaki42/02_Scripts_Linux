@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 04/01/2022
+# Last update: 04/03/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -978,6 +978,9 @@ case $optionInput in
                 echo -e "$RED\\nError: Value must be only digit (e.g. $0 brigh-2 up 10 to set brightness up in 10 %)$NC"
             fi
         fi
+
+        brighCurrentValue=$(xbacklight -get | cut -d '.' -f1)
+        notify-send "Brightness percentage change" "Final value: $brighCurrentValue %" -i "high-brightness"
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
