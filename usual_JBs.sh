@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 04/03/2022
+# Last update: 06/03/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -752,9 +752,9 @@ case $optionInput in
                         read -r syncNowOrNow
 
                         if [ "$useChecksum" == 'y' ]; then
-                            rsyncCommand="rsync -achv --delete" # check based on checksum, not mod-time & size
+                            rsyncCommand="rsync -achv --delete --progress" # check based on checksum, not mod-time & size
                         else
-                            rsyncCommand="rsync -ahv --delete" # check based on mod-time & size
+                            rsyncCommand="rsync -ahv --delete --progress" # check based on mod-time & size
                         fi
 
                         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
