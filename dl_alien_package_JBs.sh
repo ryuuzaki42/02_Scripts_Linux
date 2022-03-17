@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 10/11/2020
+# Last update: 16/03/2022
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -53,11 +53,11 @@ if [ "$changeMirror" == 'y' ]; then
     echo -e "\\nNew mirror: $mirrorStart"
 fi
 
-echo -en "\\nWith version Slackware you want? (press enter to 14.2): "
+echo -en "\\nWith version Slackware you want? (press enter to 15.0): "
 read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
-    versionSlackware="14.2"
+    versionSlackware="15.0"
 fi
 
 if [ "$pathDl" == '' ]; then
@@ -80,23 +80,23 @@ runFileTmp=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5)
 rm CHECKSUMS.md5
 runFile=$(echo "$runFileTmp" | cut -d '/' -f2-)
 
-echo -e "Packages found with \"$pathDl\":\\n$runFile"
+echo -e "All packages found with \"$pathDl\":\\n$runFile"
 
-echo -e "\\nExclude some results based one a pattern?"
-echo -n "Hit enter to no or type the pattern: "
+echo -e "\\nExclude some results based in some patterns?"
+echo -n "Hit enter to no or type the patterns (use | between the patterns, like: p1|p2): "
 read -r pathExclude
 
 if [ "$pathExclude" != '' ]; then
-    echo "Files excluded with \"$pathExclude\":"
-    echo "$runFile" | grep "$pathExclude"
+    echo -e "\\nFiles excluded with \"$pathExclude\":"
+    echo "$runFile" | grep -E "$pathExclude"
 
-    runFileTmp=$(echo "$runFileTmp" | grep -v "$pathExclude")
-    runFile=$(echo "$runFile" | grep -v "$pathExclude")
+    runFileTmp=$(echo "$runFileTmp" | grep -vE "$pathExclude")
+    runFile=$(echo "$runFile" | grep -vE "$pathExclude")
 fi
 
 if [ "$runFile" != '' ]; then
-    echo -e "\\nPackages found with \"$pathDl\":\\n$runFile\\n"
-    echo -n "Want to continue and download them? (y)es - (n)o (hit enter to yes): "
+    echo -e "\\nCurrent packages found with \"$pathDl\":\\n$runFile\\n"
+    echo -n "Want to continue and download them or no to only show the links? (y)es - (n)o (hit enter to yes): "
     read -r continueDl
 
     if [ "$continueDl" != 'n' ]; then
@@ -113,6 +113,11 @@ if [ "$runFile" != '' ]; then
         echo -e "Md5sum test of integrate:"
         md5sum -c *.md5
     else
+        for fileGrep in $(echo -e "$runFile"); do
+            echo
+            echo "$mirrorDl/$fileGrep"
+            echo "$mirrorDl/$fileGrep.md5"
+        done
         echo -e "\\nJust exiting by user choice"
     fi
 else
