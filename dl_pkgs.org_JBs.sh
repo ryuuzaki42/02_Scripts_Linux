@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 03/05/2020
+# Last update: 16/03/2022
 #
 programName=$1
 justUrl=$2
@@ -39,11 +39,11 @@ fi
 if [ "$programName" == '' ]; then
     echo -e "\\nThe name of the program/package can't be blank\\n"
 else
-    echo -en "\\nSlackware version (hit enter to insert 14.2): "
+    echo -en "\\nSlackware version (hit enter to insert 15.0): "
     read -r slackwareVersion
 
     if [ "$slackwareVersion" == '' ]; then
-        slackwareVersion="14.2"
+        slackwareVersion="15.0"
     fi
 
     echo
