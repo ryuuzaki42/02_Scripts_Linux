@@ -351,9 +351,16 @@ case $optionInput in
             read -r fileType
         fi
 
+        echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
+        autoOnOff=$3
+
         echo -e "$CYAN\\nWant check the files recursively (this folder and all his sub directories) or only this folder?$NC"
         echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
-        read -r allFolderOrNot
+        if [ "$autoOnOff" != "auto" ]; then
+            read -r allFolderOrNot
+        else
+            allFolderOrNot=1
+        fi
 
         if [ "$allFolderOrNot" == '2' ]; then
             recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
@@ -391,7 +398,7 @@ case $optionInput in
         if [ "$equalFiles" == '' ]; then
             echo -e "$CYAN\\n\\nAll files are different by md5sum$NC"
         else
-            echo -e "$CYAN\\n\\n### These file(s) are equal:$NC"
+            echo -en "$CYAN\\n\\n### These file(s) are equal:$NC"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
 
             valueBack='' # Clean the value in valueBack
@@ -409,23 +416,32 @@ case $optionInput in
                 echo "$value"
             done
 
-            echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
-            echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
-            read -r printDifferent
+            filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
+            if [ "$filesDifferent" != '' ]; then
+                echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
+                echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
+                if [ "$autoOnOff" != "auto" ]; then
+                    read -r printDifferent
+                else
+                    printDifferent='y'
+                fi
 
-            if [ "$printDifferent" != 'n' ]; then
-                echo -e "$BLUE\\n### These file(s) are different:\\n$NC"
-                filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
-                echo "$filesDifferent" | sort -k 2
+                if [ "$printDifferent" != 'n' ]; then
+                    echo -en "$BLUE\\n\n### These file(s) are different:$NC"
+                    echo "$filesDifferent" | sort -k 2
+                fi
             fi
 
             tmpFolder="equal_files_"$RANDOM
             echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
-            echo -e "$RED\\n### Files to be moved:$GREEN"
+            echo -en "$RED\\n### Files to be moved:$GREEN"
             echo "$FilesToWork" | sort -k 2
             echo -en "\\n$RED(y)es - (n)o (hit enter to no):$NC "
-
-            read -r moveEqual
+            if [ "$autoOnOff" != "auto" ]; then
+                read -r moveEqual
+            else
+                moveEqual='y'
+            fi
 
             if [ "$moveEqual" == 'y' ]; then
                 mkdir "$tmpFolder" 2> /dev/null
@@ -445,11 +461,10 @@ case $optionInput in
                     mv "$value" "$folderToCreate"
                 done
 
-                echo -e "$CYAN\\nFiles moved to: $PWD/$tmpFolder$NC"
+                echo -e "$CYAN\\nFiles moved to: $PWD/$tmpFolder/$NC"
             else
                 echo -e "$CYAN\\nFiles not moved"
             fi
-
         fi
         ;;
     "sub-extract" ) # Need ffmpeg
@@ -1257,6 +1272,8 @@ case $optionInput in
         echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
 
         folderFile=$2
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+
         if [ "$folderFile" == '' ]; then
             echo -e "$RED\\nError: You need pass the type to work:$GREEN f$RED to file or$GREEN d$RED to directory"
         elif [ "$folderFile" == 'f' ]; then # to shred files
@@ -1266,15 +1283,15 @@ case $optionInput in
             elif [ ! -f "$fileWork" ]; then
                 echo -e "$RED\\nError: The file \"$fileWork\" not exist"
             else
-                echo -e "$CYAN\\nFile to work with: $fileWork"
+                echo -e "$CYAN\\nFile to work with: $GREEN$fileWork"
 
                 echo -en "$RED\\nRealy want to continue? (y)es or (n)o: $NC"
                 read -r continueOrNot
 
                 if [ "$continueOrNot" == 'y' ]; then
                     for file in $fileWork; do
-                        echo -en "\\n\\nshred -n 9 -uz $file"
-                        shred -n 9 -uz $file
+                        echo -e "${BLUE}Running:$GREEN shred -n 9 -uz $file"
+                        shred -n 9 -uz "$file"
                     done
                 fi
             fi
@@ -1285,8 +1302,7 @@ case $optionInput in
             elif [ ! -d "$folderWork" ]; then
                 echo -e "$RED\\nError: The directory \"$folderWork\" not exist$NC"
             else
-                IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
-                echo -e "$CYAN\\nFolder to work with: $folderWork$NC"
+                echo -e "$CYAN\\nFolder to work with:$GREEN $folderWork$NC"
 
                 files=$(find "$folderWork" -type f)
                 #files=$(find "$folderWork" -type f -maxdepth 1)
@@ -1299,15 +1315,15 @@ case $optionInput in
 
                 if [ "$continueOrNot" == 'y' ]; then
                     for file in $files; do
-                        echo -en "$CYAN\\n\\nshred -uz $file"
-                        shred -uz $file
+                        echo -e "${BLUE}Running:$GREEN shred -n 9 -uz $file"
+                        shred -n 9 -uz "$file"
                     done
 
                     echo -e "$CYAN\\nRemoving folders$NC"
                     folders=$(find "$folderWork" -type d)
                     for folder in $folders; do
-                        echo -e "$CYAN\\nrmdir $folder$NC"
-                        rmdir $folder
+                        echo -e "${BLUE}Running:$GREEN rmdir $folder"
+                        rmdir "$folder"
                     done
                 fi
             fi
