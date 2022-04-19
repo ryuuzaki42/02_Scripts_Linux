@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 06/03/2022
+# Last update: 19/04/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -136,42 +136,43 @@ case $optionInput in
         fi
 
         # Options text
-        optionVector=("brigh-1      " "$RED * - Set brightness percentage value (accept % value, up and down)"
-        "brigh-2      " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-        "check-pkg-i  " "   - Check if all packages in a folder (and subfolders) are installed "
-        "cpu-max      " "   - Show the 10 process with more CPU use"
-        "date-up      " "$RED * - Update the date"
-        "day-s-i      " "$RED * - The day the system was installed"
-        "file-equal   " "   - Look for equal files using md5sum"
-        "folder-diff  " "   - Show the difference between two folder and (can) make them equal (with rsync)"
-        "git-gc       " "   - Run git gc (|--auto|--aggressive) in the sub directories"
-        "help         " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
-        "ip           " "   - Get your IP"
-        "l-pkg-i      " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
-        "l-pkg-r      " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
-        "l-pkg-u      " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
-        "mem-max      " "   - Show the 10 process with more memory RAM use"
-        "mem-use      " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
-        "mem-info     " "   - Show memory and swap percentage of use"
-        "mtr-test     " "$RED   - Run a mtr-test on a domain (default is google.com)"
-        "pdf-r        " "   - Reduce a PDF file"
-        "ping-test    " "   - Run a ping-test on a domain (default is google.com)"
-        "pkg-count    " "   - Count of packages that are installed your Slackware"
-        "pkg-i        " "$RED * - Install packge(s) from a folder (and subfolders) in the Slackware"
-        "pkg-u        " "$RED * - Upgrade packge(s) from a folder (and subfolders) in the Slackware"
-        "print-lines  " "   - Print part of file (lineStart to lineEnd)"
-        "screenshot   " "   - Screenshot from display :0"
-        "s-pkg-f      " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
-        "s-pkg-s      " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
-        "search-pwd   " "   - Search in this directory (recursive) for a pattern"
-        "slack-up     " "$RED * - Slackware update"
-        "sub-extract  " "   - Extract subtitle from a video file"
-        "swap-clean   " "$RED * - Clean up the Swap Memory"
-        "texlive-up   " "$RED * - Update the texlive packages"
-        "up-db        " "$RED * - Update the database for the 'locate'"
-        "weather      " "   - Show the weather forecast (you can pass the name of the city as parameter)"
-        "work-fbi     " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file"
-        "w            " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
+        optionVector=("brigh-1     " "$RED * - Set brightness percentage value (accept % value, up and down)"
+        "brigh-2     " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+        "check-pkg-i " "   - Check if all packages in a folder (and subfolders) are installed "
+        "cpu-max     " "   - Show the 10 process with more CPU use"
+        "date-up     " "$RED * - Update the date"
+        "day-s-i     " "$RED * - The day the system was installed"
+        "file-equal  " "   - Look for equal files using md5sum"
+        "folder-diff " "   - Show the difference between two folder and (can) make them equal (with rsync)"
+        "git-gc      " "   - Run git gc (|--auto|--aggressive) in the sub directories"
+        "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
+        "ip          " "   - Get your IP"
+        "l-pkg-i     " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "l-pkg-r     " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "l-pkg-u     " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "mem-info    " "   - Show memory and swap percentage of use"
+        "mem-max     " "   - Show the 10 process with more memory RAM use"
+        "mem-use     " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
+        "mtr-test    " "$RED * - Run a mtr-test on a domain (default is google.com)"
+        "pdf-r       " "   - Reduce a PDF file"
+        "ping-test   " "   - Run a ping-test on a domain (default is google.com)"
+        "pkg-count   " "   - Count of packages that are installed your Slackware"
+        "pkg-i       " "$RED * - Install packge(s) from a folder (and subfolders) in the Slackware"
+        "pkg-u       " "$RED * - Upgrade packge(s) from a folder (and subfolders) in the Slackware"
+        "print-lines " "   - Print part of file (lineStart to lineEnd)"
+        "s-pkg-f     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
+        "s-pkg-s     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
+        "screenshot  " "   - Screenshot from display :0"
+        "search-pwd  " "   - Search in this directory (recursive) for a pattern"
+        "shred       " "   - shred files in local folder (and subfolders)"
+        "slack-up    " "$RED * - Slackware update"
+        "sub-extract " "   - Extract subtitle from a video file"
+        "swap-clean  " "$RED * - Clean up the Swap Memory"
+        "texlive-up  " "$RED * - Update the texlive packages"
+        "up-db       " "$RED * - Update the database for the 'locate'"
+        "w           " "   - Menu with whiptail, where you can call the others options (the same result with 'w' or '')"
+        "weather     " "   - Show the weather forecast (you can pass the name of the city as parameter)"
+        "work-fbi    " "   - Write <zero>/<random> value in one ISO file to wipe trace of old deleted file")
 
         if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
             useColor
@@ -180,13 +181,13 @@ case $optionInput in
         case $optionInput in
             "--help" | "-h" | "help" | 'h' )
                 help() {
-                    echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
-                    echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$BLUE = X server required$CYAN\\n"
+                    echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') #$NC"
+                    echo -e "\\n$RED    Obs$CYAN:$RED * root required,$BLUE = X server required$CYAN\\nOptions:"
 
                     countOption='0'
                     optionVectorSize=${#optionVector[*]}
                     while [ "$countOption" -lt "$optionVectorSize" ]; do
-                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}$NC"
+                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}"
 
                         countOption=$((countOption + 2))
                     done
@@ -212,7 +213,7 @@ case $optionInput in
                         #whiptail --title "<title of box menu>" --menu "<text to be show>" <height> <width> <height of box menu> \
                         #[ <tag> <item> ] [ <tag> <item> ] [ <tag> <item> ]
 
-                        itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, + NetworkManager required, = X server required
+                        itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, = X server required
 
                         Options:" $heightWhiptail $widthWhiptail $heightMenuBoxWhiptail \
                         "${optionVector[0]}" "${optionVector[1]}" \
@@ -249,7 +250,9 @@ case $optionInput in
                         "${optionVector[62]}" "${optionVector[63]}" \
                         "${optionVector[64]}" "${optionVector[65]}" \
                         "${optionVector[66]}" "${optionVector[67]}" \
-                        "${optionVector[68]}" "${optionVector[69]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[68]}" "${optionVector[69]}" \
+                        "${optionVector[70]}" "${optionVector[71]}" \
+                        "${optionVector[72]}" "${optionVector[73]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -748,7 +751,7 @@ case $optionInput in
                         read -r useChecksum
 
                         echo -e "\\n\\t$RED#-----------------------------------------------------------------------------#"
-                        echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences)$NC: "
+                        echo -en "$CYAN$GREEN\\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences):$NC "
                         read -r syncNowOrNow
 
                         if [ "$useChecksum" == 'y' ]; then
@@ -1249,6 +1252,68 @@ case $optionInput in
         wget -qO - "wttr.in/$cityName" # Get the weather information
         echo
         curl "v2.wttr.in/$cityName"
+        ;;
+    "shred" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+        echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
+
+        folderFile=$2
+        if [ "$folderFile" == '' ]; then
+            echo -e "$RED\\nError: You need pass the type to work:$GREEN f$RED to file or$GREEN d$RED to directory"
+        elif [ "$folderFile" == 'f' ]; then # to shred files
+            fileWork=$3
+            if [ "$fileWork" == '' ]; then
+                echo -e "$RED\\nError: You need pass the file to work"
+            elif [ ! -f "$fileWork" ]; then
+                echo -e "$RED\\nError: The file \"$fileWork\" not exist"
+            else
+                echo -e "$CYAN\\nFile to work with: $fileWork"
+
+                echo -en "$RED\\nRealy want to continue? (y)es or (n)o: $NC"
+                read -r continueOrNot
+
+                if [ "$continueOrNot" == 'y' ]; then
+                    for file in $fileWork; do
+                        echo -en "\\n\\nshred -n 9 -uz $file"
+                        shred -n 9 -uz $file
+                    done
+                fi
+            fi
+        elif [ "$folderFile" == 'd' ]; then # to shred files
+            folderWork=$3
+            if [ "$folderWork" == '' ]; then
+                echo -e "$RED\\nError: You need pass the folder to work$NC"
+            elif [ ! -d "$folderWork" ]; then
+                echo -e "$RED\\nError: The directory \"$folderWork\" not exist$NC"
+            else
+                IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+                echo -e "$CYAN\\nFolder to work with: $folderWork$NC"
+
+                files=$(find "$folderWork" -type f)
+                #files=$(find "$folderWork" -type f -maxdepth 1)
+
+                echo -e "$CYAN\\nFiles to be overwriten and deleted:$NC"
+                echo "$files"
+
+                echo -en "$RED\\nRealy want to continue? (y)es or (n)o:$NC "
+                read -r continueOrNot
+
+                if [ "$continueOrNot" == 'y' ]; then
+                    for file in $files; do
+                        echo -en "$CYAN\\n\\nshred -uz $file"
+                        shred -uz $file
+                    done
+
+                    echo -e "$CYAN\\nRemoving folders$NC"
+                    folders=$(find "$folderWork" -type d)
+                    for folder in $folders; do
+                        echo -e "$CYAN\\nrmdir $folder$NC"
+                        rmdir $folder
+                    done
+                fi
+            fi
+        else
+            echo -e "$RED\\nError: Option \"$folderFile\" not recognized"
+        fi
         ;;
     * )
         echo -e "\\n$CYAN    $(basename "$0") -$RED Error: Option \"$1\" not recognized$CYAN"
