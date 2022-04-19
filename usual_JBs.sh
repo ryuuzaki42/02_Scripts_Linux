@@ -461,7 +461,7 @@ case $optionInput in
                     mv "$value" "$folderToCreate"
                 done
 
-                echo -e "$CYAN\\nFiles moved to: $PWD/$tmpFolder/$NC"
+                echo -e "$CYAN\\n\\nFiles moved to: $GREEN$PWD/$tmpFolder/$NC"
             else
                 echo -e "$CYAN\\nFiles not moved"
             fi
@@ -1320,7 +1320,7 @@ case $optionInput in
                     done
 
                     echo -e "$CYAN\\nRemoving folders$NC"
-                    folders=$(find "$folderWork" -type d)
+                    folders=$(find "$folderWork" -type d | sort -r)
                     for folder in $folders; do
                         echo -e "${BLUE}Running:$GREEN rmdir $folder"
                         rmdir "$folder"
