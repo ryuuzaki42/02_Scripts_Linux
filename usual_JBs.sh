@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 19/04/2022
+# Last update: 05/05/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -377,7 +377,7 @@ case $optionInput in
             fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType")
 
             for file in $fileAndMd5Tmp; do
-                fileAndMd5=$fileAndMd5"\n"$(md5sum "$file")
+                fileAndMd5=$fileAndMd5"\\n"$(md5sum "$file")
             done
 
             fileAndMd5=$(echo -e "$fileAndMd5") # "Create" the new lines
@@ -427,14 +427,16 @@ case $optionInput in
                 fi
 
                 if [ "$printDifferent" != 'n' ]; then
-                    echo -en "$BLUE\\n\n### These file(s) are different:$NC"
+                    echo -en "$BLUE\\n\\n### These file(s) are different:$NC"
                     echo "$filesDifferent" | sort -k 2
                 fi
+            else
+                echo -e "$BLUE\\n### There is no unic file(s) ###$NC"
             fi
 
             tmpFolder="equal_files_"$RANDOM
             echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
-            echo -en "$RED\\n### Files to be moved:$GREEN"
+            echo -en "$RED### Files to be moved:$GREEN"
             echo "$FilesToWork" | sort -k 2
             echo -en "\\n$RED(y)es - (n)o (hit enter to no):$NC "
             if [ "$autoOnOff" != "auto" ]; then
