@@ -143,6 +143,7 @@ case $optionInput in
         "date-up     " "$RED * - Update the date"
         "day-s-i     " "$RED * - The day the system was installed"
         "file-equal  " "   - Look for equal files using md5sum"
+   "file-equal-folder" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
         "folder-diff " "   - Show the difference between two folder and (can) make them equal (with rsync)"
         "git-gc      " "   - Run git gc (|--auto|--aggressive) in the sub directories"
         "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
@@ -252,7 +253,8 @@ case $optionInput in
                         "${optionVector[66]}" "${optionVector[67]}" \
                         "${optionVector[68]}" "${optionVector[69]}" \
                         "${optionVector[70]}" "${optionVector[71]}" \
-                        "${optionVector[72]}" "${optionVector[73]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[72]}" "${optionVector[73]}" \
+                        "${optionVector[74]}" "${optionVector[75]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -468,6 +470,171 @@ case $optionInput in
                 echo -e "$BLUE\\n\\tFiles moved to: $GREEN$PWD/$tmpFolder/$NC"
             else
                 echo -e "$BLUE\\n\\tFiles not moved!"
+            fi
+        fi
+        ;;
+    "file-equal-folder" )
+        echo -e "$CYAN# Look for equal files in \"folder2\" that are in \"folder1\" using md5sum #$NC"
+
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+        folder1=$2
+        folder2=$3
+
+        echo -e "\\n${BLUE}folder1: $GREEN\"$folder1\"$NC\\n${BLUE}folder2: $GREEN\"$folder2\"$NC"
+
+        if [ "$folder1" == '' ] || [ "$folder2" == '' ]; then
+            echo -e "$RED\\nError: You need pass the folders to work: you pass: \"$folder1\" and \"$folder2\"$NC"
+        elif [ ! -d "$folder1" ] || [ ! -d "$folder2" ]; then
+            echo -e "$RED\\nError: The directory \"$folder1\" or \"$folder2\" not exist$NC"
+        else
+            folder1=$(echo "$folder1" | sed 's/ /\\ /g') # Change empty space in the name to "\ "
+            folder2=$(echo "$folder2" | sed 's/ /\\ /g')
+
+            fileType=$4
+            if [ "$fileType" == '' ]; then
+                echo -e "$CYAN\\nWant check all files or just a type of files?$NC"
+                echo -en "${CYAN}Hit enter to all files or the type (e.g. txt or pdf):$NC "
+                read -r fileType
+            fi
+
+            echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
+            autoOnOff=$5
+
+            echo -e "$CYAN\\nWant check the files recursively (this source folders and all sub directories) or only in the source folders?$NC"
+            echo -en "${CYAN}1 to recursively - 2 to only in source folder (hit enter to all folders):$NC "
+            if [ "$autoOnOff" != "auto" ]; then
+                read -r allFolderOrNot
+            else
+                allFolderOrNot=1
+            fi
+
+            if [ "$allFolderOrNot" == '2' ]; then
+                recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
+            else
+                recursiveFolderValue=''
+            fi
+
+            echo -en "$GREEN\\nRunning md5sum, can take a while. Please wait, checking "
+            if [ "$fileType" == '' ]; then
+                echo -en "${BLUE}all files...$NC"
+                fileAndMd5F1=$(eval find "$folder1" "$recursiveFolderValue" -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+                fileAndMd5F2=$(eval find "$folder2" "$recursiveFolderValue" -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
+            else
+                echo -en "${BLUE}the files with $GREEN\"$fileType\"$BLUE in the name...$NC"
+                fileAndMd5TmpF1=$(eval find "$folder1" "$recursiveFolderValue" -type f | grep "$fileType")
+                fileAndMd5TmpF2=$(eval find "$folder2" "$recursiveFolderValue" -type f | grep "$fileType")
+
+                for file in $fileAndMd5TmpF1; do
+                    fileAndMd5F1=$fileAndMd5F1"\\n"$(md5sum "$file")
+                done
+
+                for file in $fileAndMd5TmpF2; do
+                    fileAndMd5F2=$fileAndMd5F2"\\n"$(md5sum "$file")
+                done
+
+                fileAndMd5F1=$(echo -e "$fileAndMd5F1") # "Create" the new lines
+                fileAndMd5F2=$(echo -e "$fileAndMd5F2")
+            fi
+
+            fileAndMd5F1=$(echo "$fileAndMd5F1" | sort) # Sort by the md5sum
+            fileAndMd5F2=$(echo "$fileAndMd5F2" | sort) # Sort by the md5sum
+
+            fileAndMd5FAll=$(echo -e "$fileAndMd5F1\\n$fileAndMd5F2" | sort)
+
+            md5FilesF1=$(echo "$fileAndMd5F1" | cut -d " " -f1) # Get only de md5sum
+            md5FilesF2=$(echo "$fileAndMd5F2" | cut -d " " -f1) # Get only de md5sum
+
+            for valueF1 in $md5FilesF1; do
+                for valueF2 in $md5FilesF2; do
+                    if [ "$valueF1" == "$valueF2" ]; then # Look for all values equal
+                        equalFiles="$equalFiles$valueF2|"
+                    fi
+                done
+            done
+
+            equalFiles=${equalFiles::-1} # Remove the last | (the last character)
+
+            if [ "$equalFiles" == '' ]; then
+                echo -e "$GREEN\\n\\n### All files are different by md5sum ###$NC\\n"
+            else
+                echo -en "$BLUE\\n\\n### These file(s) in $GREEN\"$folder2\"$BLUE are equal in $GREEN\"$folder1\"$BLUE:$NC"
+                filesEqual=$(echo "$fileAndMd5FAll" | grep -E "$equalFiles") # Grep all files equal
+
+                valueBack='' # Clean the value in valueBack
+                for value in $filesEqual; do
+                    valueNow=$(echo "$value" | cut -d " " -f1)
+
+                    if [ "$valueNow" != "$valueBack" ]; then
+                        echo # Add a new line between file different in the print on the terminal
+                    fi
+                    valueBack=$valueNow
+
+                    echo "$value"
+                done
+
+                filesEqual=$(echo "$fileAndMd5F2" | grep -E "$equalFiles") # Grep all files equal
+
+                echo -e "$BLUE\\n### File(s) equal sumary (only the equal file(s) in $GREEN\"$folder2\"$BLUE):$NC\\n$filesEqual"
+
+                for value in $filesEqual; do
+                    fileTmp=$(echo "$value" | cut -d " " -f3-) # Cut the second space from md5sum to end
+                    FilesToWork=$FilesToWork$(echo -e "\\n$fileTmp")
+
+                done
+
+                filesDifferent=$(echo -e "$fileAndMd5F1\\n$fileAndMd5F2" | grep -vE "$equalFiles") # Grep all files different
+                if [ "$filesDifferent" != '' ]; then
+                    echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
+                    echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
+                    if [ "$autoOnOff" != "auto" ]; then
+                        read -r printDifferent
+                    else
+                        printDifferent='y'
+                    fi
+
+                    if [ "$printDifferent" != 'n' ]; then
+                        echo -e "$BLUE\\n### These file(s) are different:$NC"
+                        echo "$filesDifferent" | sort -k 2
+                    fi
+                else
+                    echo -e "$BLUE\\n### There is no unic file(s) ###$NC"
+                fi
+
+                tmpFolder="equal_files_"$RANDOM
+
+                echo -en "\\n$RED### Files to be moved:$GREEN"
+                echo "$FilesToWork" | sort -k 2
+
+                echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
+                echo -en "$RED(y)es - (n)o (hit enter to no):$NC "
+                if [ "$autoOnOff" != "auto" ]; then
+                    read -r moveEqual
+                else
+                    moveEqual='y'
+                fi
+
+                if [ "$moveEqual" == 'y' ]; then
+                    mkdir "$tmpFolder" 2> /dev/null
+
+                    for value in $FilesToWork; do
+                        createFolder=$(echo "$value" | grep "/")
+
+                        if [ "$createFolder" != '' ]; then
+                            folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
+                            folderToCreate=$tmpFolder"/"$folderToCreate
+
+                            mkdir -p "$folderToCreate" 2> /dev/null
+                        else
+                            folderToCreate=$tmpFolder
+                        fi
+
+                        mv "$value" "$folderToCreate"
+                    done
+
+                    echo -e "$BLUE\\n\\tFiles moved to: $GREEN$PWD/$tmpFolder/$NC"
+                else
+                    echo -e "$BLUE\\n\\tFiles not moved!"
+                fi
             fi
         fi
         ;;
