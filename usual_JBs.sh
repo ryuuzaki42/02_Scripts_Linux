@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 05/05/2022
+# Last update: 06/05/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -347,7 +347,7 @@ case $optionInput in
         fileType=$2
         if [ "$fileType" == '' ]; then
             echo -e "$CYAN\\nWant check all files or just a type of files?$NC"
-            echo -en "$CYAN hit enter to all files or the type (e.g. txt or pdf):$NC "
+            echo -en "${CYAN}Hit enter to all files or the type (e.g. txt or pdf):$NC "
             read -r fileType
         fi
 
@@ -355,7 +355,7 @@ case $optionInput in
         autoOnOff=$3
 
         echo -e "$CYAN\\nWant check the files recursively (this folder and all his sub directories) or only this folder?$NC"
-        echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
+        echo -en "${CYAN}1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
         if [ "$autoOnOff" != "auto" ]; then
             read -r allFolderOrNot
         else
@@ -396,9 +396,9 @@ case $optionInput in
         equalFiles=${equalFiles::-1} # Remove the last | (the last character)
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "$CYAN\\n\\nAll files are different by md5sum$NC"
+            echo -e "$GREEN\\n\\n### All files are different by md5sum ###$NC"
         else
-            echo -en "$CYAN\\n\\n### These file(s) are equal:$NC"
+            echo -en "$BLUE\\n\\n### These file(s) are equal:$NC"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
 
             valueBack='' # Clean the value in valueBack
@@ -427,7 +427,7 @@ case $optionInput in
                 fi
 
                 if [ "$printDifferent" != 'n' ]; then
-                    echo -en "$BLUE\\n\\n### These file(s) are different:$NC"
+                    echo -e "$BLUE\\n### These file(s) are different:$NC"
                     echo "$filesDifferent" | sort -k 2
                 fi
             else
@@ -435,10 +435,12 @@ case $optionInput in
             fi
 
             tmpFolder="equal_files_"$RANDOM
-            echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
-            echo -en "$RED### Files to be moved:$GREEN"
+
+            echo -en "\\n$RED### Files to be moved:$GREEN"
             echo "$FilesToWork" | sort -k 2
-            echo -en "\\n$RED(y)es - (n)o (hit enter to no):$NC "
+
+            echo -e "$RED\\nWant to move (leave one) the equal file(s) to a TMP folder $GREEN($tmpFolder)?"
+            echo -en "$RED(y)es - (n)o (hit enter to no):$NC "
             if [ "$autoOnOff" != "auto" ]; then
                 read -r moveEqual
             else
@@ -463,9 +465,9 @@ case $optionInput in
                     mv "$value" "$folderToCreate"
                 done
 
-                echo -e "$CYAN\\n\\nFiles moved to: $GREEN$PWD/$tmpFolder/$NC"
+                echo -e "$BLUE\\n\\tFiles moved to: $GREEN$PWD/$tmpFolder/$NC"
             else
-                echo -e "$CYAN\\nFiles not moved"
+                echo -e "$BLUE\\n\\tFiles not moved!"
             fi
         fi
         ;;
