@@ -125,9 +125,9 @@ case $optionInput in
         su root -c 'dateUpFunction' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
 
         # It's advisable that users acquire the habit of always following the su command with a space and then a hyphen
-        # The hyphen: (1) switches the current directory to the home directory of the new user (e.g., to /root in the case of the root user) and
+        # The hyphen: (1) switches the current folder to the home folder of the new user (e.g., to /root in the case of the root user) and
         # (2) it changes the environmental variables to those of the new user
-        # If the first argument to su is a hyphen, the current directory and environment will be changed to what would be expected if the new user had actually
+        # If the first argument to su is a hyphen, the current folder and environment will be changed to what would be expected if the new user had actually
         # logged on to a new session (rather than just taking over an existing session)
         ;;
     "--help" | "-h" | "help" | 'h' | '' | 'w' )
@@ -138,14 +138,14 @@ case $optionInput in
         # Options text
         optionVector=("brigh-1     " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2     " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
-        "check-pkg-i " "   - Check if all packages in a folder (and subfolders) are installed "
+        "check-pkg-i " "   - Check if all packages in a folder (and subfolders) are installed"
         "cpu-max     " "   - Show the 10 process with more CPU use"
         "date-up     " "$RED * - Update the date"
         "day-s-i     " "$RED * - The day the system was installed"
-        "file-equal  " "   - Look for equal files using md5sum"
-   "file-equal-folder" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
-        "folder-diff " "   - Show the difference between two folder and (can) make them equal (with rsync)"
-        "git-gc      " "   - Run git gc (|--auto|--aggressive) in the sub directories"
+        "file-equal  " "   - Look for equal files using md5sum in the current folder (and subfolders)"
+        "folder-equal" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
+        "folder-diff " "   - Show the difference between two folders and (can) make them equal (with rsync)"
+        "git-gc      " "   - Run git gc (|--auto|--aggressive) in the subfolders"
         "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
         "ip          " "   - Get your IP"
         "l-pkg-i     " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
@@ -164,7 +164,7 @@ case $optionInput in
         "s-pkg-f     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
         "s-pkg-s     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
         "screenshot  " "   - Screenshot from display :0"
-        "search-pwd  " "   - Search in this directory (recursive) for a pattern"
+        "search-pwd  " "   - Search in this folder (recursive) for a pattern"
         "shred       " "   - shred files in local folder (and subfolders)"
         "slack-up    " "$RED * - Slackware update"
         "sub-extract " "   - Extract subtitle from a video file"
@@ -280,7 +280,7 @@ case $optionInput in
         if [ "$folderWork" == '' ]; then
             echo -e "$RED\\nError: You need pass the folder to work"
         elif [ ! -d "$folderWork" ]; then
-            echo -e "$RED\\nError: The directory \"$folderWork\" not exist"
+            echo -e "$RED\\nError: The folder \"$folderWork\" not exist"
         else
             echo -e "\\n$CYAN Folder to work with: $folderWork$NC"
             files=$(find "$folderWork" -type f | grep -E "txz$|tgz$")
@@ -311,8 +311,8 @@ case $optionInput in
         fi
         ;;
     "git-gc" )
-        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the sub directories #$NC"
-        ## All folder in one directory run "git gc --aggressive"
+        echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the subfolders #$NC"
+
         echo -e "\\nCommands \"git gc\" available:"
         echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
@@ -343,7 +343,7 @@ case $optionInput in
         done
         ;;
     "file-equal" )
-        echo -e "$CYAN# Look for equal files using md5sum #$NC"
+        echo -e "$CYAN# Look for equal files using md5sum in the current folder (and subfolders) #$NC"
 
         IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         fileType=$2
@@ -356,7 +356,7 @@ case $optionInput in
         echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
         autoOnOff=$3
 
-        echo -e "$CYAN\\nWant check the files recursively (this folder and all his sub directories) or only this folder?$NC"
+        echo -e "$CYAN\\nWant check the files recursively (this folder and all his subfolders) or only this folder?$NC"
         echo -en "${CYAN}1 to recursively - 2 to only this folder (hit enter to all folders):$NC "
         if [ "$autoOnOff" != "auto" ]; then
             read -r allFolderOrNot
@@ -473,7 +473,7 @@ case $optionInput in
             fi
         fi
         ;;
-    "file-equal-folder" )
+    "folder-equal" )
         echo -e "$CYAN# Look for equal files in \"folder2\" that are in \"folder1\" using md5sum #$NC"
 
         IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
@@ -485,7 +485,7 @@ case $optionInput in
         if [ "$folder1" == '' ] || [ "$folder2" == '' ]; then
             echo -e "$RED\\nError: You need pass the folders to work: you pass: \"$folder1\" and \"$folder2\"$NC"
         elif [ ! -d "$folder1" ] || [ ! -d "$folder2" ]; then
-            echo -e "$RED\\nError: The directory \"$folder1\" or \"$folder2\" not exist$NC"
+            echo -e "$RED\\nError: The folder \"$folder1\" or \"$folder2\" not exist$NC"
         else
             folder1=$(echo "$folder1" | sed 's/ /\\ /g') # Change empty space in the name to "\ "
             folder2=$(echo "$folder2" | sed 's/ /\\ /g')
@@ -500,7 +500,7 @@ case $optionInput in
             echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
             autoOnOff=$5
 
-            echo -e "$CYAN\\nWant check the files recursively (this source folders and all sub directories) or only in the source folders?$NC"
+            echo -e "$CYAN\\nWant check the files recursively (this source folders and all subfolders) or only in the source folders?$NC"
             echo -en "${CYAN}1 to recursively - 2 to only in source folder (hit enter to all folders):$NC "
             if [ "$autoOnOff" != "auto" ]; then
                 read -r allFolderOrNot
@@ -909,15 +909,15 @@ case $optionInput in
         echo -e "\\nScreenshot \"screenshot_${dateNow}.jpg\"\\nsaved in the folder \"$(pwd)/\""
         ;;
     "folder-diff" )
-        echo -e "$CYAN# Show the difference between two folder and (can) make them equal (with rsync) #$NC"
+        echo -e "$CYAN# Show the difference between two folders and (can) make them equal (with rsync) #$NC"
         if [ $# -lt 3 ]; then
             echo -e "$RED\\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
         else
             echo -e "\\n$GREEN    ## An Important Note ##$BLUE\\n"
             echo -e "The trailing slash (/) at the end of the first argument (source folder)"
-            echo -e "For example: \"rsync -a dir1/ dir2\" is necessary to mean \"the contents of dir1\""
-            echo -e "The alternative (without the trailing slash) would place dir1 (including the directory) within dir2"
-            echo -e "This would create a hierarchy that looks like: dir2/dir1/[files]"
+            echo -e "For example: \"rsync -a folder1/ folder2\" is necessary to mean \"the contents of folder1\""
+            echo -e "The alternative (without the trailing slash) would place folder1 (including the folder) within folder2"
+            echo -e "This would create a hierarchy that looks like: folder2/folder1/[files]"
             echo -e "\\n$CYAN## Please double-check your arguments before continue ##$NC"
 
             pathSource=$2
@@ -948,7 +948,7 @@ case $optionInput in
 
                         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
                         # -h output numbers in a human-readable format; -v increase verbosity
-                        # --delete delete extraneous files from destination directories
+                        # --delete delete extraneous files from destination folders
                         # -n perform a trial run with no changes made; -i output a change-summary for all updates
 
                         if [ "$syncNowOrNow" == "2" ]; then
@@ -1023,7 +1023,7 @@ case $optionInput in
         fi
         ;;
     "search-pwd" )
-        echo -e "$CYAN# Search in this directory (recursive) for a pattern #$NC"
+        echo -e "$CYAN# Search in this folder (recursive) for a pattern #$NC"
         if [ "$2" == '' ]; then
             echo -en "$CYAN\\nPattern to search: $NC"
             read -r patternSearch
@@ -1370,7 +1370,7 @@ case $optionInput in
             echo -e "$CYAN# $functionWord packge(s) in a folder (and subfolders) in the Slackware #$NC"
 
             updateInstallpkg () {
-                echo -e "$CYAN\\nWant check work recursively (this folder and all his sub directories) or only this folder?$NC"
+                echo -e "$CYAN\\nWant check work recursively (this folder and all his subfolders) or only this folder?$NC"
                 echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to only this folder):$NC "
                 read -r allFolderOrNot
 
@@ -1471,7 +1471,7 @@ case $optionInput in
             if [ "$folderWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the folder to work$NC"
             elif [ ! -d "$folderWork" ]; then
-                echo -e "$RED\\nError: The directory \"$folderWork\" not exist$NC"
+                echo -e "$RED\\nError: The folder \"$folderWork\" not exist$NC"
             else
                 echo -e "$CYAN\\nFolder to work with:$GREEN $folderWork$NC"
 
