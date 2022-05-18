@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 06/05/2022
+# Last update: 18/05/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -146,6 +146,7 @@ case $optionInput in
         "folder-equal" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
         "folder-diff " "   - Show the difference between two folders and (can) make them equal (with rsync)"
         "git-gc      " "   - Run git gc (|--auto|--aggressive) in the subfolders"
+        "git-up      " "   - Run git pull and force update to the local files (deleting changes) with the remote in the subfolders"
         "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
         "ip          " "   - Get your IP"
         "l-pkg-i     " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
@@ -254,7 +255,8 @@ case $optionInput in
                         "${optionVector[68]}" "${optionVector[69]}" \
                         "${optionVector[70]}" "${optionVector[71]}" \
                         "${optionVector[72]}" "${optionVector[73]}" \
-                        "${optionVector[74]}" "${optionVector[75]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[74]}" "${optionVector[75]}" \
+                        "${optionVector[76]}" "${optionVector[77]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -340,6 +342,25 @@ case $optionInput in
             cd "$folderGit" || exit
             $gitCommandRun
             cd .. || exit
+        done
+        ;;
+
+    "git-up")
+        echo -e "$CYAN# Run git pull and force update to the local files (deleting changes) with the remote in the subfolders #$NC"
+
+        for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
+            echo -e "\\n${BLUE}folder: $GREEN$folder/$NC"
+            cd "$folder/" || exit
+
+            if ! git pull; then # if [ $? != 0 ]
+                git fetch --all # Fetch all changes
+
+                git reset --hard origin/master # Reset the master
+
+                git pull # Pull/update
+            fi
+
+            cd ../ || exit
         done
         ;;
     "file-equal" )
