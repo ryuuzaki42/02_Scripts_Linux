@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 21/02/2022
+# Last update: 18/05/2022
 #
 echo -e "\\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
@@ -77,11 +77,11 @@ mirrorSuggestion() {
         echo " s - (stable)  - $mirrorFinal"
         echo " c - (current) - $mirrorCurrent"
         echo " i - Or insert your favorite mirror"
-        echo -en "\\nWhich mirror you want?: "
+        echo -en "\\nWhich mirror you want? (hit enter to stable): "
         read -r optionInput
     fi
 
-    if [ "$optionInput" == 's' ]; then
+    if [ "$optionInput" == 's' ] || [ "$optionInput" == '' ]; then
         mirrorDl=$mirrorFinal
     elif [ "$optionInput" == 'c' ]; then
         mirrorDl=$mirrorCurrent
@@ -278,15 +278,24 @@ getUpdateMirror() {
         iconName="audio-volume-high"
         notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
+        updatesFound=0
         lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
-        lastKernelInstalled=$(ls /var/log/packages/kernel-*$lastKernelUpdate* 2> /dev/null)
+        lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null)
 
         if [ "$lastKernelInstalled" == '' ]; then
-            echo -e "\n # Kernel update: $lastKernelUpdate #\n"
+            lastKernelUpdate=$(grep "patches/packages/linux" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '/' -f3 | cut -d '-' -f2)
+            lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null)
 
-            iconName="audio-volume-high"
-            notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"Kernel update: $lastKernelUpdate\" -i \"$iconName\"")
-        else
+            if [ "$lastKernelInstalled" == '' ]; then
+                echo -e "\n # Kernel update: $lastKernelUpdate #\n"
+
+                iconName="audio-volume-high"
+                notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"Kernel update: $lastKernelUpdate\" -i \"$iconName\"")
+                updatesFound=1
+            fi
+        fi
+
+        if [ "$updatesFound" == 0 ]; then
             echo -e "\\n        # Updates not found #\\n"
 
             iconName="audio-volume-muted"
