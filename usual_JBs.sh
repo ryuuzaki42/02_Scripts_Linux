@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 18/05/2022
+# Last update: 28/05/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -508,18 +508,22 @@ case $optionInput in
         elif [ ! -d "$folder1" ] || [ ! -d "$folder2" ]; then
             echo -e "$RED\\nError: The folder \"$folder1\" or \"$folder2\" not exist$NC"
         else
-            folder1=$(echo "$folder1" | sed 's/ /\\ /g') # Change empty space in the name to "\ "
-            folder2=$(echo "$folder2" | sed 's/ /\\ /g')
+            folder1=$(echo "${folder1// /\\ }") # Change the empty spaces " " in the name to "\ "
+            folder2=$(echo "${folder2// /\\ }")
 
             fileType=$4
             if [ "$fileType" == '' ]; then
                 echo -e "$CYAN\\nWant check all files or just a type of files?$NC"
-                echo -en "${CYAN}Hit enter to all files or the type (e.g. txt or pdf):$NC "
+                echo -en "${CYAN}Hit enter to all files or the type (e.g., txt or pdf):$NC "
                 read -r fileType
             fi
 
             echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
-            autoOnOff=$5
+            if [ "$fileType" == "auto" ]; then # If there is no file type, but has parameter "auto"
+                autoOnOff=$4
+            else
+                autoOnOff=$5
+            fi
 
             echo -e "$CYAN\\nWant check the files recursively (this source folders and all subfolders) or only in the source folders?$NC"
             echo -en "${CYAN}1 to recursively - 2 to only in source folder (hit enter to all folders):$NC "
