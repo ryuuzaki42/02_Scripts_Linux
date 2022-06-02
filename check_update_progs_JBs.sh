@@ -100,7 +100,7 @@ smplayer(){
 
 teamviewer(){
     progName="teamviewer" # last tested: "15.30.3"
-    link="https://www.teamviewer.com/en/download/linux/"
+    link="https://www.teamviewer.com/en/download/linux"
     command="grep -o 'deb package .*' a.html | head -n1 | tr -d 'a-z <>/'"
 
     checkVersion "$progName" "$link" "$command"
@@ -108,16 +108,16 @@ teamviewer(){
 
 mozilla-firefox(){
     progName="mozilla-firefox" # last tested: "101.0"
-    link="https://www.mozilla.org/firefox/all/"
-    command="grep \"latest-firefox\" a.html | sed 's/.*latest-firefox=\"//; s/\" .*//'"
+    link="https://www.mozilla.org/firefox/all"
+    command="grep 'latest-firefox' a.html | sed 's/.*latest-firefox=\"//; s/\" .*//'"
 
     checkVersion "$progName" "$link" "$command"
 }
 
 gitahead(){
-    progName="gitahead" # last tested: "2.6.3"
+    progName="gitahead"
     link="https://github.com/gitahead/gitahead/releases/latest"
-    command="grep \"Release v\" a.html | head -n1 | sed 's/.*Release v//; s/ .*//'"
+    command="grep 'Release v' a.html | head -n1 | sed 's/.*Release v//; s/ .*//'"
 
     installedVersion="2.6.3"
 
@@ -127,23 +127,23 @@ gitahead(){
 maestral(){
     progName="maestral" # last tested: "1.6.2"
     link="https://github.com/samschott/maestral/releases/latest"
-    command="grep \"Release v\" a.html | head -n1 | sed 's/.*Release v//; s/ .*//'"
+    command="grep 'Release v' a.html | head -n1 | sed 's/.*Release v//; s/ .*//'"
 
     checkVersion "$progName" "$link" "$command"
 }
 
 MasterPDFEditor(){
-    progName="MasterPDFEditor" # last tested: ""
-    link="https://code-industry.net/free-pdf-editor/#get"
+    progName="MasterPDFEditor" # last tested: "5.8.52"
+    link="https://code-industry.net/free-pdf-editor"
     command="grep -o 'http[^\"]*' a.html | grep \"x86.64.tar.gz\" | cut -d '-' -f5"
 
     checkVersion "$progName" "$link" "$command"
 }
 
 ventoy(){
-    progName="ventoy" # last tested: "1.0.74"
+    progName="ventoy"
     link="https://github.com/ventoy/Ventoy/releases/latest"
-    command="grep \"Release Ventoy\" a.html | head -n1 | sed 's/.*Release Ventoy //; s/ .*//'"
+    command="grep 'Release Ventoy' a.html | head -n1 | sed 's/.*Release Ventoy //; s/ .*//'"
 
     installedVersion="1.0.75"
 
@@ -151,9 +151,9 @@ ventoy(){
 }
 
 virtualbox(){
-    progName="virtualbox" # last tested: ""
-    link="https://www.virtualbox.org/wiki/Downloads"
-    command="grep -o 'http[^\"]*' a.html | grep \"Win.exe\" | sed 's/.*VirtualBox-//; s/.Win.exe//'"
+    progName="virtualbox"
+    link="https://www.virtualbox.org/wiki/Linux_Downloads"
+    command="grep -o 'http.*run' a.html | cut -d '-' -f2-3"
 
     installedVersion="6.1.34-150636"
 
@@ -161,15 +161,15 @@ virtualbox(){
 }
 
 authy(){
-    progName="authy" # last tested: ""
-    link="https://builds.garudalinux.org/repos/chaotic-aur/x86_64/"
+    progName="authy" # last tested: "2.2.0"
+    link="https://builds.garudalinux.org/repos/chaotic-aur/x86_64"
     command="grep -o 'authy-[0-9].*sig' a.html | cut -d '-' -f2"
 
     checkVersion "$progName" "$link" "$command"
 }
 
 TLP(){
-    progName="TLP" # last tested: ""
+    progName="TLP" # last tested: "1.5.0"
     link="https://github.com/linrunner/TLP/releases/latest"
     command="grep \"Release TLP\" a.html | head -n1 | sed 's/.*Release TLP //; s/ .*//'"
 
@@ -177,7 +177,7 @@ TLP(){
 }
 
 opera-ffmpeg-codecs(){
-    progName="opera-ffmpeg-codecs" # last tested: ""
+    progName="opera-ffmpeg-codecs" # last tested: "0.65.0"
     link="https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/latest"
     command="grep \"Release \" a.html | head -n1 | sed 's/.*Release //; s/ .*//'"
 
@@ -187,7 +187,7 @@ opera-ffmpeg-codecs(){
 ## Windows programs
 
 hwmonitor(){
-    progName="hwmonitor" # last tested: "1.46"
+    progName="hwmonitor"
     link="https://www.cpuid.com/softwares/hwmonitor.html"
     command="grep -o 'href.*hwmonitor_.*.exe' a.html | head -n1 | grep -o \"[0-9].[0-9][0-9]\""
 
@@ -197,8 +197,8 @@ hwmonitor(){
 }
 
 notepad-plus-plus(){
-    progName="notepad-plus-plus" # last tested: "8.4.1"
-    link="https://notepad-plus-plus.org/downloads/"
+    progName="notepad-plus-plus"
+    link="https://notepad-plus-plus.org/downloads"
     command="grep \"Download Notepad\" a.html | head -n1 | cut -d 'v' -f2 | tr -d '\r'"
 
     installedVersion="8.4.1"
@@ -207,8 +207,8 @@ notepad-plus-plus(){
 }
 
 revouninstaller(){
-    progName="revouninstaller" # last tested: "2.3.8"
-    link="https://www.revouninstaller.com/products/revo-uninstaller-free/"
+    progName="revouninstaller"
+    link="https://www.revouninstaller.com/products/revo-uninstaller-free"
     command="grep -o -E '>Version: (.{4}|.{5})<' a.html | tr -d 'a-zA-Z : <>'"
 
     installedVersion="2.3.8"
@@ -226,7 +226,7 @@ sumatrapdfreader(){
 }
 
 winrar(){
-    progName="winrar" # last tested: "6.11"
+    progName="winrar"
     link="https://www.win-rar.com/start.html"
     command="grep -o '>WinRAR [0-9].*<' a.html | tr -d 'a-zA-Z <>'"
 
@@ -236,7 +236,7 @@ winrar(){
 }
 
 nettraffic(){
-    progName="nettraffic" # last tested: ""
+    progName="nettraffic"
     link="https://www.venea.net/web/downloads"
     command="grep -o '>Version: [0-9].*<' a.html | head -n1 | tr -d 'a-zA-Z <>:'"
 
