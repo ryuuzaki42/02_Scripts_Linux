@@ -22,7 +22,7 @@
 #
 # Script: Script to check if some programs has one update
 #
-# Last update: 01/06/2022
+# Last update: 02/06/2022
 #
 set -e
 
@@ -217,10 +217,10 @@ revouninstaller(){
 }
 
 sumatrapdfreader(){
-    progName="sumatrapdfreader" # last tested: "3.4.3"
+    progName="sumatrapdfreader"
     link="https://www.sumatrapdfreader.org/download-free-pdf-viewer"
     command="grep -o 'SumatraPDF-.*-64-install.exe\"' a.html | cut -d '-' -f2"
-    installedVersion="3.4.3"
+    installedVersion="3.4.4"
 
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
