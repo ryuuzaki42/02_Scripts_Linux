@@ -22,29 +22,29 @@
 #
 # Script: Script to check if some programs has one update
 #
-# Last update: 31/05/2022
+# Last update: 01/06/2022
 #
 set -e
 
-## Color ##
+## Color
 useColor() {
-    BLACK='\e[1;30m'
+    #BLACK='\e[1;30m'
     RED='\e[1;31m'
     GREEN='\e[1;32m'
     NC='\033[0m' # reset/no color
     BLUE='\e[1;34m'
-    PINK='\e[1;35m'
+    #PINK='\e[1;35m'
     CYAN='\e[1;36m'
-    WHITE='\e[1;37m'
+    #WHITE='\e[1;37m'
 }
 useColor
 
-## Default functions ##
+## Default functions
 downloadHTML() {
     link=$1
 
     if [ "$link" == '' ]; then
-        echo -e "\\n${RED}Error: the link: \"$link\" is not valid!$NC"
+        echo -e "\\n${RED}Error: The link: \"$link\" is not valid!$NC"
     else
         echo -e "$CYAN - wget -q $GREEN$link$CYAN -O a.html$NC"
         wget -q $link -O a.html
@@ -61,31 +61,31 @@ checkVersion() {
 
     downloadHTML "$link"
 
-#     set -x
+    #set -x
     version=$(eval $command)
-#     echo "version: \"$version\""
+    #echo "version: \"$version\""
 
     if [ "$installedVersion" == '' ]; then
         installedVersion=$(find /var/log/packages/$progName* | rev | cut -d '-' -f3 | rev)
     fi
 
-    echo -e "\\n$BLUE   Latest version: $GREEN$version\\n${BLUE}Version installed: $GREEN$installedVersion$NC\\n"
     if [ "$version" == "$installedVersion" ]; then
-        echo -e "${CYAN}Version installed is equal to latest version.$NC"
-
+        echo -e "$BLUE   Latest version ($GREEN$version$BLUE) is ${GREEN}equal$BLUE to the installed$NC"
     else
-        echo -en "${CYAN}Version installed is$RED not equal$CYAN to latest version. Press enter to continue...$NC"
+        echo -en "\n$BLUE   Latest version ($GREEN$version$BLUE) is$RED not equal$BLUE to the installed ($GREEN$installedVersion$BLUE). "
+        echo -en "Press enter to continue...$NC"
         read -r continue
     fi
 
     rm a.html
 }
 
-## Programs ##
+## GNU/Linux programs
+
 mkvtoolnix () {
     progName="mkvtoolnix" # last tested: "68.0.0"
     link="https://mkvtoolnix.download/index.html"
-    command="grep \"Released\" a.html | head -n 1 | cut -d 'v' -f2 | cut -d ' ' -f1"
+    command="grep -o 'Released v.*(' a.html | head -n1 | tr -d 'a-zA-Z ('"
 
     checkVersion "$progName" "$link" "$command"
 }
@@ -93,7 +93,7 @@ mkvtoolnix () {
 smplayer(){
     progName="smplayer" # last tested: "22.2.0"
     link="https://www.smplayer.info/en/downloads"
-    command="grep ".tar.bz2" a.html | awk -F '.tar.bz2' '{print \$1}' | rev | cut -d '-' -f1 | rev"
+    command="grep -o '/smplayer.*-x64.exe\"' a.html | cut -d '-' -f2"
 
     checkVersion "$progName" "$link" "$command"
 }
@@ -101,7 +101,7 @@ smplayer(){
 teamviewer(){
     progName="teamviewer" # last tested: "15.30.3"
     link="https://www.teamviewer.com/en/download/linux/"
-    command="grep \"deb package\" a.html | head -n 1 | cut -d ' ' -f3 | cut -d '<' -f1"
+    command="grep -o 'deb package .*' a.html | head -n1 | tr -d 'a-z <>/'"
 
     checkVersion "$progName" "$link" "$command"
 }
@@ -160,21 +160,130 @@ virtualbox(){
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
 
+authy(){
+    progName="authy" # last tested: ""
+    link="https://builds.garudalinux.org/repos/chaotic-aur/x86_64/"
+    command="grep -o 'authy-[0-9].*sig' a.html | cut -d '-' -f2"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+TLP(){
+    progName="TLP" # last tested: ""
+    link="https://github.com/linrunner/TLP/releases/latest"
+    command="grep \"Release TLP\" a.html | head -n1 | sed 's/.*Release TLP //; s/ .*//'"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+opera-ffmpeg-codecs(){
+    progName="opera-ffmpeg-codecs" # last tested: ""
+    link="https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/latest"
+    command="grep \"Release \" a.html | head -n1 | sed 's/.*Release //; s/ .*//'"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+## Windows programs
+
+hwmonitor(){
+    progName="hwmonitor" # last tested: "1.46"
+    link="https://www.cpuid.com/softwares/hwmonitor.html"
+    command="grep -o 'href.*hwmonitor_.*.exe' a.html | head -n1 | grep -o \"[0-9].[0-9][0-9]\""
+
+    installedVersion="1.46"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+notepad-plus-plus(){
+    progName="notepad-plus-plus" # last tested: "8.4.1"
+    link="https://notepad-plus-plus.org/downloads/"
+    command="grep \"Download Notepad\" a.html | head -n1 | cut -d 'v' -f2 | tr -d '\r'"
+
+    installedVersion="8.4.1"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+revouninstaller(){
+    progName="revouninstaller" # last tested: "2.3.8"
+    link="https://www.revouninstaller.com/products/revo-uninstaller-free/"
+    command="grep -o -E '>Version: (.{4}|.{5})<' a.html | tr -d 'a-zA-Z : <>'"
+
+    installedVersion="2.3.8"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+sumatrapdfreader(){
+    progName="sumatrapdfreader" # last tested: "3.4.3"
+    link="https://www.sumatrapdfreader.org/download-free-pdf-viewer"
+    command="grep -o 'SumatraPDF-.*-64-install.exe\"' a.html | cut -d '-' -f2"
+    installedVersion="3.4.3"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+winrar(){
+    progName="winrar" # last tested: "6.11"
+    link="https://www.win-rar.com/start.html"
+    command="grep -o '>WinRAR [0-9].*<' a.html | tr -d 'a-zA-Z <>'"
+
+    installedVersion="6.11"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+nettraffic(){
+    progName="nettraffic" # last tested: ""
+    link="https://www.venea.net/web/downloads"
+    command="grep -o '>Version: [0-9].*<' a.html | head -n1 | tr -d 'a-zA-Z <>:'"
+
+    installedVersion="1.66.2"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+## Call to check version
+
+## GNU/Linux
+GNULinuxPrograms(){
+    mkvtoolnix
+    smplayer
+    teamviewer
+    mozilla-firefox
+    gitahead
+    maestral
+    MasterPDFEditor
+    ventoy
+    virtualbox
+    authy
+    TLP
+    opera-ffmpeg-codecs
+}
+
+## Windows
+windowsPrograms(){
+    hwmonitor
+    notepad-plus-plus
+    revouninstaller
+    sumatrapdfreader
+    winrar
+    nettraffic
+}
+
+## Calls
+GNULinuxPrograms
+windowsPrograms
+
+# Default function
 default(){
     progName="" # last tested: ""
     link=""
     command=""
 
-    checkVersion "$progName" "$link" "$command"
-}
+    installedVersion=""
 
-## Call to check version ##
-mkvtoolnix
-smplayer
-teamviewer
-mozilla-firefox
-gitahead
-maestral
-MasterPDFEditor
-ventoy
-virtualbox
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
