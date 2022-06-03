@@ -22,7 +22,7 @@
 #
 # Script: Script to check if some programs has one update
 #
-# Last update: 02/06/2022
+# Last update: 03/06/2022
 #
 set -e
 
@@ -228,7 +228,7 @@ notepad-plus-plus(){
     link="https://notepad-plus-plus.org/downloads"
     command="grep \"Download Notepad\" a.html | head -n1 | cut -d 'v' -f2 | tr -d '\r'"
 
-    installedVersion="8.4.1"
+    installedVersion="8.4.2"
 
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
