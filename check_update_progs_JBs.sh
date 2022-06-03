@@ -39,7 +39,7 @@ useColor() {
 }
 useColor
 
-## Default functions
+## Usual functions
 downloadHTML() {
     link=$1
 
@@ -148,16 +148,15 @@ mozilla-firefox(){
 }
 
 opera(){
-    progName="opera-stable" # last tested: "87.0.4390.36"
+    progName="opera-stable" # last tested: "87.0.4390.45"
     link="http://ftp.opera.com/ftp/pub/opera/desktop"
-    command="" # Will be used to send the last version
+    #command=""
 
     echo -e "\\n$BLUE$progName - Checking for the last version to GNU/Linux (rpm)$NC"
 
     tailNumber='1'
     continue='0'
     while [ "$continue" == '0' ]; do
-
         echo -e "   ${CYAN}wget -q $GREEN$link$CYAN -O a.html$NC"
         wget -q "$link" -O a.html
 
@@ -234,7 +233,6 @@ virtualbox(){
 }
 
 ## GNU/Linux calls
-
 GNULinuxPrograms(){
     MasterPDFEditor
     TLP
