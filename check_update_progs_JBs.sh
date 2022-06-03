@@ -147,6 +147,48 @@ mozilla-firefox(){
     checkVersion "$progName" "$link" "$command"
 }
 
+opera(){
+    progName="opera-stable" # last tested: "87.0.4390.36"
+    link="http://ftp.opera.com/ftp/pub/opera/desktop"
+    command="" # Will be used to send the last version
+
+    echo -e "\\n$BLUE$progName - Checking for the last version to GNU/Linux (rpm)$NC"
+
+    tailNumber='1'
+    continue='0'
+    while [ "$continue" == '0' ]; do
+
+        echo -e "   ${CYAN}wget -q $GREEN$link$CYAN -O a.html$NC"
+        wget -q "$link" -O a.html
+
+        version=$(grep "href" a.html | grep -v "Index" | sort -V -t '.' | tail -n $tailNumber | head -n 1 | cut -d '"' -f2 | cut -d '/' -f1)
+        if [ "$version" == '' ]; then
+            echo -e "\\n   Not found any more version\\nJust exiting"
+            exit 0
+        fi
+
+        echo -e "$BLUE      Version test: $version$CYAN - wget -q $GREEN$link/$version$CYAN -O a.html$NC"
+        wget -q "$link/$version" -O a.html
+
+        if grep -q "linux" a.html; then
+            echo -e "         ${CYAN}wget -q $GREEN$link/$version/linux$CYAN -O a.html$NC"
+            wget -q "$link/$version/linux" -O a.html
+
+            if grep -q "rpm" a.html; then
+                continue='1'
+            else
+                echo -e "            # The version \"$version\" don't have rpm version yet\\n"
+            fi
+        else
+            echo -e "         # The version \"$version\" don't have GNU/Linux version yet\\n"
+        fi
+
+        ((tailNumber++))
+    done
+
+    compareVersion "$version"
+}
+
 opera-ffmpeg-codecs(){
     progName="opera-ffmpeg-codecs" # last tested: "0.65.0"
     link="https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/latest"
@@ -201,6 +243,7 @@ GNULinuxPrograms(){
     maestral
     mkvtoolnix
     mozilla-firefox
+    opera
     opera-ffmpeg-codecs
     smplayer
     teamviewer
