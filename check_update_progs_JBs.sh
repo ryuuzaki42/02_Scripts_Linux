@@ -82,34 +82,26 @@ checkVersion() {
 
 ## GNU/Linux programs
 
-mkvtoolnix () {
-    progName="mkvtoolnix" # last tested: "68.0.0"
-    link="https://mkvtoolnix.download/index.html"
-    command="grep -o 'Released v.*(' a.html | head -n1 | tr -d 'a-zA-Z ('"
+MasterPDFEditor(){
+    progName="MasterPDFEditor" # last tested: "5.8.52"
+    link="https://code-industry.net/free-pdf-editor"
+    command="grep -o 'http[^\"]*' a.html | grep \"x86.64.tar.gz\" | cut -d '-' -f5"
 
     checkVersion "$progName" "$link" "$command"
 }
 
-smplayer(){
-    progName="smplayer" # last tested: "22.2.0"
-    link="https://www.smplayer.info/en/downloads"
-    command="grep -o '/smplayer.*-x64.exe\"' a.html | cut -d '-' -f2"
+TLP(){
+    progName="TLP" # last tested: "1.5.0"
+    link="https://github.com/linrunner/TLP/releases/latest"
+    command="grep \"Release TLP\" a.html | head -n1 | sed 's/.*Release TLP //; s/ .*//'"
 
     checkVersion "$progName" "$link" "$command"
 }
 
-teamviewer(){
-    progName="teamviewer" # last tested: "15.30.3"
-    link="https://www.teamviewer.com/en/download/linux"
-    command="grep -o 'deb package .*' a.html | head -n1 | tr -d 'a-z <>/'"
-
-    checkVersion "$progName" "$link" "$command"
-}
-
-mozilla-firefox(){
-    progName="mozilla-firefox" # last tested: "101.0"
-    link="https://www.mozilla.org/firefox/all"
-    command="grep 'latest-firefox' a.html | sed 's/.*latest-firefox=\"//; s/\" .*//'"
+authy(){
+    progName="authy" # last tested: "2.2.0"
+    link="https://builds.garudalinux.org/repos/chaotic-aur/x86_64"
+    command="grep -o 'authy-[0-9].*sig' a.html | cut -d '-' -f2"
 
     checkVersion "$progName" "$link" "$command"
 }
@@ -132,10 +124,42 @@ maestral(){
     checkVersion "$progName" "$link" "$command"
 }
 
-MasterPDFEditor(){
-    progName="MasterPDFEditor" # last tested: "5.8.52"
-    link="https://code-industry.net/free-pdf-editor"
-    command="grep -o 'http[^\"]*' a.html | grep \"x86.64.tar.gz\" | cut -d '-' -f5"
+mkvtoolnix () {
+    progName="mkvtoolnix" # last tested: "68.0.0"
+    link="https://mkvtoolnix.download/index.html"
+    command="grep -o 'Released v.*(' a.html | head -n1 | tr -d 'a-zA-Z ('"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+mozilla-firefox(){
+    progName="mozilla-firefox" # last tested: "101.0"
+    link="https://www.mozilla.org/firefox/all"
+    command="grep 'latest-firefox' a.html | sed 's/.*latest-firefox=\"//; s/\" .*//'"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+opera-ffmpeg-codecs(){
+    progName="opera-ffmpeg-codecs" # last tested: "0.65.0"
+    link="https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/latest"
+    command="grep \"Release \" a.html | head -n1 | sed 's/.*Release //; s/ .*//'"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+smplayer(){
+    progName="smplayer" # last tested: "22.2.0"
+    link="https://www.smplayer.info/en/downloads"
+    command="grep -o '/smplayer.*-x64.exe\"' a.html | cut -d '-' -f2"
+
+    checkVersion "$progName" "$link" "$command"
+}
+
+teamviewer(){
+    progName="teamviewer" # last tested: "15.30.3"
+    link="https://www.teamviewer.com/en/download/linux"
+    command="grep -o 'deb package .*' a.html | head -n1 | tr -d 'a-z <>/'"
 
     checkVersion "$progName" "$link" "$command"
 }
@@ -160,28 +184,21 @@ virtualbox(){
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
 
-authy(){
-    progName="authy" # last tested: "2.2.0"
-    link="https://builds.garudalinux.org/repos/chaotic-aur/x86_64"
-    command="grep -o 'authy-[0-9].*sig' a.html | cut -d '-' -f2"
+## GNU/Linux calls
 
-    checkVersion "$progName" "$link" "$command"
-}
-
-TLP(){
-    progName="TLP" # last tested: "1.5.0"
-    link="https://github.com/linrunner/TLP/releases/latest"
-    command="grep \"Release TLP\" a.html | head -n1 | sed 's/.*Release TLP //; s/ .*//'"
-
-    checkVersion "$progName" "$link" "$command"
-}
-
-opera-ffmpeg-codecs(){
-    progName="opera-ffmpeg-codecs" # last tested: "0.65.0"
-    link="https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/latest"
-    command="grep \"Release \" a.html | head -n1 | sed 's/.*Release //; s/ .*//'"
-
-    checkVersion "$progName" "$link" "$command"
+GNULinuxPrograms(){
+    MasterPDFEditor
+    TLP
+    authy
+    gitahead
+    maestral
+    mkvtoolnix
+    mozilla-firefox
+    opera-ffmpeg-codecs
+    smplayer
+    teamviewer
+    ventoy
+    virtualbox
 }
 
 ## Windows programs
@@ -192,6 +209,16 @@ hwmonitor(){
     command="grep -o 'href.*hwmonitor_.*.exe' a.html | head -n1 | grep -o \"[0-9].[0-9][0-9]\""
 
     installedVersion="1.46"
+
+    checkVersion "$progName" "$link" "$command" "$installedVersion"
+}
+
+nettraffic(){
+    progName="nettraffic"
+    link="https://www.venea.net/web/downloads"
+    command="grep -o '>Version: [0-9].*<' a.html | head -n1 | tr -d 'a-zA-Z <>:'"
+
+    installedVersion="1.66.2"
 
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
@@ -235,45 +262,17 @@ winrar(){
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
 
-nettraffic(){
-    progName="nettraffic"
-    link="https://www.venea.net/web/downloads"
-    command="grep -o '>Version: [0-9].*<' a.html | head -n1 | tr -d 'a-zA-Z <>:'"
-
-    installedVersion="1.66.2"
-
-    checkVersion "$progName" "$link" "$command" "$installedVersion"
-}
-
-## Call to check version
-
-## GNU/Linux
-GNULinuxPrograms(){
-    mkvtoolnix
-    smplayer
-    teamviewer
-    mozilla-firefox
-    gitahead
-    maestral
-    MasterPDFEditor
-    ventoy
-    virtualbox
-    authy
-    TLP
-    opera-ffmpeg-codecs
-}
-
-## Windows
+## Windows calls
 windowsPrograms(){
     hwmonitor
+    nettraffic
     notepad-plus-plus
     revouninstaller
     sumatrapdfreader
     winrar
-    nettraffic
 }
 
-## Calls
+## Call to check version
 GNULinuxPrograms
 windowsPrograms
 
