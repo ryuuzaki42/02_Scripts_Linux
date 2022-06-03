@@ -51,6 +51,23 @@ downloadHTML() {
     fi
 }
 
+compareVersion(){
+    version=$1
+    installedVersion=$2
+
+    if [ "$installedVersion" == '' ]; then
+        installedVersion=$(find /var/log/packages/$progName* | rev | cut -d '-' -f3 | rev)
+    fi
+
+    if [ "$version" == "$installedVersion" ]; then
+        echo -e "$BLUE   Latest version ($GREEN$version$BLUE) is ${GREEN}equal$BLUE to the installed$NC"
+    else
+        echo -en "\n$BLUE   Latest version ($GREEN$version$BLUE) is$RED not equal$BLUE to the installed ($GREEN$installedVersion$BLUE). "
+        echo -en "Press enter to continue...$NC"
+        read -r continue
+    fi
+}
+
 checkVersion() {
     progName=$1
     link=$2
@@ -65,19 +82,9 @@ checkVersion() {
     version=$(eval $command)
     #echo "version: \"$version\""
 
-    if [ "$installedVersion" == '' ]; then
-        installedVersion=$(find /var/log/packages/$progName* | rev | cut -d '-' -f3 | rev)
-    fi
-
-    if [ "$version" == "$installedVersion" ]; then
-        echo -e "$BLUE   Latest version ($GREEN$version$BLUE) is ${GREEN}equal$BLUE to the installed$NC"
-    else
-        echo -en "\n$BLUE   Latest version ($GREEN$version$BLUE) is$RED not equal$BLUE to the installed ($GREEN$installedVersion$BLUE). "
-        echo -en "Press enter to continue...$NC"
-        read -r continue
-    fi
-
     rm a.html
+
+    compareVersion "$version" "$installedVersion"
 }
 
 ## GNU/Linux programs
