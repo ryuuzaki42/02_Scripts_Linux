@@ -22,7 +22,7 @@
 #
 # Script: Script to check if some programs has one update
 #
-# Last update: 03/06/2022
+# Last update: 04/06/2022
 #
 set -e
 
@@ -124,7 +124,7 @@ gitahead(){
 }
 
 maestral(){
-    progName="maestral" # last tested: "1.6.2"
+    progName="maestral" # last tested: "1.6.3"
     link="https://github.com/samschott/maestral/releases/latest"
     command="grep 'Release v' a.html | head -n1 | sed 's/.*Release v//; s/ .*//'"
 
