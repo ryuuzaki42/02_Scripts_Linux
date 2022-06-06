@@ -3,35 +3,36 @@
 #
 # Cronometro em shell
 #
-# Vers�o 1.0: Marca��o do tempo de forma progressiva
-# Vers�o 1.1: Adicionado op��o para tempo regressivo
-# Vers�o 1.2: Adicionado op��o para tempo limite na contagem progressiva
-# Vers�o 1.3: Adicionado op��o para pausa do tempo
-# Vers�o 1.4: Adicionado efeitos na forma como o tempo � exibido na tela
-# Vers�o 1.5: Adicionado fun��o sair, modificado a par�metro (-v --vers�o), modificado a fun��o conta_tempo e  calcula_tempo
-# Joanes Duarte, Janeiro 2013
-# Rumbler Soppa, Julho 2013
-# Jo�o Batista, Janeiro 2016
+# Versão 1.0: Marcação do tempo de forma progressiva
+# Versão 1.1: Adicionado opção para tempo regressivo
+# Versão 1.2: Adicionado opção para tempo limite na contagem progressiva
+# Versão 1.3: Adicionado opção para pausa do tempo
+# Versão 1.4: Adicionado efeitos na forma como o tempo é exibido na tela
+# Versão 1.5: Adicionado função sair, modificado a parâmetro (-v --versão), modificado a função conta_tempo e  calcula_tempo
+# Versão 1.6: Joanes Duarte, Janeiro 2013
+# Versão 1.7: Rumbler Soppa, Julho 2013
+# Versão 1.8: João Batista Ribeiro, Janeiro 2016
+# Versão 1.9: Conversão de acentos e cedilha para UTF-8 - João Batista Ribeiro, Junho 2022
 
-###############################[ FUN��ES ]#################################
+###############################[ FUNÇÕES ]#################################
 
-### Fun��o para mostras as op��es de uso do programa
+### Função para mostras as opções de uso do programa
 opcoes_de_uso() {
-echo "Uso: $(basename "$0") [OP��ES]
+echo "Uso: $(basename "$0") [OPÇÕES]
 
-OP��ES
-  -p, --progressive   Inicia o cronometro em ordem progressiva
+OPÇÕES
+  -p, --progressive   Inicia o cronômetro em ordem progressiva
          Obs.:Para limitar o tempo na contagem progressiva,
-         � necess�rio informar o tempo final no formato
+         é necessário informar o tempo final no formato
          hh:mm:ss.
 
-  -r, --regressive   Inicia o cronometro em ordem regressiva.
-         Obs.: Necess�rio informar tempo inicial
+  -r, --regressive   Inicia o cronômetro em ordem regressiva.
+         Obs.: Necessário informar tempo inicial
          no formato hh:mm:ss.
 
   -h, --help      Mostra esta tela de ajuda e sai
 
-  -v, --version      Mostra a vers�o do programa e sai
+  -v, --version      Mostra a versão do programa e sai
 
 EXEMPLOS DE USO:
    $./crono -p.................contagem progressiva infinita
@@ -40,7 +41,7 @@ EXEMPLOS DE USO:
 " && exit 1
 }
 
-### Fun��o que faz a convers�o do tempo de segundos para o formato hh:mm:ss
+### Função que faz a conversão do tempo de segundos para o formato hh:mm:ss
 calcula_tempo(){
 
 if [ $TEMPO -lt 60 ] ; then
@@ -61,20 +62,20 @@ SEGUNDOS=$(($RESTO % 60))
 
 fi
 
-# Ap�s calculado o tempo, formata a sa�da para o padr�o de 2 d�gitos
+# Após calculado o tempo, formata a saída para o padrão de 2 dígitos
 HORASF=$(printf '%.2d' $HORAS)
 MINUTOSF=$(printf '%.2d' $MINUTOS)
 SEGUNDOSF=$(printf '%.2d' $SEGUNDOS)
 }
 
-### Fun��o principal que atualiza o tempo na tela automaticamente
+### Função principal que atualiza o tempo na tela automaticamente
 conta_tempo(){
 clear
 
-# Se o operador n�o for negativo, define vari�vel $TEMPO como -1
+# Se o operador não for negativo, define variável $TEMPO como -1
 [ "$OP" = '-' ] || { TEMPO=-1 ; }
 
-# In�cio do la�o que atualiza o tempo na tela
+# Início do laço que atualiza o tempo na tela
 while [ "$TECLA" != '(s|p)' ] && [ "$TEMPO_FINAL" -gt 0 ]
 do
 clear
@@ -82,7 +83,7 @@ clear
 TEMPO=$(($TEMPO $OP 1))
 TEMPO_FINAL=$(($TEMPO_FINAL - 1))
 
-# Chamada da fun��o que converte o tempo para o formato hh:mm:ss a cada ciclo
+# Chamada da função que converte o tempo para o formato hh:mm:ss a cada ciclo
 # do loop.
 calcula_tempo
 
@@ -93,9 +94,9 @@ calcula_tempo
    echo -e "\033[40;37;1m|\033[m\033[40;37m [s]sair      \
 [p]ausar \033[m\033[40;37;1m|\033[m"
    echo -e "\033[40;37;1m.........................\033[m"
-read -n1 -t 1 TECLA  # Aguarda 1 segundo pela tecla, se n�o, continua
+read -n1 -t 1 TECLA  # Aguarda 1 segundo pela tecla, se não, continua
 
-   # Conforme a tecla digitada, direciona para a fun��o espec�fica
+   # Conforme a tecla digitada, direciona para a função específica
    case "$TECLA" in
    s) sair ;;
    p) pausar ;;
@@ -106,7 +107,7 @@ read -n1 -t 1 TECLA  # Aguarda 1 segundo pela tecla, se n�o, continua
     finalizar
 }
 
-### Fun��o que mostra a tela final depois de encerrado o script
+### Função que mostra a tela final depois de encerrado o script
 finalizar(){
     clear
 
@@ -120,7 +121,7 @@ finalizar(){
     #Jonh
     aumix -v 100 #aumentar volume do canal master
     aumix -p 100 #aumentar volume do canal pcm
-    vlc -Z /media/sda1/videos/* # reproduzir aleatoriamente o conte�do da pasta /media/files/videos
+    vlc -Z /media/sda1/videos/* # reproduzir aleatoriamente o conteúdo da pasta /media/files/videos
 
     exit 0
 }
@@ -128,7 +129,7 @@ finalizar(){
 sair() {
     exit 0
 }
-### Fun��o que faz pausa no tempo
+### Função que faz pausa no tempo
 pausar(){
 
     while [ "$TECLA" != 'c' ] ; do
@@ -146,21 +147,21 @@ pausar(){
 done
 }
 
-### Fun��o que mostra a vers�o atual do programa
+### Função que mostra a versão atual do programa
 versao() {
     echo -n $(basename "$0")
-    # Extrai vers�o diretamente do cabe�alho do programa
-    grep '^# Vers�o ' "$0" | tail -1 | cut -d : -f 1 | tr -d \#
+    # Extrai versão diretamente do cabeçalho do programa
+    grep '^# Versão ' "$0" | tail -1 | cut -d : -f 1 | tr -d \#
     exit 0
 }
 
-### Fun��o que testa e converte o par�metro '$2' para segundos
+### Função que testa e converte o parâmetro '$2' para segundos
 teste_par2() {
-# Testa formato de tempo passado no par�metro 2. Deve ser hh:mm:ss
+# Testa formato de tempo passado no parâmetro 2. Deve ser hh:mm:ss
 [[ "$TEMPO_LIMITE" != [0-9][0-9]:[0-5][0-9]:[0-5][0-9] ]] && \
 echo "Tempo deve ser passado no formado hh:mm:ss" && exit 1
 
-# Passado no teste do par�metro '$2' faz a convers�o para segundos
+# Passado no teste do parâmetro '$2' faz a conversão para segundos
 HORAS=$(echo $TEMPO_LIMITE | cut -d : -f 1) && HORAS=$(($HORAS * 3600))
 MINUTOS=$(echo $TEMPO_LIMITE | cut -d : -f 2) && MINUTOS=$(($MINUTOS * 60))
 SEGUNDOS=$(echo $TEMPO_LIMITE | cut -d : -f 3)
@@ -170,25 +171,25 @@ TEMPO_FINAL=$TEMPO
 conta_tempo
 }
 
-#################[ Tratamento das op��es de linha de comando ]###############
+#################[ Tratamento das opções de linha de comando ]###############
 
-# Testa se foi passado par�metro '$1'
+# Testa se foi passado parâmetro '$1'
 [ "$1" ] || { opcoes_de_uso ; }
 
-# Passado par�metro '$1', faz o tratamento do mesmo
+# Passado parâmetro '$1', faz o tratamento do mesmo
 while test -n "$1"; do
     case "$1" in
     -p | --progressive)
         OP=+ ; TEMPO=-1
-        # Se tiver par�metro 2, chama a fun�ao para teste do mesmo, caso n�o
-        # tenha, define as vari�veis e chama direto a fun��o conta_tempo
+        # Se tiver parâmetro 2, chama a função para teste do mesmo, caso não
+        # tenha, define as variáveis e chama direto a função conta_tempo
         [ "$2" ] || { TEMPO_FINAL=999999 ; conta_tempo ; }
         TEMPO_LIMITE=$2 && teste_par2
         ;;
     -r | --regressive)
-        # Testa se foi passado o par�metro $2, que neste caso � obrigat�rio
-        [ "$2" ] || { echo "Necess�rio informar o tempo inicial para \
-        in�cio da contagem regressiva" ; exit 1 ; }
+        # Testa se foi passado o parâmetro $2, que neste caso é obrigatório
+        [ "$2" ] || { echo "Necessário informar o tempo inicial para \
+        início da contagem regressiva" ; exit 1 ; }
         TEMPO_LIMITE=$2 ; OP=- && teste_par2
         ;;
     -h | --help) opcoes_de_uso
