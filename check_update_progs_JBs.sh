@@ -22,7 +22,7 @@
 #
 # Script: Script to check if some programs has one update
 #
-# Last update: 04/06/2022
+# Last update: 06/06/2022
 #
 set -e
 
@@ -295,7 +295,7 @@ sumatrapdfreader(){
     progName="sumatrapdfreader"
     link="https://www.sumatrapdfreader.org/download-free-pdf-viewer"
     command="grep -o 'SumatraPDF-.*-64-install.exe\"' a.html | cut -d '-' -f2"
-    installedVersion="3.4.4"
+    installedVersion="3.4.5"
 
     checkVersion "$progName" "$link" "$command" "$installedVersion"
 }
