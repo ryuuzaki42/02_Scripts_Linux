@@ -22,11 +22,12 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 04/08/2021
+# Last update: 06/06/2022
 #
-
 folderHomeToClean="/media/sda2/home/j"
+
 # rm -fr $folderHomeToClean/.cache/
+rm -fr $folderHomeToClean/.cache/thumbnails
 rm -fvr $folderHomeToClean/.thumbnails/
 rm -fv $folderHomeToClean/.xsession-errors
 rm -fvr $folderHomeToClean/.config/VirtualBox/*log*
