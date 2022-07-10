@@ -22,7 +22,7 @@
 #
 # Script: Convert text utf8 to iso-8859 and others
 #
-# Last update: 11/08/2020
+# Last update: 10/07/2022
 #
 help() {
     echo -e "\\nUse the file name (with extension) that want to convert"
@@ -30,7 +30,7 @@ help() {
     exit 0
 }
 
-if [ "$#" -ne '1' ]; then # Check if has passed the file name
+if [ "$#" -lt '1' ]; then # Check if has passed the file name
     echo -e "\\n$(basename "$0"): Error - need the pass file name\\n"
     help
 fi
@@ -82,7 +82,11 @@ else
     echo "\"$fileName\" -> \"$fileName2\""
 
     echo -en "\\nOverwrite the original file?\\n(y)es, (n)o (hit enter to no): "
-    read -r answerOver
+    answerOver=$2
+    if [ "$answerOver" == '' ]; then
+        read -r answerOver
+    fi
+
     if [ "$answerOver" == 'y' ]; then
         mv -v "$fileName2" "$fileName"
         echo -e "\\nThe file has been overwrite\\n"
