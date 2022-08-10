@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 16/03/2022
+# Last update: 10/08/2022
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -32,8 +32,10 @@ esac
 echo -e "\\n# This script download files/packages from one Alien mirror #\\n"
 pathDl=$1 # Use the "pathDl" to download the packages instead the (full) folder
 
-#mirrorStart="http://bear.alienbase.nl/mirrors/people/alien/sbrepos"
-mirrorStart="http://slackware.uk/people/alien/sbrepos"
+#mirrorStart="http://www.slackware.com/~alien/sbrepos"
+#mirrorStart="https://slackware.nl/people/alien/sbrepos"
+mirrorStart="https://slackware.uk/people/alien/sbrepos"
+
 echo "Default mirror: $mirrorStart"
 
 echo -en "\\nWant change the mirror?\\n(y)es - (n)o (press enter to no): "
