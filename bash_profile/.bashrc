@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 09/04/2022
+# Last update: 13/08/2022
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -130,6 +130,10 @@ alias rm='rm -v'
 # sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
 alias sboinstall='PKGTYPE=txz sboinstall'
 alias sboupgrade='PKGTYPE=txz sboupgrade'
+
+# sbopkg (https://sbopkg.org/)
+# sbopkg create txz instead tgz (Takes less disk space)
+alias sbopkg='PKGTYPE=txz sbopkg'
 
 # Change them (folders path) as you like
 slackwarePKG="/var/log/packages/"
