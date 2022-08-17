@@ -26,7 +26,7 @@
 #
 # Last update: 17/08/2022
 #
-# Be carefully - script experimental
+# Be careful - script experimental
 #
 set -e
 
