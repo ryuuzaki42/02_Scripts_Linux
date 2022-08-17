@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-## Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
-#    You can just execute this script
+# Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
+# You can just execute this script
 #
 # Last update: 17/08/2022
 #
