@@ -24,12 +24,14 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 14/11/2017
+# Last update: 17/08/2022
+#
+# Be carefully - script experimental
 #
 if [ "$(whoami)" != "root" ]; then
     echo -e "\\nNeed to be superuser (root)\\nExiting"
 else
-    if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/powersave_JBs.sh boot
+    if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/power_save_JBs.sh boot
         optionRun='1' # Will make all change
     elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
         optionRun='1' # Will make all change
