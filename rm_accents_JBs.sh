@@ -22,8 +22,10 @@
 #
 # Script: remove accents in the files name.
 #
-# Last update: 23/11/2020
+# Last update: 17/08/2022
 #
+set -e
+
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPart=$1
 

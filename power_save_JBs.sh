@@ -28,6 +28,8 @@
 #
 # Be carefully - script experimental
 #
+set -e
+
 if [ "$(whoami)" != "root" ]; then
     echo -e "\\nNeed to be superuser (root)\\nExiting"
 else

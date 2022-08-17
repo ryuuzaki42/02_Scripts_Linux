@@ -22,8 +22,12 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 08/10/2019
+# Last update: 17/08/2022
 #
+# Tip: Add a shortcut to this script
+#
+set -e
+
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
 if [ "$1" == "test" ]; then

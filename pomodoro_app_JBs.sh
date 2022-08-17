@@ -22,10 +22,12 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Last update: 28/08/2017
+# Last update: 17/08/2022
 #
-# Dica: Adicione um atalho para este script
+# Tip: Add a shortcut to this script
 #
+set -e
+
 echo -e "\\n # Pomodoro app #"
 
 workTime="25" # Time in minutes

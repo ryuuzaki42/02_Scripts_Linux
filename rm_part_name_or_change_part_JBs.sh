@@ -22,8 +22,10 @@
 #
 # Script: remove one part in the files name.
 #
-# Last update: 07/08/2020
+# Last update: 17/08/2022
 #
+set -e
+
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPartToRemove=$1
 partToChange=$2
