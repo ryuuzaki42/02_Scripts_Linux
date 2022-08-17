@@ -22,7 +22,7 @@
 #
 # Script: funções comum do dia a dia
 #
-# Last update: 28/05/2022
+# Last update: 17/08/2022
 #
 useColor() {
     BLACK='\e[1;30m'
@@ -1472,7 +1472,7 @@ case $optionInput in
 
         if [ "$folderFile" == '' ]; then
             echo -e "$RED\\nError: You need pass the type to work:$GREEN f$RED to file or$GREEN d$RED to directory"
-        elif [ "$folderFile" == 'f' ]; then # to shred files
+        elif [ "$folderFile" == 'f' ] || [ "$folderFile" == '-f' ]; then # to shred files
             fileWork=$3
             if [ "$fileWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the file to work"
@@ -1491,7 +1491,7 @@ case $optionInput in
                     done
                 fi
             fi
-        elif [ "$folderFile" == 'd' ]; then # to shred files
+        elif [ "$folderFile" == 'd' ] || [ "$folderFile" == '-d' ]; then # to shred files
             folderWork=$3
             if [ "$folderWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the folder to work$NC"
