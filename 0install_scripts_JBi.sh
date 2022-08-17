@@ -3,8 +3,10 @@
 ## Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
 #    You can just execute this script
 #
-# Last update: 01/08/2020
+# Last update: 17/08/2022
 #
+set -e
+
 echo -e "This script copy (cp *_JBs.sh) to /usr/bin/\\n"
 echo "List of files that will be copied:"
 ls --color=auto ./*_JBs.sh

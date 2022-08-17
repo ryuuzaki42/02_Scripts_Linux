@@ -22,8 +22,10 @@
 #
 # Script: Clean some logs do home folder (~) and /tmp/ folder
 #
-# Last update: 06/06/2022
+# Last update: 17/08/2022
 #
+set -e
+
 folderHomeToClean="/media/sda2/home/j"
 
 # rm -fr $folderHomeToClean/.cache/

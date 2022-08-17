@@ -22,8 +22,10 @@
 #
 # Script: Keep the brightness up to 1%
 #
-# Last update: 14/11/2017
+# Last update: 17/08/2022
 #
+set -e
+
 sleepTime='5' # in seconds
 brightnessValueSet="50" # brightness mim value to be set ~ 1%
 

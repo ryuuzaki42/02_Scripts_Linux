@@ -22,8 +22,10 @@
 #
 # Script: Convert text utf8 to iso-8859 and others
 #
-# Last update: 10/07/2022
+# Last update: 17/08/2022
 #
+set -e
+
 help() {
     echo -e "\\nUse the file name (with extension) that want to convert"
     echo -e "Example: $(basename "$0") file.srt\\n"

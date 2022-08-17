@@ -29,8 +29,10 @@
 #
 # Script: Converte erros comuns de acentos Latini para UFT-8
 #
-# Last update: 11/08/2020
+# Last update: 17/08/2022
 #
+set -e
+
 fileName=$1
 
 if [ "$fileName" == '' ]; then
