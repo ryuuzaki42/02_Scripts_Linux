@@ -22,8 +22,10 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 10/08/2022
+# Last update: 17/08/2022
 #
+set -e
+
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
     *) archDL=$(uname -m) ;;

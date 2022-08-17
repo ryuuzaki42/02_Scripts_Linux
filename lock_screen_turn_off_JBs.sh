@@ -22,10 +22,12 @@
 #
 # Script: in the KDE and XFCE, lock the session and turnoff the screen
 #
-# Last update: 14/11/2017
+# Last update: 17/08/2022
 #
 # Tip: Add a shortcut to this script
 #
+set -e
+
 amixer set Master mute # Mute
 
 xbacklight -set 1 # Set brightness to 1%

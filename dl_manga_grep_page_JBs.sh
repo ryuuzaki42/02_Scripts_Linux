@@ -22,8 +22,10 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 06/06/2022
+# Last update: 17/08/2022
 #
+set -e
+
 echo -e "\\n# Download images (manga) from a link #\\n"
 
 help() {

@@ -22,8 +22,10 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 16/03/2022
+# Last update: 17/08/2022
 #
+set -e
+
 programName=$1
 justUrl=$2
 

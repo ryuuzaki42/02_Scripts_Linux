@@ -23,8 +23,10 @@
 # Script: Focus - warning you about a $timeToFocus in work and $timeToRest min of rest
 # Tip: Pass the time to the Script (timeToFocus and timeToRest)
 #
-# Last update: 03/04/2021
+# Last update: 17/08/2022
 #
+set -e
+
 timeToFocus=$1
 timeToRest=$2
 
