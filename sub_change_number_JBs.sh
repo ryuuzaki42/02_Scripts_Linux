@@ -24,8 +24,10 @@
 #
 # Script: Change values in one subtitle like: 2 to 1, 3 to 2, 4 to 3, and so on
 #
-# Last update: 24/08/2020
+# Last update: 17/08/2022
 #
+set -e
+
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
     echo -e "\\n# Error: Need to pass parameters (file name) to work with"

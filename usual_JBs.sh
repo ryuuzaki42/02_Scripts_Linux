@@ -24,6 +24,8 @@
 #
 # Last update: 17/08/2022
 #
+set -e
+
 useColor() {
     BLACK='\e[1;30m'
     RED='\e[1;31m'

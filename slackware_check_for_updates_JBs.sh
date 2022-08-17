@@ -24,8 +24,10 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 18/05/2022
+# Last update: 17/08/2022
 #
+set -e
+
 echo -e "\\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
 
