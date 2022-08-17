@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove accents in the files name.
+# Script: remove accents in files and folders names based in a patthern
 #
 # Last update: 17/08/2022
 #

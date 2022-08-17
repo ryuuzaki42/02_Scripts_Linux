@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove one part in the files name.
+# Script: remove one part of the name of files and folders based in a patthern
 #
 # Last update: 17/08/2022
 #
