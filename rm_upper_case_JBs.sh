@@ -20,17 +20,24 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove accents in the files name.
+# Script: remove uppercase in files and folders names based in a patthern
 #
-# Last update: 11/08/2020
+# Last update: 17/08/2022
 #
+# Be careful: Can move folders to inside another if the has the name of the another
+#
+set -e
+
 IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 equalPart=$1
 
 if [ "$equalPart" == '' ]; then
-    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
-    echo -e "\\nExample: $(basename "$0") \"FILEWITHUPPERCASE\""
-    echo -e "mv \"FILEWITHUPPERCASE.EXT\" -> \"filewithuppercase.ext\"\\n"
+    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files\\n"
+    echo "Example 1: $(basename "$0") \"FILEWITHUPPERCASE\""
+    echo "mv \"FILEWITHUPPERCASE.EXT\" -> \"filewithuppercase.ext\""
+    echo -e "\\nExample 2: $(basename "$0") \"txt\""
+    echo "mv \"FILEWITHUPPERCASE1.txt\" -> \"filewithuppercase1.txt\""
+    echo -e "mv \"FILEWITHUPPERCASE2.txt\" -> \"filewithuppercase2.txt\"\\n"
     exit
 fi
 
