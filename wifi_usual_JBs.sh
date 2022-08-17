@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: funções comum do dia a dia
+# Script:  usual / common day-to-day functions with Wi-Fi
 #
 # Last update: 17/08/2022
 #
