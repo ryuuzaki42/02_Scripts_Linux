@@ -70,30 +70,32 @@ activeOutput1MaxResolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep t
 activeOutput2MaxResolution=$(echo -e "$outputResolution" | sed -n '2p')
 
 printTrace () {
-    echo -e "\\t+----------------------------------------------------+"
+    echo -e "\\t+-----------------------------------------------+"
 }
 
-echo -e "\\t Output + Status     + Maximum Resolution + Order"
+echo -e "\\t Output + Status    + Max Resolution + Order"
 printTrace
-echo -en "\\t $activeOutput1  "
+printf "\t %-7s" "$activeOutput1"
 
 if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-    printf '+ %-11s' "$activeOutput1Resolution"
+    printf "+ %-10s" "$activeOutput1Resolution"
 else
-    printf '+ %-11s' "Not active"
+    printf "+ %-10s" "Not active"
 fi
-printf '+ %-19s' "$activeOutput1MaxResolution"
+printf "+ %-15s" "$activeOutput1MaxResolution"
 echo "+ $activeOutput1Primary"
 
 printTrace
 if [ "$activeOutput2" != '' ]; then
-    echo -en "\\t $activeOutput2  "
+    printf "\t %-7s" "$activeOutput2"
+
     if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
-        printf '+ %-11s' "$activeOutput2Resolution"
+        printf "+ %-10s" "$activeOutput2Resolution"
     else
-        printf '+ %-11s' "Not active"
+        printf "+ %-10s" "Not active"
     fi
-    printf '+ %-19s' "$activeOutput2MaxResolution"
+
+    printf "+ %-15s" "$activeOutput2MaxResolution"
     echo "+ $activeOutput2Primary"
 else
     echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\nExiting...\\n"
@@ -180,7 +182,7 @@ case $optionSelected in
 esac
 
 if [ "$optionSelected" == 'c' ]; then
-    echo -e "\\n$optionTmpc\\n"
+    echo -e "\\n$optionTmpc"
     if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
         optionSelected='2'
     else
@@ -353,7 +355,7 @@ esac
 
 if [ "$resolutionOk" == '' ]; then
     echo -n "Resolution changed. Everything OK? (y)es or (n)o (hit enter to no): "
-    read -r resolutionOk
+    read -t 10 -r resolutionOk || true
 fi
 
 if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
