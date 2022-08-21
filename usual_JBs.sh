@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 17/08/2022
+# Last update: 21/08/2022
 #
 set -e
 
@@ -510,8 +510,8 @@ case $optionInput in
         elif [ ! -d "$folder1" ] || [ ! -d "$folder2" ]; then
             echo -e "$RED\\nError: The folder \"$folder1\" or \"$folder2\" not exist$NC"
         else
-            folder1=$(echo "${folder1// /\\ }") # Change the empty spaces " " in the name to "\ "
-            folder2=$(echo "${folder2// /\\ }")
+            folder1=${folder1// /\\ } # Change the empty spaces " " in the name to "\ "
+            folder2=${folder2// /\\ }
 
             fileType=$4
             if [ "$fileType" == '' ]; then
