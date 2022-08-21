@@ -20,47 +20,55 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean some logs do home folder (~) and /tmp/ folder
+# Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update: 17/08/2022
+# Last update: 21/08/2022
 #
 set -e
 
-folderHomeToClean="/media/sda2/home/j"
+echo -e "\\n # Script to clean some logs from home folder (~) and /tmp/ folder #\\n"
 
-# rm -fr $folderHomeToClean/.cache/
-rm -fr $folderHomeToClean/.cache/thumbnails
-rm -fvr $folderHomeToClean/.thumbnails/
-rm -fv $folderHomeToClean/.xsession-errors
-rm -fvr $folderHomeToClean/.config/VirtualBox/*log*
-rm -fvr $folderHomeToClean/VirtualBox\ VMs/*/Logs/
+rmFilesAndFolders() {
+    fileName=$1
+    rm -fvr "$fileName" || true
+}
 
-rm -fv /tmp/tmpaddon*
-rm -fv /tmp/lastChance*
-rm -fv /tmp/qtsingleapp-*
-rm -fv /tmp/.ktorrent_kde4_*
-rm -fv /tmp/gameoverlayui.log*
-rm -fv /tmp/dropbox-antifreeze-*
-rm -fv /tmp/steam_chrome_shmem_uid*
-rm -fv /tmp/steam_chrome_overlay_uid*
-rm -fv /tmp/mastersingleapp-master*
-rm -fv /tmp/.org.chromium.Chromium.*
-rm -fv /tmp/OSL_PIPE_1000_SingleOfficeIPC_*
+# rmFilesAndFolders "~/.cache/"
+rmFilesAndFolders "~/.cache/thumbnails/"
 
-rm -fvr /tmp/SBo/
-rm -fvr /tmp/dumps/
-rm -fvr /tmp/Temp-*/
-rm -fvr /tmp/lu*.tmp/
-rm -fvr /tmp/skype-*/
-rm -fvr /tmp/.esd-1000/
-rm -fvr /tmp/runtime-*/
-rm -fvr /tmp/.vbox-*-ipc/
-rm -fvr /tmp/hsperfdata_*/
-rm -fvr /tmp/skypeforlinux*/
-rm -fvr /tmp/Slack\ Crashes/
-rm -fvr /tmp/smartsynchronize-*/
-rm -fvr /tmp/org.cogroo.addon.*/
-rm -fvr /tmp/v8-compile-cache-*/
-rm -fvr /tmp/plasma-csd-generator.*/
-rm -fvr /tmp/.org.chromium.Chromium.*/
-rm -fvr /tmp/com.microsoft.teams.linux\ Crashes/
+rmFilesAndFolders "~/.thumbnails/"
+rmFilesAndFolders "~/.xsession-errors"
+rmFilesAndFolders "~/.config/VirtualBox/*log*"
+rmFilesAndFolders "~/VirtualBox\ VMs/*/Logs/"
+
+rmFilesAndFolders "/tmp/tmpaddon*"
+rmFilesAndFolders "/tmp/lastChance*"
+rmFilesAndFolders "/tmp/qtsingleapp-*"
+rmFilesAndFolders "/tmp/.ktorrent_kde4_*"
+rmFilesAndFolders "/tmp/gameoverlayui.log*"
+rmFilesAndFolders "/tmp/dropbox-antifreeze-*"
+rmFilesAndFolders "/tmp/steam_chrome_shmem_uid*"
+rmFilesAndFolders "/tmp/steam_chrome_overlay_uid*"
+rmFilesAndFolders "/tmp/mastersingleapp-master*"
+rmFilesAndFolders "/tmp/.org.chromium.Chromium.*"
+rmFilesAndFolders "/tmp/OSL_PIPE_1000_SingleOfficeIPC_*"
+
+rmFilesAndFolders "/tmp/SBo/"
+rmFilesAndFolders "/tmp/dumps/"
+rmFilesAndFolders "/tmp/Temp-*/"
+rmFilesAndFolders "/tmp/lu*.tmp/"
+rmFilesAndFolders "/tmp/skype-*/"
+rmFilesAndFolders "/tmp/.esd-1000/"
+rmFilesAndFolders "/tmp/runtime-*/"
+rmFilesAndFolders "/tmp/.vbox-*-ipc/"
+rmFilesAndFolders "/tmp/hsperfdata_*/"
+rmFilesAndFolders "/tmp/skypeforlinux*/"
+rmFilesAndFolders "/tmp/Slack\ Crashes/"
+rmFilesAndFolders "/tmp/smartsynchronize-*/"
+rmFilesAndFolders "/tmp/org.cogroo.addon.*/"
+rmFilesAndFolders "/tmp/v8-compile-cache-*/"
+rmFilesAndFolders "/tmp/plasma-csd-generator.*/"
+rmFilesAndFolders "/tmp/.org.chromium.Chromium.*/"
+rmFilesAndFolders "/tmp/com.microsoft.teams.linux\ Crashes/"
+
+echo -e "\\nEnd of script!"
