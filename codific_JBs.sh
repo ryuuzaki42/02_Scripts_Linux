@@ -20,14 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Convert text utf8 to iso-8859 and others
+# Script: Convert text UTF-8 to ISO-8859-1 (ISO Latin 1) and others
 #
-# Last update: 17/08/2022
+# Last update: 21/08/2022
 #
 set -e
 
 help() {
-    echo -e "\\nUse the file name (with extension) that want to convert"
+    echo -e "Use the file name (with extension) that want to convert"
     echo -e "Example: $(basename "$0") file.srt\\n"
     exit 0
 }
