@@ -20,30 +20,31 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
+# Script: Convert common errors from ISO-8859-1 (ISO Latin 1) accents to UTF-8
+#
+# Last update: 21/08/2022
+#
+# Online: https://onlineutf8tools.com/convert-ascii-to-utf8
+#
+# More information:
 # https://berseck.wordpress.com/2010/09/28/transformar-utf-8-para-acentos-iso-com-php/comment-page-1/
 # https://wallacesilva.com/blog/2016/12/converter-para-utf-8-caracteres-iso-em-php/
 # https://www.i18nqa.com/debug/utf8-debug.html
 #
-# Online
-# https://onlineutf8tools.com/convert-ascii-to-utf8
-#
-# Script: Converte erros comuns de acentos Latini para UFT-8
-#
-# Last update: 17/08/2022
-#
 set -e
 
 fileName=$1
-
 if [ "$fileName" == '' ]; then
     echo -e "\\nError: Need to test if pass file as parameter to work\\n"
     exit 1
 fi
 
-fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
-fileExtension=$(echo "$fileName" | rev | cut -d "." -f1 | rev)
+codification=$(file "$fileName") # Get the codification of the file
+if echo "$codification" | grep -q "UTF-8"; then # Check if codification is UTF-8
+    fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
+    fileExtension=$(echo "$fileName" | rev | cut -d "." -f1 | rev)
 
-cat "$fileName" | sed '
+    cat "$fileName" | sed '
 s/Ã¡/á/g
 s/Ã /à/g
 s/Ã¢/â/g
@@ -102,4 +103,7 @@ s/Ãœ/Ü/g
 
 s/Ã‡/Ç/g' > "${fileNameTmp}_c.$fileExtension"
 
-echo -e "\\nFile converted: ${fileNameTmp}_c.$fileExtension\\n"
+    echo -e "\\nFile converted: ${fileNameTmp}_c.$fileExtension\\n"
+else
+    echo -e "\\nError: The file \"$fileName\" don't has codification UTF-8, first convert it to UTF-8 with \"codific_JBs.sh\" \"$fileName\"\\n"
+fi
