@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 17/08/2022
+# Last update: 21/08/2022
 #
 # Tip: Add a shortcut to this script
 #
@@ -50,8 +50,8 @@ activeOutput2=$(echo -e "$outputConnected" | sed -n '2p')
 activeOutput1Resolution=$(echo "$activeOutput1" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1) # Grep the actual resolution of the first output
 activeOutput2Resolution=$(echo "$activeOutput2" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1)
 
-activeOutput1Primary=$(echo "$activeOutput1" | grep "primary")
-activeOutput2Primary=$(echo "$activeOutput2" | grep "primary")
+activeOutput1Primary=$(echo "$activeOutput1" | grep "primary") || true
+activeOutput2Primary=$(echo "$activeOutput2" | grep "primary") || true
 
 if [ "$activeOutput1Primary" != '' ]; then
     activeOutput1Primary="primary"
@@ -173,8 +173,8 @@ case $optionSelected in
         diffResolutionPart2=$(echo "$activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2" | bc)
 
         if [ "$1" == "test" ]; then # Test propose
-            echo -e "\\nactiveOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2"
-            echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2"
+            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2 - $activeOutput1Primary"
+            echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2 - $activeOutput2Primary"
             echo "Diff_part2: ($activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2) = $diffResolutionPart2"
         fi
 esac
