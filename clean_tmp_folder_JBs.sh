@@ -22,53 +22,55 @@
 #
 # Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update: 21/08/2022
+# Last update: 22/08/2022
 #
 set -e
 
 echo -e "\\n # Script to clean some logs from home folder (~) and /tmp/ folder #\\n"
 
-rmFilesAndFolders() {
-    fileName=$1
-    rm -fvr "$fileName" || true
-}
+filesFoldersToRermove=("~/.cache/thumbnails/"
+"~/.thumbnails/"
+"~/.xsession-errors"
+"~/.config/VirtualBox/*log*"
+"~/VirtualBox\ VMs/*/Logs/"
+ "/tmp/tmpaddon*"
+ "/tmp/lastChance*"
+ "/tmp/qtsingleapp-*"
+"/tmp/.ktorrent_kde4_*"
+"/tmp/gameoverlayui.log*"
+"/tmp/dropbox-antifreeze-*"
+"/tmp/steam_chrome_shmem_uid*"
+"/tmp/steam_chrome_overlay_uid*"
+"/tmp/mastersingleapp-master*"
+"/tmp/.org.chromium.Chromium.*"
+"/tmp/OSL_PIPE_1000_SingleOfficeIPC_*"
+"/tmp/SBo/"
+"/tmp/dumps/"
+"/tmp/Temp-*/"
+"/tmp/lu*.tmp/"
+"/tmp/skype-*/"
+"/tmp/.esd-1000/"
+"/tmp/runtime-*/"
+"/tmp/.vbox-*-ipc/"
+"/tmp/hsperfdata_*/"
+"/tmp/skypeforlinux*/"
+"/tmp/Slack\ Crashes/"
+"plasma-csd-generator.*"
+"/tmp/smartsynchronize-*/"
+"/tmp/org.cogroo.addon.*/"
+"/tmp/v8-compile-cache-*/"
+"/tmp/plasma-csd-generator.*/"
+"/tmp/.org.chromium.Chromium.*/"
+"/tmp/com.microsoft.teams.linux\ Crashes/")
 
-# rmFilesAndFolders "~/.cache/"
-rmFilesAndFolders "~/.cache/thumbnails/"
+# Can be useful if add to filesFoldersToRermove
+# "~/.cache/"
 
-rmFilesAndFolders "~/.thumbnails/"
-rmFilesAndFolders "~/.xsession-errors"
-rmFilesAndFolders "~/.config/VirtualBox/*log*"
-rmFilesAndFolders "~/VirtualBox\ VMs/*/Logs/"
+for val in ${filesFoldersToRermove[*]}; do
+    #echo "$val"
 
-rmFilesAndFolders "/tmp/tmpaddon*"
-rmFilesAndFolders "/tmp/lastChance*"
-rmFilesAndFolders "/tmp/qtsingleapp-*"
-rmFilesAndFolders "/tmp/.ktorrent_kde4_*"
-rmFilesAndFolders "/tmp/gameoverlayui.log*"
-rmFilesAndFolders "/tmp/dropbox-antifreeze-*"
-rmFilesAndFolders "/tmp/steam_chrome_shmem_uid*"
-rmFilesAndFolders "/tmp/steam_chrome_overlay_uid*"
-rmFilesAndFolders "/tmp/mastersingleapp-master*"
-rmFilesAndFolders "/tmp/.org.chromium.Chromium.*"
-rmFilesAndFolders "/tmp/OSL_PIPE_1000_SingleOfficeIPC_*"
-
-rmFilesAndFolders "/tmp/SBo/"
-rmFilesAndFolders "/tmp/dumps/"
-rmFilesAndFolders "/tmp/Temp-*/"
-rmFilesAndFolders "/tmp/lu*.tmp/"
-rmFilesAndFolders "/tmp/skype-*/"
-rmFilesAndFolders "/tmp/.esd-1000/"
-rmFilesAndFolders "/tmp/runtime-*/"
-rmFilesAndFolders "/tmp/.vbox-*-ipc/"
-rmFilesAndFolders "/tmp/hsperfdata_*/"
-rmFilesAndFolders "/tmp/skypeforlinux*/"
-rmFilesAndFolders "/tmp/Slack\ Crashes/"
-rmFilesAndFolders "/tmp/smartsynchronize-*/"
-rmFilesAndFolders "/tmp/org.cogroo.addon.*/"
-rmFilesAndFolders "/tmp/v8-compile-cache-*/"
-rmFilesAndFolders "/tmp/plasma-csd-generator.*/"
-rmFilesAndFolders "/tmp/.org.chromium.Chromium.*/"
-rmFilesAndFolders "/tmp/com.microsoft.teams.linux\ Crashes/"
+    # echo to expand * and ~ and add || true if can't delete file/folder
+    eval $(echo "rm -fvr $val") || true
+done
 
 echo -e "\\nEnd of script!"
