@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=/usr/bin/monitor_change_resolution_JBs.sh c 1 1; /usr/bin/audio_profile_change_JBs.sh
+Exec=/usr/bin/monitor_change_resolution_JBs.sh c 0 y; /usr/bin/audio_profile_change_JBs.sh
 Icon=preferences-desktop-wallpaper
 Name=monitor_change_display
 NoDisplay=false
