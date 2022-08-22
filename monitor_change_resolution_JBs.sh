@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of the monitor or/and projector
 #
-# Last update: 21/08/2022
+# Last update: 22/08/2022
 #
 # Tip: Add a shortcut to this script
 #
@@ -69,34 +69,39 @@ outputResolution=$(xrandr | grep \+ | grep -v "connected" | cut -d ' ' -f4) # Gr
 activeOutput1MaxResolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep the maximum resolution of the first output
 activeOutput2MaxResolution=$(echo -e "$outputResolution" | sed -n '2p')
 
-printTrace () {
-    echo -e "\\t+-----------------------------------------------+"
+printTrace() {
+    echo -e "\\t|--------|------------|----------------|-----------|"
 }
 
-echo -e "\\t Output + Status    + Max Resolution + Order"
+printTrace2() {
+    echo -e "\\t+--------------------------------------------------+"
+}
+
+printTrace2
+echo -e "\\t| Output | Status     | Max Resolution | Order     |"
 printTrace
-printf "\t %-7s" "$activeOutput1"
+printf "\t| %-7s" "$activeOutput1"
 
 if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-    printf "+ %-10s" "$activeOutput1Resolution"
+    printf "| %-11s" "$activeOutput1Resolution"
 else
-    printf "+ %-10s" "Not active"
+    printf "| %-11s" "Not active"
 fi
-printf "+ %-15s" "$activeOutput1MaxResolution"
-echo "+ $activeOutput1Primary"
+printf "| %-15s" "$activeOutput1MaxResolution"
+printf "| %-10s|\n" "$activeOutput1Primary"
 
 printTrace
 if [ "$activeOutput2" != '' ]; then
-    printf "\t %-7s" "$activeOutput2"
+    printf "\t| %-7s" "$activeOutput2"
 
     if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
-        printf "+ %-10s" "$activeOutput2Resolution"
+        printf "| %-11s" "$activeOutput2Resolution"
     else
-        printf "+ %-10s" "Not active"
+        printf "| %-11s" "Not active"
     fi
 
-    printf "+ %-15s" "$activeOutput2MaxResolution"
-    echo "+ $activeOutput2Primary"
+    printf "| %-15s" "$activeOutput2MaxResolution"
+    printf "| %-10s|\n" "$activeOutput2Primary"
 else
     echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\nExiting...\\n"
     notify-send "Monitor configuration not changed!" "Just one output (\"$activeOutput1\") connected.\\nExiting..." -i "preferences-desktop-wallpaper"
@@ -107,7 +112,7 @@ else
     fi
     exit 0
 fi
-printTrace
+printTrace2
 
 specificResolution1=$(xrandr | sed -n '/'"$activeOutput1"'/,/connected/p' | grep -v "connected" | cut -d ' ' -f4) # Grep all resolution to the first output
 specificResolution2=$(xrandr | sed -n '/'"$activeOutput2"'/,/connected/p' | grep -v "connected" | cut -d ' ' -f4)
@@ -160,6 +165,15 @@ if [ "$optionSelected" == '' ]; then
         exit 1
     fi
 fi
+
+justFinish() {
+    if [ "$1" == 'f' ]; then
+        echo -e "\\nJust finish\\n"
+        exit 0
+    fi
+}
+
+justFinish "$optionSelected"
 
 case $optionSelected in
     '5' | '6' | '0' )
@@ -276,6 +290,8 @@ case $optionSelected in
             fi
         fi
 
+        justFinish "$optionSelected"
+
         activeOutput1MaxResolution_actual=$(xrandr | grep "$activeOutput1" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
         activeOutput2MaxResolution_actual=$(xrandr | grep "$activeOutput2" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
 
@@ -295,14 +311,14 @@ case $optionSelected in
         fi
 
         if [ "$activeOutputNotAtive" == '1' ]; then
-            echo -n "What you want: (1) Set the maximum resolution for both and continue or (2) Just terminate?: "
+            echo -n "(1) Set the maximum resolution for both and continue or (2) Just terminate. What you want?: "
             read -r continueOrNot
 
             if [ "$continueOrNot" == '1' ]; then # Set the maximum resolution for both and continue
                 xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution"
                 xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution"
             else # Just terminate
-                exit 0
+                justFinish 'f'
             fi
         fi
 
@@ -337,16 +353,10 @@ case $optionSelected in
                 echo -e "\\n$optionTmp14\\n"
                 xrandr --output "$activeOutput2" --primary
                 ;;
-            'f' )
-                echo -e "\\n$optionTmpf\\n"
-                ;;
             * )
                 echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
                 exit 1
         esac
-        ;;
-    'f' )
-        echo -e "\\n$optionTmpf\\n"
         ;;
     * )
         echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
