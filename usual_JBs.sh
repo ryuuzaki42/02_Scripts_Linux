@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 21/08/2022
+# Last update: 25/08/2022
 #
 set -e
 
@@ -43,7 +43,7 @@ notUseColor() {
 
 emptySpaces=$1 # Remove empty space form calls in this script to itself with $colorPrint empty
 if [ "$emptySpaces" == '' ]; then
-    shift
+    shift || true
 fi
 
 colorPrint=$1
