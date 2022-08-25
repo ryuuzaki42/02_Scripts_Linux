@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 13/08/2022
+# Last update: 25/08/2022
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -138,7 +138,7 @@ alias sbopkg='PKGTYPE=txz sbopkg'
 # Change them (folders path) as you like
 slackwarePKG="/var/log/packages/"
 downloadFolder="/media/sda2/home/j/Downloads/"
-gitFolder="/media/sda2/gitClone/"
+gitFolder="/media/sda2/git_clone/"
 
 cdFolder() {
     echo -e "\\n    cd $1\\n"
