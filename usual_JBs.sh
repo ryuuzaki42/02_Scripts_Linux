@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 25/08/2022
+# Last update: 28/08/2022
 #
 set -e
 
@@ -985,7 +985,7 @@ case $optionInput in
                             echo -en "$CYAN\\nPlease wait until all files are compared...$NC"
                             folderChangesFull=$($rsyncCommand -in "$pathSource" "$pathDestination")
 
-                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
+                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$") || true
 
                             echo # just a new blank line
                             foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
