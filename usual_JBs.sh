@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 28/08/2022
+# Last update: 18/09/2022
 #
 set -e
 
@@ -85,7 +85,7 @@ case $optionInput in
         echo -e "$CYAN# Update the date #$NC"
 
         dateUpFunction() { # Need to be run as root
-            ntpVector=("ntp1.ptb.de" "ntp.usp.br" "bonehed.lcs.mit.edu") # Ntp servers
+            ntpVector=("pool.ntp.org" "ntp1.ptb.de" "ntp.usp.br" "200.20.186.75" "bonehed.lcs.mit.edu") # Ntp servers
             #${#ntpVector[*]} # size of ntpVector
             #${ntpVector[$i]} # value of the $i index in ntpVector
             #${ntpVector[@]} # all value of the vector
@@ -94,14 +94,14 @@ case $optionInput in
             timeUpdated="false"
 
             for ntpValue in "${ntpVector[@]}"; do # Run until flagContinue is false and run the break or ntpVector get his end
-                echo -e "Running: ntpdate -u -b $ntpValue\\n"
+                echo -e "\\nRunning: ntpdate -u -b $ntpValue"
                 ntpdate -u -b "$ntpValue" 2> "$tmpFileNtpError" # Run ntpdate with one value of ntpVector and send the errors to a tmp file
 
-                if ! grep -q -v "no server" < "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
-                    if ! grep -q -v "time out" < "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
-                        if ! grep -q -v "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                            echo -e "\\nTime updated: $(date)"
-                            timeUpdated=true # Set true in the timeUpdated
+                if ! grep -q -v "no server" $tmpFileNtpError; then # Test if ntpdate got error "no server suitable for synchronization found"
+                    if ! grep -q -v "time out" $tmpFileNtpError; then # Test if ntpdate got error "time out"
+                        if ! grep -q -v "name server cannot be used" $tmpFileNtpError; then # Test if can name resolution works
+                            echo -e "\\n${CYAN}Time updated:$GREEN $(date)$NC"
+                            timeUpdated="true" # Set true in the timeUpdated
                             break
                         fi
                     fi
@@ -109,17 +109,18 @@ case $optionInput in
             done
 
             if [ "$timeUpdated" == "false" ]; then
-                echo -e "\\nSorry, time not updated: $(date)\\n"
-                if grep -q "name server cannot be used" < "$tmpFileNtpError"; then # Test if can name resolution works
-                    echo -e "$RED\\nError: No connection found - Check your network connections$NC"
+                echo -e "\\nSorry,$RED time not updated$NC: $(date)"
+                if grep -q "name server cannot be used" $tmpFileNtpError; then # Test if can name resolution works
+                    echo -e "\\nError:$RED No connection found$NC - Check your network connection"
                 fi
             fi
 
+            #cat $tmpFileNtpError
             rm "$tmpFileNtpError" # Delete the tmp file
         }
 
         export -f dateUpFunction
-        export CYAN NC RED
+        export CYAN NC GREEN RED
         if [ "$(whoami)" != "root" ]; then
             echo -e "$CYAN\\nInsert the root Password to continue$NC"
         fi
@@ -876,14 +877,13 @@ case $optionInput in
         dayInstall() {
             # tune2fs -l /dev/sda1 or dumpe2fs /dev/sda1
             partitionRoot=$(mount | grep "on / t" | cut -d ' ' -f1)
-            dayCreated=$(dumpe2fs "$partitionRoot" 2> /dev/null | grep "Filesystem created")
-            echo -en "$CYAN\\nThe system was installed in:$GREEN "
-            echo -e "$dayCreated" | cut -d ' ' -f3-
-            echo -e "$CYAN\nObs: In some of the cases is just the day partition was created$NC"
+            dayCreated=$(dumpe2fs "$partitionRoot" 2> /dev/null | grep "Filesystem created" | cut -d ' ' -f9-)
+            echo -e "$CYAN\\nThe system was installed in:$GREEN $dayCreated$NC"
+            echo -e "Obs: In some of the cases is just the day partition was created"
         }
 
         export -f dayInstall
-        export CYAN NC GREEN
+        export CYAN NC GREEN RED
         su root -c 'dayInstall'
         ;;
     "print-lines" )
@@ -1372,7 +1372,7 @@ case $optionInput in
         USEBL=$2
         installNew=$3
         export -f slackwareUpdate
-        export CYAN NC GREEN
+        export CYAN NC GREEN RED
 
         su root -c "slackwareUpdate $USEBL $installNew" # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         ;;
@@ -1445,7 +1445,7 @@ case $optionInput in
             }
 
             export -f updateInstallpkg
-            export functionWord commandToRun CYAN NC RED folderWork
+            export functionWord commandToRun CYAN NC GREEN RED folderWork
 
             if [ "$(whoami)" != "root" ]; then
                 echo -e "$CYAN\\nInsert the root Password to continue$NC"
