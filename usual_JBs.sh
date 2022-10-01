@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 18/09/2022
+# Last update: 01/10/2022
 #
 set -e
 
@@ -1362,6 +1362,8 @@ case $optionInput in
 
             slackpkg update -batch=on -default_answer=y
 
+            echo -en "$CYAN\\nPress enter to continue.$NC"
+            read -r continue_enter
             if [ "$installNew" != 'n' ]; then
                 slackpkg install-new
             fi
