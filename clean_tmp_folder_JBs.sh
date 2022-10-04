@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update: 22/08/2022
+# Last update:04/10/2022
 #
 set -e
 
@@ -43,13 +43,14 @@ filesFoldersToRermove=("~/.cache/thumbnails/"
 "/tmp/steam_chrome_overlay_uid*"
 "/tmp/mastersingleapp-master*"
 "/tmp/.org.chromium.Chromium.*"
-"/tmp/OSL_PIPE_1000_SingleOfficeIPC_*"
+"/tmp/OSL_PIPE_*_SingleOfficeIPC_*"
 "/tmp/SBo/"
 "/tmp/dumps/"
 "/tmp/Temp-*/"
 "/tmp/lu*.tmp/"
 "/tmp/skype-*/"
-"/tmp/.esd-1000/"
+"/tmp/.esd-*/"
+"/tmp/.wine-*"
 "/tmp/runtime-*/"
 "/tmp/.vbox-*-ipc/"
 "/tmp/hsperfdata_*/"
@@ -73,4 +74,7 @@ for val in ${filesFoldersToRermove[*]}; do
     eval $(echo "rm -fvr $val") || true
 done
 
-echo -e "\\nEnd of script!"
+# Delete empty (zero size) folder and files in /tmp/
+find /tmp/ -empty -print -delete
+
+echo -e "\\nEnd of script!\\n"
