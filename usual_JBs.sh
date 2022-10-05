@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 04/10/2022
+# Last update: 05/10/2022
 #
 set -eE # Same as: set -o errexit -o errtrace
 
@@ -429,7 +429,7 @@ case $optionInput in
         equalFiles=${equalFiles::-1} # Remove the last | (the last character)
 
         if [ "$equalFiles" == '' ]; then
-            echo -e "$GREEN\\n\\n### All files are different by md5sum ###$NC"
+            echo -e "$GREEN\\n\\n### All files are different by md5sum! ###$NC"
         else
             echo -en "$BLUE\\n\\n### These file(s) are equal:$NC"
             filesEqual=$(echo "$fileAndMd5" | grep -E "$equalFiles") # Grep all files equal
@@ -449,7 +449,7 @@ case $optionInput in
                 echo "$value"
             done
 
-            filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
+            filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") || true # Grep all files different
             if [ "$filesDifferent" != '' ]; then
                 echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
                 echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
@@ -464,7 +464,7 @@ case $optionInput in
                     echo "$filesDifferent" | sort -k 2
                 fi
             else
-                echo -e "$BLUE\\n### There is no unic file(s) ###$NC"
+                echo -e "$BLUE\\n### There is no unic file(s)! ###$NC"
             fi
 
             tmpFolder="equal_files_"$RANDOM
