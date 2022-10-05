@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update:04/10/2022
+# Last update: 05/10/2022
 #
 set -e
 
@@ -75,6 +75,7 @@ for val in ${filesFoldersToRermove[*]}; do
 done
 
 # Delete empty (zero size) folder and files in /tmp/
+find /tmp/ -size 0 -print -delete
 find /tmp/ -empty -print -delete
 
 echo -e "\\nEnd of script!\\n"
