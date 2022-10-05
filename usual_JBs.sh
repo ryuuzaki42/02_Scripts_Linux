@@ -22,9 +22,9 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 01/10/2022
+# Last update: 04/10/2022
 #
-set -e
+set -eE # Same as: set -o errexit -o errtrace
 
 useColor() {
     BLACK='\e[1;30m'
@@ -36,6 +36,8 @@ useColor() {
     CYAN='\e[1;36m'
     WHITE='\e[1;37m'
 }
+
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
@@ -400,7 +402,12 @@ case $optionInput in
             fileAndMd5=$(eval find . "$recursiveFolderValue" -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         else
             echo -en "the files with \"$fileType\" in the name...$NC"
-            fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType")
+            fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType") || true
+
+            if [ "$fileAndMd5Tmp" == '' ]; then
+                echo -e "\\n\\n${RED}Error: not found any file with \"$fileType\"!$NC\\n"
+                exit 1
+            fi
 
             for file in $fileAndMd5Tmp; do
                 fileAndMd5=$fileAndMd5"\\n"$(md5sum "$file")
@@ -477,7 +484,7 @@ case $optionInput in
                 mkdir "$tmpFolder" 2> /dev/null
 
                 for value in $FilesToWork; do
-                    createFolder=$(echo "$value" | grep "/")
+                    createFolder=$(echo "$value" | grep "/") || true
 
                     if [ "$createFolder" != '' ]; then
                         folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
@@ -645,7 +652,7 @@ case $optionInput in
                     mkdir "$tmpFolder" 2> /dev/null
 
                     for value in $FilesToWork; do
-                        createFolder=$(echo "$value" | grep "/")
+                        createFolder=$(echo "$value" | grep "/") || true
 
                         if [ "$createFolder" != '' ]; then
                             folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
