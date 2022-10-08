@@ -234,7 +234,7 @@ getUpdateMirror() {
         versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
 
         packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
-        locatePackage=$(find /var/log/packages/ -type f | grep "$packageNameUpdateTmp")
+        locatePackage=$(find /var/log/packages/ -type f | grep "$packageNameUpdateTmp") || true
 
         if [ "$locatePackage" == '' ]; then # To not print the last package (the already update in the Slackware)
             if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
@@ -283,7 +283,7 @@ getUpdateMirror() {
     else
         updatesFound=0
         lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
-        lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null)
+        lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null) || true
 
         if [ "$lastKernelInstalled" == '' ]; then
             lastKernelUpdate=$(grep "patches/packages/linux" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '/' -f3 | cut -d '-' -f2)
