@@ -24,9 +24,10 @@
 #
 # Script: Change values in one subtitle like: 2 to 1, 3 to 2, 4 to 3, and so on
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then

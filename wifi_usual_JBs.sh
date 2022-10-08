@@ -22,11 +22,12 @@
 #
 # Script:  usual / common day-to-day functions with Wi-Fi
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
 # Tip: If have NetworkManager installed and running, you can use nmtui
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 useColor() {
     BLACK='\e[1;30m'

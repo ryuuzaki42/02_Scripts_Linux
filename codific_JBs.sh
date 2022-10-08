@@ -22,9 +22,10 @@
 #
 # Script: Convert text UTF-8 to ISO-8859-1 (ISO Latin 1) and others
 #
-# Last update: 21/08/2022
+# Last update: 08/10/2022
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 help() {
     echo -e "Use the file name (with extension) that want to convert"

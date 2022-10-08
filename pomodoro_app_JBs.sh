@@ -22,11 +22,12 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
 # Tip: Add a shortcut to this script
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 echo -e "\\n # Pomodoro app #"
 

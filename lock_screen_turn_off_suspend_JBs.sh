@@ -22,11 +22,12 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
 # Tip: Add a shortcut to this script
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 waitTimeToSuspend=$1 # Time before suspend in minutes
 

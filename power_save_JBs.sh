@@ -24,11 +24,12 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
 # Be careful - script experimental
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 if [ "$(whoami)" != "root" ]; then
     echo -e "\\nNeed to be superuser (root)\\nExiting"

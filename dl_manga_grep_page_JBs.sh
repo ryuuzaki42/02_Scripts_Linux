@@ -22,9 +22,10 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 17/08/2022
+# Last update: 08/10/2022
 #
-set -e
+set -eE
+trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 echo -e "\\n# Download images (manga) from a link #\\n"
 
