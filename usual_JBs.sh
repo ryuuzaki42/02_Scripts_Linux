@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 05/10/2022
+# Last update: 08/10/2022
 #
 set -eE # Same as: set -o errexit -o errtrace
 
@@ -353,16 +353,21 @@ case $optionInput in
     "git-up")
         echo -e "$CYAN# Run git pull and force update to the local files (deleting changes) with the remote in the subfolders #$NC"
 
+        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
             echo -e "\\n${BLUE}folder: $GREEN$folder/$NC"
             cd "$folder/" || exit
 
-            if ! git pull; then # if [ $? != 0 ]
-                git fetch --all # Fetch all changes
+            if [ -d ".git/" ]; then
+                if ! git pull; then # if [ $? != 0 ]
+                    git fetch --all # Fetch all changes
 
-                git reset --hard origin/master # Reset the master
+                    git reset --hard origin/master # Reset the master
 
-                git pull # Pull/update
+                    git pull # Pull/update
+                fi
+            else
+                echo -e "$RED# Not a git folder #$NC"
             fi
 
             cd ../ || exit
