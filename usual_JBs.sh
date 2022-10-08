@@ -298,7 +298,7 @@ case $optionInput in
             pkgInstalled=''
             pkgNotInstalled=''
             for pkg in $filesName; do
-                locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
+                locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null) || true
 
                 if [ "$locatePkg" == '' ]; then
                     pkgNotInstalled=$pkgNotInstalled$(echo "$files" | sed -n ${linePkg}p)"\\n"
