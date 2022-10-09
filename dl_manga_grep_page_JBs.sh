@@ -24,9 +24,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "\\n# Download images (manga) from a link #\\n"
 
 help() {
@@ -103,7 +100,7 @@ read -r ContinueOrNot
 if [ "$ContinueOrNot" == 'n' ]; then
     echo -e "\\nJust exiting by local choice\\n"
 else
-    mkdir "$mangaName" || true
+    mkdir "$mangaName"
     cd "$mangaName" || exit
 
     ((chapterEnd+=1)) # To download the last chapter in the while condition
@@ -128,13 +125,13 @@ else
         i='1'
         countImg=$(echo "$linksPageDl" | wc -l)
 
-        mkdir "$mangaNameAndChapterDl" || true # Create folder to download the images
+        mkdir "$mangaNameAndChapterDl" # Create folder to download the images
         cd "$mangaNameAndChapterDl" || exit
 
         for linkImg in $linksPageDl; do
             echo -e "\\nDownloading chapter: $chapterDl images: $i of $countImg (\"$linkImg\")\\n"
             echo "wget --tries=3 -c \"$linkImg\""
-            wget --tries=3 -c "$linkImg" || true
+            wget --tries=3 -c "$linkImg"
             ((i++))
         done
 
