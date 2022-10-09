@@ -22,9 +22,10 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
-set -eE # Same as: set -o errexit -o errtrace
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 useColor() {
     BLACK='\e[1;30m'
@@ -36,8 +37,6 @@ useColor() {
     CYAN='\e[1;36m'
     WHITE='\e[1;37m'
 }
-
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
 
 notUseColor() {
     unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
