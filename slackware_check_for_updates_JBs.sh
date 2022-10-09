@@ -26,9 +26,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "\\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
 
@@ -234,7 +231,7 @@ getUpdateMirror() {
         versionInstalled=$(echo "$packageVersionInstalled" | rev | cut -d '-' -f3 | rev)
 
         packageNameUpdateTmp=$(echo "$packageNameUpdate" | rev | cut -d '.' -f2- | rev)
-        locatePackage=$(find /var/log/packages/ -type f | grep "$packageNameUpdateTmp") || true
+        locatePackage=$(find /var/log/packages/ -type f | grep "$packageNameUpdateTmp")
 
         if [ "$locatePackage" == '' ]; then # To not print the last package (the already update in the Slackware)
             if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
@@ -261,7 +258,7 @@ getUpdateMirror() {
 
     changesToShow=$(sed '/'"$valueToStopPrint"'/q' "$tmpFile")
 
-    countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-") || true
+    countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-")
     if [ "$countLinesTmp" == '0' ]; then
         countLinesTmp='1'
     else
@@ -283,7 +280,7 @@ getUpdateMirror() {
     else
         updatesFound=0
         lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
-        lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null) || true
+        lastKernelInstalled=$(ls /var/log/packages/kernel-*"$lastKernelUpdate"* 2> /dev/null)
 
         if [ "$lastKernelInstalled" == '' ]; then
             lastKernelUpdate=$(grep "patches/packages/linux" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '/' -f3 | cut -d '-' -f2)
