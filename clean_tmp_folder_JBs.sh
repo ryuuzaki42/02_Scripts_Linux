@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
 set -eE
 trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
@@ -76,7 +76,7 @@ for val in ${filesFoldersToRermove[*]}; do
 done
 
 # Delete empty (zero size) folder and files in /tmp/
-find /tmp/ -size 0 -print -delete
-find /tmp/ -empty -print -delete
+find /tmp/ -size 0 -print -delete || true
+find /tmp/ -empty -print -delete || true
 
 echo -e "\\nEnd of script!\\n"
