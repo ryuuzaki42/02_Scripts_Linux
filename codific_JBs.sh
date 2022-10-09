@@ -24,9 +24,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 help() {
     echo -e "Use the file name (with extension) that want to convert"
     echo -e "Example: $(basename "$0") file.srt\\n"

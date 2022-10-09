@@ -25,9 +25,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "\\nDefine o LVDS1 (notebook display) para resolução padrão, caso a saída VGA1 ou HDMI1 seja removida\\n"
 
 LVDS1_resolution=$(xrandr | grep "\\+" | grep -v "+0" | cut -d ' ' -f4 | sed -n "1p")
