@@ -24,9 +24,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 useColor() {
     BLACK='\e[1;30m'
     RED='\e[1;31m'
@@ -44,7 +41,7 @@ notUseColor() {
 
 emptySpaces=$1 # Remove empty space form calls in this script to itself with $colorPrint empty
 if [ "$emptySpaces" == '' ]; then
-    shift || true
+    shift
 fi
 
 colorPrint=$1
@@ -297,7 +294,7 @@ case $optionInput in
             pkgInstalled=''
             pkgNotInstalled=''
             for pkg in $filesName; do
-                locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null) || true
+                locatePkg=$(ls "/var/log/packages/$pkg" 2> /dev/null)
 
                 if [ "$locatePkg" == '' ]; then
                     pkgNotInstalled=$pkgNotInstalled$(echo "$files" | sed -n ${linePkg}p)"\\n"
@@ -406,7 +403,7 @@ case $optionInput in
             fileAndMd5=$(eval find . "$recursiveFolderValue" -type f -print0 | xargs -0 md5sum) # Get md5sum of the files
         else
             echo -en "the files with \"$fileType\" in the name...$NC"
-            fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType") || true
+            fileAndMd5Tmp=$(eval find . "$recursiveFolderValue" -type f | grep "$fileType")
 
             if [ "$fileAndMd5Tmp" == '' ]; then
                 echo -e "\\n\\n${RED}Error: not found any file with \"$fileType\"!$NC\\n"
@@ -453,7 +450,7 @@ case $optionInput in
                 echo "$value"
             done
 
-            filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") || true # Grep all files different
+            filesDifferent=$(echo "$fileAndMd5" | grep -vE "$equalFiles") # Grep all files different
             if [ "$filesDifferent" != '' ]; then
                 echo -e "$CYAN\\nWant to print the file(s) that are different?$NC"
                 echo -en "$CYAN(y)es - (n)o (hit enter to yes):$NC "
@@ -488,7 +485,7 @@ case $optionInput in
                 mkdir "$tmpFolder" 2> /dev/null
 
                 for value in $FilesToWork; do
-                    createFolder=$(echo "$value" | grep "/") || true
+                    createFolder=$(echo "$value" | grep "/")
 
                     if [ "$createFolder" != '' ]; then
                         folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
@@ -656,7 +653,7 @@ case $optionInput in
                     mkdir "$tmpFolder" 2> /dev/null
 
                     for value in $FilesToWork; do
-                        createFolder=$(echo "$value" | grep "/") || true
+                        createFolder=$(echo "$value" | grep "/")
 
                         if [ "$createFolder" != '' ]; then
                             folderToCreate=$(echo "$value" | rev | cut -d "/" -f2- | rev)
@@ -996,7 +993,7 @@ case $optionInput in
                             echo -en "$CYAN\\nPlease wait until all files are compared...$NC"
                             folderChangesFull=$($rsyncCommand -in "$pathSource" "$pathDestination")
 
-                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$") || true
+                            folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
                             echo # just a new blank line
                             foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
