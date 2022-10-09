@@ -28,9 +28,6 @@
 #
 # Be careful - script experimental
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 if [ "$(whoami)" != "root" ]; then
     echo -e "\\nNeed to be superuser (root)\\nExiting"
 else
