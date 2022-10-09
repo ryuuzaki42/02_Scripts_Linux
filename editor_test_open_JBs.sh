@@ -32,9 +32,6 @@
 # /usr/bin/editor_test_open_JBs.sh programName, for example:
 # /usr/bin/editor_test_open_JBs.sh kwrite
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 editorText=$1 # Like kwrite and gedit
 if [ "$#" -lt '2' ]; then # text the count of parramters, 1 "editor" 2 "fileName"
     $editorText # Just open the text editor
