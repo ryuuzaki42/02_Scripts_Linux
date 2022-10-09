@@ -26,9 +26,6 @@
 #
 # Tip: Add a shortcut to this script
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
 
 if [ "$1" == "test" ]; then
@@ -51,8 +48,8 @@ activeOutput2=$(echo -e "$outputConnected" | sed -n '2p')
 activeOutput1Resolution=$(echo "$activeOutput1" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1) # Grep the actual resolution of the first output
 activeOutput2Resolution=$(echo "$activeOutput2" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1)
 
-activeOutput1Primary=$(echo "$activeOutput1" | grep "primary") || true
-activeOutput2Primary=$(echo "$activeOutput2" | grep "primary") || true
+activeOutput1Primary=$(echo "$activeOutput1" | grep "primary")
+activeOutput2Primary=$(echo "$activeOutput2" | grep "primary")
 
 if [ "$activeOutput1Primary" != '' ]; then
     activeOutput1Primary="primary"
@@ -366,7 +363,7 @@ esac
 
 if [ "$resolutionOk" == '' ]; then
     echo -n "Resolution changed. Everything OK? (y)es or (n)o (hit enter to no): "
-    read -t 10 -r resolutionOk || true
+    read -t 10 -r resolutionOk
 fi
 
 if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
