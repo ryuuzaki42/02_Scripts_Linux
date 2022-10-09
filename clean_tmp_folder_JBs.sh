@@ -24,9 +24,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "\\n # Script to clean some logs from home folder (~) and /tmp/ folder #\\n"
 
 filesFoldersToRermove=("~/.cache/thumbnails/"
@@ -71,12 +68,12 @@ filesFoldersToRermove=("~/.cache/thumbnails/"
 for val in ${filesFoldersToRermove[*]}; do
     #echo "$val"
 
-    # echo to expand * and ~ and add || true if can't delete file/folder
-    eval $(echo "rm -fvr $val") || true
+    # echo to expand * and ~
+    eval $(echo "rm -fvr $val")
 done
 
 # Delete empty (zero size) folder and files in /tmp/
-find /tmp/ -size 0 -print -delete || true
-find /tmp/ -empty -print -delete || true
+find /tmp/ -size 0 -print -delete
+find /tmp/ -empty -print -delete
 
 echo -e "\\nEnd of script!\\n"
