@@ -22,7 +22,7 @@
 #
 # Script: Convert common errors from ISO-8859-1 (ISO Latin 1) accents to UTF-8
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
 # Online: https://onlineutf8tools.com/convert-ascii-to-utf8
 #
@@ -31,8 +31,8 @@
 # https://wallacesilva.com/blog/2016/12/converter-para-utf-8-caracteres-iso-em-php/
 # https://www.i18nqa.com/debug/utf8-debug.html
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 fileName=$1
 if [ "$fileName" == '' ]; then

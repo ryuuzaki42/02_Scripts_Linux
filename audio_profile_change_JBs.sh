@@ -22,13 +22,13 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
 # Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 # Stereo without input
 #speakersAudio="output:analog-stereo"

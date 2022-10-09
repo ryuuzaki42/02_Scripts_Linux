@@ -21,10 +21,10 @@
 #
 # Descrição: Script to download the last version of Slackware Live, made by AlienBob
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 echo -e "\\n # Libreoffice change language configuration en-US to pt-BR or vice versa #\\n"
 
 # ~/.config/libreoffice/4/user/registrymodifications.xcu

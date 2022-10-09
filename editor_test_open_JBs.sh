@@ -26,14 +26,14 @@
 # Dica: pela interface do KDE-menu (ou outros) altere para o icone do seu editor padrão
 # por este script em vez de executar o "programName"
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
 # To use, set in icon command:
 # /usr/bin/editor_test_open_JBs.sh programName, for example:
 # /usr/bin/editor_test_open_JBs.sh kwrite
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 editorText=$1 # Like kwrite and gedit
 if [ "$#" -lt '2' ]; then # text the count of parramters, 1 "editor" 2 "fileName"
