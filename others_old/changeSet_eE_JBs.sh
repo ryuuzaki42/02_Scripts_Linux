@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 folder_work=$1
 if [ "$folder_work" == '' ]; then
@@ -31,8 +31,13 @@ for file in *.sh; do
     echo -e "\\n$file"
 
     ## Change set -e and add new line with code
-    sed -i 's/^set -e$/set -eE\
-trap '\''echo -e "\\\\n\\\\n${RED}Error at line $LINENO$NC - Command:\\\\n$RED$BASH_COMMAND\\\\n"'\'' ERR/g' $file
+## change 1
+#    sed -i 's/^set -e$/set -eE\
+#trap '\''echo -e "\\\\n\\\\n${RED}Error at line $LINENO$NC - Command:\\\\n$RED$BASH_COMMAND\\\\n"'\'' ERR/g' $file
+
+# Change 2
+    sed -i 's/^set -eE$/set -eEuo pipefail/g'  $file
+    sed -i 's/^trap '\''echo -e "\\\\n\\\\n${RED}Error at line $LINENO$NC - Command:\\\\n$RED$BASH_COMMAND\\\\n"'\'' ERR/trap '\''echo -e "\\\\n\\\\n\\e[1;31mError at line $LINENO\\033[0m - Command:\\\\n\\e[1;31m$BASH_COMMAND\\033[0m\\\\n"'\'' ERR/g' $file
 
     # Update the date
     sed -i 's/^# Last update: .*/# Last update: '"$dateNew"'/1' $file
