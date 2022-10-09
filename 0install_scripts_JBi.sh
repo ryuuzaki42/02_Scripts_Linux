@@ -5,10 +5,8 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 echo -e "This script copy (cp *_JBs.sh) to /usr/bin/\\n"
+
 echo "List of files that will be copied:"
 ls --color=auto ./*_JBs.sh
 echo -e "\\t\\nBe careful, will overwrite the files if they already exists\\n"
