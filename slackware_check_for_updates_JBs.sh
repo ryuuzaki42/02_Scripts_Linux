@@ -261,7 +261,7 @@ getUpdateMirror() {
 
     changesToShow=$(sed '/'"$valueToStopPrint"'/q' "$tmpFile")
 
-    countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-")
+    countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-") || true
     if [ "$countLinesTmp" == '0' ]; then
         countLinesTmp='1'
     else
