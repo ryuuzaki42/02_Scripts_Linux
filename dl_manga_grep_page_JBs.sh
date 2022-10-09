@@ -22,10 +22,10 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 08/10/2022
+# Last update: 09/10/2022
 #
-set -eE
-trap 'echo -e "\\n\\n${RED}Error at line $LINENO$NC - Command:\\n$RED$BASH_COMMAND\\n"' ERR
+set -eEuo pipefail
+trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
 
 echo -e "\\n# Download images (manga) from a link #\\n"
 
@@ -103,7 +103,7 @@ read -r ContinueOrNot
 if [ "$ContinueOrNot" == 'n' ]; then
     echo -e "\\nJust exiting by local choice\\n"
 else
-    mkdir "$mangaName"
+    mkdir "$mangaName" || true
     cd "$mangaName" || exit
 
     ((chapterEnd+=1)) # To download the last chapter in the while condition
@@ -118,9 +118,9 @@ else
         mangaNameAndChapterDl="$mangaName $chapterDl"
 
         echo -e "\\nDownload the HTML file from page $chapterDl\\n"
-        wget "${linkDl}$linkBeginChange$chapterDl" -O "${chapterDl}.html"
+        wget --tries=3 "${linkDl}$linkBeginChange$chapterDl" -O "${chapterDl}.html"
 
-        linksPageDl=$(grep -E ".jpg|.png|.PNG|.JPG|.webp|.WEBP" "${chapterDl}.html" | grep "[[:digit:]]" | cut -d'"' -f2- | cut -d'"' -f1 | grep "$mangaName") # Grep link to all images (png, jpg)
+        linksPageDl=$(grep -E ".jpg|.png|.PNG|.JPG|.webp|.WEBP" "${chapterDl}.html" | grep "[[:digit:]]" | grep -o "src=.*" | cut -d '"' -f2 | grep "$mangaName") # Grep link to all images (png, jpg)
         rm "${chapterDl}.html" # Delete HTML page file
 
         linksPageDl=$(echo -e "$linksPageDl" | sed 's/^\/\///g') # Remove "//" from the begin of some links
@@ -128,12 +128,13 @@ else
         i='1'
         countImg=$(echo "$linksPageDl" | wc -l)
 
-        mkdir "$mangaNameAndChapterDl" # Create folder to download the images
+        mkdir "$mangaNameAndChapterDl" || true # Create folder to download the images
         cd "$mangaNameAndChapterDl" || exit
 
         for linkImg in $linksPageDl; do
             echo -e "\\nDownloading chapter: $chapterDl images: $i of $countImg (\"$linkImg\")\\n"
-            wget "$linkImg"
+            echo "wget --tries=3 -c \"$linkImg\""
+            wget --tries=3 -c "$linkImg" || true
             ((i++))
         done
 
