@@ -26,9 +26,6 @@
 #
 # Tip: If have NetworkManager installed and running, you can use nmtui
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 useColor() {
     BLACK='\e[1;30m'
     RED='\e[1;31m'

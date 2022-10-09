@@ -26,9 +26,6 @@
 #
 # Last update: 09/10/2022
 #
-set -eEuo pipefail
-trap 'echo -e "\\n\\n\e[1;31mError at line $LINENO\033[0m - Command:\\n\e[1;31m$BASH_COMMAND\033[0m\\n"' ERR
-
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
     echo -e "\\n# Error: Need to pass parameters (file name) to work with"
