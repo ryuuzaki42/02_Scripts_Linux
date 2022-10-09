@@ -3,14 +3,12 @@
 # Copy the this shortcuts to your folder ${HOME}.local/share/applications/
 # You can just execute this script
 #
-# Last update: 17/08/2022
+# Last update: 09/10/2022
 #
 # Tip: Add in "KDE Menu Editor" the shortcut as suggested in *.desktop
 # Start icon in the panel > right click > Edit Applications...
 # audio_profile_change => shortcut = Ctrl + Shift + A
 #
-set -e
-
 echo -e "This script copy (cp $(pwd)/*.desktop) to ${HOME}.local/share/applications/\\n"
 
 echo "List of files that will be copied:"
