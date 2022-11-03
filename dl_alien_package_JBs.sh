@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 09/10/2022
+# Last update: 03/11/2022
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -113,7 +113,7 @@ if [ "$runFile" != '' ]; then
         done
 
         echo -e "Md5sum test of integrate:"
-        md5sum -c *.md5
+        md5sum -c ./*.md5
     else
         for fileGrep in $(echo -e "$runFile"); do
             echo
