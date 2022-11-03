@@ -23,7 +23,7 @@
 # Script: Focus - warning you about a $timeToFocus in work and $timeToRest min of rest
 # Tip: Pass the time to the Script (timeToFocus and timeToRest)
 #
-# Last update: 09/10/2022
+# Last update: 03/11/2022
 #
 timeToFocus=$1
 timeToRest=$2
@@ -46,7 +46,7 @@ echo "Break of $timeToRest - $(date)"
 echo "Break of $timeToRest $(echo; date)" > /dev/pts/0
 
 echo "sleep $timeToRest"
-sleep $timeToRest
+sleep "$timeToRest"
 
 echo "Break End ... $(date)"
 echo "Break End ... $(echo; date)" > /dev/pts/0
