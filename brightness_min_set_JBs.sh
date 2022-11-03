@@ -22,7 +22,7 @@
 #
 # Script: Keep the brightness up to 1%
 #
-# Last update: 09/10/2022
+# Last update: 03/11/2022
 #
 sleepTime='5' # in seconds
 brightnessValueSet="50" # brightness mim value to be set ~ 1%
@@ -37,7 +37,7 @@ fi
 
 if [ "$pathFile" != '' ]; then
     while true; do
-        brightnessValue=$(cat $pathFile/brightness)
+        brightnessValue=$(cat "$pathFile"/brightness)
         #echo "Actual brightness: $brightnessValue"
 
         if [ "$brightnessValue" -lt "$brightnessValueSet" ]; then
