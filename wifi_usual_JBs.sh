@@ -22,7 +22,7 @@
 #
 # Script:  usual / common day-to-day functions with Wi-Fi
 #
-# Last update: 09/10/2022
+# Last update: 03/11/2022
 #
 # Tip: If have NetworkManager installed and running, you can use nmtui
 #
@@ -93,10 +93,10 @@ case $optionInput in
         loadDevWirelessInterface "$2"
 
         echo -e "\\n/usr/sbin/iw dev $devInterface link:"
-        /usr/sbin/iw dev $devInterface link
+        /usr/sbin/iw dev "$devInterface" link
 
         echo -e "\\n/sbin/iwconfig $devInterface:"
-        /sbin/iwconfig $devInterface
+        /sbin/iwconfig "$devInterface"
         ;;
     "--help" | "-h" | "help" | 'h' | '' | 'w' )
         if [ "$optionInput" == '' ] || [ "$optionInput" == 'w' ]; then # whiptailMenu()
@@ -182,7 +182,7 @@ case $optionInput in
 
         loadDevWirelessInterface "$2"
         echo "Visible networks:"
-        /sbin/iwlist $devInterface scan | grep "ESSID" | uniq
+        /sbin/iwlist "$devInterface" scan | grep "ESSID" | uniq
 
         createWifiConfig() {
             continueOrNot='0'
@@ -263,15 +263,15 @@ case $optionInput in
 
                     echo -e "\\nConnecting to $networkName by the device $devInterface\\n"
                     #wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -d -B wext # Normal command
-                    wpa_supplicant -i $devInterface -c "$TmpFile" -d -B wext # Connect with the network using the tmp file
+                    wpa_supplicant -i "$devInterface" -c "$TmpFile" -d -B wext # Connect with the network using the tmp file
 
                     rm "$TmpFile"
 
                     echo -e "\\nGetting IP\\n"
-                    dhclient $devInterface # Get IP
+                    dhclient "$devInterface" # Get IP
 
                     echo -e "\\nNetwork status\\n"
-                    iw dev $devInterface link # Show connection status
+                    iw dev "$devInterface" link # Show connection status
                 fi
             }
             export -f connectWifiConfig
@@ -312,7 +312,7 @@ case $optionInput in
 
         insertRootPasswordMsg
 
-        /sbin/iwlist $devInterface scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
+        /sbin/iwlist "$devInterface" scan | grep -E "Address|ESSID|Frequency|Signal|WPA|WPA2|Encryption|Mode|PSK|Authentication"
         ;;
     "nm-list" )
         echo -e "$CYAN# List the Wi-Fi AP around with the nmcli from NetworkManager #$NC\\n"
