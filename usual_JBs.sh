@@ -22,21 +22,22 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 09/10/2022
+# Last update: 03/11/2022
 #
 useColor() {
-    BLACK='\e[1;30m'
+    #BLACK='\e[1;30m'
     RED='\e[1;31m'
     GREEN='\e[1;32m'
     NC='\033[0m' # reset/no color
     BLUE='\e[1;34m'
-    PINK='\e[1;35m'
+    #PINK='\e[1;35m'
     CYAN='\e[1;36m'
-    WHITE='\e[1;37m'
+    #WHITE='\e[1;37m'
 }
 
 notUseColor() {
-    unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
+    #unset BLACK RED GREEN NC BLUE PINK CYAN WHITE
+    unset RED GREEN NC BLUE CYAN
 }
 
 emptySpaces=$1 # Remove empty space form calls in this script to itself with $colorPrint empty
@@ -62,7 +63,8 @@ fi
 
 testColorInput=$1
 if [ "$testColorInput" == "testColor" ]; then
-    echo -e "\\n    Test colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\\n"
+    #echo -e "\\n    Test colors: $BLACK BLACK $RED RED $GREEN GREEN $NC NC $BLUE BLUE $PINK PINK $CYAN CYAN $WHITE WHITE\\n"
+    echo -e "\\n    Test colors: $RED RED $GREEN GREEN $NC NC $BLUE BLUE $CYAN CYAN\\n"
     shift
 fi
 
@@ -95,9 +97,9 @@ case $optionInput in
                 echo -e "\\nRunning: ntpdate -u -b $ntpValue"
                 ntpdate -u -b "$ntpValue" 2> "$tmpFileNtpError" # Run ntpdate with one value of ntpVector and send the errors to a tmp file
 
-                if ! grep -q -v "no server" $tmpFileNtpError; then # Test if ntpdate got error "no server suitable for synchronization found"
-                    if ! grep -q -v "time out" $tmpFileNtpError; then # Test if ntpdate got error "time out"
-                        if ! grep -q -v "name server cannot be used" $tmpFileNtpError; then # Test if can name resolution works
+                if ! grep -q -v "no server" "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
+                    if ! grep -q -v "time out" "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
+                        if ! grep -q -v "name server cannot be used" "$tmpFileNtpError"; then # Test if can name resolution works
                             echo -e "\\n${CYAN}Time updated:$GREEN $(date)$NC"
                             timeUpdated="true" # Set true in the timeUpdated
                             break
@@ -108,7 +110,7 @@ case $optionInput in
 
             if [ "$timeUpdated" == "false" ]; then
                 echo -e "\\nSorry,$RED time not updated$NC: $(date)"
-                if grep -q "name server cannot be used" $tmpFileNtpError; then # Test if can name resolution works
+                if grep -q "name server cannot be used" "$tmpFileNtpError"; then # Test if can name resolution works
                     echo -e "\\nError:$RED No connection found$NC - Check your network connection"
                 fi
             fi
@@ -190,7 +192,7 @@ case $optionInput in
                     countOption='0'
                     optionVectorSize=${#optionVector[*]}
                     while [ "$countOption" -lt "$optionVectorSize" ]; do
-                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}"
+                        echo -e "    $GREEN${optionVector[$countOption]}$CYAN${optionVector[$countOption+1]}"
 
                         countOption=$((countOption + 2))
                     done
@@ -380,7 +382,7 @@ case $optionInput in
             read -r fileType
         fi
 
-        echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
+        echo -e "$BLUE\\n    Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
         autoOnOff=$3
 
         echo -e "$CYAN\\nWant check the files recursively (this folder and all his subfolders) or only this folder?$NC"
@@ -529,7 +531,7 @@ case $optionInput in
                 read -r fileType
             fi
 
-            echo -e "$BLUE\\n   Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
+            echo -e "$BLUE\\n    Tip: use the option \"auto\" to automatic run the code (use default options)$NC"
             if [ "$fileType" == "auto" ]; then # If there is no file type, but has parameter "auto"
                 autoOnOff=$4
             else
@@ -715,34 +717,34 @@ case $optionInput in
         echo -e "$CYAN# Get the all (shared and specific) use of memory RAM from one process/pattern #$NC"
         if [ "$2" == '' ]; then
             echo -en "\\nInsert the pattern (process name) to search: "
-            read -r process
+            read -r process_pattern
         else
-            process=$2
+            process_pattern=$2
         fi
 
-        if  [ "$process" != '' ]; then
-            processList=$(ps aux)
-            processList=$(echo "$processList" | grep "$process" | grep -v -E "$0|grep")
-            #ps -C chrome -o %cpu,%mem,cmd
-            memPercentage=$(echo "$processList" | awk '{print $4}')
+        if  [ "$process_pattern" != '' ]; then
+            process_list=$(ps aux)
+            process_pattern_list=$(echo "$process_list" | grep -E "USER|$process_pattern" | grep -v -E "$0|grep")
+            mem_percentage=$(echo "$process_pattern_list" | grep -v "USER" | awk '{print $4}')
 
-            memPercentageSum='0'
-            for memPercentageNow in $memPercentage; do
-                memPercentageSum=$(echo "scale=2; $memPercentageSum+$memPercentageNow" | bc)
-            done
+            if [ "$mem_percentage" == '' ]; then
+                echo -e "$RED\\nError: Not found any process with the pattern $BLUE\"$process_pattern\"$RED. Try with another."
+            else
+                mem_percentage_sum='0'
+                for mem_now in $mem_percentage; do
+                    mem_percentage_sum=$(echo "scale=2; $mem_percentage_sum+$mem_now" | bc)
+                done
 
-            totalMem=$(free -m | head -n 2 | tail -n 1 | awk '{print $2}')
-            useMem=$(echo "($totalMem*$memPercentageSum)/100" | bc)
+                total_mem=$(free -m | head -n 2 | tail -n 1 | awk '{print $2}')
+                use_mem=$(echo "($total_mem*$mem_percentage_sum)/100" | bc)
 
-            echo -e "\\nThe process \"$process\" uses: $useMem MiB or $memPercentageSum % of $totalMem MiB\\n"
+                if [ "$(echo "$mem_percentage_sum < 1" | bc -l)" == '1' ]; then
+                    mem_percentage_sum="0$mem_percentage_sum"
+                fi
 
-            echo -en "Show the process list?\\n(y)es - (n)o: "
-            read -r showProcessList
-
-            echo
-            if [ "$showProcessList" == 'y' ]; then
-                echo -e "$processList"
-                echo
+                echo -en "\\nThe process $BLUE\"$process_pattern\"$NC is using: $RED$use_mem$NC MiB"
+                echo -e " or $RED$mem_percentage_sum$NC % of $GREEN$total_mem MiB$NC\\n"
+                echo -e "$process_pattern_list\\n"
             fi
         else
             echo -e "$RED\\nError: You need insert some pattern/process name to search, e.g., $0 mem-use opera$NC"
@@ -849,9 +851,9 @@ case $optionInput in
             echo -en "\\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait...\\n\\n"
 
             if [ "$continueRandomOrZero" == 'r' ]; then
-                dd if=/dev/urandom of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
+                dd if=/dev/urandom of="$fileName" iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
             else
-                dd if=/dev/zero of=$fileName iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <zero> value to wipe the data
+                dd if=/dev/zero of="$fileName" iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <zero> value to wipe the data
             fi
 
             endsAtSeconds=$(date +%s)
@@ -859,7 +861,7 @@ case $optionInput in
 
             echo -e "\\nFinished to write the file - this take $timeTakeMin min"
 
-            rm $fileName # Delete the <big> file generated
+            rm "$fileName" # Delete the <big> file generated
             echo -e "\\nThe \"$fileName\" tmp file was deleted and the end of the job"
         fi
         ;;
@@ -1132,10 +1134,10 @@ case $optionInput in
         fi
 
         if [ "$pathFile" != '' ]; then
-            brightnessMax=$(cat $pathFile/max_brightness) # Get max_brightness
+            brightnessMax=$(cat "$pathFile"/max_brightness) # Get max_brightness
             brightnessPercentage=$(echo "scale=3; $brightnessMax/100" | bc) # Get the percentage of 1% from max_brightness
 
-            actualBrightness=$(cat $pathFile/actual_brightness) # Get actual_brightness
+            actualBrightness=$(cat "$pathFile"/actual_brightness) # Get actual_brightness
             actualBrightness=$(echo "scale=2; $actualBrightness/$brightnessPercentage" | bc)
 
             brightnessValue=$actualBrightness
@@ -1150,7 +1152,7 @@ case $optionInput in
             brightnessValueFinal=$(echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc) # Get no value percentage vs Input value brightness
 
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-                if [ $brightnessValueOriginal -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
+                if [ "$brightnessValueOriginal" -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
                     brightnessValueFinal=$brightnessMax
                 fi
             fi
@@ -1296,7 +1298,7 @@ case $optionInput in
                     if [ "$fileChangeOption" == '3' ]; then
                         gs -sDEVICE=pdfwrite -dNOPAUSE $printedUse -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
-                        gs -sDEVICE=pdfwrite $printedUse -dCompatibilityLevel=1.4 -dPDFSETTINGS=/$sizeQuality -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
+                        gs -sDEVICE=pdfwrite $printedUse -dCompatibilityLevel=1.4 -dPDFSETTINGS=/"$sizeQuality" -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     fi
 
                     echo -e "\\nThe output PDF: \"$filePdfOutput$fileNamePart\" was saved"
@@ -1371,7 +1373,7 @@ case $optionInput in
             slackpkg update -batch=on -default_answer=y
 
             echo -en "$CYAN\\nPress enter to continue.$NC"
-            read -r continue_enter
+            read -r _
             if [ "$installNew" != 'n' ]; then
                 slackpkg install-new
             fi
