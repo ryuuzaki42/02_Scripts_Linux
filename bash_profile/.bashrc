@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 25/08/2022
+# Last update: 25/11/2022
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -101,7 +101,7 @@ else # "Normal" User
     runRootUser() {
         commandToRun=$*
         if [ "$commandToRun" == '' ]; then
-            echo -e "\\nYou need pass a command to run as root, e.g., rootRun slackpkg update\\n"
+            echo -e "\\nYou need pass a command to run as root, e.g., runRootUser slackpkg update\\n"
         else
             echo -e "\\nRunning as root: \"$commandToRun\"\\n"
             su root -c "eval $commandToRun"
@@ -109,13 +109,13 @@ else # "Normal" User
     }
 fi
 
-tput bold
-alias tb='tput bold' # Bold
+#tput bold
+#alias tb='tput bold' # Bold
 alias nano='nano -c' # Nano with line number
 
 # egrep/fgrep/grep with color
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
+#alias egrep='egrep --color=auto'
+#alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
 # ls with color and human readable values
@@ -128,8 +128,8 @@ alias rm='rm -v'
 
 # Sbotools (https://pink-mist.github.io/sbotools/)
 # sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
-alias sboinstall='PKGTYPE=txz sboinstall'
-alias sboupgrade='PKGTYPE=txz sboupgrade'
+#alias sboinstall='PKGTYPE=txz sboinstall'
+#alias sboupgrade='PKGTYPE=txz sboupgrade'
 
 # sbopkg (https://sbopkg.org/)
 # sbopkg create txz instead tgz (Takes less disk space)
