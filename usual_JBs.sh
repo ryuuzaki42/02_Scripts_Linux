@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 03/11/2022
+# Last update: 14/12/2022
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -357,15 +357,23 @@ case $optionInput in
             cd "$folder/" || exit
 
             if [ -d ".git/" ]; then
-                if ! git pull; then # if [ $? != 0 ]
-                    git fetch --all # Fetch all changes
+                if ! git pull; then # $? != 0
+                    echo -en "\\n${CYAN}Local files with change. Force the update? (y)es or n(o):$NC "
+                    read force_up
 
-                    git reset --hard origin/master # Reset the master
+                    if [ "$force_up" == "y" ]; then
+                        git fetch --all # Fetch all changes
 
-                    git pull # Pull/update
+                        git reset --hard origin/master # Reset the master
+
+                        git pull # Pull/update
+                    else
+                        echo -e "$RED Repository not updated$NC"
+                    fi
+
                 fi
             else
-                echo -e "$RED# Not a git folder #$NC"
+                echo -e "$RED Not a git folder$NC"
             fi
 
             cd ../ || exit
