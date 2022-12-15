@@ -21,10 +21,11 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 25/08/2022
+# Last update: 15/12/2022
 #
+alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/3_slackware_jb_packages/\
+scripts_createPackage_JB/check_for_update_progs_JBs.sh $@'
 
-alias check_for_update_progs_JBs='/media/sda2/git_clone/3_slackware_jb_packages/scripts_createPackage_JB/check_for_update_progs_JBs.sh'
 alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
 
 # >>> conda initialize >>>
