@@ -28,6 +28,7 @@
 # Last update: 15/12/2022
 #
 echo -e "\\n # Timer countdown until a end time/date #"
+script_name=$(basename "$0")
 
 # Need sox and notify-send
 default_notification="notify-send '$script_name' --expire-time=0 'Timer completed';
@@ -36,7 +37,6 @@ play -n synth 0.3 pluck A3 repeat 6 2> /dev/null"
 date_end=$1
 command_run=$2
 #test='1' # Only to test the code
-script_name=$(basename "$0")
 
 help(){
     echo -e "\\nSupport:"
@@ -122,6 +122,6 @@ else
     echo -en "\\nsleep ${date_diff_sec}s ..."
     sleep "${date_diff_sec}"s # sleep $date_diff seconds
 
-    echo "command_run: $command_run"
+    echo -e "\\n\\ncommand_run: $command_run"
     eval "$command_run" # run the command
 fi
