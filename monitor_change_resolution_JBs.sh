@@ -20,13 +20,13 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Change the resolution of the monitor or/and projector
+# Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 09/10/2022
+# Last update: 17/12/2022
 #
 # Tip: Add a shortcut to this script
 #
-echo -e "\\nScript to change the resolution of your outputs (e.g., LVDS, VGA, HDMI)\\n"
+echo -e "\\n # Script to change the resolution of monitors or/and projector #\\n"
 
 if [ "$1" == "test" ]; then
     optionSelected=$2
@@ -43,7 +43,7 @@ outputConnected=$(xrandr | grep " connected") # Grep connected outputs
 activeOutput1=$(echo -e "$outputConnected" | sed -n '1p') # Grep the name of the first output
 activeOutput2=$(echo -e "$outputConnected" | sed -n '2p')
 
-#activeOutput3=$(echo -e  "$outputConnected" | sed -n '3p') # Implementation in the future
+#activeOutput3=$(echo -e "$outputConnected" | sed -n '3p') # Implementation in the future
 
 activeOutput1Resolution=$(echo "$activeOutput1" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1) # Grep the actual resolution of the first output
 activeOutput2Resolution=$(echo "$activeOutput2" | cut -d '(' -f1 | rev | cut -d ' ' -f2 | rev | cut -d '+' -f1)
@@ -88,8 +88,9 @@ fi
 printf "| %-15s" "$activeOutput1MaxResolution"
 printf "| %-10s|\n" "$activeOutput1Primary"
 
-printTrace
+
 if [ "$activeOutput2" != '' ]; then
+    printTrace
     printf "\t| %-7s" "$activeOutput2"
 
     if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
@@ -101,13 +102,12 @@ if [ "$activeOutput2" != '' ]; then
     printf "| %-15s" "$activeOutput2MaxResolution"
     printf "| %-10s|\n" "$activeOutput2Primary"
 else
-    echo -e "\\n\\tJust one output (\"$activeOutput1\") connected.\\nExiting...\\n"
-    notify-send "Monitor configuration not changed!" "Just one output (\"$activeOutput1\") connected.\\nExiting..." -i "preferences-desktop-wallpaper"
+    printTrace2
 
-    if ! echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-        echo -e "\\nThe output $activeOutput1 was not active, activating\\n"
-        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
-    fi
+    echo -e "\\n Only one output (\"$activeOutput1\") connected.\\n Just setting to max resolution!\\n"
+    notify-send "Only one output (\"$activeOutput1\") connected." "Just setting to max resolution!" -i "preferences-desktop-wallpaper"
+    xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
+
     exit 0
 fi
 printTrace2
