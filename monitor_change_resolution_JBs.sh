@@ -88,7 +88,6 @@ fi
 printf "| %-15s" "$activeOutput1MaxResolution"
 printf "| %-10s|\n" "$activeOutput1Primary"
 
-
 if [ "$activeOutput2" != '' ]; then
     printTrace
     printf "\t| %-7s" "$activeOutput2"
