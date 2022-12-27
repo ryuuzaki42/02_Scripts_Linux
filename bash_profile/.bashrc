@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 25/11/2022
+# Last update: 27/12/2022
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -108,6 +108,12 @@ else # "Normal" User
         fi
     }
 fi
+
+PS1_BKP=$PS1
+PS1_update(){ # ex: PS1_update $PS1 conda_test_env $
+    # Restore PS1 from backup variable and add some configuration if passed as parameter
+    PS1=$PS1_BKP$@
+}
 
 #tput bold
 #alias tb='tput bold' # Bold
