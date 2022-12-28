@@ -333,11 +333,11 @@ case $optionInput in
         fi
 
         for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
-            echo -e "\\n$BLUE Folder: $GREEN\"$folder/\"$NC"
+            echo -e "\\n$BLUE Folder: $GREEN$folder/$NC"
             cd "$folder/" || exit
 
             if [ -d ".git/" ]; then
-                echo -e "$BLUE Running: $GREEN\"$git_command\"$NC\\n"
+                echo -e "$BLUE Running: $GREEN$git_command$NC\\n"
                 $git_command
             else
                 echo -e "$RED Not a git folder$NC"
@@ -352,7 +352,7 @@ case $optionInput in
 
         IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
-            echo -e "\\n$BLUE Folder: $GREEN\"$folder/\"$NC"
+            echo -e "\\n$BLUE Folder: $GREEN$folder/$NC"
             cd "$folder/" || exit
 
             if [ -d ".git/" ]; then
