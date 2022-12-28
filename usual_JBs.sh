@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 14/12/2022
+# Last update: 28/12/2022
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -318,33 +318,32 @@ case $optionInput in
     "git-gc" )
         echo -e "$CYAN# Run git gc (|--auto|--aggressive) in the subfolders #$NC"
 
-        echo -e "\\nCommands \"git gc\" available:"
+        echo -e "\\nCommands available:"
         echo "1 - \"git gc\""              # Cleanup unnecessary files and optimize the local repository
         echo "2 - \"git gc --auto\""       # Checks whether any housekeeping is required; if not, it exits without performing any work
         echo "3 - \"git gc --aggressive\"" # More aggressively, optimize the repository at the expense of taking much more time
         echo -n "Which option you want? (hit enter to insert 1): "
-        read -r gitOptionCommand
+        read -r git_option
 
-        if [ "$gitOptionCommand" == '2' ]; then
-            gitCommandRun="git gc --auto"
-        elif [ "$gitOptionCommand" == '3' ]; then
-            gitCommandRun="git gc --aggressive"
-        else
-            gitCommandRun="git gc"
+        git_command="git gc"
+        if [ "$git_option" == '2' ]; then
+            git_command="$git_command --auto"
+        elif [ "$git_option" == '3' ]; then
+            git_command="$git_command --aggressive"
         fi
 
-        folderLocal=$(ls -vd -- */) # List folder names
-        folderLocalcount=$(echo "$folderLocal" | wc -l)
+        for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
+            echo -e "\\n$BLUE Folder: $GREEN\"$folder/\"$NC"
+            cd "$folder/" || exit
 
-        folderRun='0'
-        while [ "$folderRun" -lt "$folderLocalcount" ]; do
-            folderRun=$((folderRun + 1))
-            folderGit=$(echo -e "$folderLocal" | head -n "$folderRun" | tail -n 1)
+            if [ -d ".git/" ]; then
+                echo -e "$BLUE Running: $GREEN\"$git_command\"$NC\\n"
+                $git_command
+            else
+                echo -e "$RED Not a git folder$NC"
+            fi
 
-            echo -e "\\nRunning \"$gitCommandRun\" inside: \"$folderGit/\"\\n"
-            cd "$folderGit" || exit
-            $gitCommandRun
-            cd .. || exit
+            cd ../ || exit
         done
         ;;
 
@@ -353,13 +352,13 @@ case $optionInput in
 
         IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
         for folder in $(find . -maxdepth 1 -type d | grep -v "^.$"| sort); do
-            echo -e "\\n${BLUE}folder: $GREEN$folder/$NC"
+            echo -e "\\n$BLUE Folder: $GREEN\"$folder/\"$NC"
             cd "$folder/" || exit
 
             if [ -d ".git/" ]; then
                 if ! git pull; then # $? != 0
-                    echo -en "\\n${CYAN}Local files with change. Force the update? (y)es or n(o):$NC "
-                    read force_up
+                    echo -en "\\n$CYAN Local files with changes. Force the update? (y)es or n(o):$NC "
+                    read -r force_up
 
                     if [ "$force_up" == "y" ]; then
                         git fetch --all # Fetch all changes
