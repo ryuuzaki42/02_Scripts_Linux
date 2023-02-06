@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder (~) and /tmp/ folder
 #
-# Last update: 09/10/2022
+# Last update: 06/02/2023
 #
 echo -e "\\n # Script to clean some logs from home folder (~) and /tmp/ folder #\\n"
 
@@ -72,8 +72,9 @@ for val in ${filesFoldersToRermove[*]}; do
     eval $(echo "rm -fvr $val")
 done
 
+# Disabled - delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
 # Delete empty (zero size) folder and files in /tmp/
-find /tmp/ -size 0 -print -delete
-find /tmp/ -empty -print -delete
+#find /tmp/ -size 0 -print -delete
+#find /tmp/ -empty -print -delete
 
 echo -e "\\nEnd of script!\\n"
