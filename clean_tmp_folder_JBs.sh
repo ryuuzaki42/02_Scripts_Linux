@@ -20,17 +20,20 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean some logs from home folder (~) and /tmp/ folder
+# Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
 # Last update: 06/02/2023
 #
-echo -e "\\n # Script to clean some logs from home folder (~) and /tmp/ folder #\\n"
+echo -e "\\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\\n"
 
-filesFoldersToRermove=("~/.cache/thumbnails/"
-"~/.thumbnails/"
-"~/.xsession-errors"
-"~/.config/VirtualBox/*log*"
-"~/VirtualBox\ VMs/*/Logs/"
+#HOME_USER="/media/sda2/home/j/
+HOME_USER=$HOME
+
+filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
+"$HOME_USER/.thumbnails/"
+"$HOME_USER/.xsession-errors"
+"$HOME_USER/.config/VirtualBox/*log*"
+"$HOME_USER/VirtualBox VMs/*/Logs/"
  "/tmp/tmpaddon*"
  "/tmp/lastChance*"
  "/tmp/qtsingleapp-*"
@@ -53,23 +56,27 @@ filesFoldersToRermove=("~/.cache/thumbnails/"
 "/tmp/.vbox-*-ipc/"
 "/tmp/hsperfdata_*/"
 "/tmp/skypeforlinux*/"
-"/tmp/Slack\ Crashes/"
-"plasma-csd-generator.*"
+"/tmp/Slack Crashes/"
 "/tmp/smartsynchronize-*/"
 "/tmp/org.cogroo.addon.*/"
 "/tmp/v8-compile-cache-*/"
-"/tmp/plasma-csd-generator.*/"
 "/tmp/.org.chromium.Chromium.*/"
-"/tmp/com.microsoft.teams.linux\ Crashes/")
+"/tmp/com.microsoft.teams.linux Crashes/")
 
 # Can be useful if add to filesFoldersToRermove
-# "~/.cache/"
+# "$HOME_USER/.cache/"
+# "/tmp/plasma-csd-generator.*"
+# "/tmp/plasma-csd-generator.*/"
 
+IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 for val in ${filesFoldersToRermove[*]}; do
-    #echo "$val"
+    #echo "val: \"$val\""
 
-    # echo to expand * and ~
-    eval $(echo "rm -fvr $val")
+    # Show errors (files and folders not found)
+    #rm -vr "$val"
+
+    # Default - not show errors
+    rm -fvr "$val"
 done
 
 # Disabled - delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
