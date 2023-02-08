@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 27/12/2022
+# Last update: 08/02/2023
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -131,6 +131,7 @@ alias ls='ls -h --color=auto'
 alias cp='cp -v'
 alias mv='mv -v'
 alias rm='rm -v'
+alias rmdir='rmdir -v'
 
 # Sbotools (https://pink-mist.github.io/sbotools/)
 # sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
