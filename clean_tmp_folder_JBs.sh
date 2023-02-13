@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 08/02/2023
+# Last update: 13/02/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
 #HOME_USER="/media/sda2/home/j/
@@ -82,11 +82,18 @@ for val in ${filesFoldersToRermove[*]}; do
 done
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
-    # Delete empty (zero size) folder and files in /tmp/
-    find /tmp/ -size 0 -print -delete
-    find /tmp/ -empty -print -delete
+    echo -en "\\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
+    read continue_or_not
 
-    echo "# Recommendation restart your system! #"
+    if [ "$continue_or_not" == 'y' ]; then
+        # Delete empty (zero size) folder and files in /tmp/
+        find /tmp/ -size 0 -print -delete
+        find /tmp/ -empty -print -delete
+
+        echo -e "\\n # Recommendation: Restart your system! #"
+    else
+        echo "Just exiting"
+    fi
 fi
 
 echo -e "\\nEnd of script!\\n"
