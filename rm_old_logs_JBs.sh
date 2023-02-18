@@ -22,7 +22,7 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 15/02/2023
+# Last update: 18/02/2023
 #
 echo -e  "\\n# Remove old \"log\" from remove packages #\\n"
 
@@ -32,7 +32,7 @@ read -r _
 func_files_remove() {
     rm_pkg=$1
 
-    list_files=$(ls -1pL | grep -v '/') # List only files
+    list_files=$(ls -1tpL | grep -v '/') # List only files
 
     list_files_tmp=$list_files
 
@@ -43,14 +43,14 @@ func_files_remove() {
         # Remove date - like 22022-10-05,20:55:35
         #list_files=$(echo "$list_files" | sed 's/[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\},.*//')
 
-        # Remove -i?86-*, -x86_64-* and -noarch-*
-        list_files=$(echo "$list_files" | sed 's/-i.86-.*//g; s/-x86_64-.*//g; s/-noarch-.*//g;')
+        # Remove -i?86-*, -x86_64-*, -noarch-* and -x86-* (kernel-headers-*-x86-*)
+        list_files=$(echo "$list_files" | sed 's/-i.86-.*//g; s/-x86_64-.*//g; s/-noarch-.*//g; s/-x86-.*//g;')
 
         # Remove version
         list_files=$(echo "$list_files" | rev | cut -d '-' -f2- | rev)
 
         # Remove duplicate
-        list_files=$(echo "$list_files" | uniq)
+        list_files=$(echo "$list_files" | sort | uniq)
     fi
 
     # Test
