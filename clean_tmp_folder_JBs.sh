@@ -22,9 +22,10 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 13/02/2023
+# Last update: 23/02/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
+
 #HOME_USER="/media/sda2/home/j/
 HOME_USER=$HOME
 CLEAN_ALL=$1
@@ -36,9 +37,9 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.xsession-errors"
 "$HOME_USER/.config/VirtualBox/*log*"
 "$HOME_USER/VirtualBox VMs/*/Logs/"
- "/tmp/tmpaddon*"
- "/tmp/lastChance*"
- "/tmp/qtsingleapp-*"
+"/tmp/tmpaddon*"
+"/tmp/lastChance*"
+"/tmp/qtsingleapp-*"
 "/tmp/.ktorrent_kde4_*"
 "/tmp/gameoverlayui.log*"
 "/tmp/dropbox-antifreeze-*"
@@ -47,6 +48,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/mastersingleapp-master*"
 "/tmp/.org.chromium.Chromium.*"
 "/tmp/OSL_PIPE_*_SingleOfficeIPC_*"
+"/tmp/vboxdrv-Module.symvers"
 "/tmp/SBo/"
 "/tmp/dumps/"
 "/tmp/Temp-*/"
