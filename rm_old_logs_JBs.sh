@@ -20,17 +20,27 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Change the profile audio active
+# Script: Remove old \"log\" from remove packages.
 #
-# Last update: 18/02/2023
+# Folder by default: cd /var/log/removed_scripts/, /var/log/removed_packages/, /var/log/
 #
-echo -e  "\\n# Remove old \"log\" from remove packages #\\n"
+# Last update: 16/04/2023
+#
+RED='\e[1;31m'
+GREEN='\e[1;32m'
+NC='\033[0m' # reset/no color
+#BLUE='\e[1;34m'
+CYAN='\e[1;36m'
 
-echo -en "Script in beta - use at your own risk\\nHit enter to contine or Crtl + C to quit."
+echo -e  "\\n$CYAN # Remove old \"log\" from remove packages #"
+echo -e  " Select the packages logs with the same \"pkg_name\" in folder to be deleted (leave the most recent) $NC\\n"
+
+echo -en "$RED Script in beta - use at your own risk!\\nHit enter to contine or Crtl + C to quit.$NC"
 read -r _
 
 func_files_remove() {
     rm_pkg=$1
+    echo -e "\\n${CYAN}List of \"pkg_name\" in the folder $GREEN\"$PWD\"$NC"
 
     list_files=$(ls -1tpL | grep -v '/') # List only files
 
@@ -59,19 +69,19 @@ func_files_remove() {
 
     tmp_file=$(mktemp)
     for file in $list_files; do
-        echo -e "\\n$file:"
+        echo -e "\\n${CYAN}pkg_name: $GREEN$file$NC"
         echo "$list_files_tmp" | grep "^$file"
 
         echo "$list_files_tmp" | grep "^$file" | sed '1d' >> "$tmp_file"
         #read
     done
 
-    echo -e "\\nFolder: \"$PWD/\"\\nFiles to be deleted:"
+    echo -e "\\n${CYAN}Folder: \"$GREEN$PWD/\"\\n\\n${RED}Files to be deleted:$NC"
     cat "$tmp_file"
 
     list_files_delete=$(cat "$tmp_file")
     if [ "$list_files_delete" != '' ]; then
-        echo -en "\\nDelete theses files? (y)es or (n)o: "
+        echo -en "\\n$RED Delete theses files? (y)es or (n)o: "
         read -r continue_or_not
 
         if [ "$continue_or_not" == 'y' ]; then
@@ -79,10 +89,10 @@ func_files_remove() {
                 rm -v "$file"
             done
         else
-            echo " # Not deleting files! #"
+            echo -e "\\n$GREEN # Not deleting files! #$NC"
         fi
     else
-        echo " # No file to be deleted! #"
+        echo -e "\\n$GREEN # No file to be deleted! #$NC"
     fi
 
     rm "$tmp_file"
