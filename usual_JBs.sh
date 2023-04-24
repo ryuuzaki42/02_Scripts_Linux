@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 13/02/2023
+# Last update: 24/04/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1488,31 +1488,48 @@ case $optionInput in
     "shred" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
 
-        folderFile=$2
-        IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+        echo -e "\\n$BLUE Pass -f (or f) to work with files\\n Pass -d (or d) to work with directory$NC"
+        echo -e "\\n$BLUE Examples:\n$CYAN$(basename $0) shred -f file.txt\\n$(basename $0) shred -d dir/$N"
 
-        if [ "$folderFile" == '' ]; then
-            echo -e "$RED\\nError: You need pass the type to work:$GREEN f$RED to file or$GREEN d$RED to directory"
-        elif [ "$folderFile" == 'f' ] || [ "$folderFile" == '-f' ]; then # to shred files
-            fileWork=$3
+        folder_or_file=$2
+        tmp_count='3' # count of parameter to start list of files
+        if echo "$folder_or_file" | grep -Eqv "f|d"; then
+            folder_or_file='f'
+            tmp_count='2'
+        fi
+
+        if [ "$folder_or_file" == 'f' ] || [ "$folder_or_file" == '-f' ]; then # to shred files
+            OLD_IFS=$IFS
+            IFS='|'
+            # $@ expanded as "$1" "$2" "$3" ... "$n"
+            # $* expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
+            #echo "$*"
+            fileWork=${*:$tmp_count} # Get all files passed as parameter after $tmp_count
+
             if [ "$fileWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the file to work"
-            elif [ ! -f "$fileWork" ]; then
-                echo -e "$RED\\nError: The file \"$fileWork\" not exist"
             else
-                echo -e "$CYAN\\nFile to work with: $GREEN$fileWork"
+                echo -e "$CYAN\\nFile(s) to be overwritten and deleted::$BLUE"
+                echo "$fileWork" | sed 's/|/\n/g'
 
-                echo -en "$RED\\nRealy want to continue? (y)es or (n)o: $NC"
+                echo -en "$RED\\nReally want to continue? (y)es or (n)o: $NC"
                 read -r continueOrNot
 
                 if [ "$continueOrNot" == 'y' ]; then
                     for file in $fileWork; do
-                        echo -e "${BLUE}Running:$GREEN shred -n 9 -uz $file"
-                        shred -n 9 -uz "$file"
+                        if [ ! -f "$file" ]; then
+                            echo -e "$RED\\nError: The file \"$file\" not exist"
+                        else
+                            echo -e "${BLUE}Running:$GREEN shred -n 9 -uz $file"
+                            shred -n 9 -uz "$file"
+                        fi
                     done
                 fi
             fi
-        elif [ "$folderFile" == 'd' ] || [ "$folderFile" == '-d' ]; then # to shred files
+        elif [ "$folder_or_file" == 'd' ] || [ "$folder_or_file" == '-d' ]; then # to shred folder and theirs files
+            OLD_IFS=$IFS
+            IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+
             folderWork=$3
             if [ "$folderWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the folder to work$NC"
@@ -1521,22 +1538,20 @@ case $optionInput in
             else
                 echo -e "$CYAN\\nFolder to work with:$GREEN $folderWork$NC"
 
-                files=$(find "$folderWork" -type f)
-                #files=$(find "$folderWork" -type f -maxdepth 1)
+                fileWork=$(find "$folderWork" -type f)
+                echo -e "$CYAN\\nFile(s) to be overwritten and deleted:"
+                echo -e "$BLUE$fileWork"
 
-                echo -e "$CYAN\\nFiles to be overwriten and deleted:$NC"
-                echo "$files"
-
-                echo -en "$RED\\nRealy want to continue? (y)es or (n)o:$NC "
+                echo -en "$RED\\nReally want to continue? (y)es or (n)o:$NC "
                 read -r continueOrNot
 
                 if [ "$continueOrNot" == 'y' ]; then
-                    for file in $files; do
+                    for file in $fileWork; do
                         echo -e "${BLUE}Running:$GREEN shred -n 9 -uz $file"
                         shred -n 9 -uz "$file"
                     done
 
-                    echo -e "$CYAN\\nRemoving folders$NC"
+                    echo -e "$CYAN\\nRemoving folder(s):$NC"
                     folders=$(find "$folderWork" -type d | sort -r)
                     for folder in $folders; do
                         echo -e "${BLUE}Running:$GREEN rmdir $folder"
@@ -1545,8 +1560,10 @@ case $optionInput in
                 fi
             fi
         else
-            echo -e "$RED\\nError: Option \"$folderFile\" not recognized"
+            echo -e "$RED\\nError: Option \"$folder_or_file\" not recognized"
         fi
+
+        IFS=$OLD_IFS
         ;;
     * )
         echo -e "\\n$CYAN    $(basename "$0") -$RED Error: Option \"$1\" not recognized$CYAN"
