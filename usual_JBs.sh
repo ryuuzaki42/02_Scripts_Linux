@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 24/04/2023
+# Last update: 25/04/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1489,7 +1489,7 @@ case $optionInput in
         echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
 
         echo -e "\\n$BLUE Pass -f (or f) to work with files\\n Pass -d (or d) to work with directory$NC"
-        echo -e "\\n$BLUE Examples:\n$CYAN$(basename $0) shred -f file.txt\\n$(basename $0) shred -d dir/$N"
+        echo -e "\\n$BLUE Examples:\n$CYAN$(basename "$0") shred -f file.txt\\n$(basename "$0") shred -d dir/$N"
 
         folder_or_file=$2
         tmp_count='3' # count of parameter to start list of files
@@ -1498,8 +1498,8 @@ case $optionInput in
             tmp_count='2'
         fi
 
+        OLD_IFS=$IFS
         if [ "$folder_or_file" == 'f' ] || [ "$folder_or_file" == '-f' ]; then # to shred files
-            OLD_IFS=$IFS
             IFS='|'
             # $@ expanded as "$1" "$2" "$3" ... "$n"
             # $* expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
@@ -1510,7 +1510,7 @@ case $optionInput in
                 echo -e "$RED\\nError: You need pass the file to work"
             else
                 echo -e "$CYAN\\nFile(s) to be overwritten and deleted::$BLUE"
-                echo "$fileWork" | sed 's/|/\n/g'
+                echo "${fileWork//|/\n}" # Change | to \n
 
                 echo -en "$RED\\nReally want to continue? (y)es or (n)o: $NC"
                 read -r continueOrNot
@@ -1527,7 +1527,6 @@ case $optionInput in
                 fi
             fi
         elif [ "$folder_or_file" == 'd' ] || [ "$folder_or_file" == '-d' ]; then # to shred folder and theirs files
-            OLD_IFS=$IFS
             IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
 
             folderWork=$3
