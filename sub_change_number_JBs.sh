@@ -24,7 +24,7 @@
 #
 # Script: Change values in one subtitle like: 2 to 1, 3 to 2, 4 to 3, and so on
 #
-# Last update: 09/10/2022
+# Last update: 09/05/2023
 #
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
@@ -33,11 +33,11 @@ if [ "$fileToWork" == '' ]; then
     exit
 fi
 
-# Tmp file as result
-fileToWork2=${fileToWork::-4}"-TMP."$(echo "$fileToWork" | rev | cut -d '.' -f1 | rev)
+# TMP file as result: $fileToWork + "_tmp" (with extension (e.g., srt))
+fileToWork2=${fileToWork::-4}"_tmp."$(echo "$fileToWork" | rev | cut -d '.' -f1 | rev)
 
 # Grep the count line
-countLines=$(grep -E "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
+countSubMsg=$(grep -E "^[0-9]{1,4}" "$fileToWork" | tail -n 2 | head -n 1 | tr -dc '0-9')
 
 # Create a TMP File to work with
 cp "$fileToWork" "$fileToWork2"
@@ -48,13 +48,13 @@ sed -i 's/\r$//' "$fileToWork2"
 # Make the sed part to change the values, 2 to 1, 3 to 2, and so on
 sedCommands=$(
     i=1
-    for j in $(seq 2 "$countLines"); do
+    for j in $(seq 2 "$countSubMsg"); do
         echo -n "s/^$j$/$i/g; "
         ((i++))
     done
 )
 
-# Create the full command sed
+# Create the full/complete command sed
 sedCommandComplete=$(echo -e "sed -i '$sedCommands' \"$(pwd)/$fileToWork2\"")
 
 # Run the command
