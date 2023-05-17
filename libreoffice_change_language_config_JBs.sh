@@ -21,7 +21,7 @@
 #
 # Descrição: Script to download the last version of Slackware Live, made by AlienBob
 #
-# Last update: 09/10/2022
+# Last update: 17/05/2023
 #
 echo -e "\\n # Libreoffice change language configuration en-US to pt-BR or vice versa #\\n"
 
@@ -30,9 +30,6 @@ cd ~/.config/libreoffice/4/user/ || exit
 
 # en-US
 # pt-BR
-#
-# <item oor:path="/org.openoffice.Office.Linguistic/General"><prop oor:name="DefaultLocale" oor:op="fuse"><value>en-US</value></prop></item>
-# <item oor:path="/org.openoffice.Office.Linguistic/General"><prop oor:name="DefaultLocale" oor:op="fuse"><value>pt-BR</value></prop></item>
 #
 # <item oor:path="/org.openoffice.Office.Linguistic/General"><prop oor:name="UILocale" oor:op="fuse"><value></value></prop></item>
 # <item oor:path="/org.openoffice.Office.Linguistic/General"><prop oor:name="UILocale" oor:op="fuse"><value>pt-BR</value></prop></item>
@@ -47,7 +44,7 @@ cd ~/.config/libreoffice/4/user/ || exit
 # <item oor:path="/org.openoffice.Setup/L10N"><prop oor:name="ooSetupSystemLocale" oor:op="fuse"><value>pt-BR</value></prop></item>
 
 echo -n "    Current configuration: "
-if grep -q 'oor:name="DefaultLocale" oor:op="fuse"><value>en-US</value></prop></item>' registrymodifications.xcu; then
+if grep -q 'oor:name="UILocale" oor:op="fuse"><value></value></prop></item>' registrymodifications.xcu; then
     echo "en-US"
     config_en_US=1
 else # <value>pt-BR</value></prop></item>
