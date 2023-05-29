@@ -22,10 +22,10 @@
 #
 # Script: Keep the brightness up to 1%
 #
-# Last update: 03/11/2022
+# Last update: 29/05/2023
 #
-sleepTime='5' # in seconds
-brightnessValueSet="50" # brightness mim value to be set ~ 1%
+sleepTime=5 # in seconds
+brightnessValueSet=50 # brightness mim value to be set ~ 1%
 
 if [ -f /sys/class/backlight/acpi_video0/brightness ]; then # Choose the your path from "files brightness"
     pathFile="/sys/class/backlight/acpi_video0"
