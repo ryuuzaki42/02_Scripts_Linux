@@ -86,7 +86,7 @@ done
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
-    read continue_or_not
+    read -r continue_or_not
 
     if [ "$continue_or_not" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
