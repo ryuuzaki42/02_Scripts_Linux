@@ -22,7 +22,7 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 # Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
@@ -44,7 +44,7 @@ echo -n "Profile changed to "
 if echo "$profileActive" | grep -q "$speakersAudio"; then # Check if speakersAudio is active
     profilePriority=$(pacmd list-cards | grep $hdmiAudioA | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
 
-    if [ "$profilePriority" == '6' ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
+    if [ "$profilePriority" == 6 ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
         finalValue=$hdmiAudioA
 #         echo -e "\\n\\n    hdmiAudioA\\n" # To test
     else
