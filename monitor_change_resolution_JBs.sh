@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 17/12/2022
+# Last update: 29/05/2023
 #
 # Tip: Add a shortcut to this script
 #
@@ -173,7 +173,7 @@ justFinish() {
 justFinish "$optionSelected"
 
 case $optionSelected in
-    '5' | '6' | '0' )
+    5 | 6 | 0 )
         # "$activeOutput1" part resolution
         activeOutput1MaxResolution_Part1=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f1)
         activeOutput1MaxResolution_Part2=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f2)
@@ -195,9 +195,9 @@ esac
 if [ "$optionSelected" == 'c' ]; then
     echo -e "\\n$optionTmpc"
     if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
-        optionSelected='2'
+        optionSelected=2
     else
-        optionSelected='1'
+        optionSelected=1
     fi
 fi
 
@@ -212,35 +212,35 @@ case $optionSelected in
             xrandr --output "$activeOutput2" --off
         fi
         ;;
-    '1' )
+    1 )
         echo -e "\\n$optionTmp1\\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
         xrandr --output "$activeOutput2" --off
         ;;
-    '2' )
+    2 )
         echo -e "\\n$optionTmp2\\n"
         xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary
         xrandr --output "$activeOutput1" --off
         ;;
-    '3' )
+    3 )
         echo -e "\\n$optionTmp3\\n"
         xrandr --output "$activeOutput1" --mode "$maximumEqualResolution"
         xrandr --output "$activeOutput2" --mode "$maximumEqualResolution" --same-as "$activeOutput1"
         ;;
-    '4' )
+    4 )
         echo -e "\\n$optionTmp4\\n"
         xrandr --output "$activeOutput1" --mode 1024x768
         xrandr --output "$activeOutput2" --mode 1024x768 --same-as "$activeOutput1"
         ;;
-    '5' )
+    5 )
         echo -e "\\n$optionTmp5\\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos "${activeOutput1MaxResolution_Part1}x0"
         ;;
-    '6' )
+    6 )
         echo -e "\\n$optionTmp6\\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary --pos 0x0
         ;;
-    '7' )
+    7 )
         echo -e "\\n$optionTmp7\\n"
         if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput1" --off
@@ -249,7 +249,7 @@ case $optionSelected in
             exit 1
         fi
         ;;
-    '8' )
+    8 )
         echo -e "\\n$optionTmp8\\n"
         if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput2" --off
@@ -258,7 +258,7 @@ case $optionSelected in
             exit 1
         fi
         ;;
-    '0' )
+    0 )
         echo -e "\\n$optionTmp0"
         optionSelected=$optionSelectedTmp
 
@@ -299,19 +299,19 @@ case $optionSelected in
 
         if echo "$activeOutput1MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is ative
             echo -e "\\n\\tError: $activeOutput1 is not active\\n"
-            activeOutputNotAtive='1'
+            activeOutputNotAtive=1
         else
             if echo "$activeOutput2MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is ative
                 echo -e "\\n\\tError: $activeOutput2 is not active\\n"
-                activeOutputNotAtive='1'
+                activeOutputNotAtive=1
             fi
         fi
 
-        if [ "$activeOutputNotAtive" == '1' ]; then
+        if [ "$activeOutputNotAtive" == 1 ]; then
             echo -n "(1) Set the maximum resolution for both and continue or (2) Just terminate. What you want?: "
             read -r continueOrNot
 
-            if [ "$continueOrNot" == '1' ]; then # Set the maximum resolution for both and continue
+            if [ "$continueOrNot" == 1 ]; then # Set the maximum resolution for both and continue
                 xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution"
                 xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution"
             else # Just terminate
@@ -326,27 +326,27 @@ case $optionSelected in
         fi
 
         case $optionSelected in
-            '9' )
+            9 )
                 echo -e "\\n$optionTmp9\\n"
                 xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1MaxResolution_Part1}x0"
                 ;;
-            '10' )
+            10 )
                 echo -e "\\n$optionTmp10\\n"
                 xrandr --output "$activeOutput1" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
                 ;;
-            '11' )
+            11 )
                 echo -e "\\n$optionTmp11\\n"
                 xrandr --output "$activeOutput1" --above "$activeOutput2"
                 ;;
-            "12" )
+            12 )
                 echo -e "\\n$optionTmp12\\n"
                 xrandr --output "$activeOutput1" --below "$activeOutput2"
                 ;;
-            "13" )
+            13 )
                 echo -e "\\n$optionTmp13\\n"
                 xrandr --output "$activeOutput1" --primary
                 ;;
-            "14" )
+            14 )
                 echo -e "\\n$optionTmp14\\n"
                 xrandr --output "$activeOutput2" --primary
                 ;;

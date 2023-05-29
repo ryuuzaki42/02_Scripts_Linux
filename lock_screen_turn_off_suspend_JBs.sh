@@ -22,7 +22,7 @@
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 # Tip: Add a shortcut to this script
 #
@@ -31,7 +31,7 @@ waitTimeToSuspend=$1 # Time before suspend in minutes
 suspendCommand="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
 if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
-    waitTimeToSuspend='0'
+    waitTimeToSuspend=0
 fi
 
 amixer set Master mute # Mute
@@ -53,7 +53,7 @@ fi
 sleep 2s
 xset dpms force off # Turn off the screen
 
-if [ "$waitTimeToSuspend" != '0' ]; then
+if [ "$waitTimeToSuspend" != 0 ]; then
     notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will suspend in ${waitTimeToSuspend} min $(echo; echo; date)"
     sleep "$waitTimeToSuspend"m
 
