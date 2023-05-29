@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 25/04/2023
+# Last update: 29/05/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -189,7 +189,7 @@ case $optionInput in
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') #$NC"
                     echo -e "\\n$RED    Obs$CYAN:$RED * root required,$BLUE = X server required$CYAN\\nOptions:"
 
-                    countOption='0'
+                    countOption=0
                     optionVectorSize=${#optionVector[*]}
                     while [ "$countOption" -lt "$optionVectorSize" ]; do
                         echo -e "    $GREEN${optionVector[$countOption]}$CYAN${optionVector[$countOption+1]}"
@@ -208,7 +208,7 @@ case $optionInput in
                     heightWhiptail=$((LINES - 5))
                     widthWhiptail=$((COLUMNS - 5))
 
-                    if [ "$LINES" -lt "16" ]; then
+                    if [ "$LINES" -lt 16 ]; then
                         echo -e "$RED\\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
                         echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\\n" | sed 's/  / /g'
                         $0 "$colorPrint" notPrintHeader --help
@@ -326,9 +326,9 @@ case $optionInput in
         read -r git_option
 
         git_command="git gc"
-        if [ "$git_option" == '2' ]; then
+        if [ "$git_option" == 2 ]; then
             git_command="$git_command --auto"
-        elif [ "$git_option" == '3' ]; then
+        elif [ "$git_option" == 3 ]; then
             git_command="$git_command --aggressive"
         fi
 
@@ -400,7 +400,7 @@ case $optionInput in
             allFolderOrNot=1
         fi
 
-        if [ "$allFolderOrNot" == '2' ]; then
+        if [ "$allFolderOrNot" == 2 ]; then
             recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
         else
             recursiveFolderValue=''
@@ -553,7 +553,7 @@ case $optionInput in
                 allFolderOrNot=1
             fi
 
-            if [ "$allFolderOrNot" == '2' ]; then
+            if [ "$allFolderOrNot" == 2 ]; then
                 recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
             else
                 recursiveFolderValue=''
@@ -737,7 +737,7 @@ case $optionInput in
             if [ "$mem_percentage" == '' ]; then
                 echo -e "$RED\\nError: Not found any process with the pattern $BLUE\"$process_pattern\"$RED. Try with another."
             else
-                mem_percentage_sum='0'
+                mem_percentage_sum=0
                 for mem_now in $mem_percentage; do
                     mem_percentage_sum=$(echo "scale=2; $mem_percentage_sum+$mem_now" | bc)
                 done
@@ -745,7 +745,7 @@ case $optionInput in
                 total_mem=$(free -m | head -n 2 | tail -n 1 | awk '{print $2}')
                 use_mem=$(echo "($total_mem*$mem_percentage_sum)/100" | bc)
 
-                if [ "$(echo "$mem_percentage_sum < 1" | bc -l)" == '1' ]; then
+                if [ "$(echo "$mem_percentage_sum < 1" | bc -l)" == 1 ]; then
                     mem_percentage_sum="0$mem_percentage_sum"
                 fi
 
@@ -793,7 +793,7 @@ case $optionInput in
 
         sizeResultFile=$(du "$tmpFileName" | cut -f1)
 
-        if [ "$sizeResultFile" != '0' ]; then
+        if [ "$sizeResultFile" != 0 ]; then
             echo -e "\\n\\nResults saved in \"$tmpFileName\" and \"$tmpFileFull\" tmp files\\n"
 
             echo -en "Open this files with kwrite or print them in the terminal?\\n(k)write - (t)erminal: "
@@ -1104,7 +1104,7 @@ case $optionInput in
         echo -e "$CYAN\\nMemory used: ~ $GREEN$memUsedPercentage % ($memUsed of $memTotal MiB)$CYAN"
 
         testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
-        if [ "$testSwap" -eq '0' ]; then
+        if [ "$testSwap" -eq 0 ]; then
             echo -e "Swap is not configured in this computer$NC"
         else
             swapTotal=$(free -m | grep Swap | awk '{print $2}')
@@ -1120,15 +1120,15 @@ case $optionInput in
         ;;
     "brigh-1" )
         echo -e "$CYAN# Set brightness percentage value (accept % value, up and down) #$NC"
-        if [ "$#" -eq '1' ]; then
-            brightnessValueOriginal='1'
+        if [ "$#" -eq 1 ]; then
+            brightnessValueOriginal=1
         else
             brightnessValueOriginal=$2
         fi
 
         if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-            if [ "$brightnessValueOriginal" -gt "100" ]; then # Test max percentage
-                brightnessValueOriginal="100"
+            if [ "$brightnessValueOriginal" -gt 100 ]; then # Test max percentage
+                brightnessValueOriginal=100
             fi
         fi
 
@@ -1159,7 +1159,7 @@ case $optionInput in
             brightnessValueFinal=$(echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc) # Get no value percentage vs Input value brightness
 
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-                if [ "$brightnessValueOriginal" -gt "99" ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
+                if [ "$brightnessValueOriginal" -gt 99 ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
                     brightnessValueFinal=$brightnessMax
                 fi
             fi
@@ -1180,13 +1180,13 @@ case $optionInput in
         ;;
     "brigh-2" )
         echo -e "$CYAN# Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %) #$NC"
-        if [ "$#" -eq '1' ]; then # Option without value set brightness in 1%
+        if [ "$#" -eq 1 ]; then # Option without value set brightness in 1%
             xbacklight -set 1
-        elif [ "$#" -eq '2' ]; then # Option to one value of input to set
+        elif [ "$#" -eq 2 ]; then # Option to one value of input to set
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
                 brightnessValue=$2
-                if [ "$brightnessValue" -gt "100" ]; then # Test max percentage
-                    brightnessValue="100"
+                if [ "$brightnessValue" -gt 100 ]; then # Test max percentage
+                    brightnessValue=100
                 fi
                 xbacklight -set "$brightnessValue"
             else
@@ -1198,7 +1198,7 @@ case $optionInput in
                     echo -e "$RED\\nError: Not recognized the value '$2' as valid option (accept % value, up, down, up % and down %)$NC"
                 fi
             fi
-        else #elif [ "$#" -eq '3' ]; then # Option to two value of input to set
+        else #elif [ "$#" -eq 3 ]; then # Option to two value of input to set
             if echo "$3" | grep -q "[[:digit:]]"; then # Test if has only digit
                 if [ "$2" == "up" ];then
                     xbacklight -inc "$3"
@@ -1240,13 +1240,13 @@ case $optionInput in
 
         echo -e "$CYAN# List the last package(s) $functionWord (accept 'n', where 'n' is a number of packages, the default is 10) #$NC\\n"
 
-        if [ "$#" -eq '1' ]; then
-            numberPackages="10"
+        if [ "$#" -eq 1 ]; then
+            numberPackages=10
         else
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
                 numberPackages=$2
             else
-                numberPackages="10"
+                numberPackages=10
             fi
         fi
 
@@ -1259,7 +1259,7 @@ case $optionInput in
         ;;
     "pdf-r" ) # Need Ghostscript
         echo -e "$CYAN# Reduce a PDF file #$NC"
-        if [ "$#" -eq '1' ]; then
+        if [ "$#" -eq 1 ]; then
             echo -e "$RED\\nError: Use $0 pdf-r file.pdf$NC"
         else # Convert the file
             filePdfInput=$2
@@ -1290,19 +1290,19 @@ case $optionInput in
                     read -r fileChangeOption
                 fi
 
-                if [ "$fileChangeOption" == '1' ]; then
+                if [ "$fileChangeOption" == 1 ]; then
                     sizeQuality="ebook"
-                elif [ "$fileChangeOption" == '2' ]; then
+                elif [ "$fileChangeOption" == 2 ]; then
                     sizeQuality="screen"
-                elif [ "$fileChangeOption" != '3' ]; then
-                    fileChangeOption='4'
+                elif [ "$fileChangeOption" != 3 ]; then
+                    fileChangeOption=4
                 fi
 
-                if [ "$fileChangeOption" != '4' ]; then
+                if [ "$fileChangeOption" != 4 ]; then
                     fileNamePart="_r${fileChangeOption}l${annotationsUse}.pdf" # r (reduce), l (link)
 
                     echo -e "$CYAN\\nRunning: $0 $1 $filePdfInput $fileChangeOption$NC\\n"
-                    if [ "$fileChangeOption" == '3' ]; then
+                    if [ "$fileChangeOption" == 3 ]; then
                         gs -sDEVICE=pdfwrite -dNOPAUSE $printedUse -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
                     else
                         gs -sDEVICE=pdfwrite $printedUse -dCompatibilityLevel=1.4 -dPDFSETTINGS=/"$sizeQuality" -dNOPAUSE -dBATCH -sOutputFile="$filePdfOutput$fileNamePart" "$filePdfInput"
@@ -1325,7 +1325,7 @@ case $optionInput in
     "swap-clean" )
         echo -e "$CYAN# Clean up the Swap Memory #$NC"
         testSwap=$(free -m | grep Swap | awk '{print $2}') # Test if has Swap configured
-        if [ "$testSwap" -eq '0' ]; then
+        if [ "$testSwap" -eq 0 ]; then
             echo -e "\\nSwap is not configured in this computer"
         else
             swapTotal=$(free -m | grep Swap | awk '{print $2}')
@@ -1334,7 +1334,7 @@ case $optionInput in
 
             echo -e "$CYAN\\nSwap used: ~ $GREEN$swapUsedPercentage % ($swapUsed of $swapTotal MiB)$NC"
 
-            if [ "$swapUsed" -eq '0' ]; then
+            if [ "$swapUsed" -eq 0 ]; then
                 echo -e "$CYAN\\nSwap is already clean$NC"
             else
                 if [ "$2" == '' ]; then
@@ -1366,10 +1366,10 @@ case $optionInput in
             echo -en "$CYAN\\nUsing blacklist: "
             if [ "$USEBL" == 'n' ]; then # Not using blacklist
                 echo -e "${GREEN}No$NC"
-                USEBL='0'
+                USEBL=0
             else # Using blacklist
                 echo -e "${GREEN}Yes$NC"
-                USEBL='1'
+                USEBL=1
             fi
 
             if [ "$installNew" == '' ]; then
@@ -1420,7 +1420,7 @@ case $optionInput in
                 echo -en "$CYAN 1 to recursively - 2 to only this folder (hit enter to only this folder):$NC "
                 read -r allFolderOrNot
 
-                if [ "$allFolderOrNot" == '1' ]; then
+                if [ "$allFolderOrNot" == 1 ]; then
                     recursiveFolderValue=''
                 else
                     recursiveFolderValue="-maxdepth 1" # Set the max deep to 1, or just this folder
@@ -1492,10 +1492,10 @@ case $optionInput in
         echo -e "\\n$BLUE Examples:\n$CYAN$(basename "$0") shred -f file.txt\\n$(basename "$0") shred -d dir/$N"
 
         folder_or_file=$2
-        tmp_count='3' # count of parameter to start list of files
+        tmp_count=3 # count of parameter to start list of files
         if echo "$folder_or_file" | grep -Eqv "f|d"; then
             folder_or_file='f'
-            tmp_count='2'
+            tmp_count=2
         fi
 
         OLD_IFS=$IFS
