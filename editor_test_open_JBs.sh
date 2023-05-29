@@ -26,21 +26,21 @@
 # Dica: pela interface do KDE-menu (ou outros) altere para o icone do seu editor padrão
 # por este script em vez de executar o "programName"
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 # To use, set in icon command:
 # /usr/bin/editor_test_open_JBs.sh programName, for example:
 # /usr/bin/editor_test_open_JBs.sh kwrite
 #
 editorText=$1 # Like kwrite and gedit
-if [ "$#" -lt '2' ]; then # text the count of parramters, 1 "editor" 2 "fileName"
+if [ "$#" -lt 2 ]; then # text the count of parramters, 1 "editor" 2 "fileName"
     $editorText # Just open the text editor
 else
     fileName=$2 # Nome do arquivo que irá abrir
     fileSizeMB=$(du -m "$fileName" | cut -f1) # Tamanho deste aquivo em kibibyte
 
     # Testa de tamanho do arquivo é maior que 100 MiB
-    if [ "$fileSizeMB" -gt "100" ]; then # = 100 MiB (mebibyte)
+    if [ "$fileSizeMB" -gt 100 ]; then # = 100 MiB (mebibyte)
         tmpFile=$(mktemp)
         echo "Aquivo muito grande para ser aberto no $editorText." > "$tmpFile"
         echo "Abra com outro programa." >> "$tmpFile"

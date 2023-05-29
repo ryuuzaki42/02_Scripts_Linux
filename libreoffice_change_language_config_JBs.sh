@@ -21,9 +21,9 @@
 #
 # Descrição: Script to download the last version of Slackware Live, made by AlienBob
 #
-# Last update: 17/05/2023
+# Last update: 29/05/2023
 #
-echo -e "\\n # Libreoffice change language configuration en-US to pt-BR or vice versa #\\n"
+echo -e "\\n # LibreOffice change language configuration en-US to pt-BR or vice versa #\\n"
 
 # ~/.config/libreoffice/4/user/registrymodifications.xcu
 cd ~/.config/libreoffice/4/user/ || exit
@@ -55,7 +55,7 @@ fi
 cp registrymodifications.xcu registrymodifications.xcu.back
 
 echo -n "    changed to: "
-if [ "$config_en_US" == '1' ]; then # en-US to pt-BR
+if [ "$config_en_US" == 1 ]; then # en-US to pt-BR
     sed -i "s/\"UILocale\" oor:op=\"fuse\"><value><\/value><\/prop><\/item>/\"UILocale\" oor:op=\"fuse\"><value>pt-BR<\/value><\/prop><\/item>/g" registrymodifications.xcu
 
     sed -i "s/>M\/D\/Y;M\/D</>D\/M\/Y;D\/M</g" registrymodifications.xcu
@@ -63,7 +63,7 @@ if [ "$config_en_US" == '1' ]; then # en-US to pt-BR
     sed -i "s/<value>en-US<\/value><\/prop><\/item>/<value>pt-BR<\/value><\/prop><\/item>/g" registrymodifications.xcu
 
     echo "pt-BR"
-else # "config_en_US" == '1' # pt-BR to en-US
+else # "config_en_US" == 1 # pt-BR to en-US
     sed -i "s/\"UILocale\" oor:op=\"fuse\"><value>pt-BR<\/value><\/prop><\/item>/\"UILocale\" oor:op=\"fuse\"><value><\/value><\/prop><\/item>/g" registrymodifications.xcu
 
     sed -i "s/>D\/M\/Y;D\/M</>M\/D\/Y;M\/D</g" registrymodifications.xcu
