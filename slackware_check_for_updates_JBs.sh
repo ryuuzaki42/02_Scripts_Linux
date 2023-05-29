@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 echo -e "\\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
@@ -52,7 +52,7 @@ while getopts "hscin" valuesInput; do
         's' | 'c' | 'i' )
             optionInput=$valuesInput ;;
         'n' )
-            notificationOff='1' ;;
+            notificationOff=1 ;;
         * )
            optionNotRecognized "$valuesInput" ;;
     esac
@@ -65,7 +65,7 @@ mirrorSuggestion() {
     mirrorPart1="http://slackware.uk/slackware/"
     mirrorCurrent="${mirrorPart1}slackware64-current/"
 
-    if echo "$slackwareArch" | grep -q "64"; then
+    if echo "$slackwareArch" | grep -q 64; then
         mirrorPart2="slackware64-$slackwareVersion/"
     else
         mirrorPart2="slackware-$slackwareVersion/"
@@ -119,26 +119,26 @@ getValidMirror() {
 
                 if [ ! -d "$mirrorDlTmp" ]; then
                     echo -e "\\nThe mirror folder don't exist: \"$mirrorDl\""
-                    mirrorNotValid='1'
+                    mirrorNotValid=1
                 else
                     if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
                         echo -e "\\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
-                        mirrorNotValid='1'
+                        mirrorNotValid=1
                     fi
                 fi
             else
                 if echo "$mirrorDl" | grep -vqE "^http:|^ftp:"; then
-                    mirrorNotValid='1'
+                    mirrorNotValid=1
                 fi
             fi
         else
             echo -e "\\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
             echo -e "        # Please active one mirror #"
-            mirrorNotValid='1'
+            mirrorNotValid=1
         fi
     fi
 
-    if [ "$mirrorNotValid" == '1' ]; then
+    if [ "$mirrorNotValid" == 1 ]; then
         if [ "$mirrorDl" != '' ]; then
             echo -e "        # This mirror is not valid #"
         fi
@@ -163,7 +163,7 @@ alinPrint() {
 }
 
 tracePrint() {
-    countTmp='1'
+    countTmp=1
     echo -n " "
     countTotal=$(echo "$count1 * 2 + $count2 * 2 + 13" | bc)
 
@@ -191,8 +191,8 @@ getUpdateMirror() {
     fi
     changePkgs=$(grep -E "txz|tgz" "$tmpFile") # Find packages to update
 
-    count1="20"
-    count2="55"
+    count1=20
+    count2=55
 
     echo
     tracePrint
@@ -211,7 +211,7 @@ getUpdateMirror() {
         packageVersionInstalled=$(find /var/log/packages/ -type f | grep "$packageName" | rev | cut -d '/' -f1 | rev)
         countPkg=$(echo -e "$packageVersionInstalled" | wc -l) # To test if found more than one package with "$packageName"
 
-        countPkgTmp='1'
+        countPkgTmp=1
         for pkg in $packageVersionInstalled; do
             pkgTmp=$(echo "$pkg" | rev | cut -d '-' -f4- | rev)
 
@@ -235,7 +235,7 @@ getUpdateMirror() {
 
         if [ "$locatePackage" == '' ]; then # To not print the last package (the already update in the Slackware)
             if [ "$packageVersionInstalled" != '' ]; then # To print only if the package has another version installed
-               updatesFound='1'
+               updatesFound=1
 
                 alinPrint "$packageName" "$count1"
                 alinPrint "$packageVersionInstalled" "$count2"
@@ -259,15 +259,15 @@ getUpdateMirror() {
     changesToShow=$(sed '/'"$valueToStopPrint"'/q' "$tmpFile")
 
     countLinesTmp=$(echo "$changesToShow" | grep -c "\+\-\-\-\-\-\-")
-    if [ "$countLinesTmp" == '0' ]; then
-        countLinesTmp='1'
+    if [ "$countLinesTmp" == 0 ]; then
+        countLinesTmp=1
     else
         ((countLinesTmp++))
     fi
 
     lastLineToPrint=$(cat -n "$tmpFile" | grep "\+\-\-\-\-\-\-" | grep -v '^\-\-$' | sed ''"$countLinesTmp"' q' | tail -n 1 | awk '{print $1}')
 
-    if [ "$updatesFound" == '1' ]; then
+    if [ "$updatesFound" == 1 ]; then
         updaesAvailable=$(sed ''"$lastLineToPrint"' q' "$tmpFile")
         updaesAvailable=$(echo -e "\\n+--------------------------+\\n$updaesAvailable")
 
@@ -305,7 +305,7 @@ getUpdateMirror() {
 
     rm "$tmpFile"
 
-    if [ "$notificationOff" != '1' ]; then
+    if [ "$notificationOff" != 1 ]; then
         eval "$notificationToSend"
     fi
 }

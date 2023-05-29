@@ -25,7 +25,7 @@
 #
 # Script: Run command at the timer ends
 #
-# Last update: 15/12/2022
+# Last update: 29/05/2023
 #
 echo -e "\\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
@@ -36,7 +36,7 @@ play -n synth 0.3 pluck A3 repeat 6 2> /dev/null"
 
 date_end=$1
 command_run=$2
-#test='1' # Only to test the code
+#test=1 # Only to test the code
 
 help(){
     echo -e "\\nSupport:"
@@ -56,7 +56,7 @@ help(){
     exit 0
 }
 
-if [ "$test" == '1' ]; then # To test
+if [ "$test" == 1 ]; then # To test
     echo -e "\\n - Test -"
     echo -e "Input date_end: \"$date_end\" - command_run: \"$command_run\""
     echo "\$1 \"$1\" \$2 \"$2\" \$3 \"$3\""
@@ -109,7 +109,7 @@ date_diff_sec=$(echo "$date_end_sec - $date_now_sec" | bc)
 date_diff_min=$(echo "scale=2; $date_diff_sec/60" | bc)
 date_diff_hour=$(echo "scale=2; $date_diff_sec/3600" | bc)
 
-if [ "$date_diff_sec" -lt '0' ]; then
+if [ "$date_diff_sec" -lt 0 ]; then
     echo -e "\\n    # Error: \$date_end ($date_end) is greater than \$date_now ($date_now) #\\n"
 else
     echo -e "\\n # Timer: ${date_diff_sec}s - ${date_diff_min}m - ${date_diff_hour}h #"
