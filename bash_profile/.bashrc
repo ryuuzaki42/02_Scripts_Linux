@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 08/02/2023
+# Last update: 29/05/2023
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -61,7 +61,7 @@ alias pagerLess='export PAGER="/usr/bin/less"'
 
 #HISTFILESIZE=500 # Count commands save in the history file
 
-if [ "$(id -u)" -eq '0' ]; then # User root
+if [ "$(id -u)" -eq 0 ]; then # User root
     PS1="\\[$(tput setaf 1)\\][\\u@\\h \D{%d/%m/%y %H:%M} \\w]# " # With color
     #PS1="\\[\\][\\u@\\h:\\w]# "               # Without color
 
@@ -151,7 +151,7 @@ cdFolder() {
     echo -e "\\n    cd $1\\n"
     cd "$1" || exit
 
-    if [ "$(find . -maxdepth 1 | wc -l)" -lt "10" ]; then
+    if [ "$(find . -maxdepth 1 | wc -l)" -lt 10 ]; then
         ls
         echo
     fi
@@ -165,10 +165,10 @@ alias cdgit='cdFolder $gitFolder'
 echoBlankLines() { # Print x blank lines on terminal
     lineNumber="$1"
     if [ "$lineNumber" == '' ] || ! echo "$lineNumber" | grep -q "[[:digit:]]"; then
-        lineNumber="10"
+        lineNumber=10
     fi
 
-    countEcho='0'
+    countEcho=0
     while [ "$countEcho" -lt "$lineNumber" ]; do
         echo
         ((countEcho++))
@@ -179,7 +179,7 @@ alias bl='echoBlankLines'
 cdMultipleTimes() { # Move up x directories
     countCd=$1
     if [ "$countCd" == '' ] || ! echo "$countCd" | grep -q "[[:digit:]]"; then
-        countCd='1'
+        countCd=1
     fi
 
     for ((i=countCd; i > 0; i--)); do
