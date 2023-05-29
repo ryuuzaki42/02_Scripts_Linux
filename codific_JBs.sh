@@ -22,7 +22,7 @@
 #
 # Script: Convert text UTF-8 to ISO-8859-1 (ISO Latin 1) and others
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 help() {
     echo -e "Use the file name (with extension) that want to convert"
@@ -30,7 +30,7 @@ help() {
     exit 0
 }
 
-if [ "$#" -lt '1' ]; then # Check if has passed the file name
+if [ "$#" -lt 1 ]; then # Check if has passed the file name
     echo -e "\\n$(basename "$0"): Error - need the pass file name\\n"
     help
 fi
@@ -74,7 +74,7 @@ else # In last case, if not one of the cod bellow, the script ends with error
     exit 1
 fi
 
-if [ "$?" -eq '1' ]; then
+if [ "$?" -eq 1 ]; then
     echo -e "Error in the run of iconv\\nTry $(basename "$0") -h"
     exit 1
 else
