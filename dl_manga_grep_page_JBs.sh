@@ -22,7 +22,7 @@
 #
 # Script: Download images (manga) from a link
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 echo -e "\\n# Download images (manga) from a link #\\n"
 
@@ -107,8 +107,8 @@ else
     IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\b"
 
     while [ "$chapterStart" -lt "$chapterEnd" ]; do # Run until chapter download equal to end chapter to download
-        zeroChapter='0' # Just for zero to 0 to 9
-        if [ "$chapterStart" -gt '9' ]; then
+        zeroChapter=0 # Just for zero to 0 to 9
+        if [ "$chapterStart" -gt 9 ]; then
             zeroChapter='' # Greater then 9, don't need zero in begin
         fi
         chapterDl="$zeroChapter$chapterStart"
@@ -122,7 +122,7 @@ else
 
         linksPageDl=$(echo -e "$linksPageDl" | sed 's/^\/\///g') # Remove "//" from the begin of some links
 
-        i='1'
+        i=1
         countImg=$(echo "$linksPageDl" | wc -l)
 
         mkdir "$mangaNameAndChapterDl" # Create folder to download the images

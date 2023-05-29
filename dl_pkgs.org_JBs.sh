@@ -22,7 +22,7 @@
 #
 # Script: Download Slackware packages (txz/tgz) from a https://pkgs.org/ website
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 programName=$1
 justUrl=$2
@@ -57,7 +57,7 @@ else
         countPackage=1
 
         for package in $packagesLink; do
-            if [ "$countPackage" -lt "10" ]; then
+            if [ "$countPackage" -lt 10 ]; then
                 echo -n " "
             fi
 
@@ -77,7 +77,7 @@ else
 
         ((countPackage++))
         if [ "$packageNumber" -lt "$countPackage" ]; then
-            countTmp='1'
+            countTmp=1
 
             for package in $packagesLink; do
                 if [ "$countTmp" == "$packageNumber" ]; then
