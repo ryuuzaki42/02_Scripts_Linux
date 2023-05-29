@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 23/02/2023
+# Last update: 29/05/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
 
@@ -37,6 +37,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.xsession-errors"
 "$HOME_USER/.config/VirtualBox/*log*"
 "$HOME_USER/VirtualBox VMs/*/Logs/"
+"$HOME_USER//.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
