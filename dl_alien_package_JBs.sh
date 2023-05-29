@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 03/11/2022
+# Last update: 29/05/2023
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -70,7 +70,7 @@ fi
 echo -en "\\nOnly \"t?z\" or all files?\\n1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
 read -r allOrNot
 
-if [ "$allOrNot" != '2' ]; then
+if [ "$allOrNot" != 2 ]; then
     extensionFile=".t\\?z"
 fi
 
