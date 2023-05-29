@@ -24,7 +24,7 @@
 # Mute the sound, brightness in 1% and CPU frequency in minimum available
 # If CPU frequency is already in powersave, will set to performance
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 # Be careful - script experimental
 #
@@ -32,11 +32,11 @@ if [ "$(whoami)" != "root" ]; then
     echo -e "\\nNeed to be superuser (root)\\nExiting"
 else
     if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/power_save_JBs.sh boot
-        optionRun='1' # Will make all change
+        optionRun=1 # Will make all change
     elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
-        optionRun='1' # Will make all change
+        optionRun=1 # Will make all change
     else
-        optionRun='2' # Will set cpu_frequency_scaling to performance
+        optionRun=2 # Will set cpu_frequency_scaling to performance
     fi
 
     cpu_frequency_scaling() {
@@ -46,7 +46,7 @@ else
         ## http://docs.slackware.com/howtos:hardware:cpu_frequency_scaling
 
         countCPU=$(cpufreq-info | grep -c "analyzing CPU")
-        i='0'
+        i=0
         while [ "$i" -lt "$countCPU" ]; do
             cpufreq-set --cpu $i --governor "$governorMode"
             ((i++))
@@ -56,7 +56,7 @@ else
 
     echo -e "\\n    # Changes made #"
 
-    if [ "$optionRun" == '1' ]; then
+    if [ "$optionRun" == 1 ]; then
         echo "Brightness: 1%"
         /usr/bin/usual_JBs.sh brigh-1 1 > /dev/null # Set brightness to 1%
 
@@ -95,9 +95,9 @@ else
         modulesToRemove+=" kvm_intel kvm"
 
         echo -n "# Removing modules: "
-        modulePrintCount='0'
+        modulePrintCount=0
         for value in $modulesToRemove; do # Remove modules
-            if [ "$(echo "$modulePrintCount%8" | bc)" == '0' ]; then
+            if [ "$(echo "$modulePrintCount%8" | bc)" == 0 ]; then
                 echo # Create a new line after print 8 modules
             fi
             ((modulePrintCount++))
@@ -107,30 +107,30 @@ else
         done
 
         muteSound() {
-            continue='0'
-            while [ "$continue" != '1' ]; do
+            continue=0
+            while [ "$continue" != 1 ]; do
                 processInfo=$(ps -ef)
                 if echo "$processInfo" | grep -q "X"; then
                     userNormal=$(w | grep -vE "root|USER|load average" | awk '{print $1}' | tail -n 1) # Grep one normal user
 
                     if [ "$userNormal" != '' ]; then
-                        export soundDevice='0' # Device number
+                        export soundDevice=0 # Device number
 
                         echo -e "Volume: muted\\n\\n"
                         su "$userNormal" -c "pactl set-sink-mute $soundDevice 1 > /dev/null" # Mute the device
 
-                        continue='1'
+                        continue=1
                     fi
                 fi
 
-                if [ "$userNormal" != '1' ]; then
+                if [ "$userNormal" != 1 ]; then
                     sleep 3s # Wait 3 s to try again
                 fi
             done
         }
         muteSound &
 
-    elif [ "$optionRun" == '2' ]; then
+    elif [ "$optionRun" == 2 ]; then
         cpu_frequency_scaling performance # This sets CPU frequency to the maximum available
 
         #rfkill unblock all # Enabling all wireless devices

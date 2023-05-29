@@ -22,15 +22,15 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 # Tip: Add a shortcut to this script
 #
 echo -e "\\n # Pomodoro app #"
 
-workTime="25" # Time in minutes
-shortBreak='5'
-longBreak="15"
+workTime=25 # Time in minutes
+shortBreak=5
+longBreak=15
 
 startEnter() {
     echo -n "Press enter to start..."
@@ -49,11 +49,11 @@ messageShow() {
     waitTime $workTime
 }
 
-countPomodoro='1'
-while [ "$countPomodoro" -lt '6' ]; do
+countPomodoro=1
+while [ "$countPomodoro" -lt 6 ]; do
     messageShow "Work $countPomodoro - Pomodoro" "Start to work ($workTime min)"
 
-    if [ "$countPomodoro" != '5' ]; then
+    if [ "$countPomodoro" != 5 ]; then
         messageShow "Break $countPomodoro - Pomodoro" "short break ($shortBreak min)"
     else
         messageShow "Break $countPomodoro - Pomodoro" "long break ($longBreak min)"
