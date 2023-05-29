@@ -22,16 +22,16 @@
 #
 # Script: Change the volume percentage and send notification (if wanted)
 #
-# Last update: 09/10/2022
+# Last update: 29/05/2023
 #
 help() {
     echo -e "\\nHelp message:\\nUsage: $0 \"soundDevice\" [up|down|min|max|overmax]"
-    echo -e "You can add '0' (zero) at the end the command to not send notification\\n"
+    echo -e "You can add 0 (zero) at the end the command to not send notification\\n"
     echo -e "If not pass the \"soundDevice\", the script will try find to device in use\\n"
     exit 0
 }
 
-if [ "$#" -lt '1' ]; then
+if [ "$#" -lt 1 ]; then
     help
 fi
 
@@ -39,8 +39,8 @@ soundDevice=$1 # Device number - Check with: aplay -l or pacmd list-sinks
 optionValue=$2 # Option wanted - [up|down|min|max|overmax]
 notification=$3 # Send notification? - If 0 will no send
 
-volStepChange='5'
-maxVol="100"
+volStepChange=5
+maxVol=100
 volCurrentPerc=$(pacmd list-sinks | grep "volume" | head -n 1 | cut -d '/' -f2 | cut -d '%' -f1 | tr -d "[:space:]")
 
 if echo "$soundDevice" | grep -vq "[[:digit:]]"; then # Shift the value if soundDevice is not inserted
@@ -53,7 +53,7 @@ fi
 if pacmd list-sinks | grep -q "muted: yes"; then
     pactl set-sink-mute "$soundDevice" 0 > /dev/null # Unmute
 
-    if [ "$notification" != '0' ]; then
+    if [ "$notification" != 0 ]; then
         notify-send "Volume unmuted" "Volume value: $volCurrentPerc%" -i "audio-volume-medium"
     fi
     exit 0
@@ -63,22 +63,22 @@ case $optionValue in
     "up" )
         volCurrentPerc=$((volCurrentPerc + volStepChange)) ;;
     "down" )
-        skipOverCheck='1'
+        skipOverCheck=1
 
         if [ "$volCurrentPerc" -gt "$volStepChange" ]; then
             volCurrentPerc=$((volCurrentPerc - volStepChange))
         else
-            volCurrentPerc='0'
+            volCurrentPerc=0
         fi
         ;;
     "max" )
         volCurrentPerc=$maxVol ;;
     "min" )
-        volCurrentPerc='0' ;;
+        volCurrentPerc=0 ;;
     "overmax" )
-        skipOverCheck='1'
+        skipOverCheck=1
 
-        if [ "$volCurrentPerc" -lt "100" ]; then
+        if [ "$volCurrentPerc" -lt 100 ]; then
             volCurrentPerc=$maxVol
         else
             volCurrentPerc=$((volCurrentPerc + volStepChange))
@@ -91,21 +91,21 @@ esac
 if [ -z "$skipOverCheck" ]; then
     if [ "$volCurrentPerc" -gt "$maxVol" ]; then
         volCurrentPerc=$maxVol
-    elif [ "$volCurrentPerc" -lt '0' ]; then
-        volCurrentPerc='0'
+    elif [ "$volCurrentPerc" -lt 0 ]; then
+        volCurrentPerc=0
     fi
 fi
 
 pactl set-sink-volume "$soundDevice" "${volCurrentPerc}%" > /dev/null
 
-if [ "$notification" != '0' ]; then
-    if [ "$volCurrentPerc" == '0' ]; then
+if [ "$notification" != 0 ]; then
+    if [ "$volCurrentPerc" == 0 ]; then
         iconName="audio-volume-muted"
     else
-        if [ "$volCurrentPerc" -lt "33" ]; then
+        if [ "$volCurrentPerc" -lt 33 ]; then
             iconName="audio-volume-low"
         else
-            if [ "$volCurrentPerc" -lt "67" ]; then
+            if [ "$volCurrentPerc" -lt 67 ]; then
                 iconName="audio-volume-medium"
             else
                 iconName="audio-volume-high"

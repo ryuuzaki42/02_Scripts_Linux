@@ -22,7 +22,7 @@
 #
 # Script:  usual / common day-to-day functions with Wi-Fi
 #
-# Last update: 03/11/2022
+# Last update: 29/05/2023
 #
 # Tip: If have NetworkManager installed and running, you can use nmtui
 #
@@ -124,7 +124,7 @@ case $optionInput in
                     echo -e "$CYAN# Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h') $NC"
                     echo -e "$CYAN\\nOptions:\\n$RED    Obs$CYAN:$RED * root required,$PINK + NetworkManager required$CYAN\\n"
 
-                    countOption='0'
+                    countOption=0
                     optionVectorSize=${#optionVector[*]}
                     while [ "$countOption" -lt "$optionVectorSize" ]; do
                         echo -e "    $GREEN${optionVector[$countOption]}$CYAN ${optionVector[$countOption+1]}$NC"
@@ -143,7 +143,7 @@ case $optionInput in
                     heightWhiptail=$((LINES - 5))
                     widthWhiptail=$((COLUMNS - 5))
 
-                    if [ "$LINES" -lt "16" ]; then
+                    if [ "$LINES" -lt 16 ]; then
                         echo -e "$RED\\nTerminal with very small size. Use one terminal with at least 16 columns (actual size line: $LINES columns: $COLUMNS)$NC"
                         echo -e "$GREEN\\nRunning: $0 $colorPrint notPrintHeader --help$CYAN\\n" | sed 's/  / /g'
                         $0 "$colorPrint" notPrintHeader --help
@@ -185,18 +185,18 @@ case $optionInput in
         /sbin/iwlist "$devInterface" scan | grep "ESSID" | uniq
 
         createWifiConfig() {
-            continueOrNot='0'
-            while [ "$continueOrNot" == '0' ]; do
+            continueOrNot=0
+            while [ "$continueOrNot" == 0 ]; do
                 echo -en "\\nName of the network (SSID): "
                 read -r netSSID
 
                 echo -en "\\nPassword of this network: "
                 read -r -s netPassword
 
-                if [ "$(wc -c <<< "$netPassword")" -lt '8' ]; then
+                if [ "$(wc -c <<< "$netPassword")" -lt 8 ]; then
                     echo -e "\\n\\nError: Passphrase must be 8..63 characters\\n Insert the values again!"
                 else
-                    continueOrNot='1'
+                    continueOrNot=1
                 fi
             done
 
