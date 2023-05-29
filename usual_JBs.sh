@@ -218,7 +218,7 @@ case $optionInput in
                         #whiptail --title "<title of box menu>" --menu "<text to be show>" <height> <width> <height of box menu> \
                         #[ <tag> <item> ] [ <tag> <item> ] [ <tag> <item> ]
 
-                        itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs: * root required, = X server required
+                        itemSelected=$(whiptail --title "#___ Script to usual commands ___#" --menu "Obs.: * root required, = X server required
 
                         Options:" $heightWhiptail $widthWhiptail $heightMenuBoxWhiptail \
                         "${optionVector[0]}" "${optionVector[1]}" \
@@ -474,7 +474,7 @@ case $optionInput in
                     echo "$filesDifferent" | sort -k 2
                 fi
             else
-                echo -e "$BLUE\\n### There is no unic file(s)! ###$NC"
+                echo -e "$BLUE\\n### There is no unique file(s)! ###$NC"
             fi
 
             tmpFolder="equal_files_"$RANDOM
@@ -619,7 +619,7 @@ case $optionInput in
 
                 filesEqual=$(echo "$fileAndMd5F2" | grep -E "$equalFiles") # Grep all files equal
 
-                echo -e "$BLUE\\n### File(s) equal sumary (only the equal file(s) in $GREEN\"$folder2\"$BLUE):$NC\\n$filesEqual"
+                echo -e "$BLUE\\n### File(s) equal summary (only the equal file(s) in $GREEN\"$folder2\"$BLUE):$NC\\n$filesEqual"
 
                 for value in $filesEqual; do
                     fileTmp=$(echo "$value" | cut -d " " -f3-) # Cut the second space from md5sum to end
@@ -642,7 +642,7 @@ case $optionInput in
                         echo "$filesDifferent" | sort -k 2
                     fi
                 else
-                    echo -e "$BLUE\\n### There is no unic file(s) ###$NC"
+                    echo -e "$BLUE\\n### There is no unique file(s) ###$NC"
                 fi
 
                 tmpFolder="equal_files_"$RANDOM
@@ -896,7 +896,7 @@ case $optionInput in
             partitionRoot=$(mount | grep "on / t" | cut -d ' ' -f1)
             dayCreated=$(dumpe2fs "$partitionRoot" 2> /dev/null | grep "Filesystem created" | cut -d ' ' -f9-)
             echo -e "$CYAN\\nThe system was installed in:$GREEN $dayCreated$NC"
-            echo -e "Obs: In some of the cases is just the day partition was created"
+            echo -e "Obs.: In some of the cases is just the day partition was created"
         }
 
         export -f dayInstall
@@ -1491,26 +1491,21 @@ case $optionInput in
         echo -e "\\n$BLUE Pass -f (or f) to work with files\\n Pass -d (or d) to work with directory$NC"
         echo -e "\\n$BLUE Examples:\n$CYAN$(basename "$0") shred -f file.txt\\n$(basename "$0") shred -d dir/$N"
 
-        folder_or_file=$2
-        tmp_count=3 # count of parameter to start list of files
-        if echo "$folder_or_file" | grep -Eqv "f|d"; then
-            folder_or_file='f'
-            tmp_count=2
-        fi
-
         OLD_IFS=$IFS
+        folder_or_file=$2
         if [ "$folder_or_file" == 'f' ] || [ "$folder_or_file" == '-f' ]; then # to shred files
             IFS='|'
-            # $@ expanded as "$1" "$2" "$3" ... "$n"
-            # $* expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
-            #echo "$*"
-            fileWork=${*:$tmp_count} # Get all files passed as parameter after $tmp_count
+            # $# - Count of parameters
+            # $@ - expanded as "$1" "$2" "$3" ... "$n"
+            # $* - expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
+            #echo -e "\$@: $@\\n\$*: $*"
+            fileWork=${*:3} # Get all files passed as parameter after third (0 script name, 1 shred, 2 f)
 
             if [ "$fileWork" == '' ]; then
                 echo -e "$RED\\nError: You need pass the file to work"
             else
-                echo -e "$CYAN\\nFile(s) to be overwritten and deleted::$BLUE"
-                echo "${fileWork//|/\n}" # Change | to \n
+                echo -e "$CYAN\\nFile(s) to be overwritten and deleted:$BLUE"
+                echo -e "${fileWork//|/\\n}" # Change | to \\n
 
                 echo -en "$RED\\nReally want to continue? (y)es or (n)o: $NC"
                 read -r continueOrNot
