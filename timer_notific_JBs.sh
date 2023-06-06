@@ -25,7 +25,7 @@
 #
 # Script: Run command at the timer ends
 #
-# Last update: 29/05/2023
+# Last update: 06/06/2023
 #
 echo -e "\\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
@@ -41,15 +41,19 @@ command_run=$2
 help(){
     echo -e "\\nSupport:"
     echo -e "    Date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\""
-    echo -e "    Now + time: + \"x hour y min z sec\""
+    echo -e "    Now + time: + \"X hour Y min Z sec\""
+    echo -e "    Now + time: + \"Xh Ymin Zs\""
     echo -e "    Command: \"command file\" or command"
+    echo -e "    d to default notification"
 
     echo -e "\\nExamples:"
     echo -e "    $script_name \"230113 12:21:45\" \"vlc music.mp3\""
     echo -e "    $script_name 22:42 d"
     echo -e "    $script_name 12 ark"
     echo -e "    $script_name + \"2 hour 7 min 3 sec\" d"
-    echo -e "    $script_name + \"10 min 30 sec\" d"
+    echo -e "    $script_name + \"2h 7min 3s\" vlc"
+    echo -e "    $script_name + \"10 min 30 sec\" firefox"
+    echo -e "    $script_name + \"10m\" d"
     echo -e "    test=\"1\" $script_name + \"45 sec\" d"
 
     echo -e "\\ndefault_notification: $default_notification\\n"
@@ -69,7 +73,10 @@ case $input in
     ;;
 
     '+') # of plus
-        echo -e "\nNow more: \"$command_run\""
+        # Change s to sec, m to min, h to hour
+        command_run=$(echo $command_run | sed 's/s$/sec/; s/m /min /; s/m$/min/; s/h /hour /; s/h$/hour/')
+        echo -e "\nNow + time: \"$command_run\""
+
         date_end=$(date -d "$command_run")
         command_run=$3
     ;;
@@ -109,18 +116,22 @@ date_diff_sec=$(echo "$date_end_sec - $date_now_sec" | bc)
 date_diff_min=$(echo "scale=2; $date_diff_sec/60" | bc)
 date_diff_hour=$(echo "scale=2; $date_diff_sec/3600" | bc)
 
+if echo "$date_diff_hour > 1" | bc -l > /dev/null; then
+    date_diff_hour="0$date_diff_hour" # Add 0 to begin of float number, like .1 to 0.1
+fi
+
 if [ "$date_diff_sec" -lt 0 ]; then
     echo -e "\\n    # Error: \$date_end ($date_end) is greater than \$date_now ($date_now) #\\n"
 else
-    echo -e "\\n # Timer: ${date_diff_sec}s - ${date_diff_min}m - ${date_diff_hour}h #"
+    echo -e "\\n # Timer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h #"
 
 #     notify-send "$script_name" "\\n-\\ndate_end: $date_end\\ncommand_run: $command_run\\n-
-#     \\ndate_diff_sec: ${date_diff_sec}s - ${date_diff_min}m - ${date_diff_hour}h" -i "clock"
+#     \\ndate_diff_sec: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
 
-    notify-send "$script_name" "\\n-\\nTimer: ${date_diff_sec}s - ${date_diff_min}m - ${date_diff_hour}h" -i "clock"
+    notify-send "$script_name" "\\n-\\nTimer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
 
-    echo -en "\\nsleep ${date_diff_sec}s ..."
-    sleep "${date_diff_sec}"s # sleep $date_diff seconds
+    echo -en "\\nsleep $date_diff_sec s ..."
+    sleep "$date_diff_sec"s # sleep $date_diff seconds
 
     echo -e "\\n\\ncommand_run: $command_run"
     eval "$command_run" # run the command
