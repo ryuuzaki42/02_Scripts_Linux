@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 29/05/2023
+# Last update: 06/06/2023
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -117,7 +117,7 @@ PS1_update(){ # ex: PS1_update $PS1 conda_test_env $
 
 #tput bold
 #alias tb='tput bold' # Bold
-alias nano='nano -c' # Nano with line number
+alias nano='nano -c' # nano with line number
 
 # egrep/fgrep/grep with color
 #alias egrep='egrep --color=auto'
@@ -133,12 +133,12 @@ alias mv='mv -v'
 alias rm='rm -v'
 alias rmdir='rmdir -v'
 
-# Sbotools (https://pink-mist.github.io/sbotools/)
+# Sbotools - https://pink-mist.github.io/sbotools/
 # sboinstall and sboupgrade to create txz instead tgz (Takes less disk space)
 #alias sboinstall='PKGTYPE=txz sboinstall'
 #alias sboupgrade='PKGTYPE=txz sboupgrade'
 
-# sbopkg (https://sbopkg.org/)
+# sbopkg - https://sbopkg.org/
 # sbopkg create txz instead tgz (Takes less disk space)
 alias sbopkg='PKGTYPE=txz sbopkg'
 
@@ -168,11 +168,7 @@ echoBlankLines() { # Print x blank lines on terminal
         lineNumber=10
     fi
 
-    countEcho=0
-    while [ "$countEcho" -lt "$lineNumber" ]; do
-        echo
-        ((countEcho++))
-    done
+    yes '' | head -n $lineNumber
 }
 alias bl='echoBlankLines'
 
