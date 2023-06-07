@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 29/05/2023
+# Last update: 06/06/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1381,10 +1381,13 @@ case $optionInput in
 
             echo -en "$CYAN\\nPress enter to continue.$NC"
             read -r _
+
             if [ "$installNew" != 'n' ]; then
+                yes '' | head -n 55
                 slackpkg install-new
             fi
 
+            yes '' | head -n 55
             USEBL=$USEBL slackpkg upgrade-all
         }
 
