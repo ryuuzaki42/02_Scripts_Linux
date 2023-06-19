@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
 
@@ -30,7 +30,7 @@
 HOME_USER=$HOME
 CLEAN_ALL=$1
 
-echo -e "\\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\\n"
+echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/"
@@ -73,7 +73,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 # "/tmp/plasma-csd-generator.*"
 # "/tmp/plasma-csd-generator.*/"
 
-IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for val in ${filesFoldersToRermove[*]}; do
     #echo "val: \"$val\""
 
@@ -85,7 +85,7 @@ for val in ${filesFoldersToRermove[*]}; do
 done
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
-    echo -en "\\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
+    echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
     read -r continue_or_not
 
     if [ "$continue_or_not" == 'y' ]; then
@@ -93,10 +93,10 @@ if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
         find /tmp/ -size 0 -print -delete
         find /tmp/ -empty -print -delete
 
-        echo -e "\\n # Recommendation: Restart your system! #"
+        echo -e "\n # Recommendation: Restart your system! #"
     else
         echo "Just exiting"
     fi
 fi
 
-echo -e "\\nEnd of script!\\n"
+echo -e "\nEnd of script!\n"
