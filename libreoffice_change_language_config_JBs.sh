@@ -21,9 +21,9 @@
 #
 # Descrição: Script to download the last version of Slackware Live, made by AlienBob
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
-echo -e "\\n # LibreOffice change language configuration en-US to pt-BR or vice versa #\\n"
+echo -e "\n # LibreOffice change language configuration en-US to pt-BR or vice versa #\n"
 
 # ~/.config/libreoffice/4/user/registrymodifications.xcu
 cd ~/.config/libreoffice/4/user/ || exit
