@@ -22,14 +22,14 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
     *) archDL=$(uname -m) ;;
 esac
 
-echo -e "\\n# This script download files/packages from one Alien mirror #\\n"
+echo -e "\n# This script download files/packages from one Alien mirror #\n"
 pathDl=$1 # Use the "pathDl" to download the packages instead the (full) folder
 
 #mirrorStart="http://www.slackware.com/~alien/sbrepos"
@@ -38,24 +38,24 @@ mirrorStart="https://slackware.uk/people/alien/sbrepos"
 
 echo "Default mirror: $mirrorStart"
 
-echo -en "\\nWant change the mirror?\\n(y)es - (n)o (press enter to no): "
+echo -en "\nWant change the mirror?\n(y)es - (n)o (press enter to no): "
 read -r changeMirror
 
 if [ "$changeMirror" == 'y' ]; then
     mirrorStart=''
 
     while echo "$mirrorStart" | grep -v -q -E "ftp|http"; do
-        echo -en "\\nType the new mirror: "
+        echo -en "\nType the new mirror: "
         read -r mirrorStart
 
         if echo "$mirrorStart" | grep -v -q -E "ftp|http"; then
-            echo -e "\\nError: the mirror \"$mirrorStart\" is not valid\\nOne valid mirror has \"ftp\" or \"http\""
+            echo -e "\nError: the mirror \"$mirrorStart\" is not valid\nOne valid mirror has \"ftp\" or \"http\""
         fi
     done
-    echo -e "\\nNew mirror: $mirrorStart"
+    echo -e "\nNew mirror: $mirrorStart"
 fi
 
-echo -en "\\nWith version Slackware you want? (press enter to 15.0): "
+echo -en "\nWith version Slackware you want? (press enter to 15.0): "
 read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
@@ -63,11 +63,11 @@ if [ "$versionSlackware" == '' ]; then
 fi
 
 if [ "$pathDl" == '' ]; then
-    echo -en "\\nType the path/program that want download: "
+    echo -en "\nType the path/program that want download: "
     read -r pathDl
 fi
 
-echo -en "\\nOnly \"t?z\" or all files?\\n1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
+echo -en "\nOnly \"t?z\" or all files?\n1 to only \"t?z\" - 2 to all (hit enter to only t?z): "
 read -r allOrNot
 
 if [ "$allOrNot" != 2 ]; then
@@ -82,14 +82,14 @@ runFileTmp=$(grep "$pathDl.*.$extensionFile$" < CHECKSUMS.md5)
 rm CHECKSUMS.md5
 runFile=$(echo "$runFileTmp" | cut -d '/' -f2-)
 
-echo -e "All packages found with \"$pathDl\":\\n$runFile"
+echo -e "All packages found with \"$pathDl\":\n$runFile"
 
-echo -e "\\nExclude some results based in some patterns?"
+echo -e "\nExclude some results based in some patterns?"
 echo -n "Hit enter to no or type the patterns (use | between the patterns, like: p1|p2): "
 read -r pathExclude
 
 if [ "$pathExclude" != '' ]; then
-    echo -e "\\nFiles excluded with \"$pathExclude\":"
+    echo -e "\nFiles excluded with \"$pathExclude\":"
     echo "$runFile" | grep -E "$pathExclude"
 
     runFileTmp=$(echo "$runFileTmp" | grep -vE "$pathExclude")
@@ -97,7 +97,7 @@ if [ "$pathExclude" != '' ]; then
 fi
 
 if [ "$runFile" != '' ]; then
-    echo -e "\\nCurrent packages found with \"$pathDl\":\\n$runFile\\n"
+    echo -e "\nCurrent packages found with \"$pathDl\":\n$runFile\n"
     echo -n "Want to continue and download them or no to only show the links? (y)es - (n)o (hit enter to yes): "
     read -r continueDl
 
@@ -120,9 +120,9 @@ if [ "$runFile" != '' ]; then
             echo "$mirrorDl/$fileGrep"
             echo "$mirrorDl/$fileGrep.md5"
         done
-        echo -e "\\nJust exiting by user choice"
+        echo -e "\nJust exiting by user choice"
     fi
 else
-    echo -e "\\nNot found any file to download"
+    echo -e "\nNot found any file to download"
 fi
 echo
