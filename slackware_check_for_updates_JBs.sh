@@ -24,24 +24,24 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
-echo -e "\\n # Script to check for Slackware updates #"
+echo -e "\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
 
 helpMessage() {
-    echo -e "\\nOptions:\\n    -h    this message"
+    echo -e "\nOptions:\n    -h    this message"
     echo "    -n    to turn notification off"
-    echo -e "\\n    # If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
+    echo -e "\n    # If has a mirror not valid in \"/etc/slackpkg/mirrors\" you can use:"
     echo "        -s    to select one mirror from stable version"
     echo "        -c    to select one mirror from current version"
-    echo -e "        -i    to insert your favorite mirror <ftp:|http:|file:>\\n"
+    echo -e "        -i    to insert your favorite mirror <ftp:|http:|file:>\n"
     exit 0
 }
 
 optionNotRecognized() {
-    echo -e "\\n    Error: The option: \"$1\" is not recognized"
-    echo -e "    For help run: $(basename "$0") -h\\n"
+    echo -e "\n    Error: The option: \"$1\" is not recognized"
+    echo -e "    For help run: $(basename "$0") -h\n"
     exit 1
 }
 
@@ -73,11 +73,11 @@ mirrorSuggestion() {
     mirrorFinal=$mirrorPart1$mirrorPart2
 
     if [ "$optionInput" == '' ]; then
-        echo -e "\\nSuggested mirrors to use:"
+        echo -e "\nSuggested mirrors to use:"
         echo " s - (stable)  - $mirrorFinal"
         echo " c - (current) - $mirrorCurrent"
         echo " i - Or insert your favorite mirror"
-        echo -en "\\nWhich mirror you want? (hit enter to stable): "
+        echo -en "\nWhich mirror you want? (hit enter to stable): "
         read -r optionInput
     fi
 
@@ -90,16 +90,16 @@ mirrorSuggestion() {
         testMirrorCommand="echo \"\$mirrorSource\" | grep -vqE \"^ftp:|^http:|^file:\""
 
         while eval "$testMirrorCommand"; do
-            echo -en "\\nType the new mirror: "
+            echo -en "\nType the new mirror: "
             read -r mirrorSource
 
             if eval "$testMirrorCommand"; then
-                echo -e "\\nError: the mirror \"$mirrorSource\" is not valid"
+                echo -e "\nError: the mirror \"$mirrorSource\" is not valid"
                 echo "One valid mirror has \"ftp:\", \"http:\" or \"file:\""
             fi
         done
 
-        echo -e "\\nNew mirror: $mirrorSource"
+        echo -e "\nNew mirror: $mirrorSource"
         mirrorDl=$mirrorSource
     else
         optionNotRecognized "$optionInput"
@@ -111,18 +111,18 @@ getValidMirror() {
         mirrorDl=$(grep -v "#" /etc/slackpkg/mirrors | head -n 1 | sed 's/ //g')
 
         if [ "$mirrorDl" != '' ]; then
-            echo -e "\\nMirror active in \"/etc/slackpkg/mirrors\":\\n\"$mirrorDl\""
+            echo -e "\nMirror active in \"/etc/slackpkg/mirrors\":\n\"$mirrorDl\""
 
             mirrorDlTest=$(echo "$mirrorDl" | cut -d "/" -f1)
             if [ "$mirrorDlTest" == "file:" ]; then
                 mirrorDlTmp=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
                 if [ ! -d "$mirrorDlTmp" ]; then
-                    echo -e "\\nThe mirror folder don't exist: \"$mirrorDl\""
+                    echo -e "\nThe mirror folder don't exist: \"$mirrorDl\""
                     mirrorNotValid=1
                 else
                     if [ ! -e "${mirrorDlTmp}ChangeLog.txt" ]; then
-                        echo -e "\\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
+                        echo -e "\nThe \"ChangeLog.txt\" file don't exist: \"${mirrorDlTmp}ChangeLog.txt\""
                         mirrorNotValid=1
                     fi
                 fi
@@ -132,7 +132,7 @@ getValidMirror() {
                 fi
             fi
         else
-            echo -e "\\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
+            echo -e "\nThere is no mirror active in \"/etc/slackpkg/mirrors\""
             echo -e "        # Please active one mirror #"
             mirrorNotValid=1
         fi
@@ -146,7 +146,7 @@ getValidMirror() {
         mirrorSuggestion
     fi
 
-    echo -e "\\nUsing the mirror: \"$mirrorDl\""
+    echo -e "\nUsing the mirror: \"$mirrorDl\""
     getUpdateMirror
 }
 
@@ -175,7 +175,7 @@ tracePrint() {
 }
 
 getUpdateMirror() {
-    echo -e "\\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
+    echo -e "\nGetting the \"ChangeLog.txt\" from: \"$mirrorDl\". Please wait..."
 
     tmpFile=$(mktemp) # Tmp file to save the "ChangeLog.txt"
 
@@ -183,10 +183,10 @@ getUpdateMirror() {
     if [ "$mirrorDlTest" == "file:" ]; then
         mirrorDl=$(echo "$mirrorDl" | cut -d '/' -f2-)
 
-        echo -e "\\n# cp \"${mirrorDl}ChangeLog.txt\" \"$tmpFile\" #"
+        echo -e "\n# cp \"${mirrorDl}ChangeLog.txt\" \"$tmpFile\" #"
         cp "${mirrorDl}ChangeLog.txt" "$tmpFile"
     else
-        echo -e "\\n# wget \"${mirrorDl}ChangeLog.txt\" -O \"$tmpFile\" #\\n"
+        echo -e "\n# wget \"${mirrorDl}ChangeLog.txt\" -O \"$tmpFile\" #\n"
         wget "${mirrorDl}ChangeLog.txt" -O "$tmpFile"
     fi
     changePkgs=$(grep -E "txz|tgz" "$tmpFile") # Find packages to update
@@ -269,14 +269,14 @@ getUpdateMirror() {
 
     if [ "$updatesFound" == 1 ]; then
         updaesAvailable=$(sed ''"$lastLineToPrint"' q' "$tmpFile")
-        updaesAvailable=$(echo -e "\\n+--------------------------+\\n$updaesAvailable")
+        updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
 
-        echo -e "$updaesAvailable\\n"
+        echo -e "$updaesAvailable\n"
 
         updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
 
         iconName="audio-volume-high"
-        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
+        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
     else
         updatesFound=0
         lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
@@ -290,16 +290,16 @@ getUpdateMirror() {
                 echo -e "\n # Kernel update: $lastKernelUpdate #\n"
 
                 iconName="audio-volume-high"
-                notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates available\" \"Kernel update: $lastKernelUpdate\" -i \"$iconName\"")
+                notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates available\" \"Kernel update: $lastKernelUpdate\" -i \"$iconName\"")
                 updatesFound=1
             fi
         fi
 
         if [ "$updatesFound" == 0 ]; then
-            echo -e "\\n        # Updates not found #\\n"
+            echo -e "\n        # Updates not found #\n"
 
             iconName="audio-volume-muted"
-            notificationToSend=$(echo -e "notify-send \"$(basename "$0")\\n\\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
+            notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates not found\" \"No news is good news\" -i \"$iconName\"")
         fi
     fi
 
