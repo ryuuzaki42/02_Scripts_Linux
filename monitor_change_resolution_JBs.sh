@@ -22,11 +22,11 @@
 #
 # Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
 # Tip: Add a shortcut to this script
 #
-echo -e "\\n # Script to change the resolution of monitors or/and projector #\\n"
+echo -e "\n # Script to change the resolution of monitors or/and projector #\n"
 
 if [ "$1" == "test" ]; then
     optionSelected=$2
@@ -68,15 +68,15 @@ activeOutput1MaxResolution=$(echo -e "$outputResolution" | sed -n '1p') # Grep t
 activeOutput2MaxResolution=$(echo -e "$outputResolution" | sed -n '2p')
 
 printTrace() {
-    echo -e "\\t|--------|------------|----------------|-----------|"
+    echo -e "\t|--------|------------|----------------|-----------|"
 }
 
 printTrace2() {
-    echo -e "\\t+--------------------------------------------------+"
+    echo -e "\t+--------------------------------------------------+"
 }
 
 printTrace2
-echo -e "\\t| Output | Status     | Max Resolution | Order     |"
+echo -e "\t| Output | Status     | Max Resolution | Order     |"
 printTrace
 printf "\t| %-7s" "$activeOutput1"
 
@@ -103,7 +103,7 @@ if [ "$activeOutput2" != '' ]; then
 else
     printTrace2
 
-    echo -e "\\n Only one output (\"$activeOutput1\") connected.\\n Just setting to max resolution!\\n"
+    echo -e "\n Only one output (\"$activeOutput1\") connected.\n Just setting to max resolution!\n"
     notify-send "Only one output (\"$activeOutput1\") connected." "Just setting to max resolution!" -i "preferences-desktop-wallpaper"
     xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
 
@@ -141,7 +141,7 @@ optionTmp0=" 0 - Other options"
 optionTmpf=" f - Finish"
 
 if [ "$optionSelected" == '' ]; then
-    echo -e "\\n$optionTmp1"
+    echo -e "\n$optionTmp1"
     echo "$optionTmp2"
     echo "$optionTmp3"
     echo "$optionTmp4"
@@ -154,18 +154,18 @@ if [ "$optionSelected" == '' ]; then
     echo "$optionTmp0"
     echo "$optionTmpf"
 
-    echo -en "\\nWith option you wish?: "
+    echo -en "\nWith option you wish?: "
     read -r optionSelected
 
     if [ "$optionSelected" == '' ]; then
-        echo -e "\\n\\tError: You need select one of the option listed\\n"
+        echo -e "\n\tError: You need select one of the option listed\n"
         exit 1
     fi
 fi
 
 justFinish() {
     if [ "$1" == 'f' ]; then
-        echo -e "\\nJust finish\\n"
+        echo -e "\nJust finish\n"
         exit 0
     fi
 }
@@ -186,14 +186,14 @@ case $optionSelected in
         diffResolutionPart2=$(echo "$activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2" | bc)
 
         if [ "$1" == "test" ]; then # Test propose
-            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2 - $activeOutput1Primary"
+            echo -e "\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2 - $activeOutput1Primary"
             echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2 - $activeOutput2Primary"
             echo "Diff_part2: ($activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2) = $diffResolutionPart2"
         fi
 esac
 
 if [ "$optionSelected" == 'c' ]; then
-    echo -e "\\n$optionTmpc"
+    echo -e "\n$optionTmpc"
     if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
         optionSelected=2
     else
@@ -203,7 +203,7 @@ fi
 
 case $optionSelected in
     'p' )
-        echo -e "\\n$optionTmpp\\n"
+        echo -e "\n$optionTmpp\n"
         if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput2" --mode 1024x768
             xrandr --output "$activeOutput1" --off
@@ -213,53 +213,53 @@ case $optionSelected in
         fi
         ;;
     1 )
-        echo -e "\\n$optionTmp1\\n"
+        echo -e "\n$optionTmp1\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
         xrandr --output "$activeOutput2" --off
         ;;
     2 )
-        echo -e "\\n$optionTmp2\\n"
+        echo -e "\n$optionTmp2\n"
         xrandr --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary
         xrandr --output "$activeOutput1" --off
         ;;
     3 )
-        echo -e "\\n$optionTmp3\\n"
+        echo -e "\n$optionTmp3\n"
         xrandr --output "$activeOutput1" --mode "$maximumEqualResolution"
         xrandr --output "$activeOutput2" --mode "$maximumEqualResolution" --same-as "$activeOutput1"
         ;;
     4 )
-        echo -e "\\n$optionTmp4\\n"
+        echo -e "\n$optionTmp4\n"
         xrandr --output "$activeOutput1" --mode 1024x768
         xrandr --output "$activeOutput2" --mode 1024x768 --same-as "$activeOutput1"
         ;;
     5 )
-        echo -e "\\n$optionTmp5\\n"
+        echo -e "\n$optionTmp5\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos "${activeOutput1MaxResolution_Part1}x0"
         ;;
     6 )
-        echo -e "\\n$optionTmp6\\n"
+        echo -e "\n$optionTmp6\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary --pos 0x0
         ;;
     7 )
-        echo -e "\\n$optionTmp7\\n"
+        echo -e "\n$optionTmp7\n"
         if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput1" --off
         else
-            echo -e "\\n\\tError: $activeOutput2 is off"
+            echo -e "\n\tError: $activeOutput2 is off"
             exit 1
         fi
         ;;
     8 )
-        echo -e "\\n$optionTmp8\\n"
+        echo -e "\n$optionTmp8\n"
         if echo "$activeOutput1Resolution" | grep -q "[[:digit:]]"; then
             xrandr --output "$activeOutput2" --off
         else
-            echo -e "\\n\\tError: $activeOutput1 is off"
+            echo -e "\n\tError: $activeOutput1 is off"
             exit 1
         fi
         ;;
     0 )
-        echo -e "\\n$optionTmp0"
+        echo -e "\n$optionTmp0"
         optionSelected=$optionSelectedTmp
 
         optionTmp9=" 9 - $activeOutput1 left-of $activeOutput2"
@@ -270,7 +270,7 @@ case $optionSelected in
         optionTmp14="14 - $activeOutput2 primary"
 
         if [ "$optionSelected" == '' ]; then
-            echo -e "\\n$optionTmp9"
+            echo -e "\n$optionTmp9"
             echo "$optionTmp10"
             echo "$optionTmp11"
             echo "$optionTmp12"
@@ -278,11 +278,11 @@ case $optionSelected in
             echo "$optionTmp14"
             echo "$optionTmpf"
 
-            echo -en "\\nWith option you wish?: "
+            echo -en "\nWith option you wish?: "
             read -r optionSelected
 
             if [ "$optionSelected" == '' ]; then
-                echo -e "\\n\\tError: You need select one of the option listed\\n"
+                echo -e "\n\tError: You need select one of the option listed\n"
                 exit 1
             fi
         fi
@@ -293,16 +293,16 @@ case $optionSelected in
         activeOutput2MaxResolution_actual=$(xrandr | grep "$activeOutput2" | sed 's/ primary//' | cut -d " " -f3 | cut -d "+" -f1)
 
         if [ "$1" == "test" ]; then ## Test propose
-            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_actual"
+            echo -e "\n$activeOutput1: $activeOutput1MaxResolution_actual"
             echo "$activeOutput2: $activeOutput2MaxResolution_actual"
         fi
 
         if echo "$activeOutput1MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is ative
-            echo -e "\\n\\tError: $activeOutput1 is not active\\n"
+            echo -e "\n\tError: $activeOutput1 is not active\n"
             activeOutputNotAtive=1
         else
             if echo "$activeOutput2MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is ative
-                echo -e "\\n\\tError: $activeOutput2 is not active\\n"
+                echo -e "\n\tError: $activeOutput2 is not active\n"
                 activeOutputNotAtive=1
             fi
         fi
@@ -320,43 +320,43 @@ case $optionSelected in
         fi
 
         if [ "$1" == "test" ]; then # Test propose
-            echo -e "\\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2"
+            echo -e "\n$activeOutput1: $activeOutput1MaxResolution_Part1 x $activeOutput1MaxResolution_Part2"
             echo "$activeOutput2: $activeOutput2MaxResolution_Part1 x $activeOutput2MaxResolution_Part2"
             echo "Diff_part2: ($activeOutput2MaxResolution_Part2 - $activeOutput1MaxResolution_Part2) = $diffResolutionPart2"
         fi
 
         case $optionSelected in
             9 )
-                echo -e "\\n$optionTmp9\\n"
+                echo -e "\n$optionTmp9\n"
                 xrandr --output "$activeOutput1" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --pos "${activeOutput1MaxResolution_Part1}x0"
                 ;;
             10 )
-                echo -e "\\n$optionTmp10\\n"
+                echo -e "\n$optionTmp10\n"
                 xrandr --output "$activeOutput1" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --pos 0x0
                 ;;
             11 )
-                echo -e "\\n$optionTmp11\\n"
+                echo -e "\n$optionTmp11\n"
                 xrandr --output "$activeOutput1" --above "$activeOutput2"
                 ;;
             12 )
-                echo -e "\\n$optionTmp12\\n"
+                echo -e "\n$optionTmp12\n"
                 xrandr --output "$activeOutput1" --below "$activeOutput2"
                 ;;
             13 )
-                echo -e "\\n$optionTmp13\\n"
+                echo -e "\n$optionTmp13\n"
                 xrandr --output "$activeOutput1" --primary
                 ;;
             14 )
-                echo -e "\\n$optionTmp14\\n"
+                echo -e "\n$optionTmp14\n"
                 xrandr --output "$activeOutput2" --primary
                 ;;
             * )
-                echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
+                echo -e "\n\tError: The option \"$optionSelected\" is not recognized\n"
                 exit 1
         esac
         ;;
     * )
-        echo -e "\\n\\tError: The option \"$optionSelected\" is not recognized\\n"
+        echo -e "\n\tError: The option \"$optionSelected\" is not recognized\n"
         exit 1
 esac
 
