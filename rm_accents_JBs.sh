@@ -22,15 +22,15 @@
 #
 # Script: remove accents in files and folders names based in a patthern
 #
-# Last update: 09/10/2022
+# Last update: 19/06/2023
 #
-IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
 if [ "$equalPart" == '' ]; then
-    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
-    echo -e "\\nExample: $(basename "$0") \"fíléWithàccents\""
-    echo -e "mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\\n"
+    echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files"
+    echo -e "\nExample: $(basename "$0") \"fíléWithàccents\""
+    echo -e "mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\n"
     exit
 fi
 
@@ -73,7 +73,7 @@ removeAccents(){
     file2=${file2//–/-}
 }
 
-echo -e "\\nRemove accents in \"*$equalPart*\" files:\\n"
+echo -e "\nRemove accents in \"*$equalPart*\" files:\n"
 for file in *"$equalPart"*; do
     removeAccents "$file"
     printf "%-80s -> $file2\n" "$file"
@@ -88,6 +88,6 @@ if [ "$continueOrNot" == 'y' ]; then
         mv -v "$file" "$file2"
     done
 else
-    echo -e "\\nJust exiting"
+    echo -e "\nJust exiting"
 fi
 echo
