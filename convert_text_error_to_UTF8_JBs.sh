@@ -22,7 +22,7 @@
 #
 # Script: Convert common errors from ISO-8859-1 (ISO Latin 1) accents to UTF-8
 #
-# Last update: 09/10/2022
+# Last update: 19/06/2023
 #
 # Online: https://onlineutf8tools.com/convert-ascii-to-utf8
 #
@@ -33,7 +33,7 @@
 #
 fileName=$1
 if [ "$fileName" == '' ]; then
-    echo -e "\\nError: Need to test if pass file as parameter to work\\n"
+    echo -e "\nError: Need to test if pass file as parameter to work\n"
     exit 1
 fi
 
@@ -101,7 +101,7 @@ s/Ãœ/Ü/g
 
 s/Ã‡/Ç/g' > "${fileNameTmp}_c.$fileExtension"
 
-    echo -e "\\nFile converted: ${fileNameTmp}_c.$fileExtension\\n"
+    echo -e "\nFile converted: ${fileNameTmp}_c.$fileExtension\n"
 else
-    echo -e "\\nError: The file \"$fileName\" don't has codification UTF-8, first convert it to UTF-8 with \"codific_JBs.sh\" \"$fileName\"\\n"
+    echo -e "\nError: The file \"$fileName\" don't has codification UTF-8, first convert it to UTF-8 with \"codific_JBs.sh\" \"$fileName\"\n"
 fi
