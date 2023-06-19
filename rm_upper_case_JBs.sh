@@ -22,20 +22,20 @@
 #
 # Script: remove uppercase in files and folders names based in a patthern
 #
-# Last update: 09/10/2022
+# Last update: 19/06/2023
 #
 # Be careful: Can move folders to inside another if the has the name of the another
 #
-IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
 if [ "$equalPart" == '' ]; then
-    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files\\n"
+    echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files\n"
     echo "Example 1: $(basename "$0") \"FILEWITHUPPERCASE\""
     echo "mv \"FILEWITHUPPERCASE.EXT\" -> \"filewithuppercase.ext\""
-    echo -e "\\nExample 2: $(basename "$0") \"txt\""
+    echo -e "\nExample 2: $(basename "$0") \"txt\""
     echo "mv \"FILEWITHUPPERCASE1.txt\" -> \"filewithuppercase1.txt\""
-    echo -e "mv \"FILEWITHUPPERCASE2.txt\" -> \"filewithuppercase2.txt\"\\n"
+    echo -e "mv \"FILEWITHUPPERCASE2.txt\" -> \"filewithuppercase2.txt\"\n"
     exit
 fi
 
@@ -45,7 +45,7 @@ fi
 # , first character of the string to lowercase
 # ,, whole string to the lowercase
 
-echo -e "\\nRemove uppercase in \"*$equalPart*\" files:\\n"
+echo -e "\nRemove uppercase in \"*$equalPart*\" files:\n"
 for file in *"$equalPart"*; do
     file2=${file,,}
     printf "%-80s -> $file2\n" "$file"
@@ -60,6 +60,6 @@ if [ "$continueOrNot" == 'y' ]; then
         mv -v "$file" "$file2"
     done
 else
-    echo -e "\\nJust exiting"
+    echo -e "\nJust exiting"
 fi
 echo
