@@ -22,19 +22,19 @@
 #
 # Script: remove one part of the name of files and folders based in a patthern
 #
-# Last update: 09/10/2022
+# Last update: 19/06/2023
 #
-IFS=$(echo -en "\\n\\b") # Change the Internal Field Separator (IFS) to "\\n\\b"
+IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPartToRemove=$1
 partToChange=$2
 
 if [ "$equalPartToRemove" == '' ]; then
-    echo -e "\\n# Error: Need to pass parameters to remove or change in the name of the files"
-    echo -e "\\nExample 1 (remove part of the name): $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
-    echo -e "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\"\\n"
+    echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files"
+    echo -e "\nExample 1 (remove part of the name): $(basename "$0") \".720p. 10bit.WEBRip.2CH \""
+    echo -e "mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\"\n"
     echo -e "# Or two values, to change the first by the second"
-    echo -e "\\nExample 2 (change part of the name): $(basename "$0") \"file2\" \"The movie\""
-    echo -e "mv \"file2.mkv\" -> \"The movie.mkv\"\\n"
+    echo -e "\nExample 2 (change part of the name): $(basename "$0") \"file2\" \"The movie\""
+    echo -e "mv \"file2.mkv\" -> \"The movie.mkv\"\n"
     exit
 fi
 
@@ -47,7 +47,7 @@ setFile2(){
     fi
 }
 
-echo -e "\\nRemove \"$equalPartToRemove\" in this files:\\n"
+echo -e "\nRemove \"$equalPartToRemove\" in this files:\n"
 for file in *"$equalPartToRemove"*; do
     setFile2 "$file"
     printf "%-80s -> $file2\n" "$file"
@@ -62,6 +62,6 @@ if [ "$continueOrNot" == 'y' ]; then
         mv -v "$file" "$file2"
     done
 else
-    echo -e "\\nJust exiting"
+    echo -e "\nJust exiting"
 fi
 echo
