@@ -25,9 +25,9 @@
 #
 # Script: Run command at the timer ends
 #
-# Last update: 06/06/2023
+# Last update: 19/06/2023
 #
-echo -e "\\n # Timer countdown until a end time/date #"
+echo -e "\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
 
 # Need sox and notify-send
@@ -39,14 +39,14 @@ command_run=$2
 #test=1 # Only to test the code
 
 help(){
-    echo -e "\\nSupport:"
+    echo -e "\nSupport:"
     echo -e "    Date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\""
     echo -e "    Now + time: + \"X hour Y min Z sec\""
     echo -e "    Now + time: + \"Xh Ymin Zs\""
     echo -e "    Command: \"command file\" or command"
     echo -e "    d to default notification"
 
-    echo -e "\\nExamples:"
+    echo -e "\nExamples:"
     echo -e "    $script_name \"230113 12:21:45\" \"vlc music.mp3\""
     echo -e "    $script_name 22:42 d"
     echo -e "    $script_name 12 ark"
@@ -56,12 +56,12 @@ help(){
     echo -e "    $script_name + \"10m\" d"
     echo -e "    test=\"1\" $script_name + \"45 sec\" d"
 
-    echo -e "\\ndefault_notification: $default_notification\\n"
+    echo -e "\ndefault_notification: $default_notification\n"
     exit 0
 }
 
 if [ "$test" == 1 ]; then # To test
-    echo -e "\\n - Test -"
+    echo -e "\n - Test -"
     echo -e "Input date_end: \"$date_end\" - command_run: \"$command_run\""
     echo "\$1 \"$1\" \$2 \"$2\" \$3 \"$3\""
 fi
@@ -85,24 +85,24 @@ esac
 date_now=$(date)
 
 if [ "$date_end" == '' ]; then
-    echo -en "\\nInsert the date/time to timer ends: "
+    echo -en "\nInsert the date/time to timer ends: "
     read -r date_end
 fi
 
 if ! echo -e "$date_end" | grep -q " "; then # Add %y%m%d to date_end with only %H%M
     date_tmp=$(date +%y%m%d)
     date_end="$date_tmp $date_end"
-    echo -e "\\ndate_end: \"$date_end\""
+    echo -e "\ndate_end: \"$date_end\""
 fi
 
 if [ "$command_run" == '' ]; then
-    echo -en "\\nInsert the command to run after timer ends (d or hit enter to \$default_notification): "
+    echo -en "\nInsert the command to run after timer ends (d or hit enter to \$default_notification): "
     read -r command_run
 
     if [ "$command_run" == '' ]; then
         command_run='d'
     fi
-    echo -e "\\ncommand_run: \"$command_run\""
+    echo -e "\ncommand_run: \"$command_run\""
 fi
 
 if [ "$command_run" == 'd' ]; then
@@ -121,18 +121,18 @@ if echo "$date_diff_hour > 1" | bc -l > /dev/null; then
 fi
 
 if [ "$date_diff_sec" -lt 0 ]; then
-    echo -e "\\n    # Error: \$date_end ($date_end) is greater than \$date_now ($date_now) #\\n"
+    echo -e "\n    # Error: \$date_end ($date_end) is greater than \$date_now ($date_now) #\n"
 else
-    echo -e "\\n # Timer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h #"
+    echo -e "\n # Timer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h #"
 
-#     notify-send "$script_name" "\\n-\\ndate_end: $date_end\\ncommand_run: $command_run\\n-
-#     \\ndate_diff_sec: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
+#     notify-send "$script_name" "\n-\ndate_end: $date_end\ncommand_run: $command_run\n-
+#     \ndate_diff_sec: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
 
-    notify-send "$script_name" "\\n-\\nTimer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
+    notify-send "$script_name" "\n-\nTimer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
 
-    echo -en "\\nsleep $date_diff_sec s ..."
+    echo -en "\nsleep $date_diff_sec s ..."
     sleep "$date_diff_sec"s # sleep $date_diff seconds
 
-    echo -e "\\n\\ncommand_run: $command_run"
+    echo -e "\n\ncommand_run: $command_run"
     eval "$command_run" # run the command
 fi
