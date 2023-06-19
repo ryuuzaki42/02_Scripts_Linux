@@ -22,11 +22,11 @@
 #
 # Script: aplicativo de pomodoro para terminal
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
 # Tip: Add a shortcut to this script
 #
-echo -e "\\n # Pomodoro app #"
+echo -e "\n # Pomodoro app #"
 
 workTime=25 # Time in minutes
 shortBreak=5
@@ -43,7 +43,7 @@ waitTime() {
 }
 
 messageShow() {
-    echo -e "\\n$1 - $2"
+    echo -e "\n$1 - $2"
     notify-send "$1" "$2" -i "clock"
 
     waitTime $workTime
@@ -62,5 +62,5 @@ while [ "$countPomodoro" -lt 6 ]; do
     ((countPomodoro++))
 done
 
-echo -e "\\n # Good work - Pomodoro End #\\n"
+echo -e "\n # Good work - Pomodoro End #\n"
 notify-send "Pomodoro End" "Good Work" -i "clock"
