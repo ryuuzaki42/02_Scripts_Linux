@@ -22,16 +22,16 @@
 #
 # Script: Convert text UTF-8 to ISO-8859-1 (ISO Latin 1) and others
 #
-# Last update: 29/05/2023
+# Last update: 19/06/2023
 #
 help() {
     echo -e "Use the file name (with extension) that want to convert"
-    echo -e "Example: $(basename "$0") file.srt\\n"
+    echo -e "Example: $(basename "$0") file.srt\n"
     exit 0
 }
 
 if [ "$#" -lt 1 ]; then # Check if has passed the file name
-    echo -e "\\n$(basename "$0"): Error - need the pass file name\\n"
+    echo -e "\n$(basename "$0"): Error - need the pass file name\n"
     help
 fi
 
@@ -42,7 +42,7 @@ esac
 
 fileName=$1
 if [ ! -e "$fileName" ]; then
-    echo -e "\\nThe file \"$fileName\" don't exist\\nTry \"$(basename "$0") -h\" or with another file\\n"
+    echo -e "\nThe file \"$fileName\" don't exist\nTry \"$(basename "$0") -h\" or with another file\n"
     exit 1
 fi
 
@@ -70,18 +70,18 @@ elif echo "$codification" | grep -q "Non-ISO extended-ASCII text"; then # Check 
 
     iconv -f iso-8859-1 -t utf-8//TRANSLIT "$fileName" > "$fileName2" # Convert file codification to utf-8 and save in another file
 else # In last case, if not one of the cod bellow, the script ends with error
-    echo -e "\\n codification unknown\\n The file was not converted\\n"
+    echo -e "\n codification unknown\n The file was not converted\n"
     exit 1
 fi
 
 if [ "$?" -eq 1 ]; then
-    echo -e "Error in the run of iconv\\nTry $(basename "$0") -h"
+    echo -e "Error in the run of iconv\nTry $(basename "$0") -h"
     exit 1
 else
-    echo -e "\\n## File has been converted with success ##\\n\"$fileName\" from $codStart to $codEnd"
+    echo -e "\n## File has been converted with success ##\n\"$fileName\" from $codStart to $codEnd"
     echo "\"$fileName\" -> \"$fileName2\""
 
-    echo -en "\\nOverwrite the original file?\\n(y)es, (n)o (hit enter to no): "
+    echo -en "\nOverwrite the original file?\n(y)es, (n)o (hit enter to no): "
     answerOver=$2
     if [ "$answerOver" == '' ]; then
         read -r answerOver
@@ -89,8 +89,8 @@ else
 
     if [ "$answerOver" == 'y' ]; then
         mv -v "$fileName2" "$fileName"
-        echo -e "\\nThe file has been overwrite\\n"
+        echo -e "\nThe file has been overwrite\n"
     else
-        echo -e "\\nThe file has not been overwrite\\n"
+        echo -e "\nThe file has not been overwrite\n"
     fi
 fi
