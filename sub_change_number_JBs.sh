@@ -24,12 +24,12 @@
 #
 # Script: Change values in one subtitle like: 2 to 1, 3 to 2, 4 to 3, and so on
 #
-# Last update: 09/05/2023
+# Last update: 19/06/2023
 #
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
-    echo -e "\\n# Error: Need to pass parameters (file name) to work with"
-    echo -e "\\nExample: $(basename "$0") movie.srt"
+    echo -e "\n# Error: Need to pass parameters (file name) to work with"
+    echo -e "\nExample: $(basename "$0") movie.srt"
     exit
 fi
 
