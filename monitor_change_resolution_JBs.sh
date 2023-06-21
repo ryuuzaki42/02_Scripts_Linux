@@ -22,20 +22,22 @@
 #
 # Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 19/06/2023
+# Last update: 21/06/2023
 #
 # Tip: Add a shortcut to this script
 #
 echo -e "\n # Script to change the resolution of monitors or/and projector #\n"
 
 if [ "$1" == "test" ]; then
-    optionSelected=$2
-    optionSelectedTmp=$3
-    resolutionOk=$4
+    optionSelected=$2    # If option part 1 (if is on part 2, pass 0)
+    optionSelectedTmp=$3 # If option is on part 2
+    resolutionOk=$4      # Ask for confirmation
+    notificationOff=$5   # Pass 1 to disable notification
 else
     optionSelected=$1
     optionSelectedTmp=$2
     resolutionOk=$3
+    notificationOff=$4
 fi
 
 outputConnected=$(xrandr | grep " connected") # Grep connected outputs
@@ -385,5 +387,7 @@ if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
     fi
 fi
 
-configurationSelected="optionTmp$optionSelected"
-notify-send "Monitor configuration changed" "${!configurationSelected}" -i "preferences-desktop-wallpaper"
+if [ "$notificationOff" != 1 ]; then
+    configurationSelected="optionTmp$optionSelected"
+    notify-send "Monitor configuration changed" "${!configurationSelected}" -i "preferences-desktop-wallpaper"
+fi
