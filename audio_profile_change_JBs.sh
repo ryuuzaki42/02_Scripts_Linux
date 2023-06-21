@@ -22,7 +22,7 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 19/06/2023
+# Last update: 21/06/2023
 #
 # Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
@@ -31,33 +31,38 @@
 #speakersAudio="output:analog-stereo"
 #hdmiAudio="output:hdmi-stereo"
 
+notificationOff=$1 # Pass 1 to disable the notification
+
 # Stereo with input
 speakersAudio="output:analog-stereo+input:analog-stereo"   # Notebook audio
 hdmiAudioA="output:hdmi-stereo-extra1+input:analog-stereo" # HDMI audio - starting with the cable not plugged
 hdmiAudioB="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starting with the cable plugged
 
-profileActive=$(pacmd list-cards | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
+allOutputs=$(pacmd list-cards | grep "output") # Grep all outputs
 
-echo -e "Profile now active $profileActive"
-echo -n "Profile changed to "
+profileActive=$(echo "$allOutputs" | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
+
+echo -e "\nProfile active now: $profileActive"
+echo -n "Profile changed to: "
 
 if echo "$profileActive" | grep -q "$speakersAudio"; then # Check if speakersAudio is active
-    profilePriority=$(pacmd list-cards | grep $hdmiAudioA | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
+    profilePriority=$(echo "$allOutputs" | grep $hdmiAudioA | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
 
     if [ "$profilePriority" == 6 ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
         finalValue=$hdmiAudioA
-#         echo -e "\n\n    hdmiAudioA\n" # To test
+        #echo -e "\n\n    hdmiAudioA\n" # To test
     else
         finalValue=$hdmiAudioB
-#         echo -e "\n\n    hdmiAudioB\n" # To test
+        #echo -e "\n\n    hdmiAudioB\n" # To test
     fi
 else
     finalValue=$speakersAudio
 fi
 
 pactl set-card-profile 0 $finalValue
+echo -e "$finalValue\n"
 
-# echo -e "$finalValue\n" # To test
-iconName="audio-volume-medium"
-
-notify-send "Profile audio changed" "Final value $finalValue" -i $iconName
+if [ "$notificationOff" != 1 ]; then
+    iconName="audio-volume-medium"
+    notify-send "Profile audio changed" "Final value $finalValue" -i $iconName
+fi
