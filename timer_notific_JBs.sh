@@ -25,14 +25,17 @@
 #
 # Script: Run command at the timer ends
 #
-# Last update: 19/06/2023
+# Last update: 23/06/2023
 #
 echo -e "\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
+date_now=$(date)
 
 # Need sox and notify-send
 default_notification="notify-send '$script_name' --expire-time=0 'Timer completed';
-play -n synth 0.3 pluck A3 repeat 6 2> /dev/null"
+play -n synth -j 3 sin %3 sin %-2 sin %-5 sin %-9 \
+sin %-14 sin %-21 fade h .01 2 1.5 delay \
+1.3 1 .76 .54 .27 remix - fade h 0 2.7 2.5 norm -1 2> /dev/null"
 
 date_end=$1
 command_run=$2
@@ -40,23 +43,23 @@ command_run=$2
 
 help(){
     echo -e "\nSupport:"
-    echo -e "    Date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\""
-    echo -e "    Now + time: + \"X hour Y min Z sec\""
-    echo -e "    Now + time: + \"Xh Ymin Zs\""
-    echo -e "    Command: \"command file\" or command"
-    echo -e "    d to default notification"
+    echo "    Date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\""
+    echo "    Now + time: + \"X hour Y min Z sec\""
+    echo "    Now + time: + \"Xh Ymin Zs\""
+    echo "    Command: \"command file\" or command"
+    echo "    d to default notification"
+
+    echo -e "\n    default_notification:\n$default_notification"
 
     echo -e "\nExamples:"
-    echo -e "    $script_name \"230113 12:21:45\" \"vlc music.mp3\""
-    echo -e "    $script_name 22:42 d"
-    echo -e "    $script_name 12 ark"
-    echo -e "    $script_name + \"2 hour 7 min 3 sec\" d"
-    echo -e "    $script_name + \"2h 7min 3s\" vlc"
-    echo -e "    $script_name + \"10 min 30 sec\" firefox"
-    echo -e "    $script_name + \"10m\" d"
-    echo -e "    test=\"1\" $script_name + \"45 sec\" d"
-
-    echo -e "\ndefault_notification: $default_notification\n"
+    echo "    $script_name \"230113 12:21:45\" \"vlc music.mp3\""
+    echo "    $script_name 22:42 d"
+    echo "    $script_name 12 ark"
+    echo "    $script_name + \"2 hour 7 min 3 sec\" d"
+    echo "    $script_name + \"2h 7min 3s\" vlc"
+    echo "    $script_name + \"10 min 30 sec\" firefox"
+    echo "    $script_name + \"20m\" d"
+    echo -e "    test=\"1\" $script_name + \"45 sec\" d\n"
     exit 0
 }
 
@@ -74,7 +77,7 @@ case $input in
 
     '+') # of plus
         # Change s to sec, m to min, h to hour
-        command_run=$(echo $command_run | sed 's/s$/sec/; s/m /min /; s/m$/min/; s/h /hour /; s/h$/hour/')
+        command_run=$(echo "$command_run" | sed 's/s$/sec/; s/m /min /; s/m$/min/; s/h /hour /; s/h$/hour/')
         echo -e "\nNow + time: \"$command_run\""
 
         date_end=$(date -d "$command_run")
@@ -82,16 +85,8 @@ case $input in
     ;;
 esac
 
-date_now=$(date)
-
-if [ "$date_end" == '' ]; then
-    echo -en "\nInsert the date/time to timer ends: "
-    read -r date_end
-fi
-
-if ! echo -e "$date_end" | grep -q " "; then # Add %y%m%d to date_end with only %H%M
-    date_tmp=$(date +%y%m%d)
-    date_end="$date_tmp $date_end"
+if ! echo -e "$date_end" | grep -q " "; then # Add %y%m%d to $date_end with only %H%M
+    date_end="$(date +%y%m%d) $date_end"
     echo -e "\ndate_end: \"$date_end\""
 fi
 
@@ -111,6 +106,9 @@ fi
 
 date_now_sec=$(date +%s -d "$date_now")
 date_end_sec=$(date +%s -d "$date_end")
+
+echo -e "\ndate_now: $date_now"
+echo "date_end: $date_end"
 
 date_diff_sec=$(echo "$date_end_sec - $date_now_sec" | bc)
 date_diff_min=$(echo "scale=2; $date_diff_sec/60" | bc)
@@ -136,3 +134,5 @@ else
     echo -e "\n\ncommand_run: $command_run"
     eval "$command_run" # run the command
 fi
+echo
+
