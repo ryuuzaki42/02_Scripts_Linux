@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 19/06/2023
+# Last update: 29/06/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -67,17 +67,6 @@ if [ "$testColorInput" == "testColor" ]; then
     echo -e "\n    Test colors: $RED RED $GREEN GREEN $NC NC $BLUE BLUE $CYAN CYAN\n"
     shift
 fi
-
-loadDevWirelessInterface() {
-    devInterface=$1
-
-    if [ "$devInterface" == '' ]; then
-        devInterface="wlan0"
-    fi
-
-    echo -e "\nWorking with the dev interface: $devInterface"
-    echo -e "You can pass other interface as a parameter\n"
-}
 
 optionInput=$1
 case $optionInput in
@@ -146,8 +135,8 @@ case $optionInput in
         "date-up     " "$RED * - Update the date"
         "day-s-i     " "$RED * - The day the system was installed"
         "file-equal  " "   - Look for equal files using md5sum in the current folder (and subfolders)"
-        "folder-equal" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
         "folder-diff " "   - Show the difference between two folders and (can) make them equal (with rsync)"
+        "folder-equal" "   - Look for equal files in \"folder2\" that are in \"folder1\" using md5sum"
         "git-gc      " "   - Run git gc (|--auto|--aggressive) in the subfolders"
         "git-up      " "   - Run git pull and force update to the local files (deleting changes) with the remote in the subfolders"
         "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
@@ -1032,7 +1021,7 @@ case $optionInput in
                             fi
 
                             if [ "$foldersNew" == '' ] && [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
-                                echo -e "$GREEN\nThe source folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
+                                echo -e "$GREEN\nSource folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
                             else
                                 echo -en "$CYAN\nShow full rsync change-summary?\n(y)es - (n)o:$NC "
                                 read -r showRsyncS
@@ -1053,7 +1042,7 @@ case $optionInput in
                                     echo -e "$CYAN\nChanges are writing in $pathDestination.$NC Please wait..."
                                     $rsyncCommand "$pathSource" "$pathDestination"
                                 else
-                                    echo -e "$CYAN\n    None change writes in disk$NC"
+                                    echo -e "$CYAN\n    No changes has made to disk$NC"
                                 fi
                             fi
                         fi
@@ -1064,7 +1053,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "$CYAN\n    None change writes on the disk$NC"
+                echo -e "$CYAN\n    No changes has made to disk$NC"
             fi
         fi
         ;;
