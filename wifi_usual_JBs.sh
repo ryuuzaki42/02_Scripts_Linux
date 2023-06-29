@@ -22,7 +22,7 @@
 #
 # Script:  usual / common day-to-day functions with Wi-Fi
 #
-# Last update: 19/06/2023
+# Last update: 29/06/2023
 #
 # Tip: If have NetworkManager installed and running, you can use nmtui
 #
@@ -75,7 +75,7 @@ loadDevWirelessInterface() {
         devInterface="wlan0"
     fi
 
-    echo -e "\nWorking with the dev interface: $devInterface"
+    echo -e "\nWorking with the interface: $devInterface"
     echo -e "You can pass other interface as a parameter\n"
 }
 
@@ -92,7 +92,7 @@ case $optionInput in
 
         loadDevWirelessInterface "$2"
 
-        echo -e "\n/usr/sbin/iw dev $devInterface link:"
+        echo -e "/usr/sbin/iw dev $devInterface link:"
         /usr/sbin/iw dev "$devInterface" link
 
         echo -e "\n/sbin/iwconfig $devInterface:"
@@ -114,7 +114,7 @@ case $optionInput in
         "nm-list  " "$PINK + - List the Wi-Fi AP around with the nmcli from NetworkManager"
         "w        " "   - Menu with whiptail, where you can call the options above (the same result with 'w' or '')")
 
-        if [ "$colorPrint" == '' ]; then # set useColor on again if the use not pass "noColor"
+        if [ "$colorPrint" == '' ]; then # set useColor on again if the user not pass "noColor"
             useColor
         fi
 
