@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 29/06/2023
+# Last update: 18/07/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -825,9 +825,9 @@ case $optionInput in
         echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
         echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
         echo -en "\nWant continue? (y)es - (n)o: "
-        read -r contineDd
+        read -r continueDd
 
-        if [ "$contineDd" == 'y' ]; then
+        if [ "$continueDd" == 'y' ]; then
             fileName="work-fbi_" # Create a ISO file with a random part name
             fileName+=$(date +%s | md5sum | head -c 10)
             fileName+=".iso"
@@ -948,20 +948,32 @@ case $optionInput in
         if [ $# -lt 3 ]; then
             echo -e "$RED\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
         else
-            echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
-            echo -e "The trailing slash (/) at the end of the first argument (source folder)"
-            echo -e "For example: \"rsync -a folder1/ folder2\" is necessary to mean \"the contents of folder1\""
-            echo -e "The alternative (without the trailing slash) would place folder1 (including the folder) within folder2"
-            echo -e "This would create a hierarchy that looks like: folder2/folder1/[files]"
-            echo -e "\n$CYAN## Please double-check your arguments before continue ##$NC"
-
             pathSource=$2
             pathDestination=$3
-            echo -e "$CYAN\nSource folder:$GREEN $pathSource$CYAN"
-            echo -e "Destination folder:$GREEN $pathDestination$NC"
 
-            echo -en "$CYAN\nWant continue and use these source and destination folders?\n(y)es - (n)o:$NC "
-            read -r continueRsync
+            continueOrNot='y'
+            if [ "${pathSource:0-1}" != '/' ]; then # Check if last caracter of $pathSource is /
+                echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
+                echo -e "The trailing slash (/) at the end of the first argument (source folder)"
+                echo -e "For example: \"rsync -a folder1/ folder2\" is necessary to mean \"the contents of folder1\""
+                echo -e "The alternative (without the trailing slash) would place folder1 (including the folder) within folder2"
+                echo -e "This would create a hierarchy that looks like: folder2/folder1/[files]"
+                echo -e "\n$CYAN## Please double-check your arguments before continue ##$NC"
+
+                echo -en "$CYAN\nThis is the correct desire?\n(y)es - (n)o (yes to continue or no to exit):$NC "
+                read continueOrNot
+            fi
+
+            if [ "$continueOrNot" == 'y' ]; then # Check if wants to continue after '/' test
+                echo -e "$CYAN\nSource folder:$GREEN $pathSource$CYAN"
+                echo -e "Destination folder:$GREEN $pathDestination$NC"
+
+                echo -en "$CYAN\nWant continue and use these source and destination folders?\n(y)es - (n)o:$NC "
+                read -r continueRsync
+            else
+                continueRsync='n'
+            fi
+
 
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if "source" exists
@@ -1053,7 +1065,7 @@ case $optionInput in
                     echo -e "$RED\nError: The source ($pathSource) don't exist$NC"
                 fi
             else
-                echo -e "$CYAN\n    No changes has made to disk$NC"
+                echo -e "$CYAN\n    Just existing. No changes has made to disk$NC"
             fi
         fi
         ;;
@@ -1427,9 +1439,9 @@ case $optionInput in
                     echo -en "$CYAN\nPackages to $functionWord:\n\n$NC$packagesToUpdate\n"
 
                     echo -en "$CYAN\nWant to continue? (y)es or (n)o:$NC "
-                    read -r contineOrNot
+                    read -r continueOrNot
 
-                    if [ "$contineOrNot" == "y" ]; then
+                    if [ "$continueOrNot" == "y" ]; then
                         kernelMd5sum=$(md5sum /boot/vmlinuz 2>/dev/null)
 
                         for value in $packagesToUpdate; do
@@ -1560,7 +1572,7 @@ case $optionInput in
 esac
 
 if [ "$notPrintHeaderHeader" != "notPrintHeader" ]; then
-    echo -e "$BLUE\n        #___ So Long, and Thanks for All the Fish ___#$NC"
+    echo -e "$BLUE\n        #___ So Long, and Thanks for All the Fish ___#\n$NC"
 else
     shift
 fi
