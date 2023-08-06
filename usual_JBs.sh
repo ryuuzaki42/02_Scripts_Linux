@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 18/07/2023
+# Last update: 06/08/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -144,6 +144,7 @@ case $optionInput in
         "l-pkg-i     " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-r     " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-u     " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
+        "kill        " "   - Search for program with pattern/name and (can) kill it"
         "mem-info    " "   - Show memory and swap percentage of use"
         "mem-max     " "   - Show the 10 process with more memory RAM use"
         "mem-use     " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
@@ -248,7 +249,8 @@ case $optionInput in
                         "${optionVector[70]}" "${optionVector[71]}" \
                         "${optionVector[72]}" "${optionVector[73]}" \
                         "${optionVector[74]}" "${optionVector[75]}" \
-                        "${optionVector[76]}" "${optionVector[77]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[76]}" "${optionVector[77]}" \
+                        "${optionVector[78]}" "${optionVector[79]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -674,6 +676,45 @@ case $optionInput in
             fi
         fi
         ;;
+     "kill" )
+        echo -e "$CYAN# Search for program with pattern/name and (can) kill it #$NC"
+
+        program_name=$2
+        if [ "$program_name" == '' ]; then
+            echo -en "\nInsert the program name: "
+            read -r program_name
+        fi
+
+        list_process=$(ps aux | grep -i "$program_name" | grep -vE "grep|$0")
+        if [ "$list_process" != '' ]; then
+
+            echo -e "\n$BLUE List of process:$NC"
+            echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
+            echo "$list_process"
+
+            PID=$(echo "$list_process" | awk '{print $2}')
+            echo -e "\n$BLUE PID(s):\n$NC$PID"
+
+            for process in $PID; do
+                echo -e "\n$CYAN PID: $RED$process$NC"
+                echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
+                echo -e "$list_process" | grep "  $process "
+
+                echo -en "$RED\nKill this process?\n(y)es - (n)o (hit enter to no or t no end function):$NC "
+                read -r kill_process
+
+                if [ "$kill_process" == 'y' ]; then
+                    echo " + kill -9 $process"
+                    kill -9 "$process"
+
+                elif [ "$kill_process" == 't' ]; then
+                    break
+                fi
+            done
+        else
+            echo -e "$RED\nError: Not found any process with \"$program_name\"."
+        fi
+        ;;
     "sub-extract" ) # Need ffmpeg
         echo -e "$CYAN# Extract subtitle from a video file #$NC"
 
@@ -961,7 +1002,7 @@ case $optionInput in
                 echo -e "\n$CYAN## Please double-check your arguments before continue ##$NC"
 
                 echo -en "$CYAN\nThis is the correct desire?\n(y)es - (n)o (yes to continue or no to exit):$NC "
-                read continueOrNot
+                read -r continueOrNot
             fi
 
             if [ "$continueOrNot" == 'y' ]; then # Check if wants to continue after '/' test
@@ -1493,13 +1534,13 @@ case $optionInput in
         ;;
     "shred" ) # To change the city go to http://wttr.in/ e type the city name on the URL
         echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
-
-        echo -e "\n$BLUE Pass -f (or f) to work with files\n Pass -d (or d) to work with directory$NC"
-        echo -e "\n$BLUE Examples:\n$CYAN$(basename "$0") shred -f file.txt\n$(basename "$0") shred -d dir/$N"
-
         OLD_IFS=$IFS
         folder_or_file=$2
-        if [ "$folder_or_file" == 'f' ] || [ "$folder_or_file" == '-f' ]; then # to shred files
+
+        if [ "$folder_or_file" == '' ]; then
+            echo -e "\n$BLUE Pass -f (or f) to work with files\n Pass -d (or d) to work with directory$NC"
+            echo -e "\n$BLUE Examples:\n$CYAN$(basename "$0") shred -f file.txt\n$(basename "$0") shred -d dir/$N"
+        elif [ "$folder_or_file" == 'f' ] || [ "$folder_or_file" == '-f' ]; then # to shred files
             IFS='|'
             # $# - Count of parameters
             # $@ - expanded as "$1" "$2" "$3" ... "$n"
@@ -1511,7 +1552,7 @@ case $optionInput in
                 echo -e "$RED\nError: You need pass the file to work"
             else
                 echo -e "$CYAN\nFile(s) to be overwritten and deleted:$BLUE"
-                echo -e "${fileWork//|/\n}" # Change | to \n
+                echo -e "${fileWork//|/\\n}" # Change | to \n
 
                 echo -en "$RED\nReally want to continue? (y)es or (n)o: $NC"
                 read -r continueOrNot
