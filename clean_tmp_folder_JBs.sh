@@ -22,14 +22,13 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 19/06/2023
+# Last update: 06/08/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
 
 #HOME_USER="/media/sda2/home/j/
 HOME_USER=$HOME
 CLEAN_ALL=$1
-
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
@@ -37,7 +36,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.xsession-errors"
 "$HOME_USER/.config/VirtualBox/*log*"
 "$HOME_USER/VirtualBox VMs/*/Logs/"
-"$HOME_USER//.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
+"$HOME_USER/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
@@ -98,5 +97,4 @@ if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
         echo "Just exiting"
     fi
 fi
-
 echo -e "\nEnd of script!\n"
