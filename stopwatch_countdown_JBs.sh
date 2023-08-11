@@ -63,12 +63,12 @@ option_value=$1
 time_value=$2
 case $option_value in
     's' )
-        echo -e "\n   Ctrl + C to terminate the Stopwatch"
+        echo -e "\n   Stopwatch - Ctrl + C to terminate"
         stopwatch ;;
     'c' )
         echo -e "\n   Countdown of \"$time_value\" seconds"
         countdown "$time_value"
-        echo "End of countdown" ;;
+        echo -e "\n\n   End of countdown\n" ;;
     "h" )
         help ;;
     * )
