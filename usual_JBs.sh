@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 06/08/2023
+# Last update: 19/08/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -154,6 +154,7 @@ case $optionInput in
         "pkg-count   " "   - Count of packages that are installed your Slackware"
         "pkg-i       " "$RED * - Install package(s) from a folder (and subfolders) in the Slackware"
         "pkg-u       " "$RED * - Upgrade package(s) from a folder (and subfolders) in the Slackware"
+        "pkg-r       " "$RED * - Remove package(s) from a folder (and subfolders) in the Slackware"
         "print-lines " "   - Print part of file (lineStart to lineEnd)"
         "s-pkg-f     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
         "s-pkg-s     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
@@ -250,7 +251,8 @@ case $optionInput in
                         "${optionVector[72]}" "${optionVector[73]}" \
                         "${optionVector[74]}" "${optionVector[75]}" \
                         "${optionVector[76]}" "${optionVector[77]}" \
-                        "${optionVector[78]}" "${optionVector[79]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[78]}" "${optionVector[79]}" \
+                        "${optionVector[80]}" "${optionVector[81]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -1447,7 +1449,7 @@ case $optionInput in
         su - root -c "updatedb" # Update database
         echo -e "$CYAN\nDatabase updated$NC"
         ;;
-    "pkg-i" | "pkg-u" )
+    "pkg-i" | "pkg-u" | "pkg-r" )
         folderWork=$2
         if [ "$folderWork" == '' ]; then
             echo -e "$RED\nError: You need pass the folder to work"
@@ -1459,6 +1461,9 @@ case $optionInput in
             elif [ "$optionInput" = "pkg-u" ]; then
                 functionWord="Upgrade"
                 commandToRun="upgradepkg"
+            elif [ "$optionInput" = "pkg-r" ]; then
+                functionWord="Remove"
+                commandToRun="removepkg"
             fi
             echo -e "$CYAN# $functionWord packge(s) in a folder (and subfolders) in the Slackware #$NC"
 
