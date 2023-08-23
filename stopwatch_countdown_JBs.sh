@@ -25,7 +25,7 @@
 # Script: stopwatch and countdown function
 # https://superuser.com/questions/611538
 #
-# Last update: 11/08/2023
+# Last update: 23/08/2023
 #
 stopwatch() {
     start=$(date +%s)
@@ -67,8 +67,13 @@ case $option_value in
         stopwatch ;;
     'c' )
         echo -e "\n   Countdown of \"$time_value\" seconds"
-        countdown "$time_value"
-        echo -e "\n\n   End of countdown\n" ;;
+        if [ "$time_value" == '' ]; then
+            echo -e "\n$(basename "$0") c : Error - need the \"time\" value"
+            help
+        else
+            countdown "$time_value"
+            echo -e "\n\n   End of countdown\n"
+        fi ;;
     "h" )
         help ;;
     * )
