@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 19/08/2023
+# Last update: 04/09/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -141,10 +141,10 @@ case $optionInput in
         "git-up      " "   - Run git pull and force update to the local files (deleting changes) with the remote in the subfolders"
         "help        " "   - Show this help message (the same result with \"help\", \"--help\", \"-h\" or 'h')"
         "ip          " "   - Get your IP"
+        "kill        " "   - Search for program with pattern/name and (can) kill it"
         "l-pkg-i     " "   - List the last package(s) installed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-r     " "   - List the last package(s) removed (accept 'n', where 'n' is a number of packages, the default is 10)"
         "l-pkg-u     " "   - List the last package(s) upgrade (accept 'n', where 'n' is a number of packages, the default is 10)"
-        "kill        " "   - Search for program with pattern/name and (can) kill it"
         "mem-info    " "   - Show memory and swap percentage of use"
         "mem-max     " "   - Show the 10 process with more memory RAM use"
         "mem-use     " "   - Get the all (shared and specific) use of memory RAM from one process/pattern"
@@ -153,8 +153,8 @@ case $optionInput in
         "ping-test   " "   - Run a ping-test on a domain (default is google.com)"
         "pkg-count   " "   - Count of packages that are installed your Slackware"
         "pkg-i       " "$RED * - Install package(s) from a folder (and subfolders) in the Slackware"
-        "pkg-u       " "$RED * - Upgrade package(s) from a folder (and subfolders) in the Slackware"
         "pkg-r       " "$RED * - Remove package(s) from a folder (and subfolders) in the Slackware"
+        "pkg-u       " "$RED * - Upgrade package(s) from a folder (and subfolders) in the Slackware"
         "print-lines " "   - Print part of file (lineStart to lineEnd)"
         "s-pkg-f     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-f of fast)"
         "s-pkg-s     " "   - Search in the installed package folder (/var/log/packages/) for one pattern (-r of summary files)"
