@@ -22,14 +22,21 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 06/08/2023
+# Last update: 19/09/2023
 # Tip: pass all to clean empty files/folder in /tmp
 #
 
-#HOME_USER="/media/sda2/home/j/
 HOME_USER=$HOME
 CLEAN_ALL=$1
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
+
+echo -en "Continue? (y)es or (n)o (enter to continue): "
+read -r continue_or_not
+
+if [ "$continue_or_not" != 'y' ] && [ "$continue_or_not" != '' ]; then
+    echo -e "\nJust exiting\n"
+    exit 0
+fi
 
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/"
@@ -89,12 +96,14 @@ if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
 
     if [ "$continue_or_not" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
-        find /tmp/ -size 0 -print -delete
-        find /tmp/ -empty -print -delete
+        cd /tmp/ || exit
+
+        find . -size 0 -print -delete
+        find . -empty -print -delete
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
-        echo "Just exiting"
+        echo -e "\nJust exiting\n"
     fi
 fi
 echo -e "\nEnd of script!\n"
