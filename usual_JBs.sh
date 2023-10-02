@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 04/09/2023
+# Last update: 02/10/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1296,7 +1296,7 @@ case $optionInput in
             fi
         fi
 
-        commandPart1='ls -ltc '"$workFolder"' | grep -v "total [[:digit:]]"'
+        commandPart1='ls -ltcG '"$workFolder"' | grep -v "total [[:digit:]]"'
         commandPart3=' | head -n '"$numberPackages"''
 
         commandFinal=$commandPart1$commandPart2$commandPart3
