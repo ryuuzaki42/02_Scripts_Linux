@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 02/10/2023
+# Last update: 28/11/2023
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -916,11 +916,29 @@ case $optionInput in
         ;;
     "cpu-max" )
         echo -e "$CYAN# Show the 10 process with more CPU use #$NC\n"
-        ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head -n 11
+        ps axo pid,%cpu,%mem,cmd --sort=-pcpu | head -n 11 | cut -d "-" -f1
         ;;
     "mem-max" )
         echo -e "$CYAN# Show the 10 process with more memory RAM use #$NC\n"
-        ps axo pid,%cpu,%mem,cmd --sort -rss | head -n 11
+        ps axo pid,%cpu,%mem,rss,cmd --sort -rss | head -n 11 | cut -d "-" -f1 | \
+        awk '{
+                for (x=1; x<=NF; x++) {
+                    if (x == 1) {
+                        printf("%-8s ", $x)
+                    }else if (x == 2 || x == 3) {
+                        printf("%-6s ", $x)
+                    }else if (x == 4) {
+                        if ($x == "RSS") {
+                            printf("%8s     ", $x)
+                        } else {
+                            printf("%8.2f MiB ", $x/1024)
+                        }
+                    } else {
+                        printf("%-8s ", $x)
+                    }
+                }
+                print("")
+            }'
         ;;
     "day-s-i" )
         echo -e "$CYAN# The day the system was installed #$NC"
