@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 28/11/2023
+# Last update: 14/02/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -260,8 +260,8 @@ case $optionInput in
 
                             if [ "${*}" != '' ]; then # Check if has more parameters
                                 $0 "$colorPrint" notPrintHeader "$itemSelected" "${*}"
-                            else
-                                $0 "$colorPrint" notPrintHeader "$itemSelected"
+                            else # If has no more parameters, pass with . (PWD)
+                                $0 "$colorPrint" notPrintHeader "$itemSelected" "."
                             fi
                         fi
                     fi
@@ -488,7 +488,8 @@ case $optionInput in
             if [ "$moveEqual" == 'y' ]; then
                 mkdir "$tmpFolder" 2> /dev/null
 
-                for value in $FilesToWork; do
+                FilesToWork_Name=$(echo "$FilesToWork" | cut -d ' ' -f3) # Only file name
+                for value in $FilesToWork_Name; do
                     createFolder=$(echo "$value" | grep "/")
 
                     if [ "$createFolder" != '' ]; then
