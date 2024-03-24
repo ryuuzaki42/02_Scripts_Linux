@@ -23,7 +23,7 @@
 # Script: Run a AppImage using local configuration (place of the AppImage file)
 # Create to folders to save the configuration files
 #
-# Last update: 14/03/2024
+# Last update: 24/03/2024
 #
 AppImage_File=$1
 if [ "$AppImage_File" == '' ]; then
@@ -41,9 +41,10 @@ if [ "$AppImage_File" == '-h' ]; then
     exit 0
 fi
 
-echo "AppImage_File: $AppImage_File $2 $3"
+other_parameters=${*:2} # Parameters from $2 onwards
+echo "AppImage_File: $AppImage_File $other_parameters"
 
-# Added permission to run
+# Add permission to run, may not have it yet
 chmod +x $AppImage_File
 
 # Create a portable home folder to use as $HOME
@@ -52,4 +53,4 @@ chmod +x $AppImage_File
 # Create a portable config folder to use as $XDG_CONFIG_HOME
 ./$AppImage_File --appimage-portable-config
 
-./$AppImage_File $2 $3
+./$AppImage_File $other_parameters
