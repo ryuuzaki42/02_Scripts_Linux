@@ -23,11 +23,14 @@
 # Script: Run a AppImage using local (place of the script) configuration
 # Create to folders to save the configuration files
 #
-# Last update: 28/02/2024
+# Last update: 04/03/2024
 #
-
-
 AppImage_File=$1
+if [ "$AppImage_File" == '' ]; then
+    echo -e "\n# Error: Need to pass parameters - the AppImage file name\n"
+    exit
+fi
+
 echo "AppImage_File: $AppImage_File"
 # Create a portable home folder to use as $HOME
 ./$AppImage_File --appimage-portable-home
