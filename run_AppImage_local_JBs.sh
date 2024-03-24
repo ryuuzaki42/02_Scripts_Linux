@@ -20,22 +20,36 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Run a AppImage using local (place of the script) configuration
+# Script: Run a AppImage using local configuration (place of the AppImage file)
 # Create to folders to save the configuration files
 #
-# Last update: 04/03/2024
+# Last update: 14/03/2024
 #
 AppImage_File=$1
 if [ "$AppImage_File" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters - the AppImage file name\n"
-    exit
+    echo -e "\n# Error: Need to pass parameters - the AppImage file name"
+    echo -e "For help message: $0 -h\n"
+    exit 1
 fi
 
-echo "AppImage_File: $AppImage_File"
+if [ "$AppImage_File" == '-h' ]; then
+    echo -e "\n Run an AppImage using local configuration (place of the AppImage file)"
+    echo " Will create folders to save the configuration files, *.AppImage.config/ *.AppImage.home/"
+    echo " OBS.: The application in the AppImage may save files in other folder, like home user folder"
+    echo -e "\n    Example: $0 Calibre-*-x86_64-1_JB.AppImage\n"
+
+    exit 0
+fi
+
+echo "AppImage_File: $AppImage_File $2 $3"
+
+# Added permission to run
+chmod +x $AppImage_File
+
 # Create a portable home folder to use as $HOME
 ./$AppImage_File --appimage-portable-home
 
 # Create a portable config folder to use as $XDG_CONFIG_HOME
 ./$AppImage_File --appimage-portable-config
 
-./$AppImage_File
+./$AppImage_File $2 $3
