@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 14/02/2024
+# Last update: 17/04/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -128,7 +128,8 @@ case $optionInput in
         fi
 
         # Options text
-        optionVector=("brigh-1     " "$RED * - Set brightness percentage value (accept % value, up and down)"
+        optionVector=("audio-extract " "   - Extract audio from a video file"
+        "brigh-1     " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2     " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
         "check-pkg-i " "   - Check if all packages in a folder (and subfolders) are installed"
         "cpu-max     " "   - Show the 10 process with more CPU use"
@@ -252,7 +253,8 @@ case $optionInput in
                         "${optionVector[74]}" "${optionVector[75]}" \
                         "${optionVector[76]}" "${optionVector[77]}" \
                         "${optionVector[78]}" "${optionVector[79]}" \
-                        "${optionVector[80]}" "${optionVector[81]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[80]}" "${optionVector[81]}" \
+                        "${optionVector[82]}" "${optionVector[83]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -749,6 +751,44 @@ case $optionInput in
                     fi
                 else
                     echo -e "$RED\nError: The subtitle number must be a number$NC"
+                fi
+            fi
+        else
+            echo -e "$RED\nError: Need pass the file name$NC"
+        fi
+        ;;
+     "audio-extract" ) # Need ffmpeg
+        echo -e "$CYAN# Extract audio from a video file #$NC"
+
+        fileName=$2
+        if [ "$fileName" != '' ]; then
+            audioInfoGeneral=$(ffmpeg -i "$fileName" 2>&1 | grep "Stream.*Audio") # Grep information about audio in the file
+            audioNumber=$(echo -e "$audioInfoGeneral" | cut -d":" -f2 | cut -d "(" -f1 | sed ':a;N;$!ba;s/\n/ /g') # Grep audio numbers
+            audioInfo=$(echo "$audioInfoGeneral" | cut -d":" -f2 | tr "(" " " | cut -d ")" -f1) # Grep audio number and language
+
+            if [ "$audioNumber" == '' ]; then # Empty if not found any audio in the file
+                echo -e "$RED\nError: Not found any audio in the file: $GREEN\"$fileName\""
+            else
+                echo -e "$CYAN\nAudio available in the file $GREEN\"$fileName\"$CYAN:$GREEN\n$audioInfo"
+                echo -en "$CYAN\nWhich one you want? (only valid numbers: $GREEN$audioNumber$CYAN): $NC"
+                read -r audioNumber
+
+                if echo "$audioNumber" | grep -q "[[:digit:]]"; then # Test if was insert only number
+                    lastPart=$(echo "$audioInfo" | grep "^$audioNumber ") # Grep the info (number language) about the audio wanted, if exists
+                    if [ "$lastPart" != '' ]; then
+                        echo -e "\nExtracting the audio \"$lastPart\" from the file \"$fileName\""
+                        fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
+                        echo -e "That will be save as \"$fileNameTmp-$lastPart.mp3\"\n"
+
+                        echo -e "${GREEN}Running:\nffmpeg -i \"$fileName\" -map 0:a:$audioNumber \"${fileNameTmp}-${lastPart}.mp3\"\n$NC"
+                        ffmpeg -i "$fileName" -map 0:a:"$audioNumber" "${fileNameTmp}-${lastPart}.mp3"
+
+                        echo -e "$CYAN\nAudio $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
+                    else
+                        echo -e "$RED\nError: Not found the audio $GREEN\"$audioNumber\"$RED in the file: $GREEN\"$fileName\"\n$CYAN one of: $GREEN$audioNumber$NC"
+                    fi
+                else
+                    echo -e "$RED\nError: The audio number must be a number$NC"
                 fi
             fi
         else
