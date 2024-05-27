@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 17/04/2024
+# Last update: 27/05/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -774,7 +774,9 @@ case $optionInput in
                 read -r audioNumber
 
                 if echo "$audioNumber" | grep -q "[[:digit:]]"; then # Test if was insert only number
-                    lastPart=$(echo "$audioInfo" | grep "^$audioNumber ") # Grep the info (number language) about the audio wanted, if exists
+                    ((audioNumber-=1)) # Remove 1, audio start in zero 0
+                    lastPart=$(echo "0 $audioInfo" | grep "^$audioNumber ") # Grep the info (number language) about the audio wanted, if exists
+
                     if [ "$lastPart" != '' ]; then
                         echo -e "\nExtracting the audio \"$lastPart\" from the file \"$fileName\""
                         fileNameTmp=$(echo "$fileName" | rev | cut -d "." -f2- | rev)
@@ -782,8 +784,7 @@ case $optionInput in
 
                         echo -e "${GREEN}Running:\nffmpeg -i \"$fileName\" -map 0:a:$audioNumber \"${fileNameTmp}-${lastPart}.mp3\"\n$NC"
                         ffmpeg -i "$fileName" -map 0:a:"$audioNumber" "${fileNameTmp}-${lastPart}.mp3"
-
-                        echo -e "$CYAN\nAudio $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.srt\"$NC"
+                        echo -e "$CYAN\nAudio $GREEN\"$lastPart\"$CYAN from $GREEN\"$fileName\"$CYAN saved as $GREEN\"${fileNameTmp}-${lastPart}.mp3\"$NC"
                     else
                         echo -e "$RED\nError: Not found the audio $GREEN\"$audioNumber\"$RED in the file: $GREEN\"$fileName\"\n$CYAN one of: $GREEN$audioNumber$NC"
                     fi
