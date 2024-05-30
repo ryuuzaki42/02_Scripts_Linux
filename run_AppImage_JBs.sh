@@ -20,8 +20,10 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Run a AppImage using local configuration (place of the AppImage file)
-# Create to folders to save the configuration files
+# Script: Works with AppImage, can run, view, portable run and extract
+#
+# Tip: Add desktop launcher with the script
+# Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
 # Last update: 30/05/2024
 #
@@ -44,22 +46,22 @@ if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
         -h, --help     Print this message
 
         -r, --run      Run the AppImage with the arguments passed
-            Example: $script_name Maestral-*-1_JB.AppImage -r gui
+            Example: $script_name Maestral-*_JB.AppImage -r gui
                 > gui is a parameter to this AppImage to run with gui
 
         -v, --view     View the files inside the AppImage
-            Mount the file and load the tmp folder with the file explorer
-            Example: $script_name Maestral-*-1_JB.AppImage -v
+            Mount the AppImage and load the tmp folder with the file explorer
+            Example: $script_name Maestral-*_JB.AppImage -v
 
-        -x, --extract  Extract the AppImage to a folder Prog*.AppImage.ext/
-            Example: $script_name Maestral-*-1_JB.AppImage -x
+        -x, --extract  Extract the Prog*.AppImage to a folder Prog*.AppImage.ext/
+            Example: $script_name Maestral-*_JB.AppImage -x
 
         -p, --portable Create a folder to home and other to configuration, then run the AppImage
             Run an AppImage using local configuration (place of the AppImage file) and the arguments passed
-            Will create folders to save the configuration files, *.AppImage.config/ *.AppImage.home/
+            Will create folders to save the configuration files: *.AppImage.config/ and *.AppImage.home/
             Obs.: The application in the AppImage may save files in other folder, like user home folder
 
-            Example: $script_name Maestral-*-1_JB.AppImage -p gui\n"
+            Example: $script_name Maestral-*_JB.AppImage -p gui\n"
     exit 0
 fi
 
@@ -127,7 +129,7 @@ elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ] \
         # Create a portable home folder to use as $HOME
         "$AppImage_File" --appimage-portable-home
 
-        # Create a portable config folder to use as $XDG_CONFIG_HOME
+        # Create a portable configuration folder to use as $XDG_CONFIG_HOME
         "$AppImage_File" --appimage-portable-config
     fi
 
