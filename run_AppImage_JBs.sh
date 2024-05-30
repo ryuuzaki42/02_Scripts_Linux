@@ -75,11 +75,8 @@ fi
 chmod +x "$AppImage_File" # Add permission to run, may not have it yet
 
 first_char="${AppImage_File:0:1}" # Extract the first character
-if [ "$first_char" == '/' ]; then #
-    echo "Full path"
-else # Add ./ to run the AppImage
-    echo "Relative path"
-    AppImage_File="./$AppImage_File"
+if [ "$first_char" != '/' ]; then # If $first_char == '/' is full path, if $first_char != '/' is relative path
+    AppImage_File="./$AppImage_File" # Add ./ to run the AppImage
 fi
 
 if [ "$option_run" == '' ]; then
