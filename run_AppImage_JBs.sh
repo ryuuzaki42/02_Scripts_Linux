@@ -112,10 +112,6 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     read -r do_close
 
     if [ "$do_close" == 'y' ] || [ "$do_close" == '' ]; then
-        #AppImage_File_Name=$(echo "$AppImage_File" | rev | cut -d '/' -f1 | rev) # Grep file Name
-        #echo "AppImage_File_Name: $AppImage_File_Name"
-
-        #PID=$(ps aux | grep "appimage-mount" | grep "$AppImage_File_Name" | awk '{print $2}' | head -n 1)
         PID=$(ps aux | grep "appimage-mount" | grep "$AppImage_File" | awk '{print $2}' | head -n 1)
         echo "PID: $PID"
         kill $PID
