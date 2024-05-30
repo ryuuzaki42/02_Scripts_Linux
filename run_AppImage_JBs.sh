@@ -28,32 +28,42 @@
 set -x
 
 AppImage_File=$1
-
 if [ "$AppImage_File" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters - the AppImage file name"
-    echo -e "For help message: $0 -h\n"
+    echo -e "\n# Error: Need to pass parameters - the AppImage file and one option"
+    echo -e "For help message: $(basename $0) -h\n"
     exit 1
 fi
 
 if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
+    script_name=$(basename $0)
     echo -e "
     Usage:
-    ./$(basename $0) [OPTIONS]
+    $script_name [AppImage] [OPTIONS]
 
     OPTIONS:
         -h, --help     Print this message
-        -v, --view     Mount AppImage and load folder with dolphin
+
         -r, --run      Run the AppImage with the arguments passed
+            Example: $script_name Maestral-*-1_JB.AppImage -r gui
+                > gui is a parameter to this AppImage to run with gui
+
+        -v, --view     View the files inside the AppImage
+            Mount the file and load the tmp folder with the file explorer
+            Example: $script_name Maestral-*-1_JB.AppImage -v
+
         -x, --extract  Extract the AppImage to a folder Prog*.AppImage.ext/
+            Example: $script_name Maestral-*-1_JB.AppImage -x
+
         -p, --portable Create a folder to home and other to configuration, then run the AppImage
             Run an AppImage using local configuration (place of the AppImage file) and the arguments passed
             Will create folders to save the configuration files, *.AppImage.config/ *.AppImage.home/
             Obs.: The application in the AppImage may save files in other folder, like user home folder
-            Example: ./$(basename $0) Calibre-*-x86_64-1_JB.AppImage -p\n"
+
+            Example: $script_name Maestral-*-1_JB.AppImage -p gui\n"
     exit 0
 fi
 
-if echo "$AppImage_File" | grep -iq "AppImage"; then
+if echo "$AppImage_File" | grep -iq "AppImage"; then # Check if is a AppImage file
     option_run=$2
     other_parameters=${*:3} # Parameters from $3 onwards
     echo -e "\nAppImage_File: \"$AppImage_File\" option_run: \"$option_run\" other_parameters: \"$other_parameters\"\n"
@@ -63,7 +73,6 @@ else
 fi
 
 chmod +x "$AppImage_File" # Add permission to run, may not have it yet
-
 
 first_char="${AppImage_File:0:1}" # Extract the first character
 if [ "$first_char" == '/' ]; then #
@@ -77,6 +86,7 @@ fi
 if [ "$option_run" == '' ]; then
     echo "Pass one option valid to work with the AppImage"
     echo "For help run: ./$(basename $0) -h"
+    exit 1
 
 elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     TMP_File=$(mktemp) # Create tmp file to save the mount point location
@@ -119,20 +129,22 @@ elif [ "$option_run" == "-x" ] || [ "$option_run" == "--extract" ]; then
     echo "check name folder"
     echo -e "\n AppImage: \"$AppImage_File\"\n Extracted to folder: \"${AppImage_File}.ext/\""
 
-elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ]; then
-    # Create a portable home folder to use as $HOME
-    "$AppImage_File" --appimage-portable-home
+elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ] \
+   || [ "$option_run" == '-r' ] || [ "$option_run" == "--run" ]; then # If $option_run is --run or --portable
 
-    # Create a portable config folder to use as $XDG_CONFIG_HOME
-    "$AppImage_File" --appimage-portable-config
+    if [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ]; then # Only if $option_run is --portable
+        # Create a portable home folder to use as $HOME
+        "$AppImage_File" --appimage-portable-home
 
-    "$AppImage_File" "$other_parameters"
-elif [ "$option_run" == '-r' ] || [ "$option_run" == "--run" ]; then
+        # Create a portable config folder to use as $XDG_CONFIG_HOME
+        "$AppImage_File" --appimage-portable-config
+    fi
+
     if [ "$other_parameters" == '' ]; then # If no parameter is passed
         "$AppImage_File"
     else
         "$AppImage_File" "$other_parameters"
     fi
 else
-    echo "BBB"
+    echo "Error: option \"$option_run\ not recognised"
 fi
