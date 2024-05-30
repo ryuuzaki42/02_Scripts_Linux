@@ -68,7 +68,7 @@ if echo "$AppImage_File" | grep -iq "AppImage"; then # Check if is a AppImage fi
     other_parameters=${*:3} # Parameters from $3 onwards
     echo -e "\nAppImage_File: \"$AppImage_File\" option_run: \"$option_run\" other_parameters: \"$other_parameters\"\n"
 else
-    echo "Error: \"$AppImage_File\" is no valid as AppImage"
+    echo "Error: \"$AppImage_File\" is no a AppImage file"
     exit 1
 fi
 
@@ -79,7 +79,6 @@ if [ "$first_char" == '/' ]; then #
     echo "Full path"
 else # Add ./ to run the AppImage
     echo "Relative path"
-    # Extract the first character
     AppImage_File="./$AppImage_File"
 fi
 
@@ -89,14 +88,14 @@ if [ "$option_run" == '' ]; then
     exit 1
 
 elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
-    TMP_File=$(mktemp) # Create tmp file to save the mount point location
-    "$AppImage_File" --appimage-mount > "$TMP_File" &
+    TMP_File=$(mktemp) # Create a tmp file to save the mount point location
+    "$AppImage_File" --appimage-mount > "$TMP_File" & # Mount AppImage
 
     sleep 1
     mount_point=$(cat "$TMP_File")
     rm -f "$TMP_File"
 
-    if [ -x /usr/bin/dolphin ]; then
+    if [ -x /usr/bin/dolphin ]; then # Check witch file explorer available
         file_explorer="dolphin"
     elif [ -x /usr/bin/thunar ]; then
         file_explorer="thunar"
@@ -107,7 +106,7 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
 
     "$file_explorer" "$mount_point"
 
-    echo " When you complete to check the files, responde y below to close/umount the AppImage: $mount_point"
+    echo " When has complete to check the files, respond y below to close and umount the AppImage in $mount_point"
     echo -en "\n Close the \"$AppImage_File\"?\n (y)es or (n)o - Enter to yes: "
     read -r do_close
 
@@ -119,11 +118,10 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     fi
 
 elif [ "$option_run" == "-x" ] || [ "$option_run" == "--extract" ]; then
-    "$AppImage_File" --appimage-extract
+    "$AppImage_File" --appimage-extract # Extract the AppImage
 
-    mv squashfs-root "${AppImage_File}.ext"
-    echo "check name folder"
-    echo -e "\n AppImage: \"$AppImage_File\"\n Extracted to folder: \"${AppImage_File}.ext/\""
+    mv squashfs-root/ "${AppImage_File}.ext/"
+    echo -e "\n AppImage: \"$AppImage_File\"\n Extracted to the folder: \"${AppImage_File}.ext/\""
 
 elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ] \
    || [ "$option_run" == '-r' ] || [ "$option_run" == "--run" ]; then # If $option_run is --run or --portable
@@ -136,7 +134,7 @@ elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ] \
         "$AppImage_File" --appimage-portable-config
     fi
 
-    if [ "$other_parameters" == '' ]; then # If no parameter is passed
+    if [ "$other_parameters" == '' ]; then # If no parameter were passed
         "$AppImage_File"
     else
         "$AppImage_File" "$other_parameters"
