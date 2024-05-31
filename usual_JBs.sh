@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 27/05/2024
+# Last update: 31/05/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -131,6 +131,7 @@ case $optionInput in
         optionVector=("audio-extract " "   - Extract audio from a video file"
         "brigh-1     " "$RED * - Set brightness percentage value (accept % value, up and down)"
         "brigh-2     " "$BLUE = - Set brightness percentage value with xbacklight (accept % value, up, down, up % and down %)"
+        "brigh-3     " "$BLUE = - Set brightness percentage value with xrandr (accept value, l, m, h, up and down)"
         "check-pkg-i " "   - Check if all packages in a folder (and subfolders) are installed"
         "cpu-max     " "   - Show the 10 process with more CPU use"
         "date-up     " "$RED * - Update the date"
@@ -254,7 +255,8 @@ case $optionInput in
                         "${optionVector[76]}" "${optionVector[77]}" \
                         "${optionVector[78]}" "${optionVector[79]}" \
                         "${optionVector[80]}" "${optionVector[81]}" \
-                        "${optionVector[82]}" "${optionVector[83]}" 3>&1 1>&2 2>&3)
+                        "${optionVector[82]}" "${optionVector[83]}" \
+                        "${optionVector[84]}" "${optionVector[85]}" 3>&1 1>&2 2>&3)
 
                         if [ "$itemSelected" != '' ]; then
                             itemSelected=${itemSelected// /} # Remove space in the end of selected item
@@ -1320,6 +1322,58 @@ case $optionInput in
 
         brighCurrentValue=$(xbacklight -get | cut -d '.' -f1)
         notify-send "Brightness percentage change" "Final value: $brighCurrentValue %" -i "high-brightness"
+        ;;
+    "brigh-3" )
+        echo -e "$CYAN# Set brightness percentage value with xrandr (accept value, l, m, h, up and down) #$NC"
+        output=$2
+        brightness_Value=$3
+
+        active_Output_1=$(xrandr | grep " connected" | sed -n '1p' | cut -d ' ' -f1)
+        active_Output_2=$(xrandr | grep " connected" | sed -n '2p' | cut -d ' ' -f1)
+
+        if [ "$active_Output_2" == '' ]; then # Check if has a second output
+            output=1 # Set first output if has only one
+            #brightness_Value=$2 # Disable - in test if pass value and output when has only one
+        fi
+
+        if [ "$output" == '' ]; then
+            echo -e "${CYAN}Which output use: 1 $active_Output_1 or 2 $active_Output_2: "
+            read -r output
+        fi
+
+        if [ "$output" == 2 ]; then
+            active_Output=$active_Output_2
+        else
+            active_Output=$active_Output_1
+        fi
+        echo -e "${BLUE}Output: $GREEN$active_Output$NC"
+
+        if [ "$brightness_Value" == '' ]; then
+            echo -e "$CYAN\nBrightness value to use:"
+            echo "Between 0 and 1, like 0.5"
+            echo "Or l(ow) to 0.3, m(edian) to 0.5 and h(igh) to 1"
+            echo "Or up to increase 0.1, down to decrease 0.1"
+            echo -e -n "Which value use?:$NC "
+            read -r brightness_Value
+        fi
+
+        brightness_Value_Current=$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')
+        echo -e "${BLUE}Current brightness: $GREEN$brightness_Value_Current$NC"
+
+        if [ "$brightness_Value" == 'l' ]; then
+            brightness_Value=0.3
+        elif [ "$brightness_Value" == 'm' ]; then
+            brightness_Value=0.5
+        elif [ "$brightness_Value" == 'h' ] || [ "$brightness_Value" == '' ]; then
+            brightness_Value=1
+        elif [ "$brightness_Value" == 'up' ]; then
+            brightness_Value=$(echo "scale=2; $brightness_Value_Current" + 0.1 | bc)
+        elif [ "$brightness_Value" == 'down' ]; then
+            brightness_Value=$(echo "scale=2; $brightness_Value_Current" - 0.1 | bc)
+        fi
+
+        xrandr --output "$active_Output" --brightness "$brightness_Value"
+        echo -e "${BLUE}Brightness set to: $GREEN$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')$NC"
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
