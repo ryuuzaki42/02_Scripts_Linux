@@ -25,19 +25,19 @@
 # Tip: Add desktop launcher with the script
 # Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
-# Last update: 30/05/2024
+# Last update: 31/05/2024
 #
 set -x
 
 AppImage_File=$1
 if [ "$AppImage_File" == '' ]; then
     echo -e "\n# Error: Need to pass parameters - the AppImage file and one option"
-    echo -e "For help message: $(basename $0) -h\n"
+    echo -e "For help message: $(basename "$0") -h\n"
     exit 1
 fi
 
 if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
-    script_name=$(basename $0)
+    script_name=$(basename "$0")
     echo -e "
     Usage:
     $script_name [AppImage] [OPTIONS]
@@ -83,7 +83,7 @@ fi
 
 if [ "$option_run" == '' ]; then
     echo "Pass one option valid to work with the AppImage"
-    echo "For help run: ./$(basename $0) -h"
+    echo "For help run: ./$(basename "$0") -h"
     exit 1
 
 elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
@@ -112,7 +112,7 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     if [ "$do_close" == 'y' ] || [ "$do_close" == '' ]; then
         PID=$(ps aux | grep "appimage-mount" | grep "$AppImage_File" | awk '{print $2}' | head -n 1)
         echo "PID: $PID"
-        kill $PID
+        kill "$PID"
         #kill -9 $PID
     fi
 
