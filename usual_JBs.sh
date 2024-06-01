@@ -719,7 +719,7 @@ case $optionInput in
                 fi
             done
         else
-            echo -e "$RED\nError: Not found any process with \"$program_name\"."
+            echo -e "$RED\nError: Not found any process with \"$program_name\""
         fi
         ;;
     "sub-extract" ) # Need ffmpeg
@@ -1229,61 +1229,61 @@ case $optionInput in
     "brigh-1" )
         echo -e "$CYAN# Set brightness percentage value (accept % value, up and down) #$NC"
         if [ "$#" -eq 1 ]; then
-            brightnessValueOriginal=1
+            brightness_Value_Original=1
         else
-            brightnessValueOriginal=$2
+            brightness_Value_Original=$2
         fi
 
         if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-            if [ "$brightnessValueOriginal" -gt 100 ]; then # Test max percentage
-                brightnessValueOriginal=100
+            if [ "$brightness_Value_Original" -gt 100 ]; then # Test max percentage
+                brightness_Value_Original=100
             fi
         fi
 
         if [ -f /sys/class/backlight/acpi_video0/brightness ]; then # Choose the your path from "files brightness"
-            pathFile="/sys/class/backlight/acpi_video0"
+            path_File="/sys/class/backlight/acpi_video0"
         elif [ -f /sys/class/backlight/intel_backlight/brightness ]; then
-            pathFile="/sys/class/backlight/intel_backlight"
+            path_File="/sys/class/backlight/intel_backlight"
         else
             echo -e "$RED\nError: File to set brightness not found$NC"
         fi
 
-        if [ "$pathFile" != '' ]; then
-            brightnessMax=$(cat "$pathFile"/max_brightness) # Get max_brightness
-            brightnessPercentage=$(echo "scale=3; $brightnessMax/100" | bc) # Get the percentage of 1% from max_brightness
+        if [ "$path_File" != '' ]; then
+            brightness_Max=$(cat "$path_File"/max_brightness) # Get max_brightness
+            brightness_Percentage=$(echo "scale=3; $brightness_Max/100" | bc) # Get the percentage of 1% from max_brightness
 
-            actualBrightness=$(cat "$pathFile"/actual_brightness) # Get actual_brightness
-            actualBrightness=$(echo "scale=2; $actualBrightness/$brightnessPercentage" | bc)
+            actual_Brightness=$(cat "$path_File"/actual_brightness) # Get actual_brightness
+            actual_Brightness=$(echo "scale=2; $actual_Brightness/$brightness_Percentage" | bc)
 
-            brightnessValue=$actualBrightness
+            brightness_Value=$actual_Brightness
             if [ "$2" == "up" ]; then # More 1 % (more 0.1 to appears correct percentage value in the GUI interface)
-                brightnessValue=$(echo "scale=2; $brightnessValue" + 1.1 | bc)
+                brightness_Value=$(echo "scale=2; $brightness_Value" + 1.1 | bc)
             elif [ "$2" == "down" ]; then # Less 1 % (more 0.1 to appears correct percentage value in the GUI interface)
-                brightnessValue=$(echo "scale=2; $brightnessValue" - 1.1 | bc)
+                brightness_Value=$(echo "scale=2; $brightness_Value" - 1.1 | bc)
             else # Set Input value more 0.1 to appears correct percentage value in the GUI interface
-                brightnessValue=$(echo "scale=1; $brightnessValueOriginal+0.1" | bc)
+                brightness_Value=$(echo "scale=1; $brightness_Value_Original+0.1" | bc)
             fi
 
-            brightnessValueFinal=$(echo "scale=0; $brightnessPercentage*$brightnessValue/1" | bc) # Get no value percentage vs Input value brightness
+            brightness_Value_Final=$(echo "scale=0; $brightness_Percentage*$brightness_Value/1" | bc) # Get no value percentage vs Input value brightness
 
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-                if [ "$brightnessValueOriginal" -gt 99 ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
-                    brightnessValueFinal=$brightnessMax
+                if [ "$brightness_Value_Original" -gt 99 ]; then # If Input value brightness more than 99%, set max_brightness to brightness final
+                    brightness_Value_Final=$brightness_Max
                 fi
             fi
 
-            echo -e "$CYAN\nFile to set brightness: $pathFile/brightness"
-            echo "Actual brightness: $actualBrightness %"
-            echo "Input value brightness: $brightnessValueOriginal"
-            echo "Final percentage brightness value: $brightnessValue"
-            echo -e "Final set brightness value: $brightnessValueFinal$NC\n"
+            echo -e "$CYAN\nFile to set brightness: $path_File/brightness"
+            echo "Actual brightness: $actual_Brightness %"
+            echo "Input value brightness: $brightness_Value_Original"
+            echo "Final percentage brightness value: $brightness_Value"
+            echo -e "Final set brightness value: $brightness_Value_Final$NC\n"
 
             # Only for test
-            #echo "Max brightness value: $brightnessMax"
-            #echo "Percentage value to 1% of brightness: $brightnessPercentage"
+            #echo "Max brightness value: $brightness_Max"
+            #echo "Percentage value to 1% of brightness: $brightness_Percentage"
 
             # Set the final percentage brightness
-            su - root -c "echo $brightnessValueFinal > $pathFile/brightness"
+            su - root -c "echo $brightness_Value_Final > $path_File/brightness"
         fi
         ;;
     "brigh-2" )
@@ -1292,11 +1292,11 @@ case $optionInput in
             xbacklight -set 1
         elif [ "$#" -eq 2 ]; then # Option to one value of input to set
             if echo "$2" | grep -q "[[:digit:]]"; then # Test if has only digit
-                brightnessValue=$2
-                if [ "$brightnessValue" -gt 100 ]; then # Test max percentage
-                    brightnessValue=100
+                brightness_Value=$2
+                if [ "$brightness_Value" -gt 100 ]; then # Test max percentage
+                    brightness_Value=100
                 fi
-                xbacklight -set "$brightnessValue"
+                xbacklight -set "$brightness_Value"
             else
                 if [ "$2" == "up" ];then
                     xbacklight -inc 1
