@@ -264,8 +264,8 @@ case $optionInput in
 
                             if [ "${*}" != '' ]; then # Check if has more parameters
                                 $0 "$colorPrint" notPrintHeader "$itemSelected" "${*}"
-                            else # If has no more parameters, pass with . (PWD)
-                                $0 "$colorPrint" notPrintHeader "$itemSelected" "."
+                            else
+                                $0 "$colorPrint" notPrintHeader "$itemSelected"
                             fi
                         fi
                     fi
