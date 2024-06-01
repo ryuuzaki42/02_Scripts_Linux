@@ -2,7 +2,7 @@
 
 # Changed by João Batista (joao42lbatista@gmail.com)
 # Last update: 05/08/2018
-# URL: https://github.com/ryuuzaki42/2_scripts_slackware/blob/master/lightsOnPlus_JBs.sh
+# URL: https://github.com/ryuuzaki42/02_Scripts_Linux/blob/main/others_old/lightsOnPlus_JBs.sh
 
 # based on
 # Copyright (c) 2014 devkral at web de
