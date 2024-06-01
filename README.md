@@ -1,5 +1,5 @@
 
-## Scripts to make Slackware easier to use
+## Scripts to make Linux, with focus and test on Slackware, easier to use
 
 #### Useful links:
 
@@ -18,14 +18,12 @@
 
 [Slack Show BR](https://telegram.me/slackshowbr) - Telegram Group
 
-[Bumblebee-SlackBuilds](https://github.com/WhiteWolf1776/Bumblebee-SlackBuilds) - Bumblebee to NVIDIA Optimus
-
-[14_Bumblebee-SlackBuilds-Packages](https://github.com/ryuuzaki42/14_Bumblebee-SlackBuilds-Packages) - Bumblebee packages (txz) to Slackware
+[14_Nvidia_Driver_Slackware](https://github.com/ryuuzaki42/14_Nvidia_Driver_Slackware) - Nvidia driver to Slackware 15.0
 
 [12_clone_Slackware_repo_rsync](https://github.com/ryuuzaki42/12_clone_Slackware_repo_rsync) - Clone Slackware mirror to a local folder using rsync
 
 [13_clone_multilib_Slackware_repo_rsync](https://github.com/ryuuzaki42/13_clone_multilib_Slackware_repo_rsync) - Clone Slackware multilib mirror to a local folder using rsync
 
-[3_slackware_jb_packages](https://github.com/ryuuzaki42/3_slackware_jb_packages) - Some packages (txz) and some shell scripts to create packages to Slacwkare
+[03_Slackware_JB_Packages](https://github.com/ryuuzaki42/03_Slackware_JB_Packages) - Some packages (txz) and some shell scripts to create packages to Slacwkare
 
 [SlackwarePackages](https://t.me/SlackwarePackages) - Telegram group to download packages or request new ones
