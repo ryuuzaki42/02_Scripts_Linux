@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 31/05/2024
+# Last update: 01/06/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1337,7 +1337,7 @@ case $optionInput in
         fi
 
         if [ "$output" == '' ]; then
-            echo -e "${CYAN}Which output use: 1 $active_Output_1 or 2 $active_Output_2: "
+            echo -en "\n${CYAN}Which output use: 1 $active_Output_1 or 2 $active_Output_2: "
             read -r output
         fi
 
@@ -1352,13 +1352,13 @@ case $optionInput in
             echo -e "$CYAN\nBrightness value to use:"
             echo "Between 0 and 1, like 0.5"
             echo "Or l(ow) to 0.3, m(edian) to 0.5 and h(igh) to 1"
-            echo "Or up to increase 0.1, down to decrease 0.1"
+            echo "Or up to increase 0.1 and down to decrease 0.1"
             echo -e -n "Which value use?:$NC "
             read -r brightness_Value
         fi
 
         brightness_Value_Current=$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')
-        echo -e "${BLUE}Current brightness: $GREEN$brightness_Value_Current$NC"
+        echo -e "${BLUE}\nCurrent brightness: $GREEN$brightness_Value_Current$NC"
 
         if [ "$brightness_Value" == 'l' ]; then
             brightness_Value=0.3
@@ -1372,8 +1372,16 @@ case $optionInput in
             brightness_Value=$(echo "scale=2; $brightness_Value_Current" - 0.1 | bc)
         fi
 
-        xrandr --output "$active_Output" --brightness "$brightness_Value"
-        echo -e "${BLUE}Brightness set to: $GREEN$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')$NC"
+        continue_or_not='y'
+        if [ 1 -eq $(echo "$brightness_Value < 0.1" | bc) ]; then # Check if brightness_Value to set is less then 0.1
+            echo -e "\nReally want to set brightness to $brightness_Value (full black/low)? y(es) or n(o)"
+            read -r continue_or_not
+        fi
+
+        if [ "$continue_or_not" == 'y' ]; then
+            xrandr --output "$active_Output" --brightness "$brightness_Value"
+            echo -e "${BLUE}Brightness set to: $GREEN$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')$NC"
+        fi
         ;;
     "pkg-count" )
         echo -e "$CYAN# Count of packages that are installed your Slackware #$NC"
