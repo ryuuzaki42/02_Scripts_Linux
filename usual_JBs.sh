@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 01/06/2024
+# Last update: 06/06/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -46,8 +46,7 @@ if [ "$emptySpaces" == '' ]; then
 fi
 
 colorPrint=$1
-if [ "$colorPrint" == "noColor" ]; then
-    echo -e "\nColors disabled"
+if [ "$colorPrint" == "noColor" ]; # Colors disabled
     shift
 else # Some colors for script output - Make it easier to follow
     useColor
