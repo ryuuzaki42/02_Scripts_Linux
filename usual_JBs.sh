@@ -46,7 +46,7 @@ if [ "$emptySpaces" == '' ]; then
 fi
 
 colorPrint=$1
-if [ "$colorPrint" == "noColor" ]; # Colors disabled
+if [ "$colorPrint" == "noColor" ]; then # Colors disabled
     shift
 else # Some colors for script output - Make it easier to follow
     useColor
