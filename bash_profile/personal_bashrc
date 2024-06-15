@@ -21,12 +21,14 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 08/08/2023
+# Last update: 15/06/2024
 #
 alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/03_Slackware_JB_Packages/\
-scripts_createPackage_JB/check_for_update_progs_JBs.sh $@'
+scripts_createPackage_JB/check_for_update_progs_JBs.sh'
 
 alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
+
+alias autosubsync='/media/sda2/os/gnu_linux/slackware15.0/AppImage/Autosubsync-*_JB.AppImage'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
