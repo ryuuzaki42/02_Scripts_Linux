@@ -188,4 +188,4 @@ grep_01_Cool_Things() { # Search a pattern in 01_Cool_Things/
     pattern=$1
     grep -rni "$pattern" "$folder"
 }
-alias search_01="grep_01_Cool_Things"
+alias search_01='grep_01_Cool_Things'
