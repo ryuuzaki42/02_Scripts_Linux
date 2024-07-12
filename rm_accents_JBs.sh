@@ -20,18 +20,22 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove accents in files and folders names based in a patthern
+# Script: remove accents in files and folders names based in a pattern
 #
-# Last update: 19/06/2023
+# Last update: 11/07/2024
 #
+echo -e "\n # Remove accents in files and folders names based in a pattern #"
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
 if [ "$equalPart" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files"
-    echo -e "\nExample: $(basename "$0") \"fíléWithàccents\""
-    echo -e "mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\n"
-    exit
+    echo -e "\n# Error: Need to pass a parameter of files or folders name to work with"
+    echo -e "\n Example 1: $(basename "$0") \"fíléWithÀccents\""
+    echo -e " -> mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\n"
+    echo -e "\n Example 2: $(basename "$0") \"folderWithàccents\""
+    echo -e " -> mv \"folderWithàccents\" -> \"folderWithaccents\"\n"
+    echo -e "\nUse . to process all files in working directory or the first letter of a file/folder"
+    exit 1
 fi
 
 removeAccents(){
