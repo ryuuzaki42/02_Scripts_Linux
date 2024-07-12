@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 06/06/2023
+# Last update: 11/07/2024
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -119,9 +119,7 @@ PS1_update(){ # ex: PS1_update $PS1 conda_test_env $
 #alias tb='tput bold' # Bold
 alias nano='nano -c' # nano with line number
 
-# egrep/fgrep/grep with color
-#alias egrep='egrep --color=auto'
-#alias fgrep='fgrep --color=auto'
+# grep with color
 alias grep='grep --color=auto'
 
 # ls with color and human readable values
@@ -183,3 +181,11 @@ cdMultipleTimes() { # Move up x directories
     done
 }
 alias cdm='cdMultipleTimes'
+
+grep_01_Cool_Things() { # Search a pattern in 01_Cool_Things/
+    # https://github.com/ryuuzaki42/01_Cool_Things
+    folder="/media/sda2/git_clone/01_Cool_Things/"
+    pattern=$1
+    grep -rni "$pattern" "$folder"
+}
+alias search_01="grep_01_Cool_Things"
