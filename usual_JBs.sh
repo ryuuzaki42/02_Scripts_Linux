@@ -1112,7 +1112,7 @@ case $optionInput in
                             folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
                             echo # just a new blank line
-                            foldersFilesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - files deleted
+                            foldersFilesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - folders and files deleted
                             if [ "$foldersFilesDelete" != '' ]; then
                                 foldersFilesDelete=$(echo "$foldersFilesDelete" | sort)
 
@@ -1147,7 +1147,7 @@ case $optionInput in
                                 echo "$filesNew" | sort
                             fi
 
-                            if [ "$foldersNew" == '' ] && [ "$filesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$filesNew" == '' ]; then
+                            if [ "$foldersFilesDelete" == '' ] && [ "$filesDifferent" == '' ] && [ "$foldersNew" == '' ] && [ "$filesNew" == '' ]; then
                                 echo -e "$GREEN\nSource folder ($pathSource) and the destination folder ($pathDestination) don't have any difference$NC"
                             else
                                 echo -en "$CYAN\nShow full rsync change-summary?\n(y)es - (n)o:$NC "
