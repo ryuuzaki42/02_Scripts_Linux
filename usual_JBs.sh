@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 06/06/2024
+# Last update: 13/07/2024
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1112,12 +1112,6 @@ case $optionInput in
                             folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
                             echo # just a new blank line
-                            foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
-                            if [ "$foldersNew" != '' ]; then
-                                echo -e "$BLUE\nFolders new:$NC"
-                                echo "$foldersNew" | sort
-                            fi
-
                             filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - files deleted
                             if [ "$filesDelete" != '' ]; then
                                 echo -e "$BLUE\nFiles to be deleted:$NC"
@@ -1128,6 +1122,12 @@ case $optionInput in
                             if [ "$filesDifferent" != '' ]; then
                                 echo -e "$BLUE\nFiles different:$NC"
                                 echo "$filesDifferent" | sort
+                            fi
+
+                            foldersNew=$(echo -e "$folderChangesClean" | grep "^c" | awk '{print substr($0, index($0,$2))}') # "^c" - new folders
+                            if [ "$foldersNew" != '' ]; then
+                                echo -e "$BLUE\nFolders new:$NC"
+                                echo "$foldersNew" | sort
                             fi
 
                             filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # "^>f++++" - New files
