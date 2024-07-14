@@ -1112,10 +1112,21 @@ case $optionInput in
                             folderChangesClean=$(echo -e "$folderChangesFull" | grep -E "^>|^*deleting|^c|/$")
 
                             echo # just a new blank line
-                            filesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - files deleted
-                            if [ "$filesDelete" != '' ]; then
-                                echo -e "$BLUE\nFiles to be deleted:$NC"
-                                echo "$filesDelete" | sort
+                            foldersFilesDelete=$(echo -e "$folderChangesClean" | grep "^*deleting" | awk '{print substr($0, index($0,$2))}') # "^*deleting" - files deleted
+                            if [ "$foldersFilesDelete" != '' ]; then
+                                foldersFilesDelete=$(echo "$foldersFilesDelete" | sort)
+
+                                foldersDelete=$(echo "$foldersFilesDelete" | grep "/$")
+                                if [ "$foldersDelete" != '' ]; then
+                                    echo -e "$BLUE\nFolders to be deleted:$NC"
+                                    echo "$foldersDelete"
+                                fi
+
+                                filesDelete=$(echo "$foldersFilesDelete" | grep -v "/$")
+                                if [ "$filesDelete" != '' ]; then
+                                    echo -e "$BLUE\nFiles to be deleted:$NC"
+                                    echo "$filesDelete"
+                                fi
                             fi
 
                             filesDifferent=$(echo -e "$folderChangesClean" | grep -E "^>fc|^>f.st|^>f..t" | awk '{print substr($0, index($0,$2))}') # "^>fc|^>f.st|^>f..t" - all files changed
@@ -1132,7 +1143,7 @@ case $optionInput in
 
                             filesNew=$(echo -e "$folderChangesClean" | grep "^>f++++"| awk '{print substr($0, index($0,$2))}') # "^>f++++" - New files
                             if [ "$filesNew" != '' ]; then
-                                echo -e "$BLUE\nNew files:$NC"
+                                echo -e "$BLUE\nFiles new:$NC"
                                 echo "$filesNew" | sort
                             fi
 
