@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 11/07/2024
+# Last update: 30/07/2024
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -182,6 +182,7 @@ cdMultipleTimes() { # Move up x directories
 }
 alias cdm='cdMultipleTimes'
 
+# Run: search_01 "pattern to search"
 grep_01_Cool_Things() { # Search a pattern in 01_Cool_Things/
     # https://github.com/ryuuzaki42/01_Cool_Things
     folder="/media/sda2/git_clone/01_Cool_Things/"

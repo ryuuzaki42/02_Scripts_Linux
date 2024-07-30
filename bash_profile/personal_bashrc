@@ -35,7 +35,7 @@ alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
 alias ffsubsync='/media/sda2/os/gnu_linux/slackware15.0/AppImage/FFsubsync-*_JB.AppImage'
 
 # VSCodium - codium - code as VSCode
-alias code="/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage"
+alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
