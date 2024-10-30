@@ -21,12 +21,12 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 17/10/2024
+# Last update: 30/10/2024
 #
 
 # Run: check_for_update_progs_JBs.sh all
 alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/03_Slackware_JB_Packages/\
-scripts_createPackage_JB/check_for_update_progs_JBs.sh'
+check_for_update_progs_JBs.sh'
 
 # Run: GitAhead . or GitAhead
 alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
