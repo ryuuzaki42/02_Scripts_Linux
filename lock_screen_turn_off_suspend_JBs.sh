@@ -21,12 +21,16 @@
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
+# Has options $mute_audio to mute audio and $reduce_brightness to reduce brightness
 #
-# Last update: 19/06/2023
+# Last update: 30/04/2025
 #
 # Tip: Add a shortcut to this script
 #
 waitTimeToSuspend=$1 # Time before suspend in minutes
+
+mute_audio=$2
+reduce_brightness=$3
 
 suspendCommand="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
@@ -34,9 +38,13 @@ if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
     waitTimeToSuspend=0
 fi
 
-amixer set Master mute # Mute
+if [ "$mute_audio" == "y" ]; then
+    amixer set Master mute # Mute
+fi
 
-xbacklight -set 1 # Set brightness to 1%
+if [ "$reduce_brightness" == "y" ]; then
+    xbacklight -set 1 # Set brightness to 1%
+fi
 
 desktopGUI=$XDG_CURRENT_DESKTOP
 desktopGUI=${desktopGUI,,} # Convert to lower case
