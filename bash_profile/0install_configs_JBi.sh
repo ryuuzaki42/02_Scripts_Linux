@@ -3,7 +3,7 @@
 # Copy the configurations on this folder to ~/ and /root/
 # You can just execute this script
 #
-# Last update: 19/06/2023
+# Last update: 22/06/2025
 #
 echo -e "This script copy (cp .??*) to ~/ and /root/\n"
 echo "List of files that will be copied:"
@@ -15,6 +15,7 @@ read -r continueCopy
 
 if [ "$continueCopy" == 'y' ]; then
     cp .??* ~/
+    cat personal_bashrc | tail -n 29 >> ~/.bashrc
     echo -e "\n\tThe files was copied to \"$(cd ~ || exit; pwd)/\""
 
     echo -e "\nInsert the root password to copy the files to \"/root/\""
