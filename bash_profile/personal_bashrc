@@ -21,7 +21,7 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 30/10/2024
+# Last update: 22/06/2025
 #
 
 # Run: check_for_update_progs_JBs.sh all
@@ -29,14 +29,14 @@ alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/03_Slackware_JB_Packa
 check_for_update_progs_JBs.sh'
 
 # Run: GitAhead . or GitAhead
-alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
+#alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
 
 # Run: ffsubsync ffs *.m* -i *.srt -o a.srt
 alias ffsubsync='/media/sda2/os/gnu_linux/slackware15.0/AppImage/FFsubsync-*_JB-x86_64.AppImage'
 
 # VSCodium - codium - code as VSCode
-#alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
-alias code='/media/sda2/home/j/.0installed/VSCodium/VSCodium-linux-x64-*/codium'
+alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
+#alias code='/media/sda2/home/j/.0installed/VSCodium/VSCodium-linux-x64-*/codium'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
