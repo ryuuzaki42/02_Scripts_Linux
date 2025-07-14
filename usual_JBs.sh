@@ -22,7 +22,7 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 13/07/2024
+# Last update: 14/07/2025
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -1657,19 +1657,21 @@ case $optionInput in
             su root -c 'updateInstallpkg' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
         fi
         ;;
-    "weather" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+    "weather" ) # https://github.com/chubin/wttr.in
         echo -e "$CYAN# Show the weather forecast (you can pass the name of the city as parameter) #$NC\n"
-        cityName=${*:2} # Get the second parameter to the end
+        # To change the city go to http://wttr.in/ and type the city name on the URL
 
+        cityName=${*:2} # Get the second parameter to the end
         if [ "$cityName" == '' ]; then
-            cityName="Rio Paranaiba"
+            cityName="Rio Paranaíba"
         fi
 
+        cityName=${cityName/ /+} # Added + if city name has space
         wget -qO - "wttr.in/$cityName" # Get the weather information
         echo
         curl "v2.wttr.in/$cityName"
         ;;
-    "shred" ) # To change the city go to http://wttr.in/ e type the city name on the URL
+    "shred" )
         echo -e "$CYAN# shred files in local folder (and subfolders) #$NC"
         OLD_IFS=$IFS
         folder_or_file=$2
