@@ -22,7 +22,7 @@
 #
 # Script: Change the profile audio active
 #
-# Last update: 21/06/2023
+# Last update: 26/08/2025
 #
 # Tip: To list all profiles available use the command below
 #pacmd list-cards | grep "output:" | grep -v "active"
@@ -59,7 +59,7 @@ else
     finalValue=$speakersAudio
 fi
 
-pactl set-card-profile 0 $finalValue
+pactl set-card-profile 0 "$finalValue"
 echo -e "$finalValue\n"
 
 if [ "$notificationOff" != 1 ]; then
