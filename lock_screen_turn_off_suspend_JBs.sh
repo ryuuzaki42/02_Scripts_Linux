@@ -23,14 +23,15 @@
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 # Has options $mute_audio to mute audio and $reduce_brightness to reduce brightness
 #
-# Last update: 30/04/2025
+# Last update: 05/09/2025
 #
 # Tip: Add a shortcut to this script
 #
-waitTimeToSuspend=$1 # Time before suspend in minutes
+waitTimeToSuspend=${1:-'0'} # Time before suspend in minutes, default is 0 minutes
 
-mute_audio=$2
-reduce_brightness=$3
+mute_audio=${2:-'n'}        # Not mute by default
+reduce_brightness=${3:-'n'} # Not reduce the brightness by default
+disconnect_wifi=${4:-'y'}   # Disconnect the Wi-Fi by default
 
 suspendCommand="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
@@ -40,10 +41,12 @@ fi
 
 if [ "$mute_audio" == "y" ]; then
     amixer set Master mute # Mute
+    echo " # Muted Master audio #"
 fi
 
 if [ "$reduce_brightness" == "y" ]; then
     xbacklight -set 1 # Set brightness to 1%
+    echo " # Reduce brightness to 1% #"
 fi
 
 desktopGUI=$XDG_CURRENT_DESKTOP
@@ -58,8 +61,15 @@ else
     exit 1
 fi
 
+if [ "$disconnect_wifi" == "y" ]; then
+    wifi_card_name=$(grep ":" /proc/net/wireless | cut -d ':' -f1 | cut -d ' ' -f2)
+    nmcli d disconnect "$wifi_card_name"
+    echo " # Disconnect Wi-Fi: $wifi_card_name #"
+fi
+
 sleep 2s
 xset dpms force off # Turn off the screen
+echo " # Turn off screen #"
 
 if [ "$waitTimeToSuspend" != 0 ]; then
     notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will suspend in ${waitTimeToSuspend} min $(echo; echo; date)"
