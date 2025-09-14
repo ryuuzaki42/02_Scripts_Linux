@@ -21,7 +21,8 @@
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
-# Has options $mute_audio to mute audio and $reduce_brightness to reduce brightness
+# Has options $mute_audio to mute audio, $reduce_brightness to reduce brightness
+# and $disconnect_wifi to disconnect the Wi-Fi and reconnect after suspend
 #
 # Last update: 14/09/2025
 #
@@ -31,7 +32,7 @@ wait_time_to_suspend=${1:-'0'} # Time before suspend in minutes, default is 0 mi
 
 mute_audio=${2:-'n'}        # Not mute by default
 reduce_brightness=${3:-'n'} # Not reduce the brightness by default
-disconnect_wifi=${4:-'y'}   # Disconnect the Wi-Fi by default
+disconnect_wifi=${4:-'y'}   # Disconnect the Wi-Fi by default and reconnect
 
 suspend_command="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
