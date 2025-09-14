@@ -23,20 +23,20 @@
 # Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 # Has options $mute_audio to mute audio and $reduce_brightness to reduce brightness
 #
-# Last update: 05/09/2025
+# Last update: 14/09/2025
 #
 # Tip: Add a shortcut to this script
 #
-waitTimeToSuspend=${1:-'0'} # Time before suspend in minutes, default is 0 minutes
+wait_time_to_suspend=${1:-'0'} # Time before suspend in minutes, default is 0 minutes
 
 mute_audio=${2:-'n'}        # Not mute by default
 reduce_brightness=${3:-'n'} # Not reduce the brightness by default
 disconnect_wifi=${4:-'y'}   # Disconnect the Wi-Fi by default
 
-suspendCommand="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
+suspend_command="qdbus --print-reply --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Suspend true"
 
-if echo "$waitTimeToSuspend" | grep -q -v "[[:digit:]]"; then
-    waitTimeToSuspend=0
+if echo "$wait_time_to_suspend" | grep -q -v "[[:digit:]]"; then
+    wait_time_to_suspend=0
 fi
 
 if [ "$mute_audio" == "y" ]; then
@@ -76,10 +76,10 @@ if [ "$waitTimeToSuspend" != 0 ]; then
     sleep "$waitTimeToSuspend"m
 
     if xset q | grep -q "Monitor is Off"; then
-        $suspendCommand
+        $suspend_command
     else
         notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will not suspend because Monitor is On"
     fi
 else
-    $suspendCommand
+    $suspend_command
 fi
