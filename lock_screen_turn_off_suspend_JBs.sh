@@ -68,17 +68,18 @@ if [ "$disconnect_wifi" == "y" ]; then
 fi
 
 sleep 2s
-xset dpms force off # Turn off the screen
-echo " # Turn off screen #"
+xset dpms force off
+echo " # Turn off the screen #"
 
-if [ "$waitTimeToSuspend" != 0 ]; then
-    notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will suspend in ${waitTimeToSuspend} min $(echo; echo; date)"
-    sleep "$waitTimeToSuspend"m
+if [ "$wait_time_suspend" != 0 ]; then
+    script_name=$0
+    notify-send "$script_name" "System will suspend in ${wait_time_to_suspend} min $(echo; echo; date)"
+    sleep "$wait_time_to_suspend"m
 
     if xset q | grep -q "Monitor is Off"; then
         $suspend_command
     else
-        notify-send "lock_screen_turn_off_suspend_JBs.sh" "System will not suspend because Monitor is On"
+        notify-send "$script_name" "System will not suspend because Monitor is On"
     fi
 else
     $suspend_command
