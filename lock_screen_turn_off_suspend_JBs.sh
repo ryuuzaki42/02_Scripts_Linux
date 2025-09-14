@@ -75,7 +75,7 @@ sleep 2s
 xset dpms force off
 echo " # Turn off the screen #"
 
-if [ "$wait_time_suspend" != 0 ]; then
+if [ "$wait_time_to_suspend" != 0 ]; then
     script_name=$0
     notify-send "$script_name" "System will suspend in ${wait_time_to_suspend} min $(echo; echo; date)"
     sleep "$wait_time_to_suspend"m
