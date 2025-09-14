@@ -62,9 +62,12 @@ else
 fi
 
 if [ "$disconnect_wifi" == "y" ]; then
-    wifi_card_name=$(grep ":" /proc/net/wireless | cut -d ':' -f1 | cut -d ' ' -f2)
-    nmcli d disconnect "$wifi_card_name"
-    echo " # Disconnect Wi-Fi: $wifi_card_name #"
+    #wifi_card_name=$(grep ":" /proc/net/wireless | cut -d ':' -f1 | cut -d ' ' -f2)
+    #nmcli d disconnect "$wifi_card_name"
+    #echo " # Disconnect Wi-Fi: $wifi_card_name #"
+
+    echo " # Disconnect Wi-Fi #"
+    nmcli networking off
 fi
 
 sleep 2s
@@ -83,4 +86,9 @@ if [ "$wait_time_suspend" != 0 ]; then
     fi
 else
     $suspend_command
+fi
+
+if [ "$disconnect_wifi" == "y" ]; then
+    echo " # Connect Wi-Fi #"
+    nmcli networking on
 fi
