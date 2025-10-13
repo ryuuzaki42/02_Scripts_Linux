@@ -22,8 +22,12 @@
 #
 # Script: usual / common day-to-day functions general
 #
-# Last update: 14/07/2025
+# Requires: whiptail, xterm (resize command) and others by function used,
+# like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
+# Last update: 13/10/2025
+#
+
 useColor() {
     #BLACK='\e[1;30m'
     RED='\e[1;31m'
