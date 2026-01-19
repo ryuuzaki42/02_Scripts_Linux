@@ -41,9 +41,13 @@ fi
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/"
 "$HOME_USER/.xsession-errors"
-"$HOME_USER/.config/VirtualBox/*log*"
-"$HOME_USER/VirtualBox VMs/*/Logs/"
+"$HOME_USER/.config/VirtualBox/*log*" # VirtualBox
+"$HOME_USER/VirtualBox VMs/*/Logs/" # VirtualBox
 "$HOME_USER/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
+"$HOME_USER/.cache/vivaldi/Default/*Cache*"    # Vivaldi
+"$HOME_USER/.cache/mozilla/firefox/*/cache2/"  # Firefox
+"$HOME_USER/.cache/opera/Default/Cache*"       # Opera
+"$HOME_USER/.cache/zotero/zotero/*/cache2/"    # Zotero
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
@@ -72,7 +76,10 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/org.cogroo.addon.*/"
 "/tmp/v8-compile-cache-*/"
 "/tmp/.org.chromium.Chromium.*/"
-"/tmp/com.microsoft.teams.linux Crashes/")
+"/tmp/com.microsoft.teams.linux Crashes/"
+"/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
+"/tmp/System.lua"
+"/tmp/ksmserver.NAQOIo")
 
 ## Can be useful if add to filesFoldersToRermove
 # "$HOME_USER/.cache/"
