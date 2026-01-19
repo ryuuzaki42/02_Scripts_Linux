@@ -22,8 +22,8 @@
 #
 # Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 19/09/2023
-# Tip: pass all to clean empty files/folder in /tmp
+# Last update: 19/01/2026
+# Tip: pass all to clean empty files and folder in /tmp/
 #
 
 HOME_USER=$HOME
@@ -74,10 +74,17 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/.org.chromium.Chromium.*/"
 "/tmp/com.microsoft.teams.linux Crashes/")
 
-# Can be useful if add to filesFoldersToRermove
+## Can be useful if add to filesFoldersToRermove
 # "$HOME_USER/.cache/"
 # "/tmp/plasma-csd-generator.*"
 # "/tmp/plasma-csd-generator.*/"
+
+## Important temporary files and folders - Do not delete
+# /tmp/sddm-auth-*
+# /tmp/xauth-*
+# /tmp/xauth_*
+# /tmp/.ICE-unix/
+# /tmp/.X11-unix/
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for val in ${filesFoldersToRermove[*]}; do
