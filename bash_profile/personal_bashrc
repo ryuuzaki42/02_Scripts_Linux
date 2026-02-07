@@ -21,18 +21,18 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 22/06/2025
+# Last update: 07/02/2026
 #
 
-# Run: check_for_update_progs_JBs.sh all
+# Run: check_for_update_progs_JBs.sh all # https://github.com/ryuuzaki42/03_Slackware_JB_Packages/
 alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/03_Slackware_JB_Packages/\
 check_for_update_progs_JBs.sh'
 
-# Run: GitAhead . or GitAhead
-#alias GitAhead='/media/sda2/home/j/.0installed/GitAhead/GitAhead'
-
-# Run: ffsubsync ffs *.m* -i *.srt -o a.srt
+# Run: ffsubsync ffs *.m* -i *.srt -o a.srt # https://github.com/ryuuzaki42/FFsubsync_AppImage
 alias ffsubsync='/media/sda2/os/gnu_linux/slackware15.0/AppImage/FFsubsync-*_JB-x86_64.AppImage'
+
+# Run: witr # https://github.com/ryuuzaki42/witr_AppImage
+alias witr='/media/sda2/os/gnu_linux/slackware15.0/AppImage/witr-*_JB-x86_64.AppImage'
 
 # VSCodium - codium - code as VSCode
 alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
