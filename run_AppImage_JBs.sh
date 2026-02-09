@@ -25,9 +25,9 @@
 # Tip: Add desktop launcher with the script
 # Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
-# Last update: 31/05/2024
+# Last update: 09/02/2026
 #
-set -x
+#set -x
 
 AppImage_File=$1
 if [ "$AppImage_File" == '' ]; then
@@ -46,22 +46,22 @@ if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
         -h, --help     Print this message
 
         -r, --run      Run the AppImage with the arguments passed
-            Example: $script_name Maestral-*_JB.AppImage -r gui
+            Example: $script_name Maestral-*_JB-x86_64.AppImage -r gui
                 > gui is a parameter to this AppImage to run with gui
 
         -v, --view     View the files inside the AppImage
             Mount the AppImage and load the tmp folder with the file explorer
-            Example: $script_name Maestral-*_JB.AppImage -v
+            Example: $script_name Maestral-*_JB-x86_64.AppImage -v
 
         -x, --extract  Extract the Prog*.AppImage to a folder Prog*.AppImage.ext/
-            Example: $script_name Maestral-*_JB.AppImage -x
+            Example: $script_name Maestral-*_JB-x86_64.AppImage -x
 
-        -p, --portable Create a folder to home and other to configuration, then run the AppImage
+        -p, --portable Create a folder to home and another to the configurations, then run the AppImage
             Run an AppImage using local configuration (place of the AppImage file) and the arguments passed
             Will create folders to save the configuration files: *.AppImage.config/ and *.AppImage.home/
             Obs.: The application in the AppImage may save files in other folder, like user home folder
 
-            Example: $script_name Maestral-*_JB.AppImage -p gui\n"
+            Example: $script_name Zotero*_JB-x86_64.AppImage -p\n"
     exit 0
 fi
 
@@ -98,11 +98,12 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
         file_explorer="dolphin"
     elif [ -x /usr/bin/thunar ]; then
         file_explorer="thunar"
+    elif [ -x /usr/bin/nautilus ]; then
+        file_explorer="nautilus"
     else
         echo "File explorer not defined"
     fi
     #echo "file_explorer: \"$file_explorer\""
-
     "$file_explorer" "$mount_point"
 
     echo " When has complete to check the files, respond y below to close and umount the AppImage in $mount_point"
