@@ -29,11 +29,15 @@
 #
 #set -x
 
+help_info_and_exit(){
+    echo -e " For help, run: $(basename "$0") -h\n"
+    exit 1
+}
+
 AppImage_File=$1
 if [ "$AppImage_File" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters - the AppImage file and one option"
-    echo -e "For help message: $(basename "$0") -h\n"
-    exit 1
+    echo -e "\n # Error: Need to pass parameters - the AppImage file and one option"
+    help_info_and_exit
 fi
 
 if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
@@ -70,8 +74,8 @@ if echo "$AppImage_File" | grep -iq "AppImage"; then # Check if is a AppImage fi
     other_parameters=${*:3} # Parameters from $3 onwards
     echo -e "\nAppImage_File: \"$AppImage_File\" option_run: \"$option_run\" other_parameters: \"$other_parameters\"\n"
 else
-    echo "Error: \"$AppImage_File\" is no a AppImage file"
-    exit 1
+    echo -e "\n # Error: \"$AppImage_File\" is not a AppImage file"
+    help_info_and_exit
 fi
 
 chmod +x "$AppImage_File" # Add permission to run, may not have it yet
@@ -82,9 +86,8 @@ if [ "$first_char" != '/' ]; then # If $first_char == '/' is full path, if $firs
 fi
 
 if [ "$option_run" == '' ]; then
-    echo "Pass one option valid to work with the AppImage"
-    echo "For help run: ./$(basename "$0") -h"
-    exit 1
+    echo -e "\n # Error: Pass one option valid to work with the AppImage"
+    help_info_and_exit
 
 elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     TMP_File=$(mktemp) # Create a tmp file to save the mount point location
@@ -112,7 +115,7 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
 
     if [ "$do_close" == 'y' ] || [ "$do_close" == '' ]; then
         PID=$(ps aux | grep "appimage-mount" | grep "$AppImage_File" | awk '{print $2}' | head -n 1)
-        echo "PID: $PID"
+        echo "Closing (kill) the PID: $PID"
         kill "$PID"
         #kill -9 $PID
     fi
@@ -140,5 +143,6 @@ elif [ "$option_run" == '-p' ] || [ "$option_run" == "--portable" ] \
         "$AppImage_File" "$other_parameters"
     fi
 else
-    echo "Error: option \"$option_run\ not recognised"
+    echo -e "\n # Error: option \"$option_run\ not recognised"
+    help_info_and_exit
 fi
