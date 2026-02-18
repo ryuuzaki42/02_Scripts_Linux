@@ -21,14 +21,14 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 07/02/2026
+# Last update: 18/02/2026
 #
 
 # Run: check_for_update_progs_JBs.sh all # https://github.com/ryuuzaki42/03_Slackware_JB_Packages/
 alias check_for_update_progs_JBs.sh='/media/sda2/git_clone/03_Slackware_JB_Packages/\
 check_for_update_progs_JBs.sh'
 
-# Run: ffsubsync ffs *.m* -i *.srt -o a.srt # https://github.com/ryuuzaki42/FFsubsync_AppImage
+# Run: ffsubsync ffs *.m* -i *.srt -o a.srt; smartsynchronize *.srt # https://github.com/ryuuzaki42/FFsubsync_AppImage
 alias ffsubsync='/media/sda2/os/gnu_linux/slackware15.0/AppImage/FFsubsync-*_JB-x86_64.AppImage'
 
 # Run: witr # https://github.com/ryuuzaki42/witr_AppImage
