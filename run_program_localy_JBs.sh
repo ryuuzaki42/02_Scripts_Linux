@@ -24,20 +24,24 @@
 #
 # Last update: 13/02/2026
 #
+
 set -x
 
-# Here
-HERE=$(pwd)
+HERE=$(pwd) # Here
 echo -e "\nLocal place: $HERE\n"
 
 # Folder to use as $HOME (~/)
-mkdir 1_home/ || exit 1
+mkdir 1_home/
 
 # Folder to use as $XDG_CONFIG_HOME (~/.config/)
-mkdir 2_config/ || exit 1
+mkdir 2_config/
 
-# Program name
-prog_name="$1"
+prog_name="$1" # Program name
+remaining_args=("${@:2}") # Assign the remaining arguments
 
 # Run the program using the new configurations folders
-HOME="$HERE/1_home/" XDG_CONFIG_HOME="$HERE/2_config/" ./$prog_name
+if [ "$remaining_args" == "" ]; then
+    HOME="$HERE/1_home/" XDG_CONFIG_HOME="$HERE/2_config/" "./$prog_name"
+else
+    HOME="$HERE/1_home/" XDG_CONFIG_HOME="$HERE/2_config/" "./$prog_name" "$remaining_args"
+fi
