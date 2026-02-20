@@ -20,9 +20,10 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean some logs from home folder ($HOME_USER) and /tmp/ folder
+# Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 19/01/2026
+# Last update: 20/02/2026
+#
 # Tip: pass all to clean empty files and folder in /tmp/
 #
 
@@ -39,15 +40,17 @@ if [ "$continue_or_not" != 'y' ] && [ "$continue_or_not" != '' ]; then
 fi
 
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
-"$HOME_USER/.thumbnails/"
+"$HOME_USER/.thumbnails/" # Dolphin
 "$HOME_USER/.xsession-errors"
 "$HOME_USER/.config/VirtualBox/*log*" # VirtualBox
-"$HOME_USER/VirtualBox VMs/*/Logs/" # VirtualBox
+"$HOME_USER/VirtualBox VMs/*/Logs/"   # VirtualBox
 "$HOME_USER/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
 "$HOME_USER/.cache/vivaldi/Default/*Cache*"    # Vivaldi
 "$HOME_USER/.cache/mozilla/firefox/*/cache2/"  # Firefox
 "$HOME_USER/.cache/opera/Default/Cache*"       # Opera
 "$HOME_USER/.cache/zotero/zotero/*/cache2/"    # Zotero
+"$HOME_USER/.mozilla/firefox/*/storage/default/http*/" # Firefox
+"$HOME_USER/.mozilla/firefox/*/storage/default/file*/" # Firefox
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
