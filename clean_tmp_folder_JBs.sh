@@ -100,14 +100,14 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 # /tmp/.X11-unix/
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
-for val in ${filesFoldersToRermove[*]}; do
-    #echo "val: \"$val\""
+for value in ${filesFoldersToRermove[*]}; do
+    echo -e "value: \"$value\"\n"
 
     # Show errors (files and folders not found)
-    #rm -vr "$val"
+    #rm -vr "$value"
 
     # Default - not show errors
-    rm -fvr "$val"
+    rm -fvr "$value"
 done
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
