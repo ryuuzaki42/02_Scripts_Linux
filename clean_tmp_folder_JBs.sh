@@ -48,12 +48,12 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.cache/vivaldi/Default/*Cache*"    # Vivaldi
 "$HOME_USER/.cache/opera/Default/Cache*"       # Opera
 "$HOME_USER/.cache/zotero/zotero/*/cache2/"    # Zotero
-"$HOME_USER/.cache/mozilla/firefox/*/cache2/"          # Firefox
-"$HOME_USER/.mozilla/firefox/*/storage/default/http*/"
+"$HOME_USER/.mozilla/firefox/*/storage/default/http*/" # Firefox
 "$HOME_USER/.mozilla/firefox/*/storage/default/file*/"
-"$HOME_USER/.cache/librewolf/*/cache2/"                           # LibreWolf
-"$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/"
+"$HOME_USER/.cache/mozilla/firefox/*/cache2/"
+"$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/"
+"$HOME_USER/.cache/librewolf/*/cache2/"
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
