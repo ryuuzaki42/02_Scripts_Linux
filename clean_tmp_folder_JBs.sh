@@ -29,8 +29,8 @@
 
 HOME_USER=$HOME
 CLEAN_ALL=$1
-echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 
+echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 echo -en "Continue? (y)es or (n)o (enter to continue): "
 read -r continue_or_not
 
@@ -38,6 +38,8 @@ if [ "$continue_or_not" != 'y' ] && [ "$continue_or_not" != '' ]; then
     echo -e "\nJust exiting\n"
     exit 0
 fi
+
+HOME_USER=${HOME_USER::-1} # Remove last /
 
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/" # Dolphin
