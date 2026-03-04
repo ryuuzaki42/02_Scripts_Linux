@@ -59,10 +59,10 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
-"/tmp/.ktorrent_kde4_*"
+"/tmp/.ktorrent_kde4_*" # KTorrent
 "/tmp/gameoverlayui.log*"
-"/tmp/dropbox-antifreeze-*"
-"/tmp/steam_chrome_shmem_uid*"
+"/tmp/dropbox-antifreeze-*" # Dropbox
+"/tmp/steam_chrome_shmem_uid*" # Steam
 "/tmp/steam_chrome_overlay_uid*"
 "/tmp/mastersingleapp-master*"
 "/tmp/.org.chromium.Chromium.*"
@@ -72,17 +72,17 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/Temp-*/"
 "/tmp/lu*.tmp/"
 "/tmp/.esd-*/"
-"/tmp/.wine-*"
+"/tmp/.wine-*" # Wine
 "/tmp/runtime-*/"
 "/tmp/hsperfdata_*/"
-"/tmp/Slack Crashes/"
+"/tmp/Slack Crashes/" # Slack
 "/tmp/smartsynchronize-*/"
 "/tmp/org.cogroo.addon.*/"
 "/tmp/v8-compile-cache-*/"
 "/tmp/.org.chromium.Chromium.*/"
 "/tmp/com.microsoft.teams.linux Crashes/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
-"/tmp/System.lua"
+"/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
 
 ## Can be useful if add to filesFoldersToRermove
