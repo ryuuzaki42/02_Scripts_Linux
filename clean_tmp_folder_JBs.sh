@@ -107,7 +107,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for value in ${filesFoldersToRermove[*]}; do
-    echo -e "value: \"$value\"\n"
+    #echo -e "\n   # value: \"$value\" #"
 
     # Show errors (files and folders not found)
     #rm -vr "$value"
