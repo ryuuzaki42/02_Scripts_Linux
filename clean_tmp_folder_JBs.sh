@@ -51,6 +51,9 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.cache/mozilla/firefox/*/cache2/"          # Firefox
 "$HOME_USER/.mozilla/firefox/*/storage/default/http*/"
 "$HOME_USER/.mozilla/firefox/*/storage/default/file*/"
+"$HOME_USER/.cache/librewolf/*/cache2/"                           # LibreWolf
+"$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/"
+"$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/"
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
