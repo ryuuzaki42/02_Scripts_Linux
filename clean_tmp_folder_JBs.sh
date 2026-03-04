@@ -59,6 +59,10 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/"
 "$HOME_USER/.cache/librewolf/*/cache2/"
+"$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/WebStorage/" # Teams AppImage
+"$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/Cache/"
+"$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/Code Cache/"
+"/tmp/com.microsoft.teams.linux Crashes/"
 "/tmp/tmpaddon*"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
@@ -83,7 +87,6 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/org.cogroo.addon.*/"
 "/tmp/v8-compile-cache-*/"
 "/tmp/.org.chromium.Chromium.*/"
-"/tmp/com.microsoft.teams.linux Crashes/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
 "/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
