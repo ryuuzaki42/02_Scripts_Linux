@@ -50,8 +50,9 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/vboxdrv-Module.symvers"
 "$HOME_USER/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
 "$HOME_USER/.cache/vivaldi/Default/*Cache*"    # Vivaldi
-"$HOME_USER/.cache/opera/Default/Cache*"       # Opera
-"$HOME_USER/.cache/zotero/zotero/*/cache2/"    # Zotero
+"$HOME_USER/.config/opera/Default/Service Worker/CacheStorage/" # Opera
+"$HOME_USER/.cache/opera/Default/Cache*"
+"$HOME_USER/.cache/zotero/zotero/*/cache2/" # Zotero
 "$HOME_USER/.mozilla/firefox/*/storage/default/http*/" # Firefox
 "$HOME_USER/.mozilla/firefox/*/storage/default/file*/"
 "$HOME_USER/.cache/mozilla/firefox/*/cache2/"
