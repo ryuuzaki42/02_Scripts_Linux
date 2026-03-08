@@ -5,8 +5,6 @@
 # me envie um e-mail. Ficarei Grato!
 # e-mail: joao42lbatista@gmail.com
 #
-# Com contibuições de Rumbler Soppa (github.com/rumbler)
-#
 # Este programa é um software livre; você pode redistribui-lo e/ou
 # modifica-lo dentro dos termos da Licença Pública Geral GNU como
 # publicada pela Fundação do Software Livre (FSF); na versão 2 da
