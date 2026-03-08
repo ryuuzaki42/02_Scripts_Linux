@@ -20,18 +20,20 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Change values in one subtitle like: 2 to 1, 3 to 2, 4 to 3, and so on
+# Script: Change values in subtitle, removing 1 in value on subtitle order
+#   like: 2 to 1, 3 to 2, 4 to 3, and so on
 #
-# Last update: 19/06/2023
+# Last update: 08/03/2026
 #
+
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters (file name) to work with"
+    echo -e "\n # Error: Need to pass parameters (file name) to work with #"
     echo -e "\nExample: $(basename "$0") movie.srt"
     exit
 fi
 
-# TMP file as result: $fileToWork + "_tmp" (with extension (e.g., srt))
+# TMP file as result: $fileToWork + "_tmp" (with extension, e.g., srt)
 fileToWork2=${fileToWork::-4}"_tmp."$(echo "$fileToWork" | rev | cut -d '.' -f1 | rev)
 
 # Grep the count line
