@@ -16,7 +16,9 @@
 
 [Slackware Brazil](https://www.facebook.com/groups/slackwarebr/) - Facebook Group
 
-[Slack Show BR](https://telegram.me/slackshowbr) - Telegram Group
+[Slack Show BR](https://t.me/slackshowbr) - Telegram Group
+
+[Slackware Brasil](https://t.me/SlackwareBrazil) - Telegram Group
 
 [14_Nvidia_Driver_Slackware](https://github.com/ryuuzaki42/14_Nvidia_Driver_Slackware) - Nvidia driver to Slackware 15.0
 
