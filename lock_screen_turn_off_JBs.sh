@@ -23,7 +23,7 @@
 # Script: On KDE and XFCE, lock the session and turnoff the screen
 # Has options $mute_audio to mute audio and $reduce_brightness to reduce brightness
 #
-# Last update: 30/04/2025
+# Last update: 15/03/2026
 #
 # Tip: Add a shortcut to this script
 #
@@ -38,17 +38,19 @@ if [ "$reduce_brightness" == "y" ]; then
     xbacklight -set 1 # Set brightness to 1%
 fi
 
-desktopGUI=$XDG_CURRENT_DESKTOP
-desktopGUI=${desktopGUI,,} # Convert to lower case
+loginctl lock-session # Works with more desktop GUI
 
-if [ "$desktopGUI" == "xfce" ]; then
-    xflock4 # Lock the session in the XFCE
-elif [ "$desktopGUI" == "kde" ]; then
-    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
-else
-    echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
-    exit 1
-fi
+# desktopGUI=$XDG_CURRENT_DESKTOP
+# desktopGUI=${desktopGUI,,} # Convert to lower case
+#
+# if [ "$desktopGUI" == "xfce" ]; then
+#     xflock4 # Lock the session in the XFCE
+# elif [ "$desktopGUI" == "kde" ]; then
+#     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
+# else
+#     echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
+#     exit 1
+# fi
 
 sleep 2s
 xset dpms force off # Turn off the screen

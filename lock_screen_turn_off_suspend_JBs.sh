@@ -24,7 +24,7 @@
 # Has options $mute_audio to mute audio, $reduce_brightness to reduce brightness
 # and $disconnect_wifi to disconnect the Wi-Fi and reconnect after suspend
 #
-# Last update: 14/09/2025
+# Last update: 15/03/2026
 #
 # Tip: Add a shortcut to this script
 #
@@ -50,17 +50,19 @@ if [ "$reduce_brightness" == "y" ]; then
     echo " # Reduce brightness to 1% #"
 fi
 
-desktopGUI=$XDG_CURRENT_DESKTOP
-desktopGUI=${desktopGUI,,} # Convert to lower case
+loginctl lock-session # Works with more desktop GUI
 
-if [ "$desktopGUI" == "xfce" ]; then
-    xflock4 # Lock the session in the XFCE
-elif [ "$desktopGUI" == "kde" ]; then
-    qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
-else
-    echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
-    exit 1
-fi
+# desktopGUI=$XDG_CURRENT_DESKTOP
+# desktopGUI=${desktopGUI,,} # Convert to lower case
+#
+# if [ "$desktopGUI" == "xfce" ]; then
+#     xflock4 # Lock the session in the XFCE
+# elif [ "$desktopGUI" == "kde" ]; then
+#     qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock # Lock the session in the KDE
+# else
+#     echo -e "\nError: The variable \"\$desktopGUI\" is not set.\n"
+#     exit 1
+# fi
 
 if [ "$disconnect_wifi" == "y" ]; then
     #wifi_card_name=$(grep ":" /proc/net/wireless | cut -d ':' -f1 | cut -d ' ' -f2)
