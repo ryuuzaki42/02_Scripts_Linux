@@ -72,12 +72,15 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
 "/tmp/.ktorrent_kde4_*" # KTorrent
-"/tmp/gameoverlayui.log*"
 "/tmp/dropbox-antifreeze-*" # Dropbox
 "/tmp/steam_chrome_shmem_uid*" # Steam
 "/tmp/steam_chrome_overlay_uid*"
-"/tmp/mastersingleapp-master*"
-"/tmp/.org.chromium.Chromium.*"
+"/tmp/.com.valvesoftware.Steam.*"
+"/tmp/steam*"
+"/tmp/gameoverlayui.log*"
+"/tmp/mastersingleapp-master*" # Master PDF Editor
+"/tmp/.org.chromium.Chromium.*" # Chromium
+"/tmp/.org.chromium.Chromium.*/"
 "/tmp/OSL_PIPE_*_SingleOfficeIPC_*"
 "/tmp/SBo/"
 "/tmp/dumps/"
@@ -89,9 +92,8 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/hsperfdata_*/"
 "/tmp/Slack Crashes/" # Slack
 "/tmp/smartsynchronize-*/" # SmartSynchronize
-"/tmp/org.cogroo.addon.*/"
+"/tmp/org.cogroo.addon.*/" # CoGrOO LibreOffice addon
 "/tmp/v8-compile-cache-*/"
-"/tmp/.org.chromium.Chromium.*/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
 "/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
