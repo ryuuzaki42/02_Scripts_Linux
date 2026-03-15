@@ -67,6 +67,10 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/Code Cache/"
 "/tmp/com.microsoft.teams.linux Crashes/"
 "$HOME_USER/.wget-hsts" # Wget
+"$HOME_USER/.anydesk/thumbnails/" # AnyDesk
+"/tmp/ad_gevt_*"
+"/tmp/ad_mailbox_*"
+"/tmp/*_evt_subevt_0"
 "$HOME_USER/.cache/kioexec/krun/" # KIO from KDE
 "/tmp/tmpaddon*" # Others
 "/tmp/lastChance*"
@@ -79,8 +83,8 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/steam*"
 "/tmp/gameoverlayui.log*"
 "/tmp/mastersingleapp-master*" # Master PDF Editor
-"/tmp/.org.chromium.Chromium.*" # Chromium
-"/tmp/.org.chromium.Chromium.*/"
+"/tmp/.org.chromium.Chromium.*/" # Chromium
+"/tmp/.org.chromium.Chromium.*"
 "/tmp/OSL_PIPE_*_SingleOfficeIPC_*"
 "/tmp/SBo/"
 "/tmp/dumps/"
