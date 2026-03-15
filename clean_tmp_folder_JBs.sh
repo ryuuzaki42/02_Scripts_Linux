@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 04/03/2026
+# Last update: 15/03/2026
 #
 # Tip: pass all to clean empty files and folder in /tmp/
 #
@@ -110,11 +110,17 @@ IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for value in ${filesFoldersToRermove[*]}; do
     #echo -e "\n   # value: \"$value\" #"
 
-    # Show errors (files and folders not found)
-    #rm -vr "$value"
+    if echo "$value" | grep -v -q "web.whatsapp.com"; then
+        # Show errors (files and folders not found)
+        #rm -vr "$value"
 
-    # Default - not show errors
-    rm -fvr "$value"
+
+        # Default - not show errors
+        rm -fvr "$value"
+    else
+        echo -e "\n   # value: \"$value\" #"
+        echo "Not removing whatsapp, like https+++web.whatsapp.com" # Need to re-link account
+    fi
 done
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
