@@ -56,6 +56,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.mozilla/firefox/*/storage/default/http*/" # Firefox
 "$HOME_USER/.mozilla/firefox/*/storage/default/file*/"
 "$HOME_USER/.cache/mozilla/firefox/*/cache2/"
+"/tmp/mozilla-temp*"
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/"
 "$HOME_USER/.cache/librewolf/*/cache2/"
