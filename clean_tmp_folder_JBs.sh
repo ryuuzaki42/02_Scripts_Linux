@@ -68,6 +68,12 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/com.microsoft.teams.linux Crashes/"
 "$HOME_USER/.wget-hsts" # Wget
 "$HOME_USER/.anydesk/thumbnails/" # AnyDesk
+"$HOME_USER/.anydesk/AnyDesk/"
+"$HOME_USER/.anydesk/cache/"
+"$HOME_USER/.anydesk/global_cache/"
+"$HOME_USER/.anydesk/incoming/"
+"$HOME_USER/.anydesk/anydesk.trace"
+"$HOME_USER/.anydesk/connection_trace.txt"
 "/tmp/ad_gevt_*"
 "/tmp/ad_mailbox_*"
 "/tmp/*_evt_subevt_0"
