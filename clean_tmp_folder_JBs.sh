@@ -65,7 +65,8 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/Code Cache/"
 "/tmp/com.microsoft.teams.linux Crashes/"
 "$HOME_USER/.wget-hsts" # Wget
-"/tmp/tmpaddon*"
+"$HOME_USER/.cache/kioexec/krun/" # KIO from KDE
+"/tmp/tmpaddon*" # Others
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
 "/tmp/.ktorrent_kde4_*" # KTorrent
