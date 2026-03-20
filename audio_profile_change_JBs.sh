@@ -48,9 +48,22 @@ hdmiAudioB="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starti
 
 all_Outputs=$(pacmd list-cards | grep "output") # Grep all outputs
 
-profileActive=$(echo "$allOutputs" | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
+if [ "$output_to_set" != "" ];then
+    if [ "$output_to_set" == "SPEAKERS" ];then
+        asdf
+    elif [ "$output_to_set" == "HDMI" ];then
 
-echo -e "\nProfile active now: $profileActive"
+    else
+        profile_Active=""
+    fi
+
+fi
+
+
+if [ "$profile_Active" == "" ]; then
+    profile_Active=$(echo "$all_Outputs" | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
+fi
+echo -e "\nProfile active now: $profile_Active"
 echo -n "Profile changed to: "
 
 if echo "$profile_Active" | grep -q "$speakersAudio"; then # Check if speakersAudio is active
