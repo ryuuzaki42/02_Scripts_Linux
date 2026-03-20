@@ -28,7 +28,7 @@
 #pacmd list-cards | grep "output:" | grep -v "active"
 #
 # Stereo without input
-#speakersAudio="output:analog-stereo"
+#speakers_Audio="output:analog-stereo"
 #hdmiAudio="output:hdmi-stereo"
 
 output_to_set=$1 # Set the output as Speakers or HDMI
@@ -39,24 +39,23 @@ else
     output_to_set=''
 fi
 
-notificationOff=$1 # Pass 1 to disable the notification
+notification_Off=$1 # Pass 1 to disable the notification
 
 # Stereo with input
-speakersAudio="output:analog-stereo+input:analog-stereo"   # Notebook audio
-hdmiAudioA="output:hdmi-stereo-extra1+input:analog-stereo" # HDMI audio - starting with the cable not plugged
-hdmiAudioB="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starting with the cable plugged
+speakers_Audio="output:analog-stereo+input:analog-stereo"   # Notebook audio
+HDMI_Audio_A="output:hdmi-stereo-extra1+input:analog-stereo" # HDMI audio - starting with the cable not plugged
+HDMI_Audio_B="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starting with the cable plugged
 
 all_Outputs=$(pacmd list-cards | grep "output") # Grep all outputs
 
 if [ "$output_to_set" != "" ];then
     if [ "$output_to_set" == "SPEAKERS" ];then
-        asdf
+        profile_Active=""
     elif [ "$output_to_set" == "HDMI" ];then
-
+        profile_Active=""
     else
         profile_Active=""
     fi
-
 fi
 
 
@@ -66,24 +65,24 @@ fi
 echo -e "\nProfile active now: $profile_Active"
 echo -n "Profile changed to: "
 
-if echo "$profile_Active" | grep -q "$speakersAudio"; then # Check if speakersAudio is active
-    profilePriority=$(echo "$all_Outputs" | grep $hdmiAudioA | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
+if echo "$profile_Active" | grep -q "$speakers_Audio"; then # Check if speakers_Audio is active
+    profilePriority=$(echo "$all_Outputs" | grep $HDMI_Audio_A | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
 
     if [ "$profilePriority" == 6 ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
-        finalValue=$hdmiAudioA
-        #echo -e "\n\n    hdmiAudioA\n" # To test
+#         final_Value=$HDMI_Audio_A
+        #echo -e "\n\n    HDMI_Audio_A\n" # To test
     else
-        finalValue=$hdmiAudioB
-        #echo -e "\n\n    hdmiAudioB\n" # To test
+        final_Value=$HDMI_Audio_B
+        #echo -e "\n\n    HDMI_Audio_B\n" # To test
     fi
 else
-    finalValue=$speakersAudio
+    final_Value=$speakers_Audio
 fi
 
-pactl set-card-profile 0 "$finalValue"
-echo -e "$finalValue\n"
+pactl set-card-profile 0 "$final_Value"
+echo -e "$final_Value\n"
 
-if [ "$notificationOff" != 1 ]; then
-    iconName="audio-volume-medium"
-    notify-send "Profile audio changed" "Final value $finalValue" -i $iconName
+if [ "$notification_Off" != 1 ]; then
+    icon_Name="audio-volume-medium"
+    notify-send "Profile audio changed" "Final value $final_Value" -i $icon_Name
 fi
