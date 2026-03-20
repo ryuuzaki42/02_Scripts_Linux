@@ -51,14 +51,11 @@ all_Outputs=$(pacmd list-cards | grep "output") # Grep all outputs
 
 if [ "$output_to_set" != "" ];then
     if [ "$output_to_set" == "SPEAKERS" ];then
-        profile_Active=""
+        profile_Active=$HDMI_Audio_A # Set to HDMI to change after to Speakers
     elif [ "$output_to_set" == "HDMI" ];then
-        profile_Active=""
-    else
-        profile_Active=""
+        profile_Active=$speakers_Audio # Set to Speakers to change after to HDMI
     fi
-fi
-
+fi # else profile_Active=""
 
 if [ "$profile_Active" == "" ]; then
     profile_Active=$(echo "$all_Outputs" | grep "active profile" | sed 's/.*<//; s/>//') # Grep profile active
