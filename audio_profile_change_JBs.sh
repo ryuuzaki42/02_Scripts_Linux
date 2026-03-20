@@ -24,12 +24,15 @@
 #
 # Last update: 19/03/2026
 #
-# Tip: To list all profiles available use the command below
-# pacmd list-cards | grep "output:" | grep -v "active"
+# Tips:
+#    1. Pass Speakers or HDMI as a parameter to directly set the audio output
+#    2. Pass 1 as a parameter to disable the notification
+#    3. To list all profiles available, use:
+#        pacmd list-cards | grep "output:" | grep -v "active"
 #
 
 output_to_set=$1 # Set the output as Speakers or HDMI
-output_to_set=${output_to_set^^} #uppercase
+output_to_set=${output_to_set^^} # uppercase
 if [ "$output_to_set" == "SPEAKERS" ] || [ "$output_to_set" == "HDMI" ]; then # Check is Speakers or HDMI
     shift
 else
@@ -43,7 +46,7 @@ notification_Off=$1 # Pass 1 to disable the notification
 #HDMI_Audio="output:hdmi-stereo"
 
 # Stereo with input
-speakers_Audio="output:analog-stereo+input:analog-stereo"   # Notebook audio
+speakers_Audio="output:analog-stereo+input:analog-stereo"    # Notebook audio
 HDMI_Audio_A="output:hdmi-stereo-extra1+input:analog-stereo" # HDMI audio - starting with the cable not plugged
 HDMI_Audio_B="output:hdmi-surround+input:analog-stereo"      # HDMI audio - starting with the cable plugged
 
