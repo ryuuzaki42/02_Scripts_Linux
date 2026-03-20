@@ -25,11 +25,8 @@
 # Last update: 19/03/2026
 #
 # Tip: To list all profiles available use the command below
-#pacmd list-cards | grep "output:" | grep -v "active"
+# pacmd list-cards | grep "output:" | grep -v "active"
 #
-# Stereo without input
-#speakers_Audio="output:analog-stereo"
-#hdmiAudio="output:hdmi-stereo"
 
 output_to_set=$1 # Set the output as Speakers or HDMI
 output_to_set=${output_to_set^^} #uppercase
@@ -40,6 +37,10 @@ else
 fi
 
 notification_Off=$1 # Pass 1 to disable the notification
+
+# Stereo without input
+#speakers_Audio="output:analog-stereo"
+#HDMI_Audio="output:hdmi-stereo"
 
 # Stereo with input
 speakers_Audio="output:analog-stereo+input:analog-stereo"   # Notebook audio
@@ -69,7 +70,7 @@ if echo "$profile_Active" | grep -q "$speakers_Audio"; then # Check if speakers_
     profilePriority=$(echo "$all_Outputs" | grep $HDMI_Audio_A | head -n 1 | sed 's/.*priority //; s/, .*//' | wc -c)
 
     if [ "$profilePriority" == 6 ] ; then # > 33?633 = 6 numbers, if not = 5 numbers
-#         final_Value=$HDMI_Audio_A
+        final_Value=$HDMI_Audio_A
         #echo -e "\n\n    HDMI_Audio_A\n" # To test
     else
         final_Value=$HDMI_Audio_B
