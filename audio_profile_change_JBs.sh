@@ -31,6 +31,14 @@
 #speakersAudio="output:analog-stereo"
 #hdmiAudio="output:hdmi-stereo"
 
+output_to_set=$1 # Set the output as Speakers or HDMI
+output_to_set=${output_to_set^^} #uppercase
+if [ "$output_to_set" == "SPEAKERS" ] || [ "$output_to_set" == "HDMI" ]; then # Check is Speakers or HDMI
+    shift
+else
+    output_to_set=''
+fi
+
 notificationOff=$1 # Pass 1 to disable the notification
 
 # Stereo with input
