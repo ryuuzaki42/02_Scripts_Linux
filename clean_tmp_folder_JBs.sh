@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 15/03/2026
+# Last update: 29/03/2026
 #
 # Tip: pass all to clean empty files and folder in /tmp/
 #
@@ -77,6 +77,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/ad_gevt_*"
 "/tmp/ad_mailbox_*"
 "/tmp/*_evt_subevt_0"
+"/tmp/anydesk/"
 "$HOME_USER/.cache/kioexec/krun/" # KIO from KDE
 "/tmp/tmpaddon*" # Others
 "/tmp/lastChance*"
