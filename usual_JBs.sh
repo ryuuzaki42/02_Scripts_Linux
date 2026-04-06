@@ -1052,15 +1052,17 @@ case $optionInput in
         echo -e "\nScreenshot \"screenshot_${dateNow}.jpg\"\nsaved in the folder \"$(pwd)/\""
         ;;
     "folder-diff" )
-        echo -e "$CYAN# Show the difference between two folders and (can) make them equal (with rsync) #$NC"
+        echo -e "$CYAN# Show the difference between two folders and (can) make them equal (with rsync) #"
+        echo " \$2 source, \$3 destination, \$4 continue rsync, \$5 use checksum, \$6 show differences$NC"
+
         if [ $# -lt 3 ]; then
-            echo -e "$RED\nError: Need two parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
+            echo -e "$RED\nError: Need two or more parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
         else
-            pathSource=$2
-            pathDestination=$3
+            pathSource=$2 # Source folder
+            pathDestination=$3 # Destination folder
 
             continueOrNot='y'
-            if [ "${pathSource:0-1}" != '/' ]; then # Check if last caracter of $pathSource is /
+            if [ "${pathSource:0-1}" != '/' ]; then # Check if last character of $pathSource is /
                 echo -e "\n$GREEN    ## An Important Note ##$BLUE\n"
                 echo -e "The trailing slash (/) at the end of the first argument (source folder)"
                 echo -e "For example: \"rsync -a folder1/ folder2\" is necessary to mean \"the contents of folder1\""
@@ -1077,11 +1079,16 @@ case $optionInput in
                 echo -e "Destination folder:$GREEN $pathDestination$NC"
 
                 echo -en "$CYAN\nWant continue and use these source and destination folders?\n(y)es - (n)o:$NC "
-                read -r continueRsync
+
+                continueRsync=$4 # Run rsync without ask
+                if [ "$continueRsync" == '' ]; then
+                    read -r continueRsync
+                else
+                    echo "$continueRsync"
+                fi
             else
                 continueRsync='n'
             fi
-
 
             if [ "$continueRsync" == 'y' ]; then
                 if [ -e "$pathSource" ]; then # Test if "source" exists
@@ -1089,11 +1096,23 @@ case $optionInput in
 
                         echo -en "$CYAN\nWant to use checksum to check/compare the files?:$NC "
                         echo -en "$CYAN\nMuch more slower, but more security, especially to USB flash drive.\n(y)es - (n)o:$NC "
-                        read -r useChecksum
+
+                        useChecksum=$5 # Use rsync with checksum or mod-time & size
+                        if [ "$useChecksum" == '' ]; then
+                            read -r useChecksum
+                        else
+                            echo "$useChecksum"
+                        fi
 
                         echo -e "\n\t$RED#-----------------------------------------------------------------------------#"
                         echo -en "$CYAN$GREEN\t 1$CYAN Just see differences or$GREEN 2$CYAN Make them equal now? $GREEN(enter to see differences):$NC "
-                        read -r syncNowOrNow
+
+                        syncNowOrNot=$6 # Sync file now or show differences first
+                        if [ "$syncNowOrNot" == '' ]; then
+                            read -r syncNowOrNot
+                        else
+                            echo "$syncNowOrNot"
+                        fi
 
                         if [ "$useChecksum" == 'y' ]; then
                             rsyncCommand="rsync -achv --delete --progress" # check based on checksum, not mod-time & size
@@ -1106,7 +1125,7 @@ case $optionInput in
                         # --delete delete extraneous files from destination folders
                         # -n perform a trial run with no changes made; -i output a change-summary for all updates
 
-                        if [ "$syncNowOrNow" == "2" ]; then
+                        if [ "$syncNowOrNot" == "2" ]; then
                             echo -e "$CYAN\nMaking the files equal.$NC Please wait..."
                             $rsyncCommand "$pathSource" "$pathDestination"
                         else
