@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 13/10/2025
+# Last update: 06/04/2026
 #
 
 useColor() {
@@ -1386,13 +1386,13 @@ case $optionInput in
             brightness_Value=$(echo "scale=2; $brightness_Value_Current" - 0.1 | bc)
         fi
 
-        continue_or_not='y'
+        continueOrNot='y'
         if [ 1 -eq $(echo "$brightness_Value < 0.1" | bc) ]; then # Check if brightness_Value to set is less then 0.1
             echo -e "\nReally want to set brightness to $brightness_Value (full black/low)? y(es) or n(o)"
-            read -r continue_or_not
+            read -r continueOrNot
         fi
 
-        if [ "$continue_or_not" == 'y' ]; then
+        if [ "$continueOrNot" == 'y' ]; then
             xrandr --output "$active_Output" --brightness "$brightness_Value"
             echo -e "${BLUE}Brightness set to: $GREEN$(xrandr --verbose | grep -i "brightness" | awk '{print $2}')$NC"
         fi
