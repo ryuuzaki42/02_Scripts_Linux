@@ -41,8 +41,8 @@ help(){
     echo -e "\nSupport:
         Future date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\"
         Now + time: + \"X hour Y min Z sec\" or: + \"Xh Ymin Zs\"
-        d to default notification
-        or a Command as 'notification': \"command file\" or: \"command\"
+        default notification: d
+        Or wit a command as 'notification': \"command file\" or: \"command\"
 
     Default notification:\n$default_notification
 
