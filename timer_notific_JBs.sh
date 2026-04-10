@@ -117,10 +117,7 @@ fi
 if [ "$date_diff_sec" -lt 0 ]; then
     echo -e "\n    # Error: \$date_end ($date_end) is greater than \$date_now ($date_now) #\n"
 else
-    echo -e "\n # Timer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h #"
-
-#     notify-send "$script_name" "\n-\ndate_end: $date_end\ncommand_run: $command_run\n-
-#     \ndate_diff_sec: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
+    echo -e "\n # Timer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h # "
 
     notify-send "$script_name" "\n-\nTimer: $date_diff_sec s - $date_diff_min m - $date_diff_hour h" -i "clock"
 
@@ -131,4 +128,3 @@ else
     eval "$command_run" # run the command
 fi
 echo
-
