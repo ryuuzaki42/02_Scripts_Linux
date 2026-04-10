@@ -20,6 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
+# Script: Run notification or command at the timer ends
 #
 # Last update: 10/04/2026
 #
@@ -29,9 +30,8 @@ date_now=$(date)
 
 # Need sox and notify-send
 default_notification="notify-send '$script_name' --expire-time=0 'Timer completed';
-play -n synth -j 3 sin %3 sin %-2 sin %-5 sin %-9 \
-sin %-14 sin %-21 fade h .01 2 1.5 delay \
-1.3 1 .76 .54 .27 remix - fade h 0 2.7 2.5 norm -1 2> /dev/null"
+play -n synth -j 3 sin %3 sin %-2 sin %-5 sin %-9 sin %-14 sin %-21 fade h .01 2 1.5 \
+delay 1.3 1 .76 .54 .27 remix - fade h 0 2.7 2.5 norm -1 2> /dev/null"
 
 date_end=$1
 command_run=$2
