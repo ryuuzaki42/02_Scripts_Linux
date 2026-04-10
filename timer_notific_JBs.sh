@@ -38,24 +38,31 @@ command_run=$2
 #test=1 # Only to test the code
 
 help(){
-    echo -e "\nSupport:"
-    echo "    Date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\""
-    echo "    Now + time: + \"X hour Y min Z sec\""
-    echo "    Now + time: + \"Xh Ymin Zs\""
-    echo "    Command: \"command file\" or command"
-    echo "    d to default notification"
+    echo -e "\nSupport:
+        Future date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\"
+        Now + time: + \"X hour Y min Z sec\" or: + \"Xh Ymin Zs\"
+        d to default notification
+        or a Command as 'notification': \"command file\" or: \"command\"
 
-    echo -e "\n    default_notification:\n$default_notification"
+    Default notification:\n$default_notification
 
-    echo -e "\nExamples:"
-    echo "    $script_name \"230113 12:21:45\" \"vlc music.mp3\""
-    echo "    $script_name 22:42 d"
-    echo "    $script_name 12 ark"
-    echo "    $script_name + \"2 hour 7 min 3 sec\" d"
-    echo "    $script_name + \"2h 7min 3s\" vlc"
-    echo "    $script_name + \"10 min 30 sec\" firefox"
-    echo "    $script_name + \"20m\" d"
-    echo -e "    test=\"1\" $script_name + \"45 sec\" d\n"
+    Examples:
+        $script_name \"20260413 12:21:45\" \"vlc music.mp3\"
+            - run vlc with music.mp3 at 12:21:45 of day 13 month 01 year 2026\n
+        $script_name 22:42 d
+            - run 22:42 of today using default notification\n
+        $script_name 12 ark
+            - run ark at 12 hours of today - midday\n
+        $script_name + \"2 hour 7 min 3 sec\" d
+            - run in 2 hour 7 minutes 3 seconds using default notification\n
+        $script_name + \"2h 7m 3s\" vlc
+            - run vlc in 2 hour 7 minutes 3 seconds\n
+        $script_name + \"10 min 30 sec\" firefox
+            - run firefox in 10 minutes and 30 seconds\n
+        $script_name + \"20m\" d
+            - run in 20 minutes using default notification\n
+        test=\"1\" $script_name + \"45 sec\" d
+            - run using test (print more information) in 45 seconds using default notification\n"
     exit 0
 }
 
