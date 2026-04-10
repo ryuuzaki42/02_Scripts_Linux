@@ -20,12 +20,8 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# #echo $(( ($(date --date="031122" +%s) - $(date --date="031120" +%s) )/(60*60*24) ))
-# #date -d @$(date +%s -d "221122 10:59")
 #
-# Script: Run command at the timer ends
-#
-# Last update: 23/06/2023
+# Last update: 10/04/2026
 #
 echo -e "\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
