@@ -105,7 +105,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/hsperfdata_*/"
 "/tmp/Slack Crashes/" # Slack
 "/tmp/smartsynchronize-*/" # SmartSynchronize
-"/tmp/org.cogroo.addon.*/" # CoGrOO LibreOffice addon
+"/tmp/org.cogroo.addon.*/" # CoGrOO LibreOffice Addon
 "/tmp/v8-compile-cache-*/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
 "/tmp/System.lua" # Lua
@@ -125,12 +125,11 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for value in ${filesFoldersToRermove[*]}; do
-    #echo -e "\n   # value: \"$value\" #"
+    echo -e "\n    # Value: \"$value\" #"
 
-    if echo "$value" | grep -v -q "web.whatsapp.com"; then
+    if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
         # Show errors (files and folders not found)
         #rm -vr "$value"
-
 
         # Default - not show errors
         rm -fvr "$value"
