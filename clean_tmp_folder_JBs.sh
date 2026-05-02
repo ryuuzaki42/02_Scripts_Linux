@@ -108,6 +108,8 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/org.cogroo.addon.*/" # CoGrOO LibreOffice Addon
 "/tmp/v8-compile-cache-*/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
+"/tmp/bOfimIG4WelHX1Z0zZUnw_le-TD-webview-*"
+"/tmp/ad_gevt_qipcgwevt_*"
 "/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
 
