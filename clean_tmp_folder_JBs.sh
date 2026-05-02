@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 28/04/2026
+# Last update: 01/05/2026
 #
 # Tip: pass all to clean empty files and folder in /tmp/
 #
@@ -56,12 +56,12 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.cache/zotero/zotero/*/cache2/" # Zotero
 "$HOME_USER/.mozilla/firefox/*/storage/default/http*/" # Firefox
 "$HOME_USER/.mozilla/firefox/*/storage/default/file*/"
-"$HOME_USER/.mozilla/firefox/*/storage/default/file*/https+++web.whatsapp.com/cache/"
+"$HOME_USER/.mozilla/firefox/*/storage/default/https+++web.whatsapp.com/cache/"
 "$HOME_USER/.cache/mozilla/firefox/*/cache2/"
 "/tmp/mozilla-temp*"
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
 "$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/"
-"$HOME_USER/.config/librewolf/librewolf/*/storage/default/file*/https+++web.whatsapp.com/cache/"
+"$HOME_USER/.config/librewolf/librewolf/*/storage/default/https+++web.whatsapp.com/cache/"
 "$HOME_USER/.cache/librewolf/*/cache2/"
 "$HOME_USER/.config/discord/Cache/" # Discord
 "$HOME_USER/.config/teams-for-linux/Partitions/teams-4-linux/WebStorage/" # Teams AppImage
