@@ -20,9 +20,9 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: remove uppercase in files and folders names based in a patthern
+# Script: remove uppercase in files and folders names based in a pattern
 #
-# Last update: 19/06/2023
+# Last update: 08/05/2026
 #
 # Be careful: Can move folders to inside another if the has the name of the another
 #
