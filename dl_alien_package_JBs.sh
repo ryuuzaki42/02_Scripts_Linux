@@ -21,6 +21,7 @@
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
+# By default from Alien Bob mirror
 #
 # Last update: 08/05/2026
 #
