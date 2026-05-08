@@ -20,11 +20,11 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: On keybord with brightness is activate on scroll lock, enable an disable in turn
+# Script: On keyboard with brightness is activated on scroll lock, enable an disable in turn
 #
 # Tip: Add a shortcut to this script
 #
-# Last update: 25/07/2025
+# Last update: 08/05/2026
 #
 
 value_brightness=$(cat /sys/class/leds/input0::scrolllock/brightness)
