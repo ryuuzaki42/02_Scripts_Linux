@@ -24,7 +24,7 @@
 #
 # Script: Script to check for Slackware updates
 #
-# Last update: 19/06/2023
+# Last update: 08/05/2026
 #
 echo -e "\n # Script to check for Slackware updates #"
 echo " # Simple check: can make false negative #"
@@ -268,15 +268,15 @@ getUpdateMirror() {
     lastLineToPrint=$(cat -n "$tmpFile" | grep "\+\-\-\-\-\-\-" | grep -v '^\-\-$' | sed ''"$countLinesTmp"' q' | tail -n 1 | awk '{print $1}')
 
     if [ "$updatesFound" == 1 ]; then
-        updaesAvailable=$(sed ''"$lastLineToPrint"' q' "$tmpFile")
-        updaesAvailable=$(echo -e "\n+--------------------------+\n$updaesAvailable")
+        updatesAvailable=$(sed ''"$lastLineToPrint"' q' "$tmpFile")
+        updatesAvailable=$(echo -e "\n+--------------------------+\n$updatesAvailable")
 
-        echo -e "$updaesAvailable\n"
+        echo -e "$updatesAvailable\n"
 
-        updaesAvailable=${updaesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
+        updatesAvailable=${updatesAvailable//'"'/'\"'} # Change " to \" go get error with "echo "notify-send""
 
         iconName="audio-volume-high"
-        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates available\" \"$updaesAvailable\" -i \"$iconName\"")
+        notificationToSend=$(echo -e "notify-send \"$(basename "$0")\n\n Updates available\" \"$updatesAvailable\" -i \"$iconName\"")
     else
         updatesFound=0
         lastKernelUpdate=$(grep "kernel-generic" "$tmpFile" | grep -v "testing/" | head -n 1 | cut -d '-' -f3)
