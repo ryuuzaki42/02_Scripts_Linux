@@ -24,7 +24,7 @@
 #
 # Folder by default: cd /var/log/removed_scripts/, /var/log/removed_packages/, /var/log/
 #
-# Last update: 19/06/2023
+# Last update: 08/05/2026
 #
 RED='\e[1;31m'
 GREEN='\e[1;32m'
@@ -35,7 +35,7 @@ CYAN='\e[1;36m'
 echo -e  "\n$CYAN # Remove old \"log\" from remove packages #"
 echo -e  " Select the packages logs with the same \"pkg_name\" in folder to be deleted (leave the most recent) $NC\n"
 
-echo -en "$RED Script in beta - use at your own risk!\nHit enter to contine or Crtl + C to quit.$NC"
+echo -en "$RED Script in beta - use at your own risk!\nHit enter to continue or Ctrl + C to quit.$NC"
 read -r _
 
 func_files_remove() {
