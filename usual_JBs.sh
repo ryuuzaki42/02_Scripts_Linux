@@ -925,7 +925,7 @@ case $optionInput in
             echo "You can use <zero> or <random> value"
             echo "Using <random> value is better to overwrite your deleted file"
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
-            echo "Long story short, use <zero> if you has not deleted pretty good sensitive data"
+            echo "Long story short, use <zero> if you have not deleted pretty good sensitive data"
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
             read -r continueRandomOrZero
 
@@ -1620,7 +1620,7 @@ case $optionInput in
                 functionWord="Remove"
                 commandToRun="removepkg"
             fi
-            echo -e "$CYAN# $functionWord packge(s) in a folder (and subfolders) in the Slackware #$NC"
+            echo -e "$CYAN# $functionWord package(s) in a folder (and subfolders) in the Slackware #$NC"
 
             updateInstallpkg () {
                 echo -e "$CYAN\nWant check work recursively (this folder and all his subfolders) or only this folder?$NC"
@@ -1661,7 +1661,7 @@ case $optionInput in
                                 fi
                             else
                                 echo -e "\nKernel image was updated and lilo is not found on the system."
-                                echo "Adjust the boot manager (like GRUB) to boot appropriate kernel."
+                                echo "Adjust the boot manager (like GRUB) to boot the appropriate kernel."
                             fi
                         fi
                     else
@@ -1706,7 +1706,7 @@ case $optionInput in
             IFS='|'
             # $# - Count of parameters
             # $@ - expanded as "$1" "$2" "$3" ... "$n"
-            # $* - expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
+            # $* - expanded as "$1y$2y$3y...$n", where y is the value of IFS variable i.e. "$*" is one long string and $IFS acts as a separator or token delimiters.
             #echo -e "\$@: $@\n\$*: $*"
             fileWork=${*:3} # Get all files passed as parameter after third (0 script name, 1 shred, 2 f)
 
