@@ -26,6 +26,6 @@
 
 [13_clone_multilib_Slackware_repo_rsync](https://github.com/ryuuzaki42/13_clone_multilib_Slackware_repo_rsync) - Clone Slackware multilib mirror to a local folder using rsync
 
-[03_Slackware_JB_Packages](https://github.com/ryuuzaki42/03_Slackware_JB_Packages) - Some packages (txz) and some shell scripts to create packages to Slacwkare
+[03_Slackware_JB_Packages](https://github.com/ryuuzaki42/03_Slackware_JB_Packages) - Some packages (txz) and some shell scripts to create packages to Slackware
 
 [SlackwarePackages](https://t.me/SlackwarePackages) - Telegram group to download packages or request new ones
