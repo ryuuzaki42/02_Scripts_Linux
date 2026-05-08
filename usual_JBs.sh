@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 06/04/2026
+# Last update: 08/05/2026
 #
 
 useColor() {
@@ -1053,7 +1053,7 @@ case $optionInput in
         ;;
     "folder-diff" )
         echo -e "$CYAN# Show the difference between two folders and (can) make them equal (with rsync) #"
-        echo " \$2 source, \$3 destination, \$4 continue rsync, \$5 use checksum, \$6 show differences$NC"
+        echo -e " \$2 source, \$3 destination, \$4 continue rsync, \$5 use checksum, \$6 show differences$NC"
 
         if [ $# -lt 3 ]; then
             echo -e "$RED\nError: Need two or more parameters, $0 folder-diff 'pathSource' 'pathDestination'$NC"
