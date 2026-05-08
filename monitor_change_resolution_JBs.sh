@@ -22,7 +22,7 @@
 #
 # Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 21/06/2023
+# Last update: 08/05/2026
 #
 # Tip: Add a shortcut to this script
 #
@@ -105,8 +105,8 @@ if [ "$activeOutput2" != '' ]; then
 else
     printTrace2
 
-    echo -e "\n Only one output (\"$activeOutput1\") connected.\n Just setting to max resolution!\n"
-    notify-send "Only one output (\"$activeOutput1\") connected." "Just setting to max resolution!" -i "preferences-desktop-wallpaper"
+    echo -e "\n Only one output (\"$activeOutput1\") connected.\n Just setting it to max resolution!\n"
+    notify-send "Only one output (\"$activeOutput1\") connected." "Just setting it to max resolution!" -i "preferences-desktop-wallpaper"
     xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary
 
     exit 0
@@ -299,17 +299,17 @@ case $optionSelected in
             echo "$activeOutput2: $activeOutput2MaxResolution_actual"
         fi
 
-        if echo "$activeOutput1MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is ative
+        if echo "$activeOutput1MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput1 is active
             echo -e "\n\tError: $activeOutput1 is not active\n"
-            activeOutputNotAtive=1
+            activeOutputNotActive=1
         else
-            if echo "$activeOutput2MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is ative
+            if echo "$activeOutput2MaxResolution_actual" | grep -qv "[[:digit:]]"; then # Test if $activeOutput2 is active
                 echo -e "\n\tError: $activeOutput2 is not active\n"
-                activeOutputNotAtive=1
+                activeOutputNotActive=1
             fi
         fi
 
-        if [ "$activeOutputNotAtive" == 1 ]; then
+        if [ "$activeOutputNotActive" == 1 ]; then
             echo -n "(1) Set the maximum resolution for both and continue or (2) Just terminate. What you want?: "
             read -r continueOrNot
 
