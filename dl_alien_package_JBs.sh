@@ -22,7 +22,7 @@
 #
 # Script: Download files/packages from one mirror with CHECKSUMS.md5
 #
-# Last update: 19/06/2023
+# Last update: 08/05/2026
 #
 case "$(uname -m)" in
     i?86) archDL="x86" ;;
@@ -84,7 +84,7 @@ runFile=$(echo "$runFileTmp" | cut -d '/' -f2-)
 
 echo -e "All packages found with \"$pathDl\":\n$runFile"
 
-echo -e "\nExclude some results based in some patterns?"
+echo -e "\nExclude some results based on some patterns?"
 echo -n "Hit enter to no or type the patterns (use | between the patterns, like: p1|p2): "
 read -r pathExclude
 
@@ -98,7 +98,7 @@ fi
 
 if [ "$runFile" != '' ]; then
     echo -e "\nCurrent packages found with \"$pathDl\":\n$runFile\n"
-    echo -n "Want to continue and download them or no to only show the links? (y)es - (n)o (hit enter to yes): "
+    echo -n "Want to continue and download them or not, to only show the links? (y)es - (n)o (hit enter to yes): "
     read -r continueDl
 
     if [ "$continueDl" != 'n' ]; then
