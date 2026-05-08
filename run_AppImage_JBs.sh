@@ -25,7 +25,7 @@
 # Tip: Add desktop launcher with the script
 # Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
-# Last update: 09/02/2026
+# Last update: 08/05/2026
 #
 #set -x
 
@@ -97,7 +97,7 @@ elif [ "$option_run" == "-v" ] || [ "$option_run" == "--view" ]; then
     mount_point=$(cat "$TMP_File")
     rm -f "$TMP_File"
 
-    if [ -x /usr/bin/dolphin ]; then # Check witch file explorer available
+    if [ -x /usr/bin/dolphin ]; then # Check which file explorer available
         file_explorer="dolphin"
     elif [ -x /usr/bin/thunar ]; then
         file_explorer="thunar"
