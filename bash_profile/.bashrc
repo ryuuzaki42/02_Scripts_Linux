@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 30/07/2024
+# Last update: 08/05/2026
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -35,7 +35,7 @@ case "$-" in # Mask this command bind to avoid be used in interactive shells onl
         bind '"\e[A": history-search-backward'
         bind '"\e[B": history-search-forward'
 
-        # That behavior is for pageup and pagedown
+        # That behavior is for keys Page Up and Page Down
         bind '"\e[5~": previous-history'
         bind '"\e[6~": next-history'
 
