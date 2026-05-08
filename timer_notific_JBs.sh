@@ -22,7 +22,7 @@
 #
 # Script: Run notification or command at the timer ends
 #
-# Last update: 10/04/2026
+# Last update: 08/05/2026
 #
 echo -e "\n # Timer countdown until a end time/date #"
 script_name=$(basename "$0")
@@ -42,7 +42,7 @@ help(){
         Future date: \"%y%m%d %H%M:%S\", \"%H:%M:%S\", \"%H:%M\" or \"%H\"
         Now + time: + \"X hour Y min Z sec\" or: + \"Xh Ymin Zs\"
         default notification: d
-        Or wit a command as 'notification': \"command file\" or: \"command\"
+        Or with a command as 'notification': \"command file\" or: \"command\"
 
     Default notification:\n$default_notification
 
