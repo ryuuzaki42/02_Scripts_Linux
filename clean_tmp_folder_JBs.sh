@@ -78,7 +78,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.anydesk/connection_trace.txt"
 "/tmp/ad_gevt_*"
 "/tmp/ad_mailbox_*"
-"/tmp/*_evt_subevt_0"
+"/tmp/ad_connect_queue_*"
 "/tmp/anydesk/"
 "$HOME_USER/.cache/kioexec/krun/" # KIO from KDE
 "/tmp/tmpaddon*" # Others
