@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 01/05/2026
+# Last update: 02/07/2026
 #
 # Tip: pass all to clean empty files and folder in /tmp/
 #
@@ -126,15 +126,15 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 # /tmp/.X11-unix/
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
-for value in ${filesFoldersToRermove[*]}; do
+for value in "${filesFoldersToRermove[@]}"; do
     echo -e "\n    # Value: \"$value\" #"
 
     if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
         # Show errors (files and folders not found)
-        #rm -vr "$value"
+        #rm -vr $value # Without quote to expand variable / globbing
 
         # Default - not show errors
-        rm -fvr "$value"
+        rm -fvr $value # Without quote to expand variable / globbing
     else
         if echo "$value" | grep -q "/cache/"; then # Remove cache from WhatsApp Web
             echo -e "\n    # Removing cache in: $value"
