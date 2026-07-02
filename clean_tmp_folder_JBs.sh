@@ -145,6 +145,13 @@ for value in "${filesFoldersToRermove[@]}"; do
     fi
 done
 
+# Show all files with size of 0 b in /tmp/
+#find /tmp/ -maxdepth 1 -type f -empty -print
+
+# Delete all file with size 0 b in /tmp/
+echo "Empty files in /tmp/"
+find /tmp/ -maxdepth 1 -type f -empty -print -delete
+
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
     read -r continue_or_not
