@@ -151,8 +151,8 @@ if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
 
     if [ "$continue_or_not" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
-        find /tmp/ -empty -print -delete # Safe remove empty files
-        find /tmp/ -size 0b -print -delete # Check for files with 0b, depend of block size
+        find /tmp/ -empty -print -delete # Safer to remove empty files
+        find /tmp/ -size 0b -print -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
