@@ -26,11 +26,20 @@
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
+# Use: cleanup_system_JBs.sh 'username' 'continue_or_not_1' 'clean_all' 'continue_or_not_2'
+# cleanup_system_JBs.sh j y all y
+#
 
-HOME_USER=$HOME
-clean_all=$1
+username=$1
 continue_or_not_1=$2
-continue_or_not_2=$3
+clean_all=$3
+continue_or_not_2=$4
+
+if [ "$username" == '' ]; then
+    HOME_USER=$(echo $username) # Get user home path
+else
+    HOME_USER=$HOME
+fi
 
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 echo -en "Continue? (y)es or (n)o (enter to continue): "
