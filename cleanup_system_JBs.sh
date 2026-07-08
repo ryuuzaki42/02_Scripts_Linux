@@ -36,7 +36,7 @@ clean_all=$3
 continue_or_not_2=$4
 
 if [ "$username" != '' ]; then
-    HOME_USER=$(echo $username) # Get user home path
+    HOME_USER=$(eval echo ~$username) # Get user home path
 else
     HOME_USER=$HOME
 fi
