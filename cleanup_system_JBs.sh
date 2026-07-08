@@ -24,7 +24,7 @@
 #
 # Last update: 08/07/2026
 #
-# Tip: pass all to clean empty files and folder in /tmp/
+# Tip: pass all to clean empty files and folders in /tmp/
 #
 
 HOME_USER=$HOME
