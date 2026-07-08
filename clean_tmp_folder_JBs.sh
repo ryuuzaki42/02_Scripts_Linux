@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 02/07/2026
+# Last update: 08/07/2026
 #
 # Tip: pass all to clean empty files and folder in /tmp/
 #
@@ -44,7 +44,7 @@ HOME_USER=${HOME_USER::-1} # Remove last /
 filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/" # Dolphin
 "$HOME_USER/.xsession-errors"
-"$HOME_USER/.config/VirtualBox/*log*" # VirtualBox
+"$HOME_USER/.config/VirtualBox/*.log*" # VirtualBox
 "$HOME_USER/VirtualBox VMs/*/Logs/"
 "/tmp/.vbox-*-ipc/"
 "/tmp/vboxdrv-Module.symvers"
@@ -149,7 +149,7 @@ done
 #find /tmp/ -maxdepth 1 -type f -empty -print
 
 # Delete all file with size 0 b in /tmp/
-echo "Empty files in /tmp/"
+echo -e "\n    # Removing empty files in: /tmp/"
 find /tmp/ -maxdepth 1 -type f -empty -print -delete
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
