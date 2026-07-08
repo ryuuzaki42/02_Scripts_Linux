@@ -151,12 +151,12 @@ for value in "${filesFoldersToRermove[@]}"; do
     fi
 done
 
-# Show all files with size of 0 b in /tmp/
-#find /tmp/ -maxdepth 1 -type f -empty -print
+# Show all files/folders empty in /tmp/
+#find /tmp/ -maxdepth 1 -empty -print
 
-# Delete all file with size 0 b in /tmp/
+# Delete all files/folders empty in /tmp/
 echo -e "\n    # Removing empty files in: /tmp/"
-find /tmp/ -maxdepth 1 -type f -empty -print -delete
+find /tmp/ -maxdepth 1 -empty -print -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
