@@ -160,10 +160,10 @@ find /tmp/ -maxdepth 1 -empty -print -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
-    if [ "$continue_or_not_1" == '' ]; then
+    if [ "$continue_or_not_2" == '' ]; then
         read -r continue_or_not_2
     else
-        echo -n "$continue_or_not_1"
+        echo -n "$continue_or_not_2"
     fi
 
     if [ "$continue_or_not_2" == 'y' ]; then
