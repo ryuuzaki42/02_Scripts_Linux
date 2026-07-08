@@ -28,7 +28,7 @@
 #
 
 HOME_USER=$HOME
-CLEAN_ALL=$1
+clean_all=$1
 continue_or_not_1=$2
 continue_or_not_2=$3
 
@@ -158,7 +158,7 @@ done
 echo -e "\n    # Removing empty files in: /tmp/"
 find /tmp/ -maxdepth 1 -type f -empty -print -delete
 
-if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
+if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
     if [ "$continue_or_not_1" == '' ]; then
         read -r continue_or_not_2
