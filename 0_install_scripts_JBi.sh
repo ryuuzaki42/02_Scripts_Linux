@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# Copy the scripts (*_JBs.sh) int this folder to /usr/bin:
-# You can just execute this script
+# Copy/Install the scripts (*_JBs.sh) in this folder to /usr/bin/:
 #
-# Last update: 19/06/2023
+# Last update: 08/07/2026
 #
 echo -e "This script copy (cp *_JBs.sh) to /usr/bin/\n"
 
