@@ -32,9 +32,9 @@ CLEAN_ALL=$1
 
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 echo -en "Continue? (y)es or (n)o (enter to continue): "
-read -r continue_or_not
+    read -r continue_or_not_1
 
-if [ "$continue_or_not" != 'y' ] && [ "$continue_or_not" != '' ]; then
+if [ "$continue_or_not_1" != 'y' ] && [ "$continue_or_not_1" != '' ]; then
     echo -e "\nJust exiting\n"
     exit 0
 fi
@@ -154,9 +154,9 @@ find /tmp/ -maxdepth 1 -type f -empty -print -delete
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
-    read -r continue_or_not
+    read -r continue_or_not_2
 
-    if [ "$continue_or_not" == 'y' ]; then
+    if [ "$continue_or_not_2" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
         find /tmp/ -empty -print -delete # Safer to remove empty files
         find /tmp/ -size 0b -print -delete # Remove files with 0b. Depend of block size
