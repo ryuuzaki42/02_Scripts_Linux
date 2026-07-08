@@ -34,7 +34,11 @@ continue_or_not_2=$3
 
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 echo -en "Continue? (y)es or (n)o (enter to continue): "
+if [ "$continue_or_not_1" == '' ]; then
     read -r continue_or_not_1
+else
+    echo -n "$continue_or_not_1"
+fi
 
 if [ "$continue_or_not_1" != 'y' ] && [ "$continue_or_not_1" != '' ]; then
     echo -e "\nJust exiting\n"
@@ -156,7 +160,11 @@ find /tmp/ -maxdepth 1 -type f -empty -print -delete
 
 if [ "$CLEAN_ALL" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
+    if [ "$continue_or_not_1" == '' ]; then
         read -r continue_or_not_2
+    else
+        echo -n "$continue_or_not_1"
+    fi
 
     if [ "$continue_or_not_2" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
