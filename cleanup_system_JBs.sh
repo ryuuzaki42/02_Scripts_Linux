@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 08/07/2026
+# Last update: 09/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -143,21 +143,26 @@ IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     echo -e "\n    # \"$files_folders_remove_tmp\" #"
 
-    if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
-        # Show errors (files and folders not found)
-        #rm -vr $value # Without quote to expand variable / globbing
+    for value in $files_folders_remove_tmp; do
+        echo -e "# value: \"$value\" #"
+        exit 0
 
-        # Default - not show errors
-        rm -fvr $value # Without quote to expand variable / globbing
-    else
-        if echo "$value" | grep -q "/cache/"; then # Remove cache from WhatsApp Web
-            echo -e "\n    # Removing cache in: $value"
-            rm -fvr "$value"
+        if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
+            # Show errors (files and folders not found)
+            #rm -vr $value # Without quote to expand variable / globbing
+
+            # Default - not show errors
+            rm -fvr $value # Without quote to expand variable / globbing
         else
-            #echo -e "\n    # Value: \"$value\" #"
-            echo "Not removing whatsapp, like https+++web.whatsapp.com" # Need to re-link account
+            if echo "$value" | grep -q "/cache/"; then # Remove cache from WhatsApp Web
+                echo -e "\n    # Removing cache in: $value"
+                rm -fvr "$value"
+            else
+                #echo -e "\n    # Value: \"$value\" #"
+                echo "Not removing whatsapp, like https+++web.whatsapp.com" # Need to re-link account
+            fi
         fi
-    fi
+    done
 done
 
 # Show all files/folders empty in /tmp/
