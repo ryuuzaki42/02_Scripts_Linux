@@ -42,7 +42,7 @@ else
 fi
 
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
-echo -en "Continue? (y)es or (n)o (enter to continue): "
+echo -en "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
 if [ "$continue_or_not_1" == '' ]; then
     read -r continue_or_not_1
 else
