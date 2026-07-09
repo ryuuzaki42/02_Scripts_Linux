@@ -56,7 +56,7 @@ fi
 
 HOME_USER=${HOME_USER::-1} # Remove last /
 
-filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
+filesFoldersToRemove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/" # Dolphin
 "$HOME_USER/.xsession-errors"
 "$HOME_USER/.config/VirtualBox/*.log*" # VirtualBox
@@ -127,7 +127,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
 
-## Can be useful if add to filesFoldersToRermove
+## Can be useful if add to filesFoldersToRemove
 # "$HOME_USER/.cache/"
 # "/tmp/plasma-csd-generator.*"
 # "/tmp/plasma-csd-generator.*/"
@@ -140,7 +140,7 @@ filesFoldersToRermove=("$HOME_USER/.cache/thumbnails/"
 # /tmp/.X11-unix/
 
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
-for value in "${filesFoldersToRermove[@]}"; do
+for value in "${filesFoldersToRemove[@]}"; do
     echo -e "\n    # Value: \"$value\" #"
 
     if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
