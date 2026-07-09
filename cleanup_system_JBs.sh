@@ -181,7 +181,7 @@ fi
 
 # Delete all files/folders empty in /tmp/
 echo -e "\n    # Removing empty files in: /tmp/"
-find /tmp/ -maxdepth 1 -empty -print "$delete_file" # -delete
+find /tmp/ -maxdepth 1 -empty -print $delete_file # -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
@@ -193,8 +193,8 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
 
     if [ "$continue_or_not_2" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
-        find /tmp/ -empty -print "$delete_file" # -delete # Safer to remove empty files
-        find /tmp/ -size 0b -print "$delete_file" # -delete # Remove files with 0b. Depend of block size
+        find /tmp/ -empty -print $delete_file # -delete # Safer to remove empty files
+        find /tmp/ -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
