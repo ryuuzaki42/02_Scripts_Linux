@@ -34,6 +34,7 @@ username=$1
 continue_or_not_1=$2
 clean_all=$3
 continue_or_not_2=$4
+only_test=$5 # To only show files that will be deleted
 
 if [ "$username" != '' ]; then
     HOME_USER=$(eval echo ~$username) # Get user home path
@@ -144,8 +145,12 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     echo -e "\n    # \"$files_folders_remove_tmp\" #"
 
     for value in $files_folders_remove_tmp; do
-        echo -e "# value: \"$value\" #"
-        exit 0
+        echo -e "        # value: \"$value\" #"
+        if [ "$only_test" != '' ]; then
+            echo -e "# will remove \"$value\" #"
+            continue
+            exit 0
+        fi
 
         if echo "$value" | grep -v -q "web.whatsapp.com"; then # Not remove WhatsApp Web
             # Show errors (files and folders not found)
@@ -165,12 +170,18 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     done
 done
 
+if [ "$only_test" != '' ]; then
+    delete_file=''
+else
+    delete_file="-delete"
+fi
+
 # Show all files/folders empty in /tmp/
 #find /tmp/ -maxdepth 1 -empty -print
 
 # Delete all files/folders empty in /tmp/
 echo -e "\n    # Removing empty files in: /tmp/"
-find /tmp/ -maxdepth 1 -empty -print -delete
+find /tmp/ -maxdepth 1 -empty -print "$delete_file" # -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
@@ -182,8 +193,8 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
 
     if [ "$continue_or_not_2" == 'y' ]; then
         # Delete empty (zero size) folder and files in /tmp/
-        find /tmp/ -empty -print -delete # Safer to remove empty files
-        find /tmp/ -size 0b -print -delete # Remove files with 0b. Depend of block size
+        find /tmp/ -empty -print "$delete_file" # -delete # Safer to remove empty files
+        find /tmp/ -size 0b -print "$delete_file" # -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
