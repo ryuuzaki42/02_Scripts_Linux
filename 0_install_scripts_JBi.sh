@@ -14,7 +14,7 @@ echo -e "\n${BLUE}This script copy/install (cp *_JBs.sh) to /usr/bin/$NC\n"
 
 echo "List of files/scripts that will be copied:"
 ls --color=auto ./*_JBs.sh
-echo -e "\t\n${RED}Be careful Will overwrite the files if they already exists$NC\n"
+echo -e "\t\n${RED}Be careful! Will overwrite the files if they already exists$NC\n"
 
 echo -en "Want continue and copy these files?\n(y)es - (n)o: "
 read -r continueCopy
