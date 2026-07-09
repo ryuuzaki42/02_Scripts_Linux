@@ -43,6 +43,14 @@ else
 fi
 
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
+
+if [ "$only_test" != '' ]; then
+    echo "\n# Test mode - files will not be deleted #\n"
+    delete_file=''
+else
+    delete_file="-delete"
+fi
+
 echo -en "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
 if [ "$continue_or_not_1" == '' ]; then
     read -r continue_or_not_1
@@ -169,12 +177,6 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
         fi
     done
 done
-
-if [ "$only_test" != '' ]; then
-    delete_file=''
-else
-    delete_file="-delete"
-fi
 
 # Show all files/folders empty in /tmp/
 #find /tmp/ -maxdepth 1 -empty -print
