@@ -22,19 +22,20 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 09/07/2026
+# Last update: 10/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
-# Use: cleanup_system_JBs.sh 'username' 'continue_or_not_1' 'clean_all' 'continue_or_not_2'
-# cleanup_system_JBs.sh j y all y
+# Use: cleanup_system_JBs.sh 'username' 'continue_or_not_1' 'clean_all' 'continue_or_not_2' 'only_test'
+# All: cleanup_system_JBs.sh j y all y
+# Test cleanup_system_JBs.sh j y all y test
 #
 
 username=$1
 continue_or_not_1=$2
 clean_all=$3
 continue_or_not_2=$4
-only_test=$5 # To only show files that will be deleted
+only_test=$5 # test # To only show files that will be deleted
 
 if [ "$username" != '' ]; then
     HOME_USER=$(eval echo ~$username) # Get user home path
@@ -45,7 +46,7 @@ fi
 echo -e "\n # Script to clean some logs from home folder ($HOME_USER) and /tmp/ folder #\n"
 
 if [ "$only_test" != '' ]; then
-    echo "\n# Test mode - files will not be deleted #\n"
+    echo -e "# Test mode - files will not be deleted #\n"
     delete_file=''
 else
     delete_file="-delete"
