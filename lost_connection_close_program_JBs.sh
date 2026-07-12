@@ -42,8 +42,8 @@ while true; do
     echo -e "\n Ping result: $ping_result\n"
 
     if [ "$grep_failure" != '' ]; then
-        echo " - Website unreachable -"
-        killall "$program_kill"
+        echo " - Website unreachable - killall \"$program_kill\""
+        killall "$program_kill" # killall send by default SIGTERM - graceful shutdown
     fi
 
     echo " - Sleep time -"
