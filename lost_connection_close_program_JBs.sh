@@ -22,7 +22,7 @@
 #
 # Script: If lost connection, close some program
 #
-# Last update: 11/07/2026
+# Last update: 12/07/2026
 
 time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
@@ -47,5 +47,6 @@ while true; do
     fi
 
     echo " - Sleep time -"
+    date
     sleep ${time_sleep}
 done
