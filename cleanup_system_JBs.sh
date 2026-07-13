@@ -136,6 +136,7 @@ files_folders_remove=("$HOME_USER/.cache/thumbnails/"
 "/tmp/v8-compile-cache-*/"
 "/tmp/eZtz0jVPqfxm0NLRhlfuznK8-TD-webview-*"
 "/tmp/bOfimIG4WelHX1Z0zZUnw_le-TD-webview-*"
+"/tmp/create_ap.all.lock" # create_ap
 "/tmp/System.lua" # Lua
 "/tmp/ksmserver.NAQOIo")
 
