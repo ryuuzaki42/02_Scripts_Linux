@@ -38,7 +38,7 @@ continue_or_not_2=$4
 only_test=$5 # test # To only show files that will be deleted
 
 if [ "$username" != '' ]; then
-    HOME_USER=$(eval echo ~$username) # Get user home path
+    HOME_USER=$(eval echo "~$username") # Get user home path
 else
     HOME_USER=$HOME
 fi
