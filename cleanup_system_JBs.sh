@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 10/07/2026
+# Last update: 13/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -64,7 +64,9 @@ if [ "$continue_or_not_1" != 'y' ] && [ "$continue_or_not_1" != '' ]; then
     exit 0
 fi
 
-HOME_USER=${HOME_USER::-1} # Remove last /
+if echo "$HOME_USER" | grep -q '/$'; then # Check if last character is '/'
+    HOME_USER=${HOME_USER::-1} # Remove the last character - '/'
+fi
 
 files_folders_remove=("$HOME_USER/.cache/thumbnails/"
 "$HOME_USER/.thumbnails/" # Dolphin
