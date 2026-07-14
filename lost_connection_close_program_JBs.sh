@@ -22,7 +22,7 @@
 #
 # Script: If lost connection, close some program
 #
-# Last update: 12/07/2026
+# Last update: 14/07/2026
 
 time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
@@ -37,7 +37,7 @@ fi
 
 while true; do
     ping_result=$(ping -c 10 "$website_ping" 2>&1)
-    grep_failure=$(echo "$ping_result" | grep "Temporary failure in name resolution")
+    grep_failure=$(echo "$ping_result" | grep -E "Temporary failure in name resolution|100% packet loss")
 
     echo -e "\n Ping result: $ping_result\n"
 
