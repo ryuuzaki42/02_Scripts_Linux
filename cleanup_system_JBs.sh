@@ -157,7 +157,8 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     echo -e "\n    # \"$files_folders_remove_tmp\" #"
 
     for value in $files_folders_remove_tmp; do
-        echo -e "        # value: \"$value\" #"
+        #echo -e "        # value: \"$value\" #" # Disable by default
+
         if [ "$only_test" != '' ]; then
             echo -e "# will remove \"$value\" #"
             continue
@@ -175,8 +176,8 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
                 echo -e "\n    # Removing cache in: $value"
                 rm -fvr "$value"
             else
-                #echo -e "\n    # Value: \"$value\" #"
-                echo "Not removing whatsapp, like https+++web.whatsapp.com" # Need to re-link account
+                echo -e "\n    # Value: \"$value\" #"
+                echo " - Not removing whatsapp, like https+++web.whatsapp.com" # Need to re-link account
             fi
         fi
     done
