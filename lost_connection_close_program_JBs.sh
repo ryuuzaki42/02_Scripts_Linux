@@ -28,6 +28,9 @@ time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
 program_kill=$1 # Program to close when lost connection
 
+RED='\e[1;31m'
+NC='\033[0m' # reset/no color
+
 echo -e "\n # Script to test if has connection, if not, close some program #"
 
 if [ "$program_kill" == '' ]; then
@@ -42,11 +45,11 @@ while true; do
     echo -e "\n Ping result: $ping_result\n"
 
     if [ "$grep_failure" != '' ]; then
-        echo " - Website unreachable - killall \"$program_kill\""
+        echo " $RED - Website unreachable - killall \"$program_kill\" -$NC\n"
         killall "$program_kill" # killall send by default SIGTERM - graceful shutdown
     fi
 
-    echo " - Sleep time -"
+    echo -n " - Sleep time - ${time_sleep} - "
     date
     sleep ${time_sleep}
 done
