@@ -37,7 +37,12 @@ continue_or_not_2=$4
 only_test=$5 # test # To only show files that will be deleted
 
 if [ "$username" != '' ]; then
-    HOME_USER=$(eval echo "~$username") # Get user home path
+    if ! grep -q "^$username" /etc/passwd; then # Check if user exists
+        HOME_USER=$(eval echo "~$username") # Get user home path
+    else
+        echo -e "\n Error: the user \"$username\" not exists! Try again with another user\n"
+        exit 1
+    fi
 else
     HOME_USER=$HOME
 fi
