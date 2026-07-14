@@ -50,6 +50,7 @@ else
     home_user=$HOME
 fi
 
+echo -e "- user_name: $user_name\n- home_user: $home_user\n"
 
 if [ "$only_test" != '' ]; then
     echo -e "# Test mode - files will not be deleted #\n"
