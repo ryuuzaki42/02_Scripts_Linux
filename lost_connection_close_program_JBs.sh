@@ -31,7 +31,7 @@ program_kill=$1 # Program to close when lost connection
 echo -e "\n # Script to test if has connection, if not, close some program #"
 
 if [ "$program_kill" == '' ]; then
-    echo -e "\nNot passed the program to kill! Exiting...\n"
+    echo -e "\nError: not passed the program to kill! Exiting...\n"
     exit 1
 fi
 
