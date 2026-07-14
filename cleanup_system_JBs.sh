@@ -26,22 +26,22 @@
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
-# Use: cleanup_system_JBs.sh 'user_name:' 'continue_or_not_1' 'clean_all' 'continue_or_not_2' 'only_test'
+# Use: cleanup_system_JBs.sh 'user_name' 'continue_or_not_1' 'clean_all' 'continue_or_not_2' 'only_test'
 # All: cleanup_system_JBs.sh j y all y
 # Test cleanup_system_JBs.sh j y all y test
 #
-user_name:=$1
+user_name=$1
 continue_or_not_1=$2
 clean_all=$3
 continue_or_not_2=$4
 only_test=$5 # test # To only show files that will be deleted
 
 echo -e "\n # Script to clean some logs from home folder and /tmp/ folder #\n"
-if [ "$user_name:" != '' ]; then
-    if ! grep -q "^$user_name:" /etc/passwd; then # Check if user exists
-        HOME_USER=$(eval echo "~$user_name:") # Get user home path
+if [ "$user_name" != '' ]; then
+    if ! grep -q "^$user_name" /etc/passwd; then # Check if user exists
+        HOME_USER=$(eval echo "~$user_name") # Get user home path
     else
-        echo -e "\n Error: the user \"$user_name:\" not exists! Try again with another user\n"
+        echo -e "\n Error: the user \"$user_name\" not exists! Try again with another user\n"
         exit 1
     fi
 else
