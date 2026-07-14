@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($HOME_USER) and /tmp/ folder
 #
-# Last update: 13/07/2026
+# Last update: 14/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -30,7 +30,6 @@
 # All: cleanup_system_JBs.sh j y all y
 # Test cleanup_system_JBs.sh j y all y test
 #
-
 username=$1
 continue_or_not_1=$2
 clean_all=$3
