@@ -37,6 +37,7 @@ continue_or_not_2=$4
 only_test=$5 # test # To only show files that will be deleted
 
 echo -e "\n # Script to clean some logs from home folder and /tmp/ folder #\n"
+
 if [ "$user_name" != '' ]; then
     if ! grep -q "^$user_name" /etc/passwd; then # Check if user exists
         HOME_USER=$(eval echo "~$user_name") # Get user home path
@@ -45,6 +46,7 @@ if [ "$user_name" != '' ]; then
         exit 1
     fi
 else
+    user_name=$(whoami)
     HOME_USER=$HOME
 fi
 
