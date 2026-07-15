@@ -22,7 +22,7 @@
 #
 # Script: If lost connection, close some program
 #
-# Last update: 14/07/2026
+# Last update: 15/07/2026
 
 time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
@@ -45,7 +45,7 @@ while true; do
     echo -e "\n Ping result: $ping_result\n"
 
     if [ "$grep_failure" != '' ]; then
-        echo " $RED - Website unreachable - killall \"$program_kill\" -$NC\n"
+        echo -e " $RED - Website unreachable - killall \"$program_kill\" -$NC\n"
         killall "$program_kill" # killall send by default SIGTERM - graceful shutdown
     fi
 
