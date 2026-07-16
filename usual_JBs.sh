@@ -905,7 +905,7 @@ case $optionInput in
         ;;
     "work-fbi" )
         echo -e "$CYAN# Write <zero>/<random> value in one ISO file to wipe trace of old deleted file #$NC"
-        echo -e "\nWarning: Depending on how big is the amount of free space, this can take a long time"
+        echo -e "\n${BLUE}Warning: Depending on how big is the amount of free space, this can take a long time$NC"
 
         freeSpace=$(df . | awk '/[0-9]%/{print $(NF-2)}') # Free space local/pwd folder
         freeSpaceMiB=$(echo "scale=2; $freeSpace/1024" | bc) # Free space in MiB
@@ -936,7 +936,7 @@ case $optionInput in
             else
                 typeWriteDd="zero"
             fi
-            echo -en "\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait...\n\n"
+            echo -e "\nWriting <$typeWriteDd> value in the \"$fileName\" tmp file. Please wait..."
 
             if [ "$continueRandomOrZero" == 'r' ]; then
                 dd if=/dev/urandom of="$fileName" iflag=nocache oflag=direct bs=1M conv=notrunc status=progress # Write <random> value to wipe the data
