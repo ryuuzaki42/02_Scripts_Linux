@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 08/05/2026
+# Last update: 15/07/2026
 #
 
 useColor() {
@@ -915,9 +915,9 @@ case $optionInput in
         echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
         echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
         echo -en "\nWant continue? (y)es - (n)o: "
-        read -r continueDd
+        read -r continue_dd
 
-        if [ "$continueDd" == 'y' ]; then
+        if [ "$continue_dd" == 'y' ]; then
             fileName="work-fbi_" # Create a ISO file with a random part name
             fileName+=$(date +%s | md5sum | head -c 10)
             fileName+=".iso"
