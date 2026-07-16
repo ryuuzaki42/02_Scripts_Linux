@@ -913,6 +913,7 @@ case $optionInput in
         timeAvgMin=$(echo "($freeSpaceMiB/30)/60" | bc)
 
         echo -e "\nThere are$GREEN $freeSpaceGiB$CYAN GiB$NC ($GREEN$freeSpaceMiB$CYAN MiB$NC) free in this folder/disk/partition (that will be write)"
+        echo -e "${RED}Local working path: $GREEN$(pwd)/$NC"
         echo -e "Considering$CYAN 30 MiB/s$NC in speed of write, will take$GREEN $timeAvgMin min$NC to finish this job"
         echo -en "\nWant continue? (y)es - (n)o: "
         read -r continue_dd
@@ -922,8 +923,8 @@ case $optionInput in
             fileName+=$(date +%s | md5sum | head -c 10)
             fileName+=".iso"
 
-            echo "You can use <zero> or <random> value"
-            echo "Using <random> value is better to overwrite your deleted file"
+            echo -e "\nYou can use <zero> or <random> value"
+            echo "Using <random> value is better to overwrite deleted files"
             echo "Otherwise, is slower (almost 10 times) then use <zero> value"
             echo "Long story short, use <zero> if you have not deleted pretty good sensitive data"
             echo -en "\nUse random or zero value?\n(r)andom - (z)ero: "
