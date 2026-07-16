@@ -22,11 +22,12 @@
 #
 # Script: If lost connection, close some program
 #
-# Last update: 15/07/2026
+# Last update: 16/07/2026
 
 time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
 program_kill=$1 # Program to close when lost connection
+count_ping_send=3 #3 # Count of packets of ping to send
 
 RED='\e[1;31m'
 NC='\033[0m' # reset/no color
@@ -39,7 +40,7 @@ if [ "$program_kill" == '' ]; then
 fi
 
 while true; do
-    ping_result=$(ping -c 10 "$website_ping" 2>&1)
+    ping_result=$(ping -c "$count_ping_send" "$website_ping" 2>&1)
     grep_failure=$(echo "$ping_result" | grep -E "Temporary failure in name resolution|100% packet loss")
 
     echo -e "\n Ping result: $ping_result\n"
