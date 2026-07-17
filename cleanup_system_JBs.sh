@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($home_user) and /tmp/ folder
 #
-# Last update: 14/07/2026
+# Last update: 17/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -39,7 +39,7 @@ only_test=$5 # test # To only show files that will be deleted
 echo -e "\n # Script to clean some logs from home folder and /tmp/ folder #\n"
 
 if [ "$user_name" != '' ]; then
-    if ! grep -q "^$user_name" /etc/passwd; then # Check if user exists
+    if grep -q "^$user_name" /etc/passwd; then # Check if user exists
         home_user=$(eval echo "~$user_name") # Get user home path
     else
         echo -e "\n Error: the user \"$user_name\" not exists! Try again with another user\n"
