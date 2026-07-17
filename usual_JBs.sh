@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 15/07/2026
+# Last update: 17/07/2026
 #
 
 useColor() {
@@ -114,7 +114,7 @@ case $optionInput in
         export -f dateUpFunction
         export CYAN NC GREEN RED
         if [ "$(whoami)" != "root" ]; then
-            echo -e "$CYAN\nInsert the root Password to continue$NC"
+            echo -e "$CYAN\nEnter the root password to continue$NC"
         fi
 
         su root -c 'dateUpFunction' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
@@ -1675,7 +1675,7 @@ case $optionInput in
             export functionWord commandToRun CYAN NC GREEN RED folderWork
 
             if [ "$(whoami)" != "root" ]; then
-                echo -e "$CYAN\nInsert the root Password to continue$NC"
+                echo -e "$CYAN\nEnter the root password to continue$NC"
             fi
 
             su root -c 'updateInstallpkg' # In this case without the hyphen (su - root -c 'command') to no change the environment variables
