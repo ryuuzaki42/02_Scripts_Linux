@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($home_user) and /tmp/ folder
 #
-# Last update: 17/07/2026
+# Last update: 21/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -190,11 +190,11 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     done
 done
 
-# Show all files/folders empty in /tmp/
+# Show all files/folders empty in /tmp/ - '-maxdepth 1' to not recursively
 #find /tmp/ -maxdepth 1 -empty -print
 
 # Delete all files/folders empty in /tmp/
-echo -e "\n    # Removing empty files in: /tmp/"
+echo -e "\n    # Removing all empty files in /tmp/ not recursively"
 find /tmp/ -maxdepth 1 -empty -print $delete_file # -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
