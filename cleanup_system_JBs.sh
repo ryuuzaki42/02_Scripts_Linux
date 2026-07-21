@@ -209,13 +209,13 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
         # Preserves important files required for graphical sessions
             # /tmp/sddm-auth-*, /tmp/xauth-*, /tmp/xauth_*, /tmp/.ICE-unix/, /tmp/.X11-unix/
         preserve_X=(-name "sddm-auth-*" -o -name "xauth-*" -o -name "xauth_*" -o )
-        preserve_X+=( -name ".ICE-unix/" -o -name ".X11-unix/" ) # Need '-prune -o' after
+        preserve_X+=( -name ".ICE-unix*" -o -name ".X11-unix*" ) # Need '-prune -o' after
         echo -e "\n\nFiles/Folders ignored - need by X -\$preserve_X: ${preserve_X[@]}"
 
         # Delete all empty (zero size) folders and files in /tmp/ recursively
             # '-name ".mount_*" -prune -o' to ignore all AppImage in use, with mount in "/tmp/.mount_*"
         find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -empty -print $delete_file # -delete # Safer to remove empty files
-        find /tmp/ \( "${preserve_X[@]}" \)  -prune -o -name ".mount_*" -prune -o -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
+        find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
