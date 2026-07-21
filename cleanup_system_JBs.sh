@@ -206,9 +206,10 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
     fi
 
     if [ "$continue_or_not_2" == 'y' ]; then
-        # Delete empty (zero size) folder and files in /tmp/
-        find /tmp/ -empty -print $delete_file # -delete # Safer to remove empty files
-        find /tmp/ -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
+        # Delete all empty (zero size) folders and files in /tmp/ recursively, ignoring ".mount_*"
+            # '-name ".mount_*" -prune -o' to ignore all AppImage in use, with mount in "/tmp/.mount_*"
+        find /tmp/ -name ".mount_*" -prune -o -empty -print $delete_file # -delete # Safer to remove empty files
+        find /tmp/ -name ".mount_*" -prune -o -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
