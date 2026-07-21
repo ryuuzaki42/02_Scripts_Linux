@@ -206,6 +206,11 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
     fi
 
     if [ "$continue_or_not_2" == 'y' ]; then
+        # Preserves important files required for graphical sessions
+            # /tmp/sddm-auth-*, /tmp/xauth-*, /tmp/xauth_*, /tmp/.ICE-unix/, /tmp/.X11-unix/
+        preserve_X=(-name "sddm-auth-*" -o -name "xauth-*" -o -name "xauth_*" -o )
+        preserve_X+=( -name ".ICE-unix/" -o -name ".X11-unix/" ) # Need '-prune -o' after
+        echo -e "\n\nFiles/Folders ignored - need by X -\$preserve_X: ${preserve_X[@]}"
         # Delete all empty (zero size) folders and files in /tmp/ recursively
             # '-name ".mount_*" -prune -o' to ignore all AppImage in use, with mount in "/tmp/.mount_*"
         find /tmp/ -name ".mount_*" -prune -o -empty -print $delete_file # -delete # Safer to remove empty files
