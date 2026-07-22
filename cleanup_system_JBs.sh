@@ -53,7 +53,7 @@ fi
 echo -e "- user_name: $user_name\n- home_user: $home_user\n"
 
 if [ "$only_test" != '' ]; then
-    echo -e "# Test mode - files will not be deleted #\n"
+    echo -e "# Test mode - files and folders will not be deleted #\n"
     delete_file=''
 else
     delete_file="-delete"
@@ -209,8 +209,9 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
         # Preserves important files required for graphical sessions
             # /tmp/sddm-auth-*, /tmp/xauth-*, /tmp/xauth_*, /tmp/.ICE-unix/, /tmp/.X11-unix/
         preserve_X=(-name "sddm-auth-*" -o -name "xauth-*" -o -name "xauth_*" -o )
-        preserve_X+=( -name ".ICE-unix*" -o -name ".X11-unix*" ) # Need '-prune -o' after
-        echo -e "\n\nFiles/Folders ignored - need by X -\$preserve_X: ${preserve_X[@]}"
+        # Folders without the '/', to works with find - The '/' character is a directory separator, not part of the folder name
+        preserve_X+=( -name ".ICE-unix" -o -name ".X11-unix" ) # Need '-prune -o' after
+        #echo -e "\n\nFiles/Folders ignored - need by X -\$preserve_X: ${preserve_X[@]}"
 
         # Delete all empty (zero size) folders and files in /tmp/ recursively
             # '-name ".mount_*" -prune -o' to ignore all AppImage in use, with mount in "/tmp/.mount_*"
