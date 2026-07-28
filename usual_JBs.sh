@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 17/07/2026
+# Last update: 28/07/2026
 #
 
 useColor() {
@@ -710,7 +710,7 @@ case $optionInput in
                 echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
                 echo -e "$list_process" | grep "  $process "
 
-                echo -en "$RED\nKill this process?\n(y)es - (n)o (hit enter to no or t no end function):$NC "
+                echo -en "$RED\nKill this process?\n(y)es - (n)o (hit enter to no or t to end function):$NC "
                 read -r kill_process
 
                 if [ "$kill_process" == 'y' ]; then
