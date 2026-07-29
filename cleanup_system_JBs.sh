@@ -22,7 +22,7 @@
 #
 # Script: Clean some logs and cache from home folder ($home_user) and /tmp/ folder
 #
-# Last update: 21/07/2026
+# Last update: 28/07/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -54,9 +54,9 @@ echo -e "- user_name: $user_name\n- home_user: $home_user\n"
 
 if [ "$only_test" != '' ]; then
     echo -e "# Test mode - files and folders will not be deleted #\n"
-    delete_file=''
+    delete_file=() # Empty array
 else
-    delete_file="-delete"
+    delete_file=(-exec rm -rvf -- {} +) # Delete files/folders
 fi
 
 echo -en "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
@@ -195,7 +195,7 @@ done
 
 # Delete all files/folders empty in /tmp/
 echo -e "\n    # Removing all empty files in /tmp/ not recursively"
-find /tmp/ -maxdepth 1 -empty -print $delete_file # -delete
+find /tmp/ -maxdepth 1 -empty -print "${delete_file[@]}" # -delete
 
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
@@ -215,8 +215,8 @@ if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-gener
 
         # Delete all empty (zero size) folders and files in /tmp/ recursively
             # '-name ".mount_*" -prune -o' to ignore all AppImage in use, with mount in "/tmp/.mount_*"
-        find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -empty -print $delete_file # -delete # Safer to remove empty files
-        find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -size 0b -print $delete_file # -delete # Remove files with 0b. Depend of block size
+        find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -empty -print "${delete_file[@]}" # -delete # Safer to remove empty files
+        find /tmp/ \( "${preserve_X[@]}" \) -prune -o -name ".mount_*" -prune -o -size 0b -print "${delete_file[@]}" # -delete # Remove files with 0b. Depend of block size
 
         echo -e "\n # Recommendation: Restart your system! #"
     else
