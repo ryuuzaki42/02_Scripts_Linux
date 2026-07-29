@@ -195,6 +195,7 @@ done
 echo -e "\n    # Removing all empty files in /tmp/ not recursively"
 find /tmp/ -maxdepth 1 -empty "${delete_file[@]}" # -delete
 
+echo -e "\nTo delete all empty files/folders in /tmp/, pass all as third parameter"
 if [ "$clean_all" == "all" ]; then # Delete .ICE-unix .X11-unix plasma-csd-generator.* sddm-auth*
     echo -en "\nDelete empty files/folders in /tmp/ folder. Continue? (y)es or (n)o: "
     if [ "$continue_or_not_2" == '' ]; then
