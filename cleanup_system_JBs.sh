@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clean some logs and cache from home folder ($home_user) and /tmp/ folder
+# Script: Clean some logs and cache from home folder ($home_folder) and /tmp/ folder
 #
 # Last update: 28/07/2026
 #
@@ -40,17 +40,17 @@ echo -e "\n # Script to clean some logs from home folder and /tmp/ folder #\n"
 
 if [ "$user_name" != '' ]; then
     if grep -q "^$user_name" /etc/passwd; then # Check if user exists
-        home_user=$(eval echo "~$user_name") # Get user home path
+        home_folder=$(eval echo "~$user_name") # Get user home path
     else
         echo -e "\n Error: the user \"$user_name\" not exists! Try again with another user\n"
         exit 1
     fi
 else
     user_name=$(whoami)
-    home_user=$HOME
+    home_folder=$HOME
 fi
 
-echo -e "- user_name: $user_name\n- home_user: $home_user\n"
+echo -e "- user_name: $user_name\n- home_folder: $home_folder\n"
 
 if [ "$only_test" != '' ]; then
     echo -e "# Test mode - files and folders will not be deleted #\n"
@@ -71,50 +71,50 @@ if [ "$continue_or_not_1" != 'y' ] && [ "$continue_or_not_1" != '' ]; then
     exit 0
 fi
 
-if echo "$home_user" | grep -q '/$'; then # Check if last character is '/'
-    home_user=${home_user::-1} # Remove the last character - '/'
+if echo "$home_folder" | grep -q '/$'; then # Check if last character is '/'
+    home_folder=${home_folder::-1} # Remove the last character - '/'
 fi
 
-files_folders_remove=("$home_user/.cache/thumbnails/"
-"$home_user/.thumbnails/" # Dolphin
-"$home_user/.xsession-errors"
-"$home_user/.config/VirtualBox/*.log*" # VirtualBox
-"$home_user/VirtualBox VMs/*/Logs/"
+files_folders_remove=("$home_folder/.cache/thumbnails/"
+"$home_folder/.thumbnails/" # Dolphin
+"$home_folder/.xsession-errors"
+"$home_folder/.config/VirtualBox/*.log*" # VirtualBox
+"$home_folder/VirtualBox VMs/*/Logs/"
 "/tmp/.vbox-*-ipc/"
 "/tmp/vboxdrv-Module.symvers"
-"$home_user/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
-"$home_user/.cache/vivaldi/Default/*Cache*" # Vivaldi
-"$home_user/.config/opera/Default/Service Worker/CacheStorage/" # Opera
-"$home_user/.cache/opera/Default/Cache/"
-"$home_user/.cache/opera/Default/Code Cache/"
-"$home_user/.cache/zotero/zotero/*/cache2/" # Zotero
-"$home_user/.mozilla/firefox/*/storage/default/http*/" # Firefox
-"$home_user/.mozilla/firefox/*/storage/default/file*/"
-"$home_user/.mozilla/firefox/*/storage/default/https+++web.whatsapp.com/cache/"
-"$home_user/.cache/mozilla/firefox/*/cache2/"
+"$home_folder/.local/share/okular/docdata/*.xml" # Okular open file info/config (like last page viewed)
+"$home_folder/.cache/vivaldi/Default/*Cache*" # Vivaldi
+"$home_folder/.config/opera/Default/Service Worker/CacheStorage/" # Opera
+"$home_folder/.cache/opera/Default/Cache/"
+"$home_folder/.cache/opera/Default/Code Cache/"
+"$home_folder/.cache/zotero/zotero/*/cache2/" # Zotero
+"$home_folder/.mozilla/firefox/*/storage/default/http*/" # Firefox
+"$home_folder/.mozilla/firefox/*/storage/default/file*/"
+"$home_folder/.mozilla/firefox/*/storage/default/https+++web.whatsapp.com/cache/"
+"$home_folder/.cache/mozilla/firefox/*/cache2/"
 "/tmp/mozilla-temp*"
-"$home_user/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
-"$home_user/.config/librewolf/librewolf/*/storage/default/file*/"
-"$home_user/.config/librewolf/librewolf/*/storage/default/https+++web.whatsapp.com/cache/"
-"$home_user/.cache/librewolf/*/cache2/"
-"$home_user/.config/discord/Cache/" # Discord
-"$home_user/.config/teams-for-linux/Partitions/teams-4-linux/WebStorage/" # Teams AppImage
-"$home_user/.config/teams-for-linux/Partitions/teams-4-linux/Cache/"
-"$home_user/.config/teams-for-linux/Partitions/teams-4-linux/Code Cache/"
+"$home_folder/.config/librewolf/librewolf/*/storage/default/http*/" # LibreWolf
+"$home_folder/.config/librewolf/librewolf/*/storage/default/file*/"
+"$home_folder/.config/librewolf/librewolf/*/storage/default/https+++web.whatsapp.com/cache/"
+"$home_folder/.cache/librewolf/*/cache2/"
+"$home_folder/.config/discord/Cache/" # Discord
+"$home_folder/.config/teams-for-linux/Partitions/teams-4-linux/WebStorage/" # Teams AppImage
+"$home_folder/.config/teams-for-linux/Partitions/teams-4-linux/Cache/"
+"$home_folder/.config/teams-for-linux/Partitions/teams-4-linux/Code Cache/"
 "/tmp/com.microsoft.teams.linux Crashes/"
-"$home_user/.wget-hsts" # Wget
-"$home_user/.anydesk/thumbnails/" # AnyDesk
-"$home_user/.anydesk/AnyDesk/"
-"$home_user/.anydesk/cache/"
-"$home_user/.anydesk/global_cache/"
-"$home_user/.anydesk/incoming/"
-"$home_user/.anydesk/anydesk.trace"
-"$home_user/.anydesk/connection_trace.txt"
+"$home_folder/.wget-hsts" # Wget
+"$home_folder/.anydesk/thumbnails/" # AnyDesk
+"$home_folder/.anydesk/AnyDesk/"
+"$home_folder/.anydesk/cache/"
+"$home_folder/.anydesk/global_cache/"
+"$home_folder/.anydesk/incoming/"
+"$home_folder/.anydesk/anydesk.trace"
+"$home_folder/.anydesk/connection_trace.txt"
 "/tmp/ad_gevt_*"
 "/tmp/ad_mailbox_*"
 "/tmp/ad_connect_queue_*"
 "/tmp/anydesk/"
-"$home_user/.cache/kioexec/krun/" # KIO from KDE
+"$home_folder/.cache/kioexec/krun/" # KIO from KDE
 "/tmp/tmpaddon*" # Others
 "/tmp/lastChance*"
 "/tmp/qtsingleapp-*"
@@ -148,7 +148,7 @@ files_folders_remove=("$home_user/.cache/thumbnails/"
 "/tmp/ksmserver.NAQOIo")
 
 ## Can be useful if add to $files_folders_remove
-# "$home_user/.cache/"
+# "$home_folder/.cache/"
 # "/tmp/plasma-csd-generator.*"
 # "/tmp/plasma-csd-generator.*/"
 
