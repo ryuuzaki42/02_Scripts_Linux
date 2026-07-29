@@ -64,14 +64,13 @@ echo -n "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
 if [ "$continue_or_not_1" == '' ]; then
     read -r continue_or_not_1
 else
-    echo -n "$continue_or_not_1"
+    echo "$continue_or_not_1"
 fi
 
 if [ "$continue_or_not_1" != 'y' ] && [ "$continue_or_not_1" != '' ]; then
     echo -e "\nJust exiting\n"
     exit 0
 fi
-echo
 
 if echo "$home_folder" | grep -q '/$'; then # Check if last character is '/'
     home_folder=${home_folder::-1} # Remove the last character - '/'
