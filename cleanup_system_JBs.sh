@@ -191,7 +191,7 @@ for files_folders_remove_tmp in "${files_folders_remove[@]}"; do
     done
 done
 
-# Delete all files/folders empty in /tmp/
+# Delete all files/folders empty in /tmp/ - '-maxdepth 1' to not recursively
 echo -e "\n    # Removing all empty files in /tmp/ not recursively"
 find /tmp/ -maxdepth 1 -empty "${delete_file[@]}" # -delete
 
