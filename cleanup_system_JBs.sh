@@ -51,15 +51,16 @@ else
 fi
 
 echo -e "- user_name: $user_name\n- home_folder: $home_folder\n"
+echo -e "To only test, dry run, pass test as fifty parameter\n"
 
 if [ "$only_test" != '' ]; then
-    echo -e "# Test mode - files and folders will not be deleted #\n"
+    echo -e "    # Test mode - files and folders will not be deleted #\n"
     delete_file=(-print) # Only print files/folders name
 else
     delete_file=(-exec rm -rvf -- {} +) # Delete files/folders
 fi
 
-echo -en "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
+echo -n "Be careful! Want to continue? (y)es or (n)o (hit enter to continue): "
 if [ "$continue_or_not_1" == '' ]; then
     read -r continue_or_not_1
 else
