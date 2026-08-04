@@ -21,7 +21,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 08/05/2026
+# Last update: 04/08/2026
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -45,8 +45,13 @@ case "$-" in # Mask this command bind to avoid be used in interactive shells onl
         bind -f /etc/inputrc # Load /etc/inputrc
 esac
 
-# To ignore dups in history
-HISTCONTROL=ignoredups:erasedups
+# To ignore duplicate in history
+    # ignoredups - Ignore consecutive duplicate commands
+    # ignorespace - Ignore commands with leading whitespace
+        # Useful for hiding passwords or sensitive data
+    # ignoreboth - Combine ignorespace and ignoredups
+    # erasedups  - Eliminate all previous duplicates
+HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
