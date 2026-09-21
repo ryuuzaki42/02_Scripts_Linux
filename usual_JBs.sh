@@ -25,7 +25,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 28/07/2026
+# Last update: 21/09/2026
 #
 
 useColor() {
@@ -1407,7 +1407,7 @@ case $optionInput in
         fi
 
         continueOrNot='y'
-        if [ 1 -eq $(echo "$brightness_Value < 0.1" | bc) ]; then # Check if brightness_Value to set is less then 0.1
+        if [ 1 -eq "$(echo "$brightness_Value < 0.1" | bc)" ]; then # Check if brightness_Value to set is less then 0.1
             echo -e "\nReally want to set brightness to $brightness_Value (full black/low)? y(es) or n(o)"
             read -r continueOrNot
         fi
