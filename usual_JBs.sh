@@ -690,6 +690,7 @@ case $optionInput in
         echo -e "$CYAN# Search for program with pattern/name and (can) kill it #$NC"
 
         program_name=$2
+        kill_process=$3 # If is 'y', run the kill without asking for every PID of '$program_name'
         if [ "$program_name" == '' ]; then
             echo -en "\nInsert the program name: "
             read -r program_name
@@ -711,8 +712,10 @@ case $optionInput in
                 echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
                 echo -e "$list_process" | grep "  $process "
 
-                echo -en "$RED\nKill this process?\n(y)es - (n)o (hit enter to no or t to end function):$NC "
-                read -r kill_process
+                if [ "$kill_process" == '' ]; then
+                    echo -en "$RED\nKill this process?\n(y)es - (n)o (hit enter to no or t to end the function):$NC "
+                    read -r kill_process
+                fi
 
                 if [ "$kill_process" == 'y' ]; then
                     echo " + kill -9 $process"
