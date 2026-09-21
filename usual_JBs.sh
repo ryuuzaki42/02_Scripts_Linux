@@ -695,9 +695,10 @@ case $optionInput in
             read -r program_name
         fi
 
+        # Finds running processes for '$program_name' ignoring case sensitivity
+        #   - Filter out false positives, grep and this script itself
         list_process=$(ps aux | grep -i "$program_name" | grep -vE "grep|$0")
         if [ "$list_process" != '' ]; then
-
             echo -e "\n$BLUE List of process:$NC"
             echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
             echo "$list_process"
