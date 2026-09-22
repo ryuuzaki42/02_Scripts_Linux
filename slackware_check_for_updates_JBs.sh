@@ -17,8 +17,6 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-#
 # Script: Script to check for Slackware updates
 #
 # Last update: 08/05/2026
