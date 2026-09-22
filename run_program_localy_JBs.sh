@@ -19,7 +19,6 @@
 #
 # Last update: 13/02/2026
 #
-
 set -x
 
 HERE=$(pwd) # Here

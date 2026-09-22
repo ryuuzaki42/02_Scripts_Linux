@@ -20,7 +20,6 @@
 #
 # Last update: 08/03/2026
 #
-
 fileToWork=$1
 if [ "$fileToWork" == '' ]; then
     echo -e "\n # Error: Need to pass parameters (file name) to work with #"

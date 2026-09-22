@@ -25,7 +25,6 @@
 #    3. To list all profiles available, use:
 #        pacmd list-cards | grep "output:" | grep -v "active"
 #
-
 output_to_set=$1 # Set the output as Speakers or HDMI
 output_to_set=${output_to_set^^} # uppercase
 if [ "$output_to_set" == "SPEAKERS" ] || [ "$output_to_set" == "HDMI" ]; then # Check is Speakers or HDMI

@@ -4,7 +4,6 @@
 #
 # Last update: 09/07/2026
 #
-
 RED='\e[1;31m'
 GREEN='\e[1;32m'
 NC='\033[0m' # reset/no color

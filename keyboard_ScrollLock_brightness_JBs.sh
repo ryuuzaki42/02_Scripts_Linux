@@ -21,7 +21,6 @@
 #
 # Last update: 08/05/2026
 #
-
 value_brightness=$(cat /sys/class/leds/input0::scrolllock/brightness)
 if [ "$value_brightness" == 0 ]; then
     xset led named "Scroll Lock"
