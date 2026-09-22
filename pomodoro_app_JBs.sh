@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: aplicativo de pomodoro para terminal
+# Script: Pomodoro application for terminal
 #
 # Last update: 19/06/2023
 #

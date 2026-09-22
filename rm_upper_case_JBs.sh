@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: remove uppercase in files and folders names based in a pattern
+# Script: Remove uppercase in files and folders names based in a pattern
 #
 # Last update: 08/05/2026
 #
