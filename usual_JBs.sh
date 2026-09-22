@@ -22,7 +22,6 @@
 #
 # Last update: 21/09/2026
 #
-
 useColor() {
     #BLACK='\e[1;30m'
     RED='\e[1;31m'

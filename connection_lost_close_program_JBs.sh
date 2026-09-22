@@ -18,7 +18,7 @@
 # Script: If lost connection, close some program
 #
 # Last update: 16/07/2026
-
+#
 time_sleep="5m" #5m # Time to sleep and test again
 website_ping="google.com" # google.com # Website to test ping
 program_kill=$1 # Program to close when lost connection

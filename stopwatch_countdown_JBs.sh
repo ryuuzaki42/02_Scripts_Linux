@@ -20,7 +20,6 @@
 #
 # Last update: 08/03/2026
 #
-
 stopwatch() {
     start=$(date +%s)
     while true; do

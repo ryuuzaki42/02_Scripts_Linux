@@ -22,8 +22,6 @@
 #
 # Last update: 08/05/2026
 #
-#set -x
-
 help_info_and_exit(){
     echo -e " For help, run: $(basename "$0") -h\n"
     exit 1
