@@ -17,7 +17,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: Script to check for Slackware updates
+# Script: Check for Slackware updates
 #
 # Last update: 08/05/2026
 #

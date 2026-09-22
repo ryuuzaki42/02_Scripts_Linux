@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script:  usual / common day-to-day functions with Wi-Fi
+# Script: usual / common day-to-day functions with Wi-Fi
 #
 # Last update: 29/06/2023
 #

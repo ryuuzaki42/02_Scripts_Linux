@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Descrição: Script to change the language configuration en-US to pt-BR or vice versa
+# Script: Change the language configuration en-US to pt-BR or vice versa
 #
 # Last update: 19/06/2023
 #
