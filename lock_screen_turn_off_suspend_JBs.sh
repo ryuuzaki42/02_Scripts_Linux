@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: in the KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
+# Script: On KDE and XFCE, lock the session and suspend (allow insert X min before suspend)
 # Has options $mute_audio to mute audio, $reduce_brightness to reduce brightness
 # and $disconnect_wifi to disconnect the Wi-Fi and reconnect after suspend
 #

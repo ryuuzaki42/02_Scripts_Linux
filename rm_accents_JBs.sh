@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: remove accents in files and folders names based in a pattern
+# Script: Remove accents in files and folders names based in a pattern
 #
 # Last update: 11/07/2024
 #
