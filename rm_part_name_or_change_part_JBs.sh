@@ -15,7 +15,7 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: Remove one part of the name of files and folders based in a pattern
+# Script: Remove or replace part of files and folders names based on a pattern
 #
 # Last update: 11/07/2024
 #
@@ -23,14 +23,20 @@ IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equal_Part_To_Remove=$1
 part_To_Change=$2
 
+echo -e "\n # Remove or replace part of files and folders names based on a pattern #"
+
 help_message(){
-    echo -e "\n # Remove one part of the name of files and folders based in a pattern #\n"
-    echo -e " Example 1 - remove part of the name:\n$(basename "$0") \".720p. 10bit.WEBRip.2CH \""
-    echo -e "  -> mv \"file.720p. 10bit.WEBRip.2CH .mkv\" -> \"file.mkv\"\n"
-    echo -e " # Or with two values, to change the first by the second"
-    echo -e " Example 2 - change part of the name:\n$(basename "$0") \"file2\" \"The movie\""
-    echo -e "  -> mv \"file2.mkv\" -> \"The movie.mkv\"\n"
-    echo -e "Obs.: run to all files/folder in the working directory, but not recursively\n"
+    echo -e "\nUsage: $(basename "$0") <pattern>"
+    echo "       $(basename "$0") <old_text> <new_text>"
+
+    echo -e "\n Example 1 - remove part of the name:\n$(basename "$0") \"_part. to remove \""
+    echo -e "\n  -> mv \"file_part. to remove .txt\" -> \"file.txt\""
+
+    echo -e "\n # Or with two values, to replace the first by the second"
+    echo -e " Example 2 - replace part of the name:\n$(basename "$0") \"_old.part to-Remove\" \".new.part\""
+    echo -e "\n  -> mv \"file_old.part to-Remove.txt\" -> \"file.new.part.txt\"\n"
+
+    echo -e "Note: Applies to files/folders in the current directory only (non-recursive)\n"
 }
 
 if [ "$equal_Part_To_Remove" == '' ]; then
