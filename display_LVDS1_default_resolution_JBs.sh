@@ -15,9 +15,6 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: Define a resolução padrão do monitor do notebook (LVDS1)
-# para o padrão, caso o cabo do VGA1 ou HDMI1 seja removido
-#
 # Script: Sets the default resolution for the laptop monitor (LVDS1)
 # if the VGA1 or HDMI1 cable is disconnected.
 #
