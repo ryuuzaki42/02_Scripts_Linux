@@ -24,24 +24,24 @@
 # Last update: 23/09/2026
 #
 # To use, set in icon command field:
-# /usr/bin/editor_test_open_JBs.sh programName, for example:
+# /usr/bin/editor_test_open_JBs.sh editor_name, for example:
 # /usr/bin/editor_test_open_JBs.sh kwrite
 #
-editorText=$1 # Like kwrite and gedit
-if [ "$#" -lt 2 ]; then # Check the count of parameters, 1 "editor", 2 "fileName"
-    $editorText # Just open the text editor
+editor_name=$1 # Like kwrite and gedit
+if [ "$#" -lt 2 ]; then # Check the count of parameters, 1 "editor_name", 2 "file_name"
+    $editor_name # Just open the text editor
 else
-    fileName=$2 # File name to be open
-    fileSizeMB=$(du -m "$fileName" | cut -f1) # File size in kibibyte
+    file_name=$2 # File name to be open
+    file_Size_MiB=$(du -m "$file_name" | cut -f1) # File size in MiB
 
     # Check if file size is greater than 100 MiB
-    if [ "$fileSizeMB" -gt 100 ]; then # = 100 MiB (mebibyte)
-        tmpFile=$(mktemp)
-        echo "File too large to be opened in $editorText." > "$tmpFile"
-        echo "Open it with another program." >> "$tmpFile"
-        "$editorText" "$tmpFile"
-        rm "$tmpFile"
+    if [ "$file_Size_MiB" -gt 100 ]; then # = 100 MiB (mebibyte)
+        tmp_file=$(mktemp)
+        echo "File too large to be opened in $editor_name." > "$tmp_file"
+        echo "Open it with another program." >> "$tmp_file"
+        "$editor_name" "$tmp_file"
+        rm "$tmp_file"
     else
-        "$editorText" "$fileName"
+        "$editor_name" "$file_name"
     fi
 fi
