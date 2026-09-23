@@ -28,7 +28,7 @@ if [ "$(whoami)" != "root" ]; then
 else
     if [ "$1" == "boot" ]; then # Add in the /etc/rc.d/rc.local = /usr/bin/power_save_JBs.sh boot
         optionRun=1 # Will make all change
-    elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2  | grep -q "performance"; then
+    elif cpufreq-info | grep "The governor" | head -n 1 | cut -d '"' -f2 | grep -q "performance"; then
         optionRun=1 # Will make all change
     else
         optionRun=2 # Will set cpu_frequency_scaling to performance
@@ -68,7 +68,7 @@ else
 
         ## Remove modules from Linux kernel
         # List modules load an information (if has one)
-        #for value in $(lsmod | grep  '0$' | cut -d ' ' -f1); do echo -e "\n$value"; modinfo -d $value; done
+        #for value in $(lsmod | grep '0$' | cut -d ' ' -f1); do echo -e "\n$value"; modinfo -d $value; done
 
         # Bluetooth
         modulesToRemove="bluetooth"

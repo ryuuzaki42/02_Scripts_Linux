@@ -27,8 +27,8 @@ NC='\033[0m' # reset/no color
 #BLUE='\e[1;34m'
 CYAN='\e[1;36m'
 
-echo -e  "\n$CYAN # Remove old \"log\" from remove packages #"
-echo -e  " Select the packages logs with the same \"pkg_name\" in folder to be deleted (leave the most recent) $NC\n"
+echo -e "\n$CYAN # Remove old \"log\" from remove packages #"
+echo -e " Select the packages logs with the same \"pkg_name\" in folder to be deleted (leave the most recent) $NC\n"
 
 echo -en "$RED Script in beta - use at your own risk!\nHit enter to continue or Ctrl + C to quit.$NC"
 read -r _
