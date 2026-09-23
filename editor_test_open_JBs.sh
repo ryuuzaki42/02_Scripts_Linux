@@ -37,8 +37,10 @@ else
     # Check if file size is greater than 100 MiB
     if [ "$file_Size_MiB" -gt 100 ]; then # = 100 MiB (mebibyte)
         tmp_file=$(mktemp)
-        echo "File too large to be opened in $editor_name." > "$tmp_file"
+        echo -e "\nFile too large, more than 100 MiB, to be opened in $editor_name." > "$tmp_file"
         echo "Open it with another program." >> "$tmp_file"
+        echo -e "File: $file_name" >> "$tmp_file"
+        echo -e "Size: $file_Size_MiB MiB" >> "$tmp_file"
         "$editor_name" "$tmp_file"
         rm "$tmp_file"
     else
