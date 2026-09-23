@@ -15,30 +15,30 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: testa o tamanho do arquivo antes de abrir no em algum editor de texto
-# Obs: Arquivos com mais de 100 MiB não serão abertos, com um aviso de arquivo muito grande
+# Script: Checks the file size before opening it in a text editor
+# Note: Files larger than 100 MiB will not be opened; a "file too large" warning will be shown instead
 #
-# Dica: pela interface do KDE-menu (ou outros) altere para o icone do seu editor padrão
-# por este script em vez de executar o "programName"
+# Tip: Use the KDE menu (or other launchers) to change the command of the default editor,
+# to run this script instead of the original editor
 #
-# Last update: 08/05/2026
+# Last update: 23/09/2026
 #
-# To use, set in icon command:
+# To use, set in icon command field:
 # /usr/bin/editor_test_open_JBs.sh programName, for example:
 # /usr/bin/editor_test_open_JBs.sh kwrite
 #
 editorText=$1 # Like kwrite and gedit
-if [ "$#" -lt 2 ]; then # text the count of parameters, 1 "editor" 2 "fileName"
+if [ "$#" -lt 2 ]; then # Check the count of parameters, 1 "editor", 2 "fileName"
     $editorText # Just open the text editor
 else
-    fileName=$2 # Nome do arquivo que irá abrir
-    fileSizeMB=$(du -m "$fileName" | cut -f1) # Tamanho deste arquivo em kibibyte
+    fileName=$2 # File name to be open
+    fileSizeMB=$(du -m "$fileName" | cut -f1) # File size in kibibyte
 
-    # Testa de tamanho do arquivo é maior que 100 MiB
+    # Check if file size is greater than 100 MiB
     if [ "$fileSizeMB" -gt 100 ]; then # = 100 MiB (mebibyte)
         tmpFile=$(mktemp)
-        echo "Arquivo muito grande para ser aberto no $editorText." > "$tmpFile"
-        echo "Abra com outro programa." >> "$tmpFile"
+        echo "File too large to be opened in $editorText." > "$tmpFile"
+        echo "Open it with another program." >> "$tmpFile"
         "$editorText" "$tmpFile"
         rm "$tmpFile"
     else
