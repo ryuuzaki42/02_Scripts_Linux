@@ -17,7 +17,7 @@
 #
 # Script: Change the resolution of your outputs (e.g., LVDS, eDP, VGA, HDMI)
 #
-# Last update: 08/05/2026
+# Last update: 15/10/2026
 #
 # Tip: Add a shortcut to this script
 #
@@ -33,6 +33,15 @@ else
     optionSelectedTmp=$2
     resolutionOk=$3
     notificationOff=$4
+fi
+
+if [ "$1" == "-h" ]; then
+    echo "# Help message"
+    echo "\$1 optionSelected    # If option part 1 (if is on part 2, pass 0)"
+    echo "\$2 optionSelectedTmp # If option is on part 2"
+    echo "\$3 resolutionOk      # Ask for confirmation"
+    echo -e "\$4 notificationOff   # Pass 1 to disable notification\n"
+    exit 0
 fi
 
 outputConnected=$(xrandr | grep " connected") # Grep connected outputs
