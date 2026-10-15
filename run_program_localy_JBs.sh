@@ -19,6 +19,7 @@
 #
 # Last update: 15/10/2026
 #
+echo -e "\n # Run a program using \$HOME in working directory (\$PWD) #\n"
 set -x
 
 HERE=$(pwd) # Here
