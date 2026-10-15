@@ -17,20 +17,28 @@
 #
 # Script: Remove accents in files and folders names based in a pattern
 #
-# Last update: 11/07/2024
+# Last update: 15/10/2026
 #
 echo -e "\n # Remove accents in files and folders names based in a pattern #"
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
+help_message(){
+    echo -e "\nHelp message:"
+    echo " Example 1: $(basename "$0") \"fíléWithÀccents\""
+    echo " -> mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\""
+    echo -e "\n Example 2: $(basename "$0") \"folderWithàccents\""
+    echo " -> mv \"folderWithàccents\" -> \"folderWithaccents\""
+    echo -e "\nUse . to process all files in working directory or the first letter of a file/folder\n"
+}
+
 if [ "$equalPart" == '' ]; then
     echo -e "\n# Error: Need to pass a parameter of files or folders name to work with"
-    echo -e "\n Example 1: $(basename "$0") \"fíléWithÀccents\""
-    echo -e " -> mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\"\n"
-    echo -e "\n Example 2: $(basename "$0") \"folderWithàccents\""
-    echo -e " -> mv \"folderWithàccents\" -> \"folderWithaccents\"\n"
-    echo -e "\nUse . to process all files in working directory or the first letter of a file/folder"
+    help_message
     exit 1
+elif [ "$equalPart" == '-h' ] || [ "$equalPart" == '--help' ]; then
+    help_message
+    exit 0
 fi
 
 removeAccents(){
