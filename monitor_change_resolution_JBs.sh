@@ -35,7 +35,8 @@ else
     notificationOff=$4
 fi
 
-if [ "$1" == "-h" ]; then
+
+if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "Help message:"
     echo " \$1 optionSelected    # If option part 1 (if is on part 2, pass 0)"
     echo " \$2 optionSelectedTmp # If option is on part 2"
