@@ -35,7 +35,6 @@ else
     notificationOff=$4
 fi
 
-
 if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "Help message:"
     echo " \$1 optionSelected    # If option part 1 (if is on part 2, pass 0)"
@@ -259,7 +258,6 @@ case $optionSelected in
         echo -e "\n$optionTmpb2\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos 0x0
         ;;
-
     7 )
         echo -e "\n$optionTmp7\n"
         if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
