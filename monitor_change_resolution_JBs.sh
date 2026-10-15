@@ -36,11 +36,11 @@ else
 fi
 
 if [ "$1" == "-h" ]; then
-    echo "# Help message"
-    echo "\$1 optionSelected    # If option part 1 (if is on part 2, pass 0)"
-    echo "\$2 optionSelectedTmp # If option is on part 2"
-    echo "\$3 resolutionOk      # Ask for confirmation"
-    echo -e "\$4 notificationOff   # Pass 1 to disable notification\n"
+    echo "Help message:"
+    echo " \$1 optionSelected    # If option part 1 (if is on part 2, pass 0)"
+    echo " \$2 optionSelectedTmp # If option is on part 2"
+    echo " \$3 resolutionOk      # Ask for confirmation"
+    echo -e " \$4 notificationOff   # Pass 1 to disable notification\n"
     exit 0
 fi
 
