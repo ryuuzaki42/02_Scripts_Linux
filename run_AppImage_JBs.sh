@@ -15,13 +15,15 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: Works with AppImage, can run, view, portable run and extract
+# Script: Run AppImage, can run, view, portable run and extract
 #
 # Tip: Add desktop launcher with the script
 # Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
 # Last update: 15/10/2026
 #
+echo -e "\n # Run AppImage, can run, view, portable run and extract #\n"
+
 help_info_and_exit(){
     echo -e " For help, run: $(basename "$0") -h\n"
     exit 1
