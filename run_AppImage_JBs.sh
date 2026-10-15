@@ -20,7 +20,7 @@
 # Tip: Add desktop launcher with the script
 # Examples: https://github.com/ryuuzaki42/04_AppImage_shortcut_desktop/tree/main/AppImage_run
 #
-# Last update: 08/05/2026
+# Last update: 15/10/2026
 #
 help_info_and_exit(){
     echo -e " For help, run: $(basename "$0") -h\n"
@@ -33,7 +33,7 @@ if [ "$AppImage_File" == '' ]; then
     help_info_and_exit
 fi
 
-if [ "$AppImage_File" == '-h' ] || [ "$AppImage_File" == '--help' ]; then
+if [ "$AppImage_File" == "-h" ] || [ "$AppImage_File" == "--help" ]; then
     script_name=$(basename "$0")
     echo -e "
     Usage:
