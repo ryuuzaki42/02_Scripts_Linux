@@ -141,6 +141,8 @@ optionTmp5=" 5 - $activeOutput1 $activeOutput1MaxResolution (primary) left-of $a
 optionTmp6=" 6 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution (primary)"
 optionTmp7=" 7 - $activeOutput1 off"
 optionTmp8=" 8 - $activeOutput2 off"
+optionTmpb=" b - $activeOutput1 $activeOutput1MaxResolution left-of $activeOutput2 $activeOutput2MaxResolution"
+optionTmpb2=" b2 - $activeOutput1 $activeOutput1MaxResolution right-of $activeOutput2 $activeOutput2MaxResolution"
 optionTmpc=" c - Set ($activeOutput1 $activeOutput1MaxResolution) or ($activeOutput2 $activeOutput2MaxResolution) in turn"
 optionTmpp=" p - Set ($activeOutput1 1024x768) or ($activeOutput2 1024x768) in turn"
 optionTmp0=" 0 - Other options"
@@ -155,6 +157,8 @@ if [ "$optionSelected" == '' ]; then
     echo "$optionTmp6"
     echo "$optionTmp7"
     echo "$optionTmp8"
+    echo "$optionTmpb"
+    echo "$optionTmpb2"
     echo "$optionTmpc"
     echo "$optionTmpp"
     echo "$optionTmp0"
@@ -179,7 +183,7 @@ justFinish() {
 justFinish "$optionSelected"
 
 case $optionSelected in
-    5 | 6 | 0 )
+    5 | 6 | 0 | b | b2 )
         # "$activeOutput1" part resolution
         activeOutput1MaxResolution_Part1=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f1)
         activeOutput1MaxResolution_Part2=$(echo "$activeOutput1MaxResolution" | cut -d 'x' -f2)
@@ -242,10 +246,19 @@ case $optionSelected in
         echo -e "\n$optionTmp5\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --primary --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos "${activeOutput1MaxResolution_Part1}x0"
         ;;
+    'b' )
+        echo -e "\n$optionTmpb\n"
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "0x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos "${activeOutput1MaxResolution_Part1}x0"
+        ;;
     6 )
         echo -e "\n$optionTmp6\n"
         xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --primary --pos 0x0
         ;;
+    "b2" )
+        echo -e "\n$optionTmpb2\n"
+        xrandr --output "$activeOutput1" --mode "$activeOutput1MaxResolution" --pos "${activeOutput2MaxResolution_Part1}x$diffResolutionPart2" --output "$activeOutput2" --mode "$activeOutput2MaxResolution" --pos 0x0
+        ;;
+
     7 )
         echo -e "\n$optionTmp7\n"
         if echo "$activeOutput2Resolution" | grep -q "[[:digit:]]"; then
@@ -369,6 +382,7 @@ esac
 if [ "$resolutionOk" == '' ]; then
     echo -n "Resolution changed. Everything OK? (y)es or (n)o (hit enter to no): "
     read -t 10 -r resolutionOk
+    echo
 fi
 
 if [ "$resolutionOk" == '' ] || [ "$resolutionOk" = 'n' ]; then
