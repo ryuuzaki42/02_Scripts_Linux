@@ -17,7 +17,7 @@
 #
 # Script: Remove or replace part of files and folders names based on a pattern
 #
-# Last update: 11/07/2024
+# Last update: 15/10/2026
 #
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equal_Part_To_Remove=$1
@@ -43,7 +43,7 @@ if [ "$equal_Part_To_Remove" == '' ]; then
     echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files"
     help_message
     exit 1
-elif [ "$equal_Part_To_Remove" == '-h' ] || [ "$equal_Part_To_Remove" == '--help' ]; then
+elif [ "$equal_Part_To_Remove" == "-h" ] || [ "$equal_Part_To_Remove" == "--help" ]; then
     help_message
     exit 0
 fi
