@@ -15,24 +15,29 @@
 # COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
 # Consulte a Licença Pública Geral do GNU para mais detalhes.
 #
-# Script: Convert text UTF-8 to ISO-8859-1 (ISO Latin 1) and others
+# Script: Convert text ISO-8859-1 (ISO Latin 1) to UTF-8 and vice versa
 #
-# Last update: 19/06/2023
+# Tip: Useful to change subtitles text encoding
 #
-help() {
+# Last update: 15/10/2026
+#
+echo -e "\n # Convert text ISO-8859-1 (ISO Latin 1) to UTF-8 and vice versa #\n"
+
+help_message() {
     echo -e "Use the file name (with extension) that want to convert"
     echo -e "Example: $(basename "$0") file.srt\n"
-    exit 0
 }
 
 if [ "$#" -lt 1 ]; then # Check if has passed the file name
-    echo -e "\n$(basename "$0"): Error - need the pass file name\n"
-    help
+    echo -e "# Error: need the pass file name\n"
+    help_message
+    exit 1
 fi
 
-case $1 in # case to call help
-    '--help' | '-h')
-        help
+case $1 in # case to call help_message
+    "--help" | "-h")
+        help_message
+        exit 0
 esac
 
 fileName=$1
