@@ -19,12 +19,13 @@
 #
 # Last update: 15/10/2026
 #
-echo -e "\n # Remove accents in files and folders names based in a pattern #"
+echo -e "\n # Remove accents in files and folders names based in a pattern #\n"
+
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
 help_message(){
-    echo -e "\nHelp message:"
+    echo "Help message:"
     echo " Example 1: $(basename "$0") \"fíléWithÀccents\""
     echo " -> mv \"fíléWithÀccents.ext\" -> \"fileWithAccents.ext\""
     echo -e "\n Example 2: $(basename "$0") \"folderWithàccents\""
@@ -33,10 +34,10 @@ help_message(){
 }
 
 if [ "$equalPart" == '' ]; then
-    echo -e "\n# Error: Need to pass a parameter of files or folders name to work with"
+    echo -e "# Error: Need to pass a parameter of files or folders name to work with\n"
     help_message
     exit 1
-elif [ "$equalPart" == '-h' ] || [ "$equalPart" == '--help' ]; then
+elif [ "$equalPart" == "-h" ] || [ "$equalPart" == "--help" ]; then
     help_message
     exit 0
 fi
