@@ -17,21 +17,31 @@
 #
 # Script: Remove uppercase in files and folders names based in a pattern
 #
-# Last update: 08/05/2026
+# Last update: 15/10/2026
 #
 # Be careful: Can move folders to inside another if the has the name of the another
 #
+echo -e "\n # Remove uppercase in files and folders names based in a pattern #\n"
+
 IFS=$(echo -en "\n\b") # Change the Internal Field Separator (IFS) to "\n\b"
 equalPart=$1
 
-if [ "$equalPart" == '' ]; then
-    echo -e "\n# Error: Need to pass parameters to remove or change in the name of the files\n"
+help_message(){
+    echo "Help message:"
     echo "Example 1: $(basename "$0") \"FILEWITHUPPERCASE\""
     echo "mv \"FILEWITHUPPERCASE.EXT\" -> \"filewithuppercase.ext\""
     echo -e "\nExample 2: $(basename "$0") \"txt\""
     echo "mv \"FILEWITHUPPERCASE1.txt\" -> \"filewithuppercase1.txt\""
     echo -e "mv \"FILEWITHUPPERCASE2.txt\" -> \"filewithuppercase2.txt\"\n"
-    exit
+}
+
+if [ "$equalPart" == '' ]; then
+    echo -e "# Error: Need to pass parameters to remove or change in the name of the files\n"
+    help_message
+    exit 1
+elif [ "$equalPart" == "-h" ] || [ "$equalPart" == "--help" ]; then
+    help_message
+    exit 0
 fi
 
 # file2=${file,,}
