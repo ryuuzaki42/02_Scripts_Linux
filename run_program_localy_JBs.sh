@@ -17,7 +17,7 @@
 #
 # Script: Run a program using $HOME in working directory ($PWD)
 #
-# Last update: 13/02/2026
+# Last update: 15/10/2026
 #
 set -x
 
@@ -34,7 +34,7 @@ prog_name="$1" # Program name
 remaining_args=("${@:2}") # Assign the remaining arguments
 
 # Run the program using the new configurations folders
-if [ "$remaining_args" == "" ]; then
+if [ "$remaining_args" == '' ]; then
     HOME="$HERE/1_home/" XDG_CONFIG_HOME="$HERE/2_config/" "./$prog_name"
 else
     HOME="$HERE/1_home/" XDG_CONFIG_HOME="$HERE/2_config/" "./$prog_name" "$remaining_args"
