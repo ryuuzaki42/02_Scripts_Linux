@@ -17,7 +17,7 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 18/02/2026
+# Last update: 05/11/2026
 #
 
 # Run: check_for_update_progs_JBs.sh all # https://github.com/ryuuzaki42/03_Slackware_JB_Packages/
@@ -33,6 +33,17 @@ alias witr='/media/sda2/os/gnu_linux/slackware15.0/AppImage/witr-*_JB-x86_64.App
 # VSCodium - codium - code as VSCode
 alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
 #alias code='/media/sda2/home/j/.0installed/VSCodium/VSCodium-linux-x64-*/codium'
+
+tesouro_direto(){ # Exibe dados do Tesouro Direto do Brasil
+    # https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
+    dados=$(wget -q -O - "https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv")
+
+    if [ "$1" != '' ]; then # Todos títulos, se $1 diferente de ''
+        echo "$dados" | column -s ';' -t -o $'\t' # column com \t para alinhar os dados
+    else # Apenas Prefixado 2032 e IPCA+ 2032
+        echo "$dados" | grep -E "Prefixado 2032|IPCA\+ 2032" | column -s ';' -t -o $'\t' # \+ to grep +
+    fi
+}
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
