@@ -20,7 +20,7 @@
 # Requires: whiptail, xterm (resize command) and others by function used,
 # like: git, rsync, gs (Ghostscript), ffmpeg, grep, ifconfig, wget, curl and md5sum
 #
-# Last update: 21/09/2026
+# Last update: 05/11/2026
 #
 useColor() {
     #BLACK='\e[1;30m'
@@ -71,6 +71,8 @@ case $optionInput in
         echo -e "$CYAN# Update the date #$NC"
 
         dateUpFunction() { # Need to be run as root
+            date_1_seconds=$(date +"%s")
+
             ntpVector=("pool.ntp.org" "ntp1.ptb.de" "ntp.usp.br" "200.20.186.75" "bonehed.lcs.mit.edu") # Ntp servers
             #${#ntpVector[*]} # size of ntpVector
             #${ntpVector[$i]} # value of the $i index in ntpVector
@@ -86,7 +88,13 @@ case $optionInput in
                 if ! grep -q -v "no server" "$tmpFileNtpError"; then # Test if ntpdate got error "no server suitable for synchronization found"
                     if ! grep -q -v "time out" "$tmpFileNtpError"; then # Test if ntpdate got error "time out"
                         if ! grep -q -v "name server cannot be used" "$tmpFileNtpError"; then # Test if can name resolution works
-                            echo -e "\n${CYAN}Time updated:$GREEN $(date)$NC"
+                            echo -e "\n${CYAN}Time updated$NC"
+                            echo " Before: $(date -d "@$date_1_seconds" +"%d/%m/%Y %T")"
+                            date_2_seconds=$(date +%s)
+                            echo "    Now: $(date -d "@$date_2_seconds" +"%d/%m/%Y %T")"
+                            duration=$(( $date_2_seconds - $date_1_seconds ))
+                            echo "   Diff: $(($duration % 60)) seconds"
+
                             timeUpdated="true" # Set true in the timeUpdated
                             break
                         fi
