@@ -17,7 +17,7 @@
 #
 # Description: .bashrc to load a bash configuration
 #
-# Last update: 04/08/2026
+# Last update: 05/11/2026
 #
 # Tip: Copy (cp .??* ~) for root and also to normal user
 #
@@ -142,9 +142,10 @@ alias rmdir='rmdir -v'
 alias sbopkg='PKGTYPE=txz sbopkg'
 
 # Change them (folders path) as you like
-slackwarePKG="/var/log/packages/"
-downloadFolder="/media/sda2/home/j/Downloads/"
-gitFolder="/media/sda2/git_clone/"
+slackwarePKG="/var/log/packages/" # Slackware packages folder
+downloadFolder="/media/sda2/home/j/Downloads/" # My Download folder
+gitFolder="/media/sda2/git_clone/" # My Git folder
+tmp_folder_RAM="/media/sda2/home/j/Downloads/0_tmp_folder_RAM/" # My TMP folder in RAM
 
 cdFolder() {
     echo -e "\\n    cd $1\\n"
@@ -160,6 +161,7 @@ alias cdpkg='cdFolder $slackwarePKG'
 alias cdh='cdFolder $HOME'
 alias cddl='cdFolder $downloadFolder'
 alias cdgit='cdFolder $gitFolder'
+alias cdtr='cdFolder $tmp_folder_RAM'
 
 echoBlankLines() { # Print x blank lines on terminal
     lineNumber="$1"
