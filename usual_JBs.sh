@@ -93,7 +93,7 @@ case $optionInput in
                             date_2_seconds=$(date +%s)
                             echo "    Now: $(date -d "@$date_2_seconds" +"%d/%m/%Y %T")"
                             duration=$(( $date_2_seconds - $date_1_seconds ))
-                            echo "   Diff: $(($duration % 60)) seconds"
+                            echo "   Diff: $(($duration/3600)) hours $(($duration %3600 / 60)) minutes and $(($duration % 60)) seconds"
 
                             timeUpdated="true" # Set true in the timeUpdated
                             break
