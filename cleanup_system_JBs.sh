@@ -17,7 +17,7 @@
 #
 # Script: Clean some logs and cache from home folder ($home_folder) and /tmp/ folder
 #
-# Last update: 28/07/2026
+# Last update: 09/11/2026
 #
 # Tip: pass all to clean empty files and folders in /tmp/
 #
@@ -106,6 +106,7 @@ files_folders_remove=("$home_folder/.cache/thumbnails/"
 "$home_folder/.anydesk/incoming/"
 "$home_folder/.anydesk/anydesk.trace"
 "$home_folder/.anydesk/connection_trace.txt"
+"$home_folder/.anydesk/file_transfer_trace.txt"
 "/tmp/ad_gevt_*"
 "/tmp/ad_mailbox_*"
 "/tmp/ad_connect_queue_*"
