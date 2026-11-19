@@ -37,7 +37,7 @@ alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
 tesouro_direto(){ # Exibe dados do Tesouro Direto do Brasil
     # https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
     URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
-    dados=$(wget -U "Mozilla" -q -O - "$URL_tesouro")
+    dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
 
     if [ "$dados" != '' ]; then
         dados_tabela=$(echo "$dados" | column -s ';' -t -o $'\t') # column com \t para alinhar os dados
