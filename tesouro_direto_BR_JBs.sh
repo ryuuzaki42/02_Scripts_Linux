@@ -22,6 +22,8 @@
 URL_tesouro_horario="https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_horario")
 
+dados=$(echo "$dados" | sed -E 's/<[^>]+>//g;') # Remove HTML, like <span>, <strong>
+dados=$(echo "$dados" | tr -d '\t') # Remove tab spaces '\t'
 echo -e -n "\n Tesouro Direto - "
 echo "$dados" | grep -m 1 "Mercado" | sed 's/\t//g' # Mercado aberto ou fechado
 echo
