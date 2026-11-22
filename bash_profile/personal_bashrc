@@ -17,7 +17,7 @@
 #
 # Description: personal_bashrc with personal bashrc configuration
 #
-# Last update: 19/11/2026
+# Last update: 22/11/2026
 #
 
 # Run: check_for_update_progs_JBs.sh all # https://github.com/ryuuzaki42/03_Slackware_JB_Packages/
@@ -36,14 +36,14 @@ alias code='/media/sda2/os/gnu_linux/slackware15.0/AppImage/VSCodium-*.AppImage'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/media/sda2/home/j/.0installed/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/media/sda2/0_installed/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/media/sda2/home/j/.0installed/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/media/sda2/home/j/.0installed/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/media/sda2/0_installed/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/media/sda2/0_installed/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/media/sda2/home/j/.0installed/anaconda3/bin:$PATH"
+        export PATH="/media/sda2/0_installed/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
