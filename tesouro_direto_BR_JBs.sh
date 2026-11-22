@@ -24,15 +24,15 @@ dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesour
 
 dados=$(echo "$dados" | sed -E 's/<[^>]+>//g;') # Remove HTML, like <span>, <strong>
 dados=$(echo "$dados" | tr -d '\t') # Remove tab spaces '\t'
-echo -e -n "\n Tesouro Direto - "
+echo -e -n "\n - Tesouro Direto - "
 echo "$dados" | grep -m 1 "Mercado" # Mercado aberto ou fechado
-echo
 
 part_1=$(echo "$dados" | grep -m 1 -A 2 "Horário de funcionamento")
 part_2=$(echo "$dados" | grep -m 1 -A 2 "Última atualização")
 echo " - $part_1" | paste -sd ':' - | sed 's/:/: /g'
 echo " - $part_2" | paste -sd ' ' -
 echo
+
 URL_tesouro_dados="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_dados")
 
