@@ -25,11 +25,11 @@ dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesour
 dados=$(echo "$dados" | sed -E 's/<[^>]+>//g;') # Remove HTML, like <span>, <strong>
 dados=$(echo "$dados" | tr -d '\t') # Remove tab spaces '\t'
 echo -e -n "\n Tesouro Direto - "
-echo "$dados" | grep -m 1 "Mercado" | sed 's/\t//g' # Mercado aberto ou fechado
+echo "$dados" | grep -m 1 "Mercado" # Mercado aberto ou fechado
 echo
 
-part_1=$(echo "$dados" | grep -m 1 -A 2 "Horário de funcionamento" | cut -d '>' -f2-3 | tr -d "\n\r")
-part_2=$(echo "$dados" | grep -m 1 -A 2 "Última atualização" | cut -d '>' -f2-3 | tr -d "\n\r")
+part_1=$(echo "$dados" | grep -m 1 -A 2 "Horário de funcionamento")
+part_2=$(echo "$dados" | grep -m 1 -A 2 "Última atualização")
 echo
 echo -e "$part_1" | sed -E 's/strong|span|<|\/|>//g'
 echo -e "$part_2" | sed -E 's/strong|span|<\/|: //g'
