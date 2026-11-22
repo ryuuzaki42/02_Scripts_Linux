@@ -30,9 +30,9 @@ echo
 
 part_1=$(echo "$dados" | grep -m 1 -A 2 "Horário de funcionamento")
 part_2=$(echo "$dados" | grep -m 1 -A 2 "Última atualização")
+echo " - $part_1" | paste -sd ':' - | sed 's/:/: /g'
+echo " - $part_2" | paste -sd ' ' -
 echo
-echo -e "$part_1" | sed -E 's/strong|span|<|\/|>//g'
-echo -e "$part_2" | sed -E 's/strong|span|<\/|: //g'
 URL_tesouro_dados="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_dados")
 
