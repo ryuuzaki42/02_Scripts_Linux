@@ -26,6 +26,11 @@ echo -e -n "\n Tesouro Direto - "
 echo "$dados" | grep -m 1 "Mercado" | sed 's/\t//g' # Mercado aberto ou fechado
 echo
 
+part_1=$(echo "$dados" | grep -m 1 -A 2 "Horário de funcionamento" | cut -d '>' -f2-3 | tr -d "\n\r")
+part_2=$(echo "$dados" | grep -m 1 -A 2 "Última atualização" | cut -d '>' -f2-3 | tr -d "\n\r")
+echo
+echo -e "$part_1" | sed -E 's/strong|span|<|\/|>//g'
+echo -e "$part_2" | sed -E 's/strong|span|<\/|: //g'
 URL_tesouro_dados="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_dados")
 
