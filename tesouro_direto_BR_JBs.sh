@@ -2,24 +2,44 @@ tesouro_direto(){ # Exibe dados do Tesouro Direto do Brasil
     # https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
     URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
     dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
+#!/bin/bash
+#
+# Autor= João Batista Ribeiro
+# Bugs, Agradecimentos, Críticas "construtivas"
+# me envie um e-mail. Ficarei Grato!
+# e-mail: joao42lbatista@gmail.com
+#
+# Este programa é um software livre: você pode redistribuí-lo e/ou
+# modificá-lo sob os termos da Licença Pública Geral GNU (GPL)
+# conforme publicada pela Free Software Foundation, tanto a versão 3
+# da licença, como (a seu critério) qualquer versão posterior.
+#
+# Este programa é distribuído na esperança de que seja útil,
+# mas SEM NENHUMA GARANTIA; nem mesmo a garantia implícita de
+# COMERCIABILIDADE ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO.
+# Consulte a Licença Pública Geral do GNU para mais detalhes.
+#
+# Description: Exibe dados do Tesouro Direto do Brasil
+#
+# Last update: 22/11/2026
 
-    if [ "$dados" != '' ]; then
-        dados_tabela=$(echo "$dados" | column -s ';' -t -o $'\t') # column com \t para alinhar os dados
+if [ "$dados" != '' ]; then
+    dados_tabela=$(echo "$dados" | column -s ';' -t -o $'\t') # column com \t para alinhar os dados
 
-        if [ "$1" != '' ]; then # Todos títulos, se $1 diferente de '', como "todos"
-            echo "$dados_tabela"
-        else # Apenas Prefixado 2032 e IPCA+ 2032
-            titulos="Prefixado 2032|IPCA\+ 2032"
-            dados_selec=$(echo "$dados_tabela" | grep -E "$titulos") # \+ to grep +"
+    if [ "$1" != '' ]; then # Todos títulos, se $1 diferente de '', como "todos"
+        echo "$dados_tabela"
+    else # Apenas Prefixado 2032 e IPCA+ 2032
+        titulos="Prefixado 2032|IPCA\+ 2032"
+        dados_selec=$(echo "$dados_tabela" | grep -E "$titulos") # \+ to grep +"
 
-            if [ "$dados_selec" != '' ]; then # Verifica se estão à venda
-                echo "$dados_selec"
-            else
-                titulos_msg=$(echo $titulos | sed 's/|/ e /g; s/\\//g') # Troca '|' por 'e ' e remove '\' junto ao +
-                echo -e "\n Títulos não estão à venda - $titulos_msg\n"
-            fi
+        if [ "$dados_selec" != '' ]; then # Verifica se estão à venda
+            echo "$dados_selec"
+        else
+            titulos_msg=$(echo $titulos | sed 's/|/ e /g; s/\\//g') # Troca '|' por 'e ' e remove '\' junto ao +
+            echo -e "\n Títulos não estão à venda - $titulos_msg\n"
         fi
-    else
-        echo -e "\n Erro no download da planilha com os dados\n"
     fi
-}
+else
+    echo -e "\n Erro no download da planilha com os dados\n"
+fi
+
