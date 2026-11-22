@@ -26,8 +26,8 @@ echo -e -n "\n Tesouro Direto - "
 echo "$dados" | grep -m 1 "Mercado" | sed 's/\t//g' # Mercado aberto ou fechado
 echo
 
-URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
-dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
+URL_tesouro_dados="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
+dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_dados")
 
 if [ "$dados" != '' ]; then
     dados_tabela=$(echo "$dados" | column -s ';' -t -o $'\t') # column com \t para alinhar os dados
