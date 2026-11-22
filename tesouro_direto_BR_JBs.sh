@@ -19,7 +19,13 @@
 #
 # Last update: 22/11/2026
 #
-# https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
+URL_tesouro_horario="https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos"
+dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_horario")
+
+echo -e -n "\n Tesouro Direto - "
+echo "$dados" | grep -m 1 "Mercado" | sed 's/\t//g' # Mercado aberto ou fechado
+echo
+
 URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
 
@@ -42,4 +48,4 @@ if [ "$dados" != '' ]; then
 else
     echo -e "\n Erro no download da planilha com os dados\n"
 fi
-
+echo
