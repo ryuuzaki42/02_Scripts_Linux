@@ -1,7 +1,3 @@
-tesouro_direto(){ # Exibe dados do Tesouro Direto do Brasil
-    # https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
-    URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
-    dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
 #!/bin/bash
 #
 # Autor= João Batista Ribeiro
@@ -22,6 +18,10 @@ tesouro_direto(){ # Exibe dados do Tesouro Direto do Brasil
 # Description: Exibe dados do Tesouro Direto do Brasil
 #
 # Last update: 22/11/2026
+#
+# https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos
+URL_tesouro="https://www.tesourodireto.com.br/documents/d/guest/rendimento-investir-csv"
+dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro")
 
 if [ "$dados" != '' ]; then
     dados_tabela=$(echo "$dados" | column -s ';' -t -o $'\t') # column com \t para alinhar os dados
