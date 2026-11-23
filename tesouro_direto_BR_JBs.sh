@@ -17,7 +17,7 @@
 #
 # Description: Exibe dados do Tesouro Direto do Brasil
 #
-# Last update: 22/11/2026
+# Last update: 23/11/2026
 #
 URL_tesouro_horario="https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_horario")
@@ -26,7 +26,7 @@ dados=$(echo "$dados" | sed -E 's/<[^>]+>//g;') # Remove HTML, like <span>, <str
 dados=$(echo "$dados" | tr -d '\t') # Remove tab spaces '\t'
 
 echo -e -n "\n - Tesouro Direto - "
-echo "$dados" | grep -m 1 "Mercado" # Mercado aberto ou fechado
+echo "$dados" | grep -m 1 "Mercado" # Mercado aberto, fechado ou em manutenção
 
 part_1=$(echo "$dados" | grep -m 1 -A 1 "Horário de funcionamento")
 part_2=$(echo "$dados" | grep -m 1 -A 1 "Última atualização")
