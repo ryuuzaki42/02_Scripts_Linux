@@ -17,7 +17,7 @@
 #
 # Description: Exibe dados do Tesouro Direto do Brasil
 #
-# Last update: 23/11/2026
+# Last update: 24/11/2026
 #
 URL_tesouro_horario="https://www.tesourodireto.com.br/produtos/dados-sobre-titulos/rendimento-dos-titulos"
 dados=$(wget -U "Mozilla" --header="Accept-Language: pt-BR" -q -O - "$URL_tesouro_horario")
@@ -51,10 +51,10 @@ if [ "$dados" != '' ]; then
             echo "$dados_selec"
         else
             titulos_msg=$(echo $titulos | sed 's/|/ e /g; s/\\//g') # Troca '|' por 'e ' e remove '\' junto ao +
-            echo -e "\n Títulos não estão à venda - $titulos_msg\n"
+            echo " Títulos não estão à venda - $titulos_msg"
         fi
     fi
 else
-    echo -e "\n Erro no download da planilha com os dados\n"
+    echo " Erro no download da planilha com os dados"
 fi
 echo
